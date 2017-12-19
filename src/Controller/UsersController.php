@@ -108,4 +108,9 @@ class UsersController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+    
+     public function beforeRender(\Cake\Event\Event $event) {
+        parent::beforeRender($event);
+        $this->viewBuilder()->theme('Admintheme');
+    }
 }
