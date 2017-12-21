@@ -2,6 +2,14 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
+use Cake\Network\Http\Client;
+use Cake\Mailer\Email;
+use Cake\Core\Plugin;
+use Cake\Filesystem\Folder;
+use Cake\Routing\Router;
+use Cake\Utility\Security;
 
 /**
  * Users Controller
@@ -20,9 +28,54 @@ class UsersController extends AppController
      */
     public function index()
     {
-        $users = $this->paginate($this->Users);
+        $name = '';
+        $email = '';
+        $norec = 10;
+        $status = '';
+        $search = [];
+        if (isset($this->request->query['name']) && trim($this->request->query['name']) != "") {
+            $name = $this->request->query['name'];
+            $search['Users.name REGEXP'] = $name;
+        }
+        
+         if (isset($this->request->query['email']) && trim($this->request->query['email']) != "") {
+            $email = $this->request->query['email'];
+            $search['Users.email REGEXP'] = $email;
+        }
 
-        $this->set(compact('users'));
+        if (isset($this->request->query['status']) && trim($this->request->query['status']) != "") {
+            $status = $this->request->query['status'];
+            $search['Users.active'] = $status;
+        }
+
+        if (isset($this->request->query['norec']) && trim($this->request->query['norec']) != "") {
+            $norec = $this->request->query['norec'];
+        }
+        
+         if (isset($search)) {
+
+            $count = $this->Users->find('all')
+                    ->where([$search]);
+        } else {
+            $count = $this->Users->find('all');
+        }
+
+        $count = $count->where(['Users.active !=' => '2']);
+
+
+
+
+        $this->paginate = ['limit' => $norec, 'order' => ['Users.id' => 'DESC']];
+
+        $users = $this->paginate($count)->toArray();
+
+        
+        
+        
+        
+       // $users = $this->paginate($this->Users);
+
+        $this->set(compact('users', 'name', 'status', 'norec','email'));
         $this->set('_serialize', ['users']);
     }
 
@@ -52,8 +105,37 @@ class UsersController extends AppController
     {
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+            
+            $data = $this->request->data;
+            $data['guestid'] = '11';
+            $data['verified'] = '1';
+            
+            $user = $this->Users->patchEntity($user, $data);
+          // pr($user); die;
             if ($this->Users->save($user)) {
+                
+           $userDataArr['Password'] = $data['password'];
+           $userDataArr['name'] = $data['name'];
+           $userDataArr['email'] = $data['email'];
+            $toEmail = $data['email'];
+            $subject = 'Registration Successful | Nimbuzz';
+            $email = new Email();
+            $email->transport('default');
+            try {
+                $email->emailFormat('html');
+                $email->template('userpass')
+                        ->from(['noreply@nimbuzz.com' => 'Nimbuzz'])
+                        ->to($toEmail)
+                        ->subject($subject)
+                        ->viewVars($userDataArr)
+                        ->send();
+            } catch (Exception $e) {
+
+            }
+                
+                
+                
+                
                 $this->Flash->success(__('The user has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
@@ -77,7 +159,12 @@ class UsersController extends AppController
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+            $data = $this->request->data;
+            $data['guestid'] = '11';
+            //$data['verified'] = '1';
+            
+            $user = $this->Users->patchEntity($user, $data);
+          // pr($user); die;
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
 
@@ -85,6 +172,7 @@ class UsersController extends AppController
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
+        //pr($user); die;
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);
     }
