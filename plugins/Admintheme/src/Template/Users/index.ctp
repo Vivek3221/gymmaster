@@ -40,7 +40,6 @@ $nofrec = $this->Common->getNoOfRec();
                             <h2 >
                                <?= __('Users') ?>
                             </h2>
-                            <?= __('Users'); ?>
                         </div>
                         <div class="body">
                               <div class="box-body">

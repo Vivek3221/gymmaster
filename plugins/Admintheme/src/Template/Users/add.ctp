@@ -1,8 +1,6 @@
 <?php
 $status = $this->Common->getstatus();
 $user_type = $this->Common->getType();
-
-
 ?>
 <section class="content">
     <div class="container-fluid">

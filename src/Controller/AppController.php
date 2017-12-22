@@ -52,7 +52,16 @@ class AppController extends Controller
         //$this->loadComponent('Security');
         //$this->loadComponent('Csrf');
     }
+     
+    public function beforeFilter(Event $event) {
+        parent::beforeFilter($event);
+     $useremail = $this->Cookie->read('user_email');
+        
+       
 
+        $this->set(compact('useremail'));
+        $this->set('_serialize', ['cookie_value']);
+    }
     /**
      * Before render callback.
      *

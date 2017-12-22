@@ -5,7 +5,7 @@
 <div class="login-page">
     <div class="login-box">
         <div class="logo">
-            <a href="javascript:void(0);">Nimbuzz</a>
+            <a href="javascript:void(0);">Gym Admin</a>
            <?= $this->Flash->render() ?>
         </div>
         <div class="card">
