@@ -56,10 +56,11 @@ class AppController extends Controller
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
      $useremail = $this->Cookie->read('user_email');
+     $username = $this->Cookie->read('users_name');
         
        
 
-        $this->set(compact('useremail'));
+        $this->set(compact('useremail','username'));
         $this->set('_serialize', ['cookie_value']);
     }
     /**

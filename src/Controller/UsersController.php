@@ -291,8 +291,9 @@ class UsersController extends AppController
                     $user_detail = $this->Users->find()->select(['id','user_type','name','email'])->where(['email' => $data['email'], 'active' => 1])->first();
                  
                     $this->request->session()->write('users_id', $user_detail->id);
+                     $this->Cookie->write('users_name', $user_detail->name);
                     $this->Cookie->write('users_id', $user_detail->id);
-                    $this->Cookie->write('user_email', $user_detail->name);
+                    $this->Cookie->write('user_email', $user_detail->email);
                     $this->Cookie->write('user_type', $user_detail->user_type);
                    
                     return $this->redirect(['controller' => 'Users', 'action' => 'index']);
