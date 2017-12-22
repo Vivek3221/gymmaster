@@ -20,6 +20,21 @@ use Cake\Utility\Security;
  */
 class UsersController extends AppController
 {
+    
+    public function initialize()
+    {
+
+        parent::initialize();
+        $this->loadComponent('Flash'); 
+    }
+    
+    public function beforeFilter(Event $event) {
+        parent::beforeFilter($event);
+       // $this->Users->userAuth = $this->UserAuth;
+        $this->Auth->allow(['dashboardPartner','index','changePassword','add','view','edit','login','status','adminLogin','verifiedUpdate','forgotPassword','resetPassword','profileEdit','getNewArtiCount','getLangCount','getNewweakCount','getArtiweakCount']);
+        
+    }
+
 
     /**
      * Index method
@@ -110,9 +125,14 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             
             $data = $this->request->data;
+           
+            $t = time();
+            $name = $data['name'] . $t;
+
+            $data['username'] = $this->slugify($name);
             $data['guestid'] = '11';
             $data['verified'] = '1';
-            
+//             pr($data);exit;
             if($data['password'] != $data['cpassword'])
             {
                 $this->Flash->error(__('Password Not Match .'));
@@ -124,17 +144,17 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $data);
             if ($this->Users->save($user)) {
                 
-           $userDataArr['Password'] = $data['password'];
-           $userDataArr['name'] = $data['name'];
-           $userDataArr['email'] = $data['email'];
-            $toEmail = $data['email'];
-            $subject = 'Registration Successful | Nimbuzz';
-            $email = new Email();
+           $userDataArr['Password']  = $data['cpassword'];
+           $userDataArr['name']      = $data['name'];
+           $userDataArr['email']     = $data['email'];
+            $toEmail                 = $data['email'];
+            $subject                 = 'Registration Successful | Gym-Admin';
+            $email                   = new Email();
             $email->transport('default');
             try {
                 $email->emailFormat('html');
                 $email->template('userpass')
-                        ->from(['noreply@nimbuzz.com' => 'Nimbuzz'])
+                        ->from(['noreply@gymadmin.com' => 'Gym-Admin'])
                         ->to($toEmail)
                         ->subject($subject)
                         ->viewVars($userDataArr)
@@ -166,10 +186,11 @@ class UsersController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->data;
             $data['guestid'] = '11';
-            //$data['verified'] = '1';
+          //  $data['location'] = $data['location'];
+           // pr($data);
             
             $user = $this->Users->patchEntity($user, $data);
-          // pr($user); die;
+        //   pr($user); die;
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
 
@@ -299,7 +320,7 @@ class UsersController extends AppController
                     return $this->redirect(['controller' => 'Users', 'action' => 'index']);
                }
             else {
-                $this->Flash->error(__('The user id and password not match'));
+                $this->Flash->error(__('This email and password not match'));
                  return $this->redirect(['controller' => 'Users', 'action' => 'adminLogin']);
                }
                

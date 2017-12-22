@@ -81,6 +81,8 @@ class UsersTable extends Table
 
         $validator
             ->allowEmpty('email_verified');
+        $validator
+            ->allowEmpty('location');
 
         $validator
             ->scalar('name')

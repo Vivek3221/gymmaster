@@ -17,7 +17,7 @@ $user_type = $this->Common->getType();
                 <div class="card">
                    <div class="header">
                             <h2>
-                               <?= __('Add User') ?>
+                               <?= __('Edit User') ?>
                             </h2>
                             
                         </div>
@@ -40,12 +40,7 @@ $user_type = $this->Common->getType();
                                 <label class="form-label">Name</label>
                             </div>
                         </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('username', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Username</label>
-                            </div>
-                        </div>
+                        
                         
                         <div class="form-group form-float">
                             <div class="form-line">
@@ -53,19 +48,19 @@ $user_type = $this->Common->getType();
                                 <label class="form-label">Email</label>
                             </div>
                         </div>
-                        <div class="form-group form-float">
+<!--                        <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('location', ['class' => 'form-control', 'label' => false]) ?> 
                                 <label class="form-label">Location</label>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('mobile_no', ['class' => 'form-control','type'=>'number', 'label' => false]) ?> 
                                 <label class="form-label">Mobile No.</label>
                             </div>
                         </div>
-                        <div class="form-group form-float">
+<!--                        <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('password', ['class' => 'form-control', 'label' => false]) ?> 
                                 <label class="form-label">Password</label>
@@ -76,7 +71,7 @@ $user_type = $this->Common->getType();
                                 <?= $this->Form->control('cpassword', ['type' => 'password', 'class' => 'form-control', 'label' => false]) ?> 
                                 <label class="form-label">Conform Password</label>
                             </div>
-                        </div>
+                        </div>-->
                          <div class="form-group form-float">
                             <div class="form-line">
                         <?= $this->Form->input('active', ['empty' => __('Select status'), 'options' => $status, 'class' => 'form-control']); ?>

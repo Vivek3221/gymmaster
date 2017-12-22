@@ -28,7 +28,9 @@ use Cake\Event\Event;
 class AppController extends Controller
 {
     
- public $components = ['Flash','Cookie'/* , 'Security', 'Csrf' */];
+    public $captcha    = "6Lf_JygUAAAAALYOstCso54v8y3yu5hiw9hYpOUg";
+    public $components = ['Flash', 'Auth', 'Cookie'/* , 'Security', 'Csrf' */];
+   // public $helpers    = ['Usermgmt.UserAuth', 'Usermgmt.Image', 'Form'];
     /**
      * Initialization hook method.
      *
@@ -69,6 +71,26 @@ class AppController extends Controller
      * @param \Cake\Event\Event $event The beforeRender event.
      * @return \Cake\Http\Response|null|void
      */
+    
+    public function slugify($text) {
+
+        // replace non letter or digits by -
+        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+        // transliterate
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+        // remove unwanted characters
+        $text = preg_replace('~[^-\w]+~', '', $text);
+        // trim
+        $text = trim($text, '-');
+        // remove duplicate -
+        $text = preg_replace('~-+~', '-', $text);
+        // lowercase
+        $text = strtolower($text);
+        if (empty($text)) {
+            return 'n-a';
+        }
+        return $text;
+    }
     public function beforeRender(Event $event)
     {
         // Note: These defaults are just to get started quickly with development

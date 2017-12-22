@@ -16,11 +16,11 @@
                             <table class="vertical-table">
                                 <tr>
                                     <th scope="row"><?= __('Name') ?></th>
-                                    <td><?php echo h($user['name']);?></td>
+                                    <td><?= ucfirst(h($user['name']));?></td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><?= __('Group(s)') ?></th>
-                                    <td><?=  h($user['group_name']);?></td>
+                                    <td><?=  h($user['user_type'])? __('Admin') : __('User');?></td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><?= __('Username') ?></th>
@@ -37,34 +37,34 @@
                                 </tr>-->
                                 <tr>
                                     <th scope="row"><?= __('Contact No.') ?></th>
-                                    <td><?php echo h($user['user_detail']['cellphone']);?></td>
+                                    <td><?php echo h($user['mobile_no']);?></td>
                                 </tr>
-                                <tr>
+<!--                                <tr>
                                     <th scope="row"><?= __('Location') ?></th>
                                     <td><?php echo h($user['user_detail']['location']);?></td>
-                                </tr>
+                                </tr>-->
                                 <tr>
                                     <th scope="row"><?= __('Status') ?></th>
                                     <td><?php echo ($user['active']) ? __('Active') : __('Inactive');?></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><?= __('Email Verified') ?></th>
-                                    <td><?php echo ($user['email_verified']) ? __('Yes') : __('No');?></td>
+                                    <th scope="row"><?= __('Verified') ?></th>
+                                    <td><?php echo ($user['verified']) ? __('Yes') : __('No');?></td>
                                 </tr>
-                                <tr>
+<!--                                <tr>
                                     <th scope="row"><?= __('Ip Address') ?></th>
                                     <td><?php echo $user['ip_address'];?></td>
-                                </tr>
+                                </tr>-->
 
                                 <tr>
                                     <th scope="row"><?= __('Joined') ?></th>
                                      <?php $birthdate = ($user['created']->format('d-M-Y')); ?>
                                     <td><?php if(!empty($user['created'])) { echo $birthdate; } ?></td>
                                 </tr>
-                                <tr>
+<!--                                <tr>
                                     <th scope="row"><?= __('Created By') ?></th>
                                     <td><?php echo ($user['created_by']) ? $user['created_by'] : '';?></td>
-                                </tr>
+                                </tr>-->
                             </table>
                             
                         </div>

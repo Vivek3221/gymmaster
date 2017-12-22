@@ -22,7 +22,7 @@ $user_type = $this->Common->getType();
                     <div class="body">
                         <!--                            <form id="form_validation" method="POST">-->
                         <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']); ?>
-                        <?= $this->Form->create($user, ['id' => 'form_validation','templates' => ['inputContainer' => '{{content}}']]) ?>
+                        <?= $this->Form->create($user, ['id' => 'addusers','templates' => ['inputContainer' => '{{content}}']]) ?>
       
                         <div class="form-group form-float">
                             <div class="form-line">
@@ -37,29 +37,21 @@ $user_type = $this->Common->getType();
                                 <label class="form-label">Name</label>
                             </div>
                         </div>
-                        
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('username', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Username</label>
-                            </div>
-                        </div>
-                        
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('email', ['class' => 'form-control', 'label' => false]) ?> 
                                 <label class="form-label">Email</label>
                             </div>
                         </div>
-                        <div class="form-group form-float">
+<!--                        <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('location', ['class' => 'form-control', 'label' => false]) ?> 
                                 <label class="form-label">Location</label>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('mobile_no', ['class' => 'form-control','type'=>'number', 'label' => false]) ?> 
+                                <?= $this->Form->control('mobile_no', ['class' => 'form-control','type'=>'text', 'label' => false]) ?> 
                                 <label class="form-label">Mobile No.</label>
                             </div>
                         </div>
@@ -72,7 +64,7 @@ $user_type = $this->Common->getType();
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('cpassword', ['type' => 'password', 'class' => 'form-control', 'label' => false]) ?> 
-                                <label class="form-label">Conform Password</label>
+                                <label class="form-label">Confirm Password</label>
                             </div>
                         </div>
                          <div class="form-group form-float">
