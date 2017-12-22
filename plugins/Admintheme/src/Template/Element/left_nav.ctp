@@ -20,7 +20,7 @@ $action = $this->request['action'];
                     <ul class="dropdown-menu pull-right">
                         <li><a href=""><i class="material-icons">input</i><?= __('Profile') ?></a></li>
                         <li role="seperator" class="divider"></li>
-                        <li><a href=""><i class="material-icons">input</i><?= __('Sign Out') ?></a></li>
+                        <li><a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']); ?>"><i class="material-icons">input</i><?= __('Sign Out') ?></a></li>
                     </ul>
                 </div>
             </div>
