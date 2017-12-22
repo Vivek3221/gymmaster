@@ -28,6 +28,7 @@ class UsersController extends AppController
      */
     public function index()
     {
+        
         $name = '';
         $email = '';
         $norec = 10;
@@ -116,8 +117,9 @@ class UsersController extends AppController
               return $this->redirect(['action' => 'add']);
             }
             
+            $data['password'] = md5($data['cpassword']);
+            
             $user = $this->Users->patchEntity($user, $data);
-        pr($data); die;
             if ($this->Users->save($user)) {
                 
            $userDataArr['Password'] = $data['password'];
@@ -137,12 +139,7 @@ class UsersController extends AppController
                         ->send();
             } catch (Exception $e) {
 
-            }
-                
-                
-                
-                
-                $this->Flash->success(__('The user has been saved.'));
+            }$this->Flash->success(__('The user has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
@@ -264,6 +261,54 @@ class UsersController extends AppController
             }
         }
     }
+    
+     public function adminLogin()
+      {
+     
+       }
+      
+       
+       
+        public function login()
+    {
+         
+        $user = $this->Users->newEntity();
+        
+        if ($this->request->is('post')) {
+            //echo 'ggg';
+               $data = $this->request->data;
+               
+               $data['password'] = md5($this->request->data['password']);
+               $data['email'] = $this->request->data['email'];
+               
+              // pr($data); die;
+               $count = $this->Users->find()->select(['id'])->where(['email' => $data['email'], 'password' =>$data['password'], 'active'=>1])->count();
+              
+               if($count == 1)
+               {
+                    $user_detail = $this->Users->find()->select(['id','user_type','name'])->where(['email' => $data['email'], 'active' => 1])->first();
+                 
+                    $this->Cookie->write('user_email', $data['email']);
+                    $this->request->session()->write('users_id', $user_detail->id);
+                    $this->Cookie->write('users_id', $user_detail->id);
+                    $this->Cookie->write('user_email', $user_detail->name);
+                    $this->Cookie->write('user_type', $user_detail->user_type);
+                   
+                    return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+               }
+            else {
+                $this->Flash->error(__('The user id and password not match'));
+                 return $this->redirect(['controller' => 'Users', 'action' => 'adminLogin']);
+               }
+               
+    }
+               //pr($data); die;
+           
+            
+        }
+       
+    
+    
 
     
     

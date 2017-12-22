@@ -27,7 +27,8 @@ use Cake\Event\Event;
  */
 class AppController extends Controller
 {
-
+    
+ public $components = ['Flash','Cookie'/* , 'Security', 'Csrf' */];
     /**
      * Initialization hook method.
      *

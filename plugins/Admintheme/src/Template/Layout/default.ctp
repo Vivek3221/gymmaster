@@ -86,7 +86,7 @@
   <?= $this->Html->script('jquery.min.js') ?>
 </head>
 <body>
-    <?php if (($this->request->action != 'login')) { ?>
+    <?php if (($this->request->action != 'adminLogin')) { ?>
     <?php
     
      echo $this->element('header');
