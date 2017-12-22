@@ -29,6 +29,8 @@ class UsersController extends AppController
     public function index()
     {
         
+       // pr($this->Cookie->read('user_email')); die;
+        
         $name = '';
         $email = '';
         $norec = 10;
@@ -286,9 +288,8 @@ class UsersController extends AppController
               
                if($count == 1)
                {
-                    $user_detail = $this->Users->find()->select(['id','user_type','name'])->where(['email' => $data['email'], 'active' => 1])->first();
+                    $user_detail = $this->Users->find()->select(['id','user_type','name','email'])->where(['email' => $data['email'], 'active' => 1])->first();
                  
-                    $this->Cookie->write('user_email', $data['email']);
                     $this->request->session()->write('users_id', $user_detail->id);
                     $this->Cookie->write('users_id', $user_detail->id);
                     $this->Cookie->write('user_email', $user_detail->name);
@@ -306,6 +307,12 @@ class UsersController extends AppController
            
             
         }
+        
+        
+         public function logout()
+    {
+        return $this->redirect($this->Auth->logout());
+    }
        
     
     
