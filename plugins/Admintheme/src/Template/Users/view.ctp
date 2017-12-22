@@ -1,92 +1,77 @@
-<?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\User $user
- */
-?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit User'), ['action' => 'edit', $user->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete User'), ['action' => 'delete', $user->id], ['confirm' => __('Are you sure you want to delete # {0}?', $user->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Users'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New User'), ['action' => 'add']) ?> </li>
-    </ul>
-</nav>
-<div class="users view large-9 medium-8 columns content">
-    <h3><?= h($user->name) ?></h3>
-    <table class="vertical-table">
-        <tr>
-            <th scope="row"><?= __('Guestid') ?></th>
-            <td><?= h($user->guestid) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Username') ?></th>
-            <td><?= h($user->username) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Email') ?></th>
-            <td><?= h($user->email) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Password') ?></th>
-            <td><?= h($user->password) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Mobile No') ?></th>
-            <td><?= h($user->mobile_no) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Id') ?></th>
-            <td><?= $this->Number->format($user->id) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('User Type') ?></th>
-            <td><?= $this->Number->format($user->user_type) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Email Verified') ?></th>
-            <td><?= $this->Number->format($user->email_verified) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Gender') ?></th>
-            <td><?= $this->Number->format($user->gender) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Active') ?></th>
-            <td><?= $this->Number->format($user->active) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Verified') ?></th>
-            <td><?= $this->Number->format($user->verified) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Dob') ?></th>
-            <td><?= h($user->dob) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Created') ?></th>
-            <td><?= h($user->created) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Modified') ?></th>
-            <td><?= h($user->modified) ?></td>
-        </tr>
-    </table>
-    <div class="row">
-        <h4><?= __('Name') ?></h4>
-        <?= $this->Text->autoParagraph(h($user->name)); ?>
-    </div>
-    <div class="row">
-        <h4><?= __('Contact Person') ?></h4>
-        <?= $this->Text->autoParagraph(h($user->contact_person)); ?>
-    </div>
-    <div class="row">
-        <h4><?= __('Photo') ?></h4>
-        <?= $this->Text->autoParagraph(h($user->photo)); ?>
-    </div>
-    <div class="row">
-        <h4><?= __('Aboutme') ?></h4>
-        <?= $this->Text->autoParagraph(h($user->aboutme)); ?>
-    </div>
-</div>
+<section class="content">
+        <div class="container-fluid">
+            <!-- Basic Examples -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2 >
+                               <?= __('View User') ?>
+                            </h2>
+              
+                        </div>
+                        <div class="body">
+                            <div class="contacts view large-9 medium-8 columns content">
+                            <h3><?= h($user->first_name) ?></h3>
+                            <table class="vertical-table">
+                                <tr>
+                                    <th scope="row"><?= __('Name') ?></th>
+                                    <td><?php echo h($user['name']);?></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><?= __('Group(s)') ?></th>
+                                    <td><?=  h($user['group_name']);?></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><?= __('Username') ?></th>
+                                    <td><?=  h($user['username']);?></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><?= __('Email') ?></th>
+                                    <td><?= h($user['email']);?></td>
+                                </tr>
+<!--                                <tr>
+                                    
+                                    <th scope="row"><?= __('Birthday') ?></th>
+                                    <td><?php if(!empty($user['bday'])) { echo date('d M Y',strtotime($user['bday'])); } ?></td>
+                                </tr>-->
+                                <tr>
+                                    <th scope="row"><?= __('Contact No.') ?></th>
+                                    <td><?php echo h($user['user_detail']['cellphone']);?></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><?= __('Location') ?></th>
+                                    <td><?php echo h($user['user_detail']['location']);?></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><?= __('Status') ?></th>
+                                    <td><?php echo ($user['active']) ? __('Active') : __('Inactive');?></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><?= __('Email Verified') ?></th>
+                                    <td><?php echo ($user['email_verified']) ? __('Yes') : __('No');?></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><?= __('Ip Address') ?></th>
+                                    <td><?php echo $user['ip_address'];?></td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row"><?= __('Joined') ?></th>
+                                     <?php $birthdate = ($user['created']->format('d-M-Y')); ?>
+                                    <td><?php if(!empty($user['created'])) { echo $birthdate; } ?></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><?= __('Created By') ?></th>
+                                    <td><?php echo ($user['created_by']) ? $user['created_by'] : '';?></td>
+                                </tr>
+                            </table>
+                            
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #END# Basic Examples -->
+        </div>
+</section>

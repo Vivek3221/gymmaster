@@ -110,8 +110,14 @@ class UsersController extends AppController
             $data['guestid'] = '11';
             $data['verified'] = '1';
             
+            if($data['password'] != $data['cpassword'])
+            {
+                $this->Flash->error(__('Password Not Match .'));
+              return $this->redirect(['action' => 'add']);
+            }
+            
             $user = $this->Users->patchEntity($user, $data);
-          // pr($user); die;
+        pr($data); die;
             if ($this->Users->save($user)) {
                 
            $userDataArr['Password'] = $data['password'];
@@ -196,6 +202,70 @@ class UsersController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+    
+    
+     public function verifiedUpdate() {
+        $this->autoRender = false;
+        $get_id = $this->request->data['id'];
+
+        $verified = $this->request->data['verified'];
+
+
+        if ($verified == '1') {
+            $verified_chg = '0';
+        } else {
+            $verified_chg = '1';
+        }
+        $query = $this->Users->query();
+        $result = $query->update()
+                ->set(['verified' => $verified_chg])
+                ->where(['id' => $get_id])
+                ->execute();
+        $user = $this->Users->find()
+                ->select(['email','name'])
+                ->where(['id' => $get_id])
+                ->first();
+   
+        if ($verified_chg == '0') {
+
+            echo '<button id=' . $get_id . ' class="btn btn-primary waves-effect" value=' . $verified_chg . ' onclick="updateVerified(this.id,' . $verified_chg . ')" type="submit">UnApproved</button>';
+        } else {
+
+            
+             
+
+            echo '<button id=' . $get_id . ' class="btn btn-success waves-effect" value=' . $verified_chg . ' onclick="updateVerified(this.id,' . $verified_chg . ')" type="submit">Approved</button>';
+     }
+    }
+    
+    
+       public function status() {
+        $id = $this->request->params['pass'][0];
+        $status = $this->request->params['pass'][1];
+        $user = $this->Users->get($id);
+        if ($status == 1) {
+            $user_data['active'] = 0;
+            $user_data['id'] = $id;
+            $user = $this->Users->patchEntity($user, $user_data);
+            if ($this->Users->save($user)) {
+                $st = $user_data['active'] ? '<span class="label label-success">' . __('Active') . '</span>' : '<span class="label label-danger">' . __('Inactive') . '</span>';
+                // echo "<a href= '#' onclick = 'updateStatus(" . $id . "," . $user_data['status'] . ")'> " . $st . " </a>";
+                echo '<button id=' . $id . ' class="btn btn-primary waves-effect status" value=' . $user_data['active'] . ' onclick="updateStatus(this.id,' . $user_data['active'] . ')" type="submit">Inactive</button>';
+                exit;
+            }
+        } else {
+            $user_data['active'] = 1;
+            $user_data['id'] = $id;
+            $user = $this->Users->patchEntity($user, $user_data);
+            if ($this->Users->save($user)) {
+                $st = $user_data['active'] ? '<span class="label label-success">' . __('Active') . '</span>' : '<span class="label label-danger">' . __('Inactive') . '</span>';
+                echo '<button id=' . $id . ' class="btn btn-success waves-effect status" value=' . $user_data['active'] . ' onclick="updateStatus(this.id,' . $user_data['active'] . ')" type="submit">Active</button>';
+                exit;
+            }
+        }
+    }
+
+    
     
      public function beforeRender(\Cake\Event\Event $event) {
         parent::beforeRender($event);
