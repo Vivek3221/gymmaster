@@ -42,9 +42,12 @@ $action = $this->request['action'];
                         <span><?= __('Workout Directry') ?></span>
                     </a>
                     <ul class="ml-menu">
-                        <li class="<?php if ($controller == 'Bodies' && ($action == 'index')) {echo 'active';} ?>">
+                        <li class="<?php if ($controller == 'Bodies' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
                         <?= $this->Html->link(__('Body Parts'), ['controller' => 'Bodies', 'action' => 'index']) ?>
                         </li>  
+                   <li class="<?php if ($controller == 'Exercises' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
+                        <?= $this->Html->link(__('Exercise List'), ['controller' => 'Exercises', 'action' => 'index']) ?>
+                   </li>
                     </ul>
                 </li>   
               

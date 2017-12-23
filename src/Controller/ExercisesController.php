@@ -1,6 +1,6 @@
 <?php
 namespace App\Controller;
-
+use Cake\Event\Event;
 use App\Controller\AppController;
 
 /**
@@ -12,7 +12,19 @@ use App\Controller\AppController;
  */
 class ExercisesController extends AppController
 {
+      public function initialize()
+    {
 
+        parent::initialize();
+        $this->loadComponent('Flash'); 
+    }
+    
+     public function beforeFilter(Event $event) {
+        parent::beforeFilter($event);
+       // $this->Users->userAuth = $this->UserAuth;
+        $this->Auth->allow(['index','add','view','delete','edit','status']);
+        
+    }
     /**
      * Index method
      *
@@ -20,6 +32,9 @@ class ExercisesController extends AppController
      */
     public function index()
     {
+         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $this->paginate = [
             'contain' => ['Bodies']
         ];
@@ -37,7 +52,10 @@ class ExercisesController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
-    {
+    { 
+         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $exercise = $this->Exercises->get($id, [
             'contain' => ['Bodies']
         ]);
@@ -52,7 +70,10 @@ class ExercisesController extends AppController
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
     public function add()
-    {
+    { 
+         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $exercise = $this->Exercises->newEntity();
         if ($this->request->is('post')) {
             $exercise = $this->Exercises->patchEntity($exercise, $this->request->getData());
@@ -76,7 +97,10 @@ class ExercisesController extends AppController
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function edit($id = null)
-    {
+    { 
+         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $exercise = $this->Exercises->get($id, [
             'contain' => []
         ]);
@@ -102,8 +126,11 @@ class ExercisesController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)
-    {
-        $this->request->allowMethod(['post', 'delete']);
+    { 
+         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        //$this->request->allowMethod(['post', 'delete']);
         $exercise = $this->Exercises->get($id);
         if ($this->Exercises->delete($exercise)) {
             $this->Flash->success(__('The exercise has been deleted.'));
@@ -112,5 +139,10 @@ class ExercisesController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+    
+     public function beforeRender(\Cake\Event\Event $event) {
+        parent::beforeRender($event);
+        $this->viewBuilder()->theme('Admintheme');
     }
 }
