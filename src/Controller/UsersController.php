@@ -31,7 +31,7 @@ class UsersController extends AppController
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
        // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['dashboardPartner','index','changePassword','add','view','edit','login','status','adminLogin','verifiedUpdate','forgotPassword','resetPassword','profileEdit','getNewArtiCount','getLangCount','getNewweakCount','logout']);
+        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout']);
         
     }
 
@@ -126,9 +126,9 @@ class UsersController extends AppController
      */
     public function add()
     {
-                      if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
-            return $this->redirect('/');
-        }
+     if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+     return $this->redirect('/');
+   }
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             
@@ -188,8 +188,8 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
-                       if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
-            return $this->redirect('/');
+     if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+      return $this->redirect('/');
         }
         $user = $this->Users->get($id, [
             'contain' => []
@@ -223,8 +223,8 @@ class UsersController extends AppController
      */
     public function delete($id = null)
     {
-                     if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
-            return $this->redirect('/');
+       if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+       return $this->redirect('/');
         }
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);

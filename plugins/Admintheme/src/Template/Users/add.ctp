@@ -57,7 +57,7 @@ $user_type = $this->Common->getType();
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('password', ['class' => 'form-control', 'label' => false]) ?> 
+                                <?= $this->Form->control('password', ['class' => 'form-control', 'label' => false,'id'=> 'npassword']) ?> 
                                 <label class="form-label">Password</label>
                             </div>
                         </div>

@@ -36,7 +36,17 @@ $action = $this->request['action'];
                         <span><?= __('Users') ?></span>
                     </a>
                 </li>
-                
+             <li class="<?php if (($controller == 'Bodies')){echo "active";}?>">
+                    <a href="javascript:void(0);" class="menu-toggle">
+                        <i class="material-icons">view_list</i>
+                        <span><?= __('Workout Directry') ?></span>
+                    </a>
+                    <ul class="ml-menu">
+                        <li class="<?php if ($controller == 'Bodies' && ($action == 'index')) {echo 'active';} ?>">
+                        <?= $this->Html->link(__('Body Parts'), ['controller' => 'Bodies', 'action' => 'index']) ?>
+                        </li>  
+                    </ul>
+                </li>   
               
             </ul>
 
