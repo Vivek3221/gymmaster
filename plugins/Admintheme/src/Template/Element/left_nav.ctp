@@ -13,8 +13,8 @@ $action = $this->request['action'];
 <!--            <div class="image">
             </div>-->
             <div class="info-container">
-                <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $username; ?></div>
-                <div class="email">  <div class="email"><?php echo $useremail; ?></div></div>
+                <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $usersdetail['users_name']; ?></div>
+                <div class="email">  <div class="email"><?php echo $usersdetail['users_email']; ?></div></div>
                 <div class="btn-group user-helper-dropdown">
                     <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                     <ul class="dropdown-menu pull-right">
@@ -30,7 +30,7 @@ $action = $this->request['action'];
         <div class="menu">
             <ul class="list">
                 <li class="header"><?= __('MAIN NAVIGATION') ?></li>
-                 <li class="<?php if (($controller == 'Users' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'))){echo "active";}?>">
+                 <li class="<?php if (($controller == 'Users' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'logoutqq'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>">
                         <i class="material-icons">list</i>
                         <span><?= __('Users') ?></span>

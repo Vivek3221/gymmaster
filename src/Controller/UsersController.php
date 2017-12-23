@@ -31,7 +31,7 @@ class UsersController extends AppController
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
        // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['dashboardPartner','index','changePassword','add','view','edit','login','status','adminLogin','verifiedUpdate','forgotPassword','resetPassword','profileEdit','getNewArtiCount','getLangCount','getNewweakCount','getArtiweakCount']);
+        $this->Auth->allow(['dashboardPartner','index','changePassword','add','view','edit','login','status','adminLogin','verifiedUpdate','forgotPassword','resetPassword','profileEdit','getNewArtiCount','getLangCount','getNewweakCount','logout']);
         
     }
 
@@ -44,8 +44,10 @@ class UsersController extends AppController
     public function index()
     {
         
-       // pr($this->Cookie->read('user_email')); die;
-        
+       //pr($this->usersdetail['users_email']); die;
+                      if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $name = '';
         $email = '';
         $norec = 10;
@@ -106,6 +108,9 @@ class UsersController extends AppController
      */
     public function view($id = null)
     {
+                       if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $user = $this->Users->get($id, [
             'contain' => []
         ]);
@@ -121,6 +126,9 @@ class UsersController extends AppController
      */
     public function add()
     {
+                      if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             
@@ -180,6 +188,9 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
+                       if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $user = $this->Users->get($id, [
             'contain' => []
         ]);
@@ -212,6 +223,9 @@ class UsersController extends AppController
      */
     public function delete($id = null)
     {
+                     if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);
         if ($this->Users->delete($user)) {
@@ -225,6 +239,9 @@ class UsersController extends AppController
     
     
      public function verifiedUpdate() {
+                      if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $this->autoRender = false;
         $get_id = $this->request->data['id'];
 
@@ -260,6 +277,9 @@ class UsersController extends AppController
     
     
        public function status() {
+                       if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $id = $this->request->params['pass'][0];
         $status = $this->request->params['pass'][1];
         $user = $this->Users->get($id);
@@ -304,19 +324,15 @@ class UsersController extends AppController
                $data['password'] = md5($this->request->data['password']);
                $data['email'] = $this->request->data['email'];
                
-              // pr($data); die;
+               
                $count = $this->Users->find()->select(['id'])->where(['email' => $data['email'], 'password' =>$data['password'], 'active'=>1])->count();
-              
+              //pr($count); die;
                if($count == 1)
                {
                     $user_detail = $this->Users->find()->select(['id','user_type','name','email'])->where(['email' => $data['email'], 'active' => 1])->first();
                  
-                    $this->request->session()->write('users_id', $user_detail->id);
-                     $this->Cookie->write('users_name', $user_detail->name);
-                    $this->Cookie->write('users_id', $user_detail->id);
-                    $this->Cookie->write('user_email', $user_detail->email);
-                    $this->Cookie->write('user_type', $user_detail->user_type);
-                   
+                    $this->Cookie->write('users',['users_id'=>$user_detail->id,'users_name'=>$user_detail->name,'users_email'=>$user_detail->email,'users_type' =>$user_detail->user_type]);
+             
                     return $this->redirect(['controller' => 'Users', 'action' => 'index']);
                }
             else {
@@ -325,7 +341,7 @@ class UsersController extends AppController
                }
                
     }
-               //pr($data); die;
+         
            
             
         }
@@ -333,8 +349,15 @@ class UsersController extends AppController
         
          public function logout()
     {
-        return $this->redirect($this->Auth->logout());
-    }
+             $this->autoRender = false;
+            // echo 'hhhhh';
+             
+             $useremail =  $this->Cookie->read('users');
+          //pr($useremail); die;
+             
+             $this->Cookie->delete('users');
+             return $this->redirect(['controller' => 'Users', 'action' => 'adminLogin']);
+ }
        
     
     
