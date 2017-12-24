@@ -15,7 +15,7 @@ $status = $this->Common->getstatus();
                 <div class="card">
                    <div class="header">
                             <h2>
-                               <?= __('Edit User') ?>
+                               <?= __('Edit Body') ?>
                             </h2>
                             
                         </div>
