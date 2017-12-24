@@ -36,7 +36,7 @@ $action = $this->request['action'];
                         <span><?= __('Users') ?></span>
                     </a>
                 </li>
-             <li class="<?php if (($controller == 'Bodies')){echo "active";}?>">
+             <li class="<?php if (($controller == 'Bodies') || ($controller == 'Exercises')){echo "active";}?>">
                     <a href="javascript:void(0);" class="menu-toggle">
                         <i class="material-icons">view_list</i>
                         <span><?= __('Workout Directry') ?></span>

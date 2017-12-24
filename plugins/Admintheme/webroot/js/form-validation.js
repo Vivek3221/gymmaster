@@ -69,10 +69,10 @@ $(document).ready(function () {
         },
         rules: {
 
-            user_group_id: {
+            user_type: {
                 required: true
             },
-            uname: {
+            name: {
                 required: true,
                regex: /^[a-zA-Z ]{3,50}$/
             },
@@ -99,8 +99,8 @@ $(document).ready(function () {
             }
         },
         messages: {
-            user_group_id: {
-                required: 'Select User group'
+            user_type: {
+                required: 'Select User type'
             },
             name: {
                 required: 'Enter User Name',
@@ -124,6 +124,121 @@ $(document).ready(function () {
             cpassword: {
                 required: 'Enter Confirm Password',
                 equalTo: 'Passwor & confirm password does not match'
+            }
+        }
+    });
+     $("#editusers").validate({
+        ignore: ":hidden",
+        errorElement: 'span',
+        errorClass: 'help-inline',
+        
+        highlight: function (element) {
+            $(element).parent().addClass("error");
+        },
+        unhighlight: function (element) {
+            $(element).parent().removeClass("error");
+        },
+        rules: {
+
+            user_type: {
+                required: true
+            },
+            name: {
+                required: true,
+               regex: /^[a-zA-Z ]{3,50}$/
+            },
+            
+            email: {
+                required: true,
+               regex: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$|^[0-9]{5,15}$/
+                },
+            
+            
+            mobile_no: {
+                required: true,
+               // isValidCmobileNo: true,
+                regex: /^$|^[0-9]{5,15}$/
+            }
+        },
+        messages: {
+            user_type: {
+                required: 'Select User type'
+            },
+            name: {
+                required: 'Enter User Name',
+                regex: 'Enter valid  name'
+            },
+           
+            email: {
+                required: 'Enter Email Id',
+                regex: 'Enter valid Email Id'
+            },
+            mobile_no: {
+                required:'Enter Mobile number',
+               // isValidUmobileNo:'Enter valid mobile number',
+               regex: 'Enter valid mobile No.'
+            }
+        }
+    });
+     $("#addexercise").validate({
+        ignore: ":hidden",
+        errorElement: 'span',
+        errorClass: 'help-inline',
+        
+        highlight: function (element) {
+            $(element).parent().addClass("error");
+        },
+        unhighlight: function (element) {
+            $(element).parent().removeClass("error");
+        },
+        rules: {
+
+            body_id: {
+                required: true
+            },
+            name: {
+                required: true,
+               regex: /^[a-zA-Z ]{3,50}$/
+            }
+        },
+        messages: {
+            body_id: {
+                required: 'Select Body'
+            },
+            name: {
+                required: 'Enter Exercise Name',
+                regex: 'Enter valid  name'
+            }
+        }
+    });
+     $("#editexercise").validate({
+        ignore: ":hidden",
+        errorElement: 'span',
+        errorClass: 'help-inline',
+        
+        highlight: function (element) {
+            $(element).parent().addClass("error");
+        },
+        unhighlight: function (element) {
+            $(element).parent().removeClass("error");
+        },
+        rules: {
+
+            body_id: {
+                required: true
+            },
+            name: {
+                required: true,
+               regex: /^[a-zA-Z ]{3,50}$/
+            }
+        },
+        messages: {
+            body_id: {
+                required: 'Select Body'
+            },
+            name: {
+                required: 'Enter Exercise Name',
+                regex: 'Enter valid  name'
             }
         }
     });

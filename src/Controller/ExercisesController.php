@@ -35,12 +35,38 @@ class ExercisesController extends AppController
          if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
+        $name = '';
+        $norec = 10;
+        $status = '';
+        $search = [];
+        if (isset($this->request->query['name']) && trim($this->request->query['name']) != "") {
+            $name = $this->request->query['name'];
+            $search['Exercises.name REGEXP'] = $name;
+        }
+        if (isset($this->request->query['status']) && trim($this->request->query['status']) != "") {
+            $status = $this->request->query['status'];
+            $search['Exercises.status'] = $status;
+        }
+        if (isset($this->request->query['norec']) && trim($this->request->query['norec']) != "") {
+            $norec = $this->request->query['norec'];
+        }
+        if (isset($search)) {
+            $count = $this->Exercises->find('all')
+                    ->where([$search]);
+        } else {
+            $count = $this->Exercises->find('all');
+        }
+        $count = $count->where(['Exercises.status !=' => '2']);
+
+        
         $this->paginate = [
+            'limit' => $norec, 
+            'order' => ['Exercises.id' => 'DESC'],
             'contain' => ['Bodies']
         ];
-        $exercises = $this->paginate($this->Exercises);
+        $exercises = $this->paginate($count);
 
-        $this->set(compact('exercises'));
+        $this->set(compact('exercises','name','status','norec'));
         $this->set('_serialize', ['exercises']);
     }
 

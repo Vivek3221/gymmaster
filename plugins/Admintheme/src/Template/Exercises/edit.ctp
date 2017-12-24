@@ -1,34 +1,57 @@
+
 <?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Exercise $exercise
- */
+$status = $this->Common->getstatus();
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $exercise->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $exercise->id)]
-            )
-        ?></li>
-        <li><?= $this->Html->link(__('List Exercises'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Bodies'), ['controller' => 'Bodies', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Body'), ['controller' => 'Bodies', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
-<div class="exercises form large-9 medium-8 columns content">
-    <?= $this->Form->create($exercise) ?>
-    <fieldset>
-        <legend><?= __('Edit Exercise') ?></legend>
-        <?php
-            echo $this->Form->control('body_id', ['options' => $bodies]);
-            echo $this->Form->control('name');
-            echo $this->Form->control('description');
-            echo $this->Form->control('status');
-        ?>
-    </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
-    <?= $this->Form->end() ?>
-</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+        </div>
+        <!-- Basic Validation -->
+        <div class="row clearfix">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <?= $this->Flash->render() ?>
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            <?= __('Edit Exercise') ?>
+                        </h2>
+
+                    </div>
+                    <div class="body">
+                        <!--                            <form id="form_validation" method="POST">-->
+                        <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']);  ?>
+                        <?= $this->Form->create($exercise, ['id' => 'editexercise', 'templates' => ['inputContainer' => '{{content}}']]) ?>
+
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?= $this->Form->control('body_id', ['class' => 'form-control', 'type' => 'select','empty'=>'Select Body','options' => $bodies]) ?> 
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?= $this->Form->control('name', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                <label class="form-label">Exercise Name</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?= $this->Form->control('description', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                <label class="form-label">Description</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?= $this->Form->input('status', ['empty' => __('Select status'), 'options' => $status, 'class' => 'form-control']); ?>
+                            </div>
+                        </div>
+                        <?= $this->Form->button('Add exercise', ['class' => 'btn btn-primary waves-effect']) ?>
+                        <?= $this->Form->end() ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>

@@ -38,7 +38,6 @@ class BodiesController extends AppController
         
         
         $name = '';
-        $email = '';
         $norec = 10;
         $status = '';
         $search = [];
@@ -46,29 +45,22 @@ class BodiesController extends AppController
             $name = $this->request->query['name'];
             $search['Bodies.name REGEXP'] = $name;
         }
-        
-       
-
         if (isset($this->request->query['status']) && trim($this->request->query['status']) != "") {
             $status = $this->request->query['status'];
             $search['Bodies.status'] = $status;
         }
-
         if (isset($this->request->query['norec']) && trim($this->request->query['norec']) != "") {
             $norec = $this->request->query['norec'];
         }
-        
          if (isset($search)) {
-
             $count = $this->Bodies->find('all')
                     ->where([$search]);
         } else {
             $count = $this->Bodies->find('all');
         }
-
         $count = $count->where(['Bodies.status !=' => '2']);
 
-     $this->paginate = ['limit' => $norec, 'order' => ['Bodies.id' => 'DESC']];
+        $this->paginate = ['limit' => $norec, 'order' => ['Bodies.id' => 'DESC']];
 
         $bodies = $this->paginate($count)->toArray();
         
@@ -182,22 +174,22 @@ class BodiesController extends AppController
         $status = $this->request->params['pass'][1];
         $user = $this->Bodies->get($id);
         if ($status == 1) {
-            $user_data['active'] = 0;
+            $user_data['status'] = 0;
             $user_data['id'] = $id;
             $user = $this->Bodies->patchEntity($user, $user_data);
             if ($this->Bodies->save($user)) {
-                $st = $user_data['active'] ? '<span class="label label-success">' . __('Active') . '</span>' : '<span class="label label-danger">' . __('Inactive') . '</span>';
+                $st = $user_data['status'] ? '<span class="label label-success">' . __('Active') . '</span>' : '<span class="label label-danger">' . __('Inactive') . '</span>';
                 // echo "<a href= '#' onclick = 'updateStatus(" . $id . "," . $user_data['status'] . ")'> " . $st . " </a>";
-                echo '<button id=' . $id . ' class="btn btn-primary waves-effect status" value=' . $user_data['active'] . ' onclick="updateStatus(this.id,' . $user_data['active'] . ')" type="submit">Inactive</button>';
+                echo '<button id=' . $id . ' class="btn btn-primary waves-effect status" value=' . $user_data['status'] . ' onclick="updateStatus(this.id,' . $user_data['status'] . ')" type="submit">Inactive</button>';
                 exit;
             }
         } else {
-            $user_data['active'] = 1;
+            $user_data['status'] = 1;
             $user_data['id'] = $id;
             $user = $this->Bodies->patchEntity($user, $user_data);
             if ($this->Bodies->save($user)) {
-                $st = $user_data['active'] ? '<span class="label label-success">' . __('Active') . '</span>' : '<span class="label label-danger">' . __('Inactive') . '</span>';
-                echo '<button id=' . $id . ' class="btn btn-success waves-effect status" value=' . $user_data['active'] . ' onclick="updateStatus(this.id,' . $user_data['active'] . ')" type="submit">Active</button>';
+                $st = $user_data['status'] ? '<span class="label label-success">' . __('Active') . '</span>' : '<span class="label label-danger">' . __('Inactive') . '</span>';
+                echo '<button id=' . $id . ' class="btn btn-success waves-effect status" value=' . $user_data['status'] . ' onclick="updateStatus(this.id,' . $user_data['status'] . ')" type="submit">Active</button>';
                 exit;
             }
         }

@@ -24,7 +24,7 @@ $user_type = $this->Common->getType();
                     <div class="body">
                         <!--                            <form id="form_validation" method="POST">-->
                         <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']); ?>
-                        <?= $this->Form->create($user, ['id' => 'form_validation','templates' => ['inputContainer' => '{{content}}']]) ?>
+                        <?= $this->Form->create($user, ['id' => 'editusers','templates' => ['inputContainer' => '{{content}}']]) ?>
       
                         <div class="form-group form-float">
                             <div class="form-line">
@@ -44,7 +44,7 @@ $user_type = $this->Common->getType();
                         
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('email', ['class' => 'form-control', 'label' => false]) ?> 
+                                <?= $this->Form->control('email', ['class' => 'form-control', 'label' => false ,'readonly']) ?> 
                                 <label class="form-label">Email</label>
                             </div>
                         </div>
