@@ -1,33 +1,55 @@
 <?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Body $body
- */
+$status = $this->Common->getstatus();
+
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $body->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $body->id)]
-            )
-        ?></li>
-        <li><?= $this->Html->link(__('List Bodies'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Exercise'), ['controller' => 'Exercise', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Exercise'), ['controller' => 'Exercise', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
-<div class="bodies form large-9 medium-8 columns content">
-    <?= $this->Form->create($body) ?>
-    <fieldset>
-        <legend><?= __('Edit Body') ?></legend>
-        <?php
-            echo $this->Form->control('name');
-            echo $this->Form->control('description');
-            echo $this->Form->control('status');
-        ?>
-    </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
-    <?= $this->Form->end() ?>
-</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+
+        </div>
+        <!-- Basic Validation -->
+        <div class="row clearfix">
+            
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                 <?= $this->Flash->render() ?>
+                <div class="card">
+                   <div class="header">
+                            <h2>
+                               <?= __('Edit User') ?>
+                            </h2>
+                            
+                        </div>
+                    <div class="body">
+                        <!--                            <form id="form_validation" method="POST">-->
+                        <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']); ?>
+                        <?= $this->Form->create($body, ['id' => 'addbody','templates' => ['inputContainer' => '{{content}}']]) ?>
+      
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?= $this->Form->control('name', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                <label class="form-label">Name</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?= $this->Form->control('description', ['class' => 'form-control', 'type' => 'textarea', 'label' => false]) ?> 
+                                <label class="form-label">Description</label>
+                            </div>
+                        </div>
+ 
+                         <div class="form-group form-float">
+                            <div class="form-line">
+                        <?= $this->Form->input('status', ['empty' => __('Select status'), 'options' => $status, 'class' => 'form-control']); ?>
+                         
+                    </div>
+                        </div>
+                        <?= $this->Form->button('Edit Body', ['class' => 'btn btn-primary waves-effect']) ?>
+
+                        <?= $this->Form->end() ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>

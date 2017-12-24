@@ -35,9 +35,45 @@ class BodiesController extends AppController
              if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-        $bodies = $this->paginate($this->Bodies);
+        
+        
+        $name = '';
+        $email = '';
+        $norec = 10;
+        $status = '';
+        $search = [];
+        if (isset($this->request->query['name']) && trim($this->request->query['name']) != "") {
+            $name = $this->request->query['name'];
+            $search['Bodies.name REGEXP'] = $name;
+        }
+        
+       
 
-        $this->set(compact('bodies'));
+        if (isset($this->request->query['status']) && trim($this->request->query['status']) != "") {
+            $status = $this->request->query['status'];
+            $search['Bodies.status'] = $status;
+        }
+
+        if (isset($this->request->query['norec']) && trim($this->request->query['norec']) != "") {
+            $norec = $this->request->query['norec'];
+        }
+        
+         if (isset($search)) {
+
+            $count = $this->Bodies->find('all')
+                    ->where([$search]);
+        } else {
+            $count = $this->Bodies->find('all');
+        }
+
+        $count = $count->where(['Bodies.status !=' => '2']);
+
+     $this->paginate = ['limit' => $norec, 'order' => ['Bodies.id' => 'DESC']];
+
+        $bodies = $this->paginate($count)->toArray();
+        
+
+        $this->set(compact('bodies','name', 'status', 'norec'));
         $this->set('_serialize', ['bodies']);
     }
 
@@ -54,9 +90,7 @@ class BodiesController extends AppController
              if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-        $body = $this->Bodies->get($id, [
-            'contain' => ['Exercise']
-        ]);
+        $body = $this->Bodies->get($id);
 
         $this->set('body', $body);
         $this->set('_serialize', ['body']);
@@ -136,6 +170,37 @@ class BodiesController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+    
+    
+    
+      public function status() {
+                       if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        $id = $this->request->params['pass'][0];
+        $status = $this->request->params['pass'][1];
+        $user = $this->Bodies->get($id);
+        if ($status == 1) {
+            $user_data['active'] = 0;
+            $user_data['id'] = $id;
+            $user = $this->Bodies->patchEntity($user, $user_data);
+            if ($this->Bodies->save($user)) {
+                $st = $user_data['active'] ? '<span class="label label-success">' . __('Active') . '</span>' : '<span class="label label-danger">' . __('Inactive') . '</span>';
+                // echo "<a href= '#' onclick = 'updateStatus(" . $id . "," . $user_data['status'] . ")'> " . $st . " </a>";
+                echo '<button id=' . $id . ' class="btn btn-primary waves-effect status" value=' . $user_data['active'] . ' onclick="updateStatus(this.id,' . $user_data['active'] . ')" type="submit">Inactive</button>';
+                exit;
+            }
+        } else {
+            $user_data['active'] = 1;
+            $user_data['id'] = $id;
+            $user = $this->Bodies->patchEntity($user, $user_data);
+            if ($this->Bodies->save($user)) {
+                $st = $user_data['active'] ? '<span class="label label-success">' . __('Active') . '</span>' : '<span class="label label-danger">' . __('Inactive') . '</span>';
+                echo '<button id=' . $id . ' class="btn btn-success waves-effect status" value=' . $user_data['active'] . ' onclick="updateStatus(this.id,' . $user_data['active'] . ')" type="submit">Active</button>';
+                exit;
+            }
+        }
     }
     
      public function beforeRender(\Cake\Event\Event $event) {
