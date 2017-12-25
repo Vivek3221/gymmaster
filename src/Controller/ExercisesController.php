@@ -69,8 +69,8 @@ class ExercisesController extends AppController
             'order' => ['Exercises.id' => 'DESC'],
             'contain' => ['Bodies']
         ];
-        $exercises = $this->paginate($count);
-         $bodies = $this->Exercises->Bodies->find('list', ['limit' => 200]);
+         $exercises = $this->paginate($count);
+         $bodies = $this->Exercises->Bodies->find('list', ['limit' => 200])->where(['Bodies.status' => '1']);
 
         $this->set(compact('exercises','name','status','norec','bodies','bodie'));
         $this->set('_serialize', ['exercises']);
@@ -116,7 +116,8 @@ class ExercisesController extends AppController
             }
             $this->Flash->error(__('The exercise could not be saved. Please, try again.'));
         }
-        $bodies = $this->Exercises->Bodies->find('list', ['limit' => 200]);
+        $bodies = $this->Exercises->Bodies->find('list', ['limit' => 200])->where(['Bodies.status' => '1']);
+
         $this->set(compact('exercise', 'bodies'));
         $this->set('_serialize', ['exercise']);
     }
