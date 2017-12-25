@@ -36,6 +36,7 @@ class ExercisesController extends AppController
             return $this->redirect('/');
         }
         $name = '';
+        $bodie ='';
         $norec = 10;
         $status = '';
         $search = [];
@@ -46,6 +47,10 @@ class ExercisesController extends AppController
         if (isset($this->request->query['status']) && trim($this->request->query['status']) != "") {
             $status = $this->request->query['status'];
             $search['Exercises.status'] = $status;
+        }
+        if (isset($this->request->query['body_id']) && trim($this->request->query['body_id']) != "") {
+            $bodie = $this->request->query['body_id'];
+            $search['Exercises.body_id'] = $bodie;
         }
         if (isset($this->request->query['norec']) && trim($this->request->query['norec']) != "") {
             $norec = $this->request->query['norec'];
@@ -65,8 +70,9 @@ class ExercisesController extends AppController
             'contain' => ['Bodies']
         ];
         $exercises = $this->paginate($count);
+         $bodies = $this->Exercises->Bodies->find('list', ['limit' => 200]);
 
-        $this->set(compact('exercises','name','status','norec'));
+        $this->set(compact('exercises','name','status','norec','bodies','bodie'));
         $this->set('_serialize', ['exercises']);
     }
 

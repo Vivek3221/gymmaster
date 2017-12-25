@@ -22,6 +22,9 @@ $nofrec = $this->Common->getNoOfRec();
                             <div class="col-md-3">
                                 <?php echo $this->Form->input('name', ['label' => __('Name'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Exercise Name'), 'value' => $name]); ?>
                             </div>
+                             <div class="col-md-2">
+                                <?= $this->Form->input('body_id', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'), 'options' => $bodies, 'value' => $bodie]); ?>
+                            </div>
                             <div class="col-md-2">
                                 <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'), 'options' => $nofrec, 'value' => $norec]); ?>
                             </div>
