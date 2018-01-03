@@ -15,7 +15,7 @@ $user_type = $this->Common->getType();
                 <div class="card">
                    <div class="header">
                             <h2>
-                               <?= __('Add User') ?>
+                               <?= __('Enquery Form') ?>
                             </h2>
                             
                         </div>
@@ -43,12 +43,12 @@ $user_type = $this->Common->getType();
                                 <label class="form-label">Email</label>
                             </div>
                         </div>
-<!--                        <div class="form-group form-float">
+                        <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('location', ['class' => 'form-control', 'label' => false]) ?> 
-                                <label class="form-label">Location</label>
+                                <label class="form-label">Address</label>
                             </div>
-                        </div>-->
+                        </div>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('mobile_no', ['class' => 'form-control','type'=>'text', 'label' => false]) ?> 
@@ -57,22 +57,28 @@ $user_type = $this->Common->getType();
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('password', ['class' => 'form-control', 'label' => false,'id'=> 'npassword']) ?> 
-                                <label class="form-label">Password</label>
+                                <?= $this->Form->control('emerg_no', ['class' => 'form-control','type'=>'text', 'label' => false]) ?> 
+                                <label class="form-label">Emergency No.</label>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('cpassword', ['type' => 'password', 'class' => 'form-control', 'label' => false]) ?> 
-                                <label class="form-label">Confirm Password</label>
+                               <input name="gender" type="radio" value="1" checked id="radio_4" class="with-gap">
+                                                <label for="radio_4"><?= __('Male') ?></label>
+                                                <input name="genderu" type="radio" value="2" id="radio_5" class="with-gap">
+                                                <label for="radio_5"><?= __('Female') ?></label>
+                                
                             </div>
                         </div>
-                         <div class="form-group form-float">
-                            <div class="form-line">
-                        <?= $this->Form->input('active', ['empty' => __('Select status'), 'options' => $status, 'class' => 'form-control']); ?>
-                         
-                    </div>
-                        </div>
+                       <div class="form-group form-float">
+                                    <div class="form-line">
+
+                                        <?= $this->Form->control('dob', ['class' => 'form-control datetimepicker', 'type' => 'text', 'placeholder' => 'DOB', 'label' => FALSE ,'required', 'format'=>'YYYY-MM-DD']) ?>          
+
+                                    </div>
+                                </div> 
+                        
+                        
                         <?= $this->Form->button('Add User', ['class' => 'btn btn-primary waves-effect']) ?>
 
                         <?= $this->Form->end() ?>
@@ -83,3 +89,11 @@ $user_type = $this->Common->getType();
 
     </div>
 </section>
+
+  <script type="text/javascript">
+       $(document).ready(function () {
+     $('.datetimepicker').bootstrapMaterialDatePicker({format: 'YYYY-MM-DD HH:mm', lang: 'fr', weekStart: 1, cancelText: 'Cancel',maxDate : new Date()});
+     $('').bootstrapMaterialDatePicker({ format : 'DD/MM/YYYY HH:mm', minDate : new Date() });
+     });
+      
+      </script>

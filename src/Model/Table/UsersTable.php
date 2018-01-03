@@ -73,11 +73,11 @@ class UsersTable extends Table
             ->notEmpty('email')
             ->add('email', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
-        $validator
-            ->scalar('password')
-            ->maxLength('password', 100)
-            ->requirePresence('password', 'create')
-            ->notEmpty('password');
+//        $validator
+//            ->scalar('password')
+//            ->maxLength('password', 100)
+//            ->requirePresence('password', 'create')
+//            ->notEmpty('password');
 
         $validator
             ->allowEmpty('email_verified');
@@ -111,16 +111,16 @@ class UsersTable extends Table
             ->requirePresence('mobile_no', 'create')
             ->notEmpty('mobile_no');
 
-        $validator
-            ->requirePresence('active', 'create')
-            ->notEmpty('active');
+//        $validator
+//            ->requirePresence('active', 'create')
+//            ->notEmpty('active');
 
         $validator
             ->allowEmpty('verified');
 
-        $validator
-            ->date('dob')
-            ->allowEmpty('dob');
+//        $validator
+//            ->date('dob')
+//            ->allowEmpty('dob');
 
         return $validator;
     }

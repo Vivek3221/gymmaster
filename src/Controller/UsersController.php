@@ -31,7 +31,7 @@ class UsersController extends AppController
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
        // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout']);
+        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment']);
         
     }
 
@@ -134,34 +134,29 @@ class UsersController extends AppController
             
             $data = $this->request->data;
            
+           // pr($data); 
             $t = time();
             $name = $data['name'] . $t;
+            
 
             $data['username'] = $this->slugify($name);
             $data['guestid'] = '11';
             $data['verified'] = '1';
 //             pr($data);exit;
-            if($data['password'] != $data['cpassword'])
-            {
-                $this->Flash->error(__('Password Not Match .'));
-              return $this->redirect(['action' => 'add']);
-            }
-            
-            $data['password'] = md5($data['cpassword']);
-            
+           
             $user = $this->Users->patchEntity($user, $data);
-            if ($this->Users->save($user)) {
-                
-           $userDataArr['Password']  = $data['cpassword'];
+            $useradd =$this->Users->save($user);
+            if ($useradd) {
+            
            $userDataArr['name']      = $data['name'];
            $userDataArr['email']     = $data['email'];
             $toEmail                 = $data['email'];
-            $subject                 = 'Registration Successful | Gym-Admin';
+            $subject                 = 'Inquery Successful | Gym-Admin';
             $email                   = new Email();
             $email->transport('default');
             try {
                 $email->emailFormat('html');
-                $email->template('userpass')
+                $email->template('inquery')
                         ->from(['noreply@gymadmin.com' => 'Gym-Admin'])
                         ->to($toEmail)
                         ->subject($subject)
@@ -171,13 +166,25 @@ class UsersController extends AppController
 
             }$this->Flash->success(__('The user has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'payment',$useradd->id]);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);
     }
+    
+    
+     public function payment($id ='')
+    {
+     if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+     return $this->redirect('/');
+   }
+        $user_id = $id;
+        $this->set(compact('user_id'));
+        $this->set('_serialize', ['user_id']);
+    }
+    
 
     /**
      * Edit method
