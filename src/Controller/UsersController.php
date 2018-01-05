@@ -186,8 +186,8 @@ class UsersController extends AppController
               if ($this->request->is(['patch', 'post', 'put'])) {
                   
                $data = $this->request->data;
-               $data['payment']= '5555';
-               //pr($data);
+               //$data['payment']= '';
+              // pr($data);
                
               $user = $this->Users->patchEntity($user, $data);
               
@@ -195,7 +195,7 @@ class UsersController extends AppController
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'view',$id]);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
                

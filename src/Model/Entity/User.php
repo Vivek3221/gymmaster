@@ -38,23 +38,8 @@ class User extends Entity
      * @var array
      */
     protected $_accessible = [
-        'guestid' => true,
-        'user_type' => true,
-        'username' => true,
-        'email' => true,
-        'password' => true,
-        'email_verified' => true,
-        'name' => true,
-        'contact_person' => true,
-        'photo' => true,
-        'gender' => true,
-        'aboutme' => true,
-        'mobile_no' => true,
-        'active' => true,
-        'verified' => true,
-        'dob' => true,
-        'created' => true,
-        'modified' => true
+        '*'=>true,
+        'id'=> false
     ];
 
     /**
