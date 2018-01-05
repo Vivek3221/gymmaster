@@ -80,7 +80,7 @@ class UsersController extends AppController
             $count = $this->Users->find('all');
         }
 
-        $count = $count->where(['Users.active !=' => '2']);
+        $count = $count->where(['Users.active !=' => '3']);
 
 
 
@@ -142,6 +142,7 @@ class UsersController extends AppController
             $data['username'] = $this->slugify($name);
             $data['guestid'] = '11';
             $data['verified'] = '1';
+            $data['active'] = '2';
 //             pr($data);exit;
            
             $user = $this->Users->patchEntity($user, $data);

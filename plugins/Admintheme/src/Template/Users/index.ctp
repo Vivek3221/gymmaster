@@ -99,26 +99,28 @@ $nofrec = $this->Common->getNoOfRec();
                                             </td>
                                         
                                         
-                                        
+                                        <?php if ($user->active  != '2'){ ?>
                                         <td id='status<?= $user->id ?>'>
                                             <?php
                                             if(isset($user->active)  && $user->active == '1'){
                                             ?>
-
   <?= $this->Form->button('Active',['class'=>'btn btn-success waves-effect','id'=>$user->id,'value'=>$user->active,'onclick'=>'updateStatus(this.id,'.$user->active.')' ]) ?>
                                             <?php
                                             } else {
                                                 ?>
    <?= $this->Form->button('Inactive',['class'=>'btn btn-primary waves-effect','id'=>$user->id,'value'=>$user->active,'onclick'=>'updateStatus(this.id,'.$user->active.')' ]) ?>
-                                                <?php
-                                            }
-                                            ?>
-                                            </td>
-                                        
+                                        <?php }?>
+                                        </td><?php } else { ?>
+            <td><?= $this->Form->button('Enquiry',['class'=>'btn btn-primary waves-effect non-click','id'=>$user->id,'value'=>$user->active ]) ?>
+                                        </td>  <?php } ?>
                                         <td><i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $user['id']]) ?></i>
-                                       <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $user['id']]) ?></i></td>
-                                    </tr>
+                                       <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $user['id']]) ?></i>
+                                    <?php if (empty($user->payment)){?>
+                                        <i class="material-icons"><?= $this->Html->link(__('find_in_page'), ['action' => 'payment', $user['id']]) ?></i>
                                     <?php } ?>
+                                     </td>
+                                    </tr>
+                                    <?php } ?> 
                                 </tbody>
                             </table>
                                   <div class="paginator">

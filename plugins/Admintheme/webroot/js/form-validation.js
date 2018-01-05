@@ -72,9 +72,15 @@ $(document).ready(function () {
             user_type: {
                 required: true
             },
+            location: {
+                required: true
+            },
             name: {
                 required: true,
                regex: /^[a-zA-Z ]{3,50}$/
+            },
+            dob: {
+                required: true
             },
             
             email: {
@@ -86,6 +92,92 @@ $(document).ready(function () {
             mobile_no: {
                 required: true,
                // isValidCmobileNo: true,
+                regex: /^$|^[0-9]{10,15}$/
+            },
+             emerg_no: {
+                regex: /^$|^[0-9]{5,15}$/
+            }
+        },
+        messages: {
+            user_type: {
+                required: 'Select user type'
+            },
+            location: {
+                required: 'Enter location'
+            },
+            name: {
+                required: 'Enter name',
+                regex: 'Enter valid  name'
+            },
+            dob: {
+                required: 'Enter DOB'
+            },
+           
+            email: {
+                required: 'Enter email Id',
+                regex: 'Enter valid email Id'
+            },
+            mobile_no: {
+                required:'Enter mobile number',
+               // isValidUmobileNo:'Enter valid mobile number',
+               regex: 'Enter valid mobile No.'
+            },
+            emerg_no: {
+                regex: 'Enter valid mobile No.'
+            }
+        }
+    });
+     $("#payment").validate({
+        ignore: ":hidden",
+        errorElement: 'span',
+        errorClass: 'help-inline',
+        
+        highlight: function (element) {
+            $(element).parent().addClass("error");
+        },
+        unhighlight: function (element) {
+            $(element).parent().removeClass("error");
+        },
+        rules: {
+
+            user_type: {
+                required: true
+            },
+            mode_ofpay: {
+                required: true
+            },
+            course_duration: {
+                required: true
+            },
+            active: {
+                required: true
+            },
+            location: {
+                required: true
+            },
+            name: {
+                required: true,
+               regex: /^[a-zA-Z ]{3,50}$/
+            },
+            dob: {
+                required: true
+            },
+            payment: {
+                required: true
+            },
+            
+            email: {
+                required: true,
+               regex: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$|^[0-9]{5,15}$/
+                },
+            
+            
+            mobile_no: {
+                required: true,
+               // isValidCmobileNo: true,
+                regex: /^$|^[0-9]{10,15}$/
+            },
+             emerg_no: {
                 regex: /^$|^[0-9]{5,15}$/
             },
             password: {
@@ -100,29 +192,49 @@ $(document).ready(function () {
         },
         messages: {
             user_type: {
-                required: 'Select User type'
+                required: 'Select user type'
+            },
+            mode_ofpay: {
+                required: 'Select mode of payment'
+            },
+            course_duration: {
+                required: 'Select course of duration'
+            },
+            active: {
+                required: 'Select status'
+            },
+            location: {
+                required: 'Enter location'
             },
             name: {
-                required: 'Enter User Name',
+                required: 'Enter name',
                 regex: 'Enter valid  name'
+            },
+            dob: {
+                required: 'Enter DOB'
+            },
+            payment: {
+                required: 'Enter payment'
             },
            
             email: {
-                required: 'Enter Email Id',
-                regex: 'Enter valid Email Id'
+                required: 'Enter email Id',
+                regex: 'Enter valid email Id'
             },
             mobile_no: {
-                required:'Enter Mobile number',
+                required:'Enter mobile number',
                // isValidUmobileNo:'Enter valid mobile number',
                regex: 'Enter valid mobile No.'
             },
-           
+            emerg_no: {
+                regex: 'Enter Valid mobile No.'
+            },
             password: {
-                required: 'Enter Password',
+                required: 'Enter password',
                 regex: 'Enter password 6-16 alphanumeric & one special character.'
             },
             cpassword: {
-                required: 'Enter Confirm Password',
+                required: 'Enter confirm password',
                 equalTo: 'Passwor & confirm password does not match'
             }
         }

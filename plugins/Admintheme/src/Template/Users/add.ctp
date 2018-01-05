@@ -27,7 +27,7 @@ $user_type = $this->Common->getType();
                         <div class="form-group form-float">
                             <div class="form-line">
 <!--                                        <input type="text" class="form-control" name="name" required>-->
-                                <?= $this->Form->control('user_type', ['class' => 'form-control', 'type' => 'select','options'=>$user_type]) ?>          
+                                <?= $this->Form->control('user_type', ['class' => 'form-control', 'type' => 'select', 'empty'=>__('Select Type'),'options'=>$user_type]) ?>          
                                 
                             </div>
                         </div>
