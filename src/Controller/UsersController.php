@@ -180,9 +180,36 @@ class UsersController extends AppController
      if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
      return $this->redirect('/');
    }
+              $user = $this->Users->get($id, [
+            'contain' => []
+        ]);
+              if ($this->request->is(['patch', 'post', 'put'])) {
+                  
+               $data = $this->request->data;
+               $data['payment']= '5555';
+               //pr($data);
+               
+              $user = $this->Users->patchEntity($user, $data);
+              
+              //pr($user); die;
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('The user has been saved.'));
+
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+               
+                  
+              }
+              
+              
+              
+              
+       
+   
         $user_id = $id;
-        $this->set(compact('user_id'));
-        $this->set('_serialize', ['user_id']);
+        $this->set(compact('user_id','user'));
+        $this->set('_serialize', ['user_id','user']);
     }
     
 

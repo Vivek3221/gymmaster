@@ -51,12 +51,12 @@ class CommonHelper extends Helper {
     public function getStatus() {
         return['1' => 'Active', '0' => 'Inactive'];
     }
-    public function getSubStatus() {
-        return['1' => 'Subscribed', '0' => 'Unsubscribed'];
+    public function getModPayment() {
+        return['0' => 'By Cash', '1' => 'By Check', '2' => 'By Online'];
     }
     
-     public function getVisibility() {
-        return['1' => 'Show', '0' => 'Hide'];
+     public function getPayDuration() {
+        return['0' => '1 Month', '1' => '3 month', '2' => '6 month'];
     }
     
      public function getLevel() {
