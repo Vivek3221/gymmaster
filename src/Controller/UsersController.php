@@ -194,10 +194,18 @@ class UsersController extends AppController
                }
                $data['password'] = md5($data['password']);
                
+                if (isset($this->request->data['images']['name']) && $data['images']['name'] != "") {
+                $flname = time() . str_replace(" ", "", $data['images']['name']);
+                $flpath = WWW_ROOT . "img/" . $flname;
+                if (move_uploaded_file($data['images']['tmp_name'], $flpath)) {
+                    $data['photo'] = $flname;
+                }
+            }
                
+               //pr($data); die;
               $user = $this->Users->patchEntity($user, $data);
               
-              //pr($user); die;
+             // pr($user); die;
               $useradd =$this->Users->save($user);
            if ($useradd) {
             
@@ -257,9 +265,15 @@ class UsersController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->data;
             $data['guestid'] = '11';
-          //  $data['location'] = $data['location'];
-           // pr($data);
             
+           if (isset($this->request->data['images']['name']) && $data['images']['name'] != "") {
+                $flname = time() . str_replace(" ", "", $data['images']['name']);
+                $flpath = WWW_ROOT . "img/" . $flname;
+                if (move_uploaded_file($data['images']['tmp_name'], $flpath)) {
+                    $data['photo'] = $flname;
+                }
+            }
+          //  pr($data); die;
             $user = $this->Users->patchEntity($user, $data);
         //   pr($user); die;
             if ($this->Users->save($user)) {

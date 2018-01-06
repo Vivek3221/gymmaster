@@ -31,7 +31,7 @@ $getPayDuration = $this->Common->getPayDuration();
                         <div class="" id="makepayment" hidden="">
                         <!--                            <form id="form_validation" method="POST">-->
                         <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']); ?>
-                        <?= $this->Form->create($user, ['id' => 'payment','templates' => ['inputContainer' => '{{content}}']]) ?>
+                        <?= $this->Form->create($user, ['enctype' => 'multipart/form-data','id' => 'payment','templates' => ['inputContainer' => '{{content}}']]) ?>
       
                         <div class="form-group form-float">
                             <div class="form-line">
@@ -92,6 +92,11 @@ $getPayDuration = $this->Common->getPayDuration();
                                 <label class="form-label">Confirm Password</label>
                             </div>
                         </div>
+                         <div class="form-group form-floa">
+                                                <div class="form-line image">
+                                                    <?= $this->Form->control('images', ['label' => 'Cover Image', 'class' => 'form-control', 'type' => 'file', 'onchange' => "ImageFilesize();"]) ?>            
+                                                </div>
+                                            </div>
                         <div class="form-group">
                             <div class="form-line">
                                 <?= $this->Form->input('active', ['options' => $status, 'class' => 'form-control', 'empty' => __('Select Status')]); ?>
@@ -118,6 +123,34 @@ $getPayDuration = $this->Common->getPayDuration();
 </section>
 
 <script type="text/javascript">
+    
+    function ImageFilesize() {
+      
+        var Extension = '';
+        if (window.ActiveXObject) {
+            var fso = new ActiveXObject("Scripting.FileSystemObject");
+            var filepath = document.getElementById('images').value;
+            var thefile = fso.getFile(filepath);
+            var sizeinbytes = thefile.size;
+        } else {
+            var filepath = document.getElementById('images').value;
+            var Extension = filepath.substring(filepath.lastIndexOf('.') + 1).toLowerCase();
+            var sizeinbytes = document.getElementById('images').files[0].size;
+        }
+        var size = sizeinbytes / 1024 / 1024;
+        if (Extension == "gif" || Extension == "png" || Extension == "bmp" || Extension == "jpeg" || Extension == "jpg") {
+            if (size <= 2) {
+            } else {
+                alert('Allowed maximum image sizes is 2MB.');
+                document.getElementById('images').value = '';
+            }
+        } else {
+            alert('Allowed only .gif,.png,.bmp,.jpg,.jpeg image files.');
+            document.getElementById('images').value = '';
+        }
+
+    }
+    
     
    function makePayment()
     {

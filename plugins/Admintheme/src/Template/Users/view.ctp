@@ -16,7 +16,7 @@ $getPayDuration = $this->Common->getPayDuration();
               
                         </div>
                         <div class="body">
-                            <div class="contacts view large-9 medium-8 columns content">
+                            <div class="contacts view large-6 medium-8 columns content">
                             <h3><?= h($user->first_name) ?></h3>
                             <table class="vertical-table">
                                 <tr>
@@ -82,6 +82,22 @@ $getPayDuration = $this->Common->getPayDuration();
                             </table>
                             
                         </div>
+                               <div class="news-img">
+                                 <?php if(!empty($user->photo)) {    
+                                                $cover = '/img/' .$user->photo;
+                        if (strpos($user->photo, 'http') !== false) {
+                        $cover = $user->photo;
+                        }
+                                                ?>
+                                <?= $this->Html->image($cover, ['alt' => 'related-news', 'accept' => 'image/*']); ?>
+                          
+                                 <?php }?>
+                                
+                             
+                                
+                                
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
