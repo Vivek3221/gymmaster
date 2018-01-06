@@ -1,3 +1,8 @@
+<?php
+$getModPayment = $this->Common->getModPayment();
+$getPayDuration = $this->Common->getPayDuration();
+?>
+
 <section class="content">
         <div class="container-fluid">
             <!-- Basic Examples -->
@@ -39,10 +44,7 @@
                                     <th scope="row"><?= __('Contact No.') ?></th>
                                     <td><?php echo h($user['mobile_no']);?></td>
                                 </tr>
-<!--                                <tr>
-                                    <th scope="row"><?= __('Location') ?></th>
-                                    <td><?php echo h($user['user_detail']['location']);?></td>
-                                </tr>-->
+
                                 <tr>
                                     <th scope="row"><?= __('Status') ?></th>
                                     <td><?php echo ($user['active']) ? __('Active') : __('Inactive');?></td>
@@ -51,20 +53,32 @@
                                     <th scope="row"><?= __('Verified') ?></th>
                                     <td><?php echo ($user['verified']) ? __('Yes') : __('No');?></td>
                                 </tr>
-<!--                                <tr>
-                                    <th scope="row"><?= __('Ip Address') ?></th>
-                                    <td><?php echo $user['ip_address'];?></td>
-                                </tr>-->
+
 
                                 <tr>
                                     <th scope="row"><?= __('Joined') ?></th>
                                      <?php $birthdate = ($user['created']->format('d-M-Y')); ?>
                                     <td><?php if(!empty($user['created'])) { echo $birthdate; } ?></td>
                                 </tr>
-<!--                                <tr>
-                                    <th scope="row"><?= __('Created By') ?></th>
-                                    <td><?php echo ($user['created_by']) ? $user['created_by'] : '';?></td>
-                                </tr>-->
+                                  <?php if(!empty($user->payment)) {    ?>
+                                <tr>
+                                    <th scope="row"><?= __('Payment') ?></th>
+                                    <td><?= $user->payment ?></td>
+                                </tr>
+                                 <?php } ?>
+                                  <?php if(!empty($user->mode_ofpay)) {    ?>
+                                <tr>
+                                    <th scope="row"><?= __('Mode ofpay') ?></th>
+                                    <td><?= $getModPayment[$user->mode_ofpay] ?></td>
+                                </tr>
+                                 <?php } ?>
+                                  <?php if(!empty($user->course_duration)) {    ?>
+                                <tr>
+                                    <th scope="row"><?= __('Course duration') ?></th>
+                                    <td><?= $getPayDuration[$user->course_duration] ?></td>
+                                </tr>
+                                 <?php } ?>
+
                             </table>
                             
                         </div>

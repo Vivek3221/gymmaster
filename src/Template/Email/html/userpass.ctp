@@ -27,13 +27,13 @@
                             </p>
 
                             <p>
-                               <?= __('Password') ?> <strong><?= $Password ?></strong>
+                               <?= __('Password') ?> <strong><?= $password ?></strong>
                             </p>
                            
                             
                             <p style="line-height:25px;"><?= __('Congratulations! You have successfully registered as User') ?> </p>
                             <p align="center" style="margin-top:20px;">
-                            <a href="http://new.nimbuzz.com/in/login-user" target="_blank" style="width: 100%; height:50px; background-color:#da2128; color:#fff; font-weight: normal; font-size: 14px; border: 0px; text-decoration: none; padding: 10px;">Click here to login</a>
+                            <a href="<?= $login_url ?>" target="_blank" style="width: 100%; height:50px; background-color:#da2128; color:#fff; font-weight: normal; font-size: 14px; border: 0px; text-decoration: none; padding: 10px;">Click here to login</a>
                             </p>
                             <p style="line-height:25px;"><?= __('For any query, complaint or Suggestion, Just shoot us an email! We’re always here to help you.') ?></p>
                             <p style="line-height:25px;">

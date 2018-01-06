@@ -184,19 +184,44 @@ class UsersController extends AppController
               $user = $this->Users->get($id, [
             'contain' => []
         ]);
+             
               if ($this->request->is(['patch', 'post', 'put'])) {
                   
                $data = $this->request->data;
-               //$data['payment']= '';
-              // pr($data);
+               if($data['password'] != $data['cpassword'])
+               {
+                  return $this->redirect(['action' => 'payment',$id]); 
+               }
+               $data['password'] = md5($data['password']);
+               
                
               $user = $this->Users->patchEntity($user, $data);
               
               //pr($user); die;
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
+              $useradd =$this->Users->save($user);
+           if ($useradd) {
+            
+           $userDataArr['name']      = $data['name'];
+           $userDataArr['password']  = $data['cpassword'];
+           $userDataArr['email']     = $data['email'];
+           $userDataArr['login_url'] = Router::url('/',['controller' => 'Users', 'action' => 'login']);
+            $toEmail                 = $data['email'];
+            $subject                 = 'Inquery Successful | Gym-Admin';
+            $email                   = new Email();
+            $email->transport('default');
+            try {
+                $email->emailFormat('html');
+                $email->template('userpass')
+                        ->from(['noreply@gymadmin.com' => 'Gym-Admin'])
+                        ->to($toEmail)
+                        ->subject($subject)
+                        ->viewVars($userDataArr)
+                        ->send();
+            } catch (Exception $e) {
 
-                return $this->redirect(['action' => 'view',$id]);
+            }$this->Flash->success(__('The user has been saved.'));
+
+                return $this->redirect(['action' => 'view',$useradd->id]);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
                
