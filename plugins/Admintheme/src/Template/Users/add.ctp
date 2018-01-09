@@ -63,10 +63,9 @@ $user_type = $this->Common->getType();
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                               <input name="gender" type="radio" value="1" checked id="radio_4" class="with-gap">
-                                                <label for="radio_4"><?= __('Male') ?></label>
-                                                <input name="genderu" type="radio" value="2" id="radio_5" class="with-gap">
-                                                <label for="radio_5"><?= __('Female') ?></label>
+                               <input type="radio" name="gender" id="a"  value="1"class="indual with-gap" > <label for="a"><?= __('Male') ?></label>
+                               <input type="radio" name="gender" id="b" value="2" class="company with-gap"> <label for="b"><?= __('Female') ?></label>
+                                    
                                 
                             </div>
                         </div>
@@ -92,7 +91,7 @@ $user_type = $this->Common->getType();
 
   <script type="text/javascript">
        $(document).ready(function () {
-     $('.datetimepicker').bootstrapMaterialDatePicker({format: 'YYYY-MM-DD HH:mm', lang: 'fr', weekStart: 1, cancelText: 'Cancel',maxDate : new Date()});
+     $('.datetimepicker').bootstrapMaterialDatePicker({format: 'YYYY-MM-DD', lang: 'fr', weekStart: 1, cancelText: 'Cancel',maxDate : new Date(),time:'false'});
      $('').bootstrapMaterialDatePicker({ format : 'DD/MM/YYYY HH:mm', minDate : new Date() });
      });
       

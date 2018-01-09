@@ -101,7 +101,19 @@ $getPayDuration = $this->Common->getPayDuration();
                                 </div>
                         <?php } ?>
                         
-                        
+                            <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <?php
+                                        $dob1 = $user->dob;
+                                        //pr($dob1);
+                                    $dob  =   date_format($dob1,"y-m-d");
+                                    //pr($dob); 
+                                        ?>
+
+                                        <?= $this->Form->control('dob', ['class' => 'form-control datetimepicker', 'type' => 'text', 'placeholder' => 'DOB','value' => $dob, 'label' => FALSE ,'required']) ?>          
+
+                                    </div>
+                                </div> 
 
                          <div class="form-group form-float">
                             <div class="form-line">
@@ -120,6 +132,13 @@ $getPayDuration = $this->Common->getPayDuration();
     </div>
 </section>
 <script type="text/javascript">
+    
+     $(document).ready(function () {
+     $('.datetimepicker').bootstrapMaterialDatePicker({format: 'YYYY-MM-DD', lang: 'fr', weekStart: 1, cancelText: 'Cancel',maxDate : new Date(),time:'false'});
+     $('').bootstrapMaterialDatePicker({ format : 'DD/MM/YYYY HH:mm', minDate : new Date() });
+     });
+    
+    
     function ImageFilesize() {
       
         var Extension = '';
