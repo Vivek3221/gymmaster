@@ -2,6 +2,14 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
+use Cake\Network\Http\Client;
+use Cake\Mailer\Email;
+use Cake\Core\Plugin;
+use Cake\Filesystem\Folder;
+use Cake\Routing\Router;
+use Cake\Utility\Security;
 
 /**
  * FitnessMeserments Controller
@@ -18,15 +26,79 @@ class FitnessMesermentsController extends AppController
      *
      * @return \Cake\Http\Response|void
      */
+      public function initialize()
+    {
+
+        parent::initialize();
+        $this->loadComponent('Flash'); 
+    }
+    
+    public function beforeFilter(Event $event) {
+        parent::beforeFilter($event);
+       // $this->Users->userAuth = $this->UserAuth;
+        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment']);
+        
+    }
+    
+    
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['Users']
-        ];
-        $fitnessMeserments = $this->paginate($this->FitnessMeserments);
+        
+                     if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        
+        $name = '';
+        $email = '';
+        $norec = 10;
+        $status = '';
+        $search = [];
+        if (isset($this->request->query['name']) && trim($this->request->query['name']) != "") {
+            $name = $this->request->query['name'];
+            $search['Users.name REGEXP'] = $name;
+        }
+        
+         if (isset($this->request->query['email']) && trim($this->request->query['email']) != "") {
+            $email = $this->request->query['email'];
+            $search['Users.email REGEXP'] = $email;
+        }
 
-        $this->set(compact('fitnessMeserments'));
+        if (isset($this->request->query['status']) && trim($this->request->query['status']) != "") {
+            $status = $this->request->query['status'];
+            $search['Users.active'] = $status;
+        }
+
+        if (isset($this->request->query['norec']) && trim($this->request->query['norec']) != "") {
+            $norec = $this->request->query['norec'];
+        }
+        
+         if (isset($search)) {
+
+            $count = $this->FitnessMeserments->find('all')
+                    ->where([$search]);
+        } else {
+            $count = $this->FitnessMeserments->find('all');
+        }
+
+        //$count = $count->where(['Users.active !=' => '3']);
+
+
+
+
+        $this->paginate = ['limit' => $norec, 'order' => ['FitnessMeserments.id' => 'DESC'],'contain' => ['Users']];
+
+        $fitnessMeserments = $this->paginate($count)->toArray();
+
+        
+        
+        
+        
+       // $users = $this->paginate($this->Users);
+
+        $this->set(compact('fitnessMeserments', 'name', 'status', 'norec','email'));
         $this->set('_serialize', ['fitnessMeserments']);
+        
+        
     }
 
     /**
@@ -38,6 +110,9 @@ class FitnessMesermentsController extends AppController
      */
     public function view($id = null)
     {
+                     if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $fitnessMeserment = $this->FitnessMeserments->get($id, [
             'contain' => ['Users']
         ]);
@@ -53,9 +128,18 @@ class FitnessMesermentsController extends AppController
      */
     public function add()
     {
+        
+                     if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        
         $fitnessMeserment = $this->FitnessMeserments->newEntity();
         if ($this->request->is('post')) {
-            $fitnessMeserment = $this->FitnessMeserments->patchEntity($fitnessMeserment, $this->request->getData());
+             $data = $this->request->data;
+             $data['user_id'] = $this->usersdetail['users_id'];
+             
+            $fitnessMeserment = $this->FitnessMeserments->patchEntity($fitnessMeserment, $data);
+            //pr($fitnessMeserment); die;
             if ($this->FitnessMeserments->save($fitnessMeserment)) {
                 $this->Flash->success(__('The fitness meserment has been saved.'));
 
@@ -77,11 +161,18 @@ class FitnessMesermentsController extends AppController
      */
     public function edit($id = null)
     {
+                     if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        
         $fitnessMeserment = $this->FitnessMeserments->get($id, [
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $fitnessMeserment = $this->FitnessMeserments->patchEntity($fitnessMeserment, $this->request->getData());
+            $data = $this->request->data;
+            $data['user_id'] = $this->usersdetail['users_id'];
+            
+            $fitnessMeserment = $this->FitnessMeserments->patchEntity($fitnessMeserment, $data);
             if ($this->FitnessMeserments->save($fitnessMeserment)) {
                 $this->Flash->success(__('The fitness meserment has been saved.'));
 
@@ -103,6 +194,10 @@ class FitnessMesermentsController extends AppController
      */
     public function delete($id = null)
     {
+                     if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        
         $this->request->allowMethod(['post', 'delete']);
         $fitnessMeserment = $this->FitnessMeserments->get($id);
         if ($this->FitnessMeserments->delete($fitnessMeserment)) {
@@ -113,4 +208,10 @@ class FitnessMesermentsController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+    
+   public function beforeRender(\Cake\Event\Event $event) {
+        parent::beforeRender($event);
+        $this->viewBuilder()->theme('Admintheme');
+    } 
+    
 }
