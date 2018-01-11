@@ -129,11 +129,11 @@ class FitnessMesermentsTable extends Table
             ->requirePresence('calf', 'create')
             ->notEmpty('calf');
 
-        $validator
-            ->scalar('whr')
-            ->maxLength('whr', 50)
-            ->requirePresence('whr', 'create')
-            ->notEmpty('whr');
+//        $validator
+//            ->scalar('whr')
+//            ->maxLength('whr', 50)
+//            ->requirePresence('whr', 'create')
+//            ->notEmpty('whr');
 
         $validator
             ->scalar('fat')
@@ -141,23 +141,23 @@ class FitnessMesermentsTable extends Table
             ->requirePresence('fat', 'create')
             ->notEmpty('fat');
 
-        $validator
-            ->scalar('tricep')
-            ->maxLength('tricep', 50)
-            ->requirePresence('tricep', 'create')
-            ->notEmpty('tricep');
+//        $validator
+//            ->scalar('tricep')
+//            ->maxLength('tricep', 50)
+//            ->requirePresence('tricep', 'create')
+//            ->notEmpty('tricep');
 
-        $validator
-            ->scalar('abdomen')
-            ->maxLength('abdomen', 50)
-            ->requirePresence('abdomen', 'create')
-            ->notEmpty('abdomen');
+//        $validator
+//            ->scalar('abdomen')
+//            ->maxLength('abdomen', 50)
+//            ->requirePresence('abdomen', 'create')
+//            ->notEmpty('abdomen');
 
-        $validator
-            ->scalar('ad_hold')
-            ->maxLength('ad_hold', 50)
-            ->requirePresence('ad_hold', 'create')
-            ->notEmpty('ad_hold');
+//        $validator
+//            ->scalar('ad_hold')
+//            ->maxLength('ad_hold', 50)
+//            ->requirePresence('ad_hold', 'create')
+//            ->notEmpty('ad_hold');
 
         return $validator;
     }
