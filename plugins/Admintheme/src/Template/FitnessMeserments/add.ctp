@@ -22,7 +22,7 @@ $user_type = $this->Common->getType();
                     <div class="body">
                         <!--                            <form id="form_validation" method="POST">-->
                         <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']); ?>
-                        <?= $this->Form->create($fitnessMeserment, ['id' => 'addusers','templates' => ['inputContainer' => '{{content}}']]) ?>
+                        <?= $this->Form->create($fitnessMeserment, ['name'=>'bmiForm','id' => 'addusers','templates' => ['inputContainer' => '{{content}}']]) ?>
       
                         <div class="form-group form-float">
                             <div class="form-line">
@@ -36,6 +36,7 @@ $user_type = $this->Common->getType();
                                 <label class="form-label">Height</label>
                             </div>
                         </div>
+                        <input type="button" value="Calculate BMI" onClick="calculateBmi()">
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('bmi', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
@@ -44,14 +45,16 @@ $user_type = $this->Common->getType();
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('neck', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                <?= $this->Form->control('neck', ['class' => 'form-control', 'id'=>'neck', 'type' => 'text', 'label' => false,'value'=>'1' , 'onchange'=>'getLastValue("neck")']) ?> 
                                 <label class="form-label">Neck</label>
+                                <div id="1neck"> </div>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('upper_arm', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                <?= $this->Form->control('upper_arm', ['class' => 'form-control','id'=>'upper_arm', 'type' => 'text', 'label' => false, 'onchange'=>'getLastValue("upper_arm")']) ?> 
                                 <label class="form-label">Upper_arm</label>
+                                 <div id="1upper_arm"> </div>
                             </div>
                         </div>
                         <div class="form-group form-float">
@@ -142,6 +145,62 @@ $user_type = $this->Common->getType();
 </section>
 
   <script type="text/javascript">
+      
+        function getLastValue(id)
+        {
+            var fitnessfield = id;
+           // alert(fitnessfield);
+            var position =  $('#'+fitnessfield+'').val();
+             
+            var urls = '<?= $this->Url->build(['controller' =>'FitnessMeserments', 'action' =>'getLastValue'])?>';
+   
+            var data = '&fitnessfield=' + escape(fitnessfield)+ '&position=' + escape(position);
+         
+            $.ajax({
+                 
+        type: "POST",
+        
+        cache:false,
+       
+        data: data,
+        
+        url: urls,
+        
+        success: function(data)
+			{
+                            //alert(data);
+                       $('#1'+fitnessfield+'').html(data)   
+                   
+                     
+			} 
+                  });
+    return false;  
+    }
+      
+      
+      
+      function calculateBmi() {
+var weight = document.bmiForm.weight.value
+var height = document.bmiForm.height.value
+if(weight > 0 && height > 0){	
+var finalBmi = weight/(height/100*height/100)
+document.bmiForm.bmi.value = finalBmi
+if(finalBmi < 18.5){
+document.bmiForm.meaning.value = "That you are too thin."
+}
+if(finalBmi > 18.5 && finalBmi < 25){
+document.bmiForm.meaning.value = "That you are healthy."
+}
+if(finalBmi > 25){
+document.bmiForm.meaning.value = "That you have overweight."
+}
+}
+else{
+alert("Please Fill in everything correctly")
+}
+}
+      
+      
        $(document).ready(function () {
      $('.datetimepicker').bootstrapMaterialDatePicker({format: 'YYYY-MM-DD HH:mm', lang: 'fr', weekStart: 1, cancelText: 'Cancel',maxDate : new Date()});
      $('').bootstrapMaterialDatePicker({ format : 'DD/MM/YYYY HH:mm', minDate : new Date() });

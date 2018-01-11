@@ -36,7 +36,7 @@ class FitnessMesermentsController extends AppController
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
        // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment']);
+        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment','getLastValue']);
         
     }
     
@@ -208,6 +208,28 @@ class FitnessMesermentsController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+    
+     public function getLastValue()
+                      {
+      
+            $this->autoRender=false;
+            $get_name = $this->request->data['fitnessfield'];
+            $position = $this->request->data['position'];
+            $user_id = $this->usersdetail['users_id'];
+           
+          
+           
+           
+             $getfield = $this->FitnessMeserments->find()
+                                   ->select([$get_name])
+                                   ->where(['user_id'=>$user_id])
+                                   ->order(['id Asc'])->first();
+          echo $getfield->$get_name;
+          exit();
+          
+                      }
+     
+    
     
    public function beforeRender(\Cake\Event\Event $event) {
         parent::beforeRender($event);
