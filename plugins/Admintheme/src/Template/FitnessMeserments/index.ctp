@@ -13,7 +13,7 @@ $nofrec = $this->Common->getNoOfRec();
                     <div class="card">
                         <div class="header">
                             <h2 >
-                               <?= __('FitnessMeserments') ?>
+                               <?= __('Body Meserments') ?>
                             </h2>
                         </div>
                         <div class="body">
@@ -26,16 +26,12 @@ $nofrec = $this->Common->getNoOfRec();
                             <?php echo $this->Form->input('email', ['label' => __('Email'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Email'), 'value' => $email]); ?>
                         </div>            
                                   
-                             
-                        <div class="col-md-2">
-                            <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'),'options' => $nofrec, 'value'=>$norec]); ?>
-                        </div>
                                   <div class="col-md-2">
                             <?php echo $this->Form->input('status', ['label' => __('Status'), 'class' => 'form-control', 'empty' => __('Select Status'), 'options' => $statu, 'value' => $status]); ?>
                         </div>
                         <div class="col-md-3 marginTop25">
                             <?= $this->Form->button(__('Search'), ['class' => 'btn btn-primary']) ?>
-                            <?= $this->Html->link(__('Clear'), ['controller' => 'Users'], ['class' => 'btn btn-danger']) ?>
+                            <?= $this->Html->link(__('Clear'), ['controller' => 'FitnessMeserments'], ['class' => 'btn btn-danger']) ?>
                         </div>
                         <?= $this->Form->end() ?>
                     </div> 

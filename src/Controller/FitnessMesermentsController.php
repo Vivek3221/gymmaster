@@ -44,10 +44,10 @@ class FitnessMesermentsController extends AppController
     public function index()
     {
         
-                     if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-        
+
         $name = '';
         $email = '';
         $norec = 10;
@@ -141,11 +141,11 @@ class FitnessMesermentsController extends AppController
             $fitnessMeserment = $this->FitnessMeserments->patchEntity($fitnessMeserment, $data);
             //pr($fitnessMeserment); die;
             if ($this->FitnessMeserments->save($fitnessMeserment)) {
-                $this->Flash->success(__('The fitness meserment has been saved.'));
+                $this->Flash->success(__('The body meserment has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The fitness meserment could not be saved. Please, try again.'));
+            $this->Flash->error(__('The body meserment could not be saved. Please, try again.'));
         }
         $users = $this->FitnessMeserments->Users->find('list', ['limit' => 200]);
         $this->set(compact('fitnessMeserment', 'users'));
@@ -174,11 +174,11 @@ class FitnessMesermentsController extends AppController
             
             $fitnessMeserment = $this->FitnessMeserments->patchEntity($fitnessMeserment, $data);
             if ($this->FitnessMeserments->save($fitnessMeserment)) {
-                $this->Flash->success(__('The fitness meserment has been saved.'));
+                $this->Flash->success(__('The body meserment has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The fitness meserment could not be saved. Please, try again.'));
+            $this->Flash->error(__('The body meserment could not be saved. Please, try again.'));
         }
         $users = $this->FitnessMeserments->Users->find('list', ['limit' => 200]);
         $this->set(compact('fitnessMeserment', 'users'));
@@ -201,9 +201,9 @@ class FitnessMesermentsController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $fitnessMeserment = $this->FitnessMeserments->get($id);
         if ($this->FitnessMeserments->delete($fitnessMeserment)) {
-            $this->Flash->success(__('The fitness meserment has been deleted.'));
+            $this->Flash->success(__('The body meserment has been deleted.'));
         } else {
-            $this->Flash->error(__('The fitness meserment could not be deleted. Please, try again.'));
+            $this->Flash->error(__('The body meserment could not be deleted. Please, try again.'));
         }
 
         return $this->redirect(['action' => 'index']);
@@ -211,7 +211,6 @@ class FitnessMesermentsController extends AppController
     
      public function getLastValue()
                       {
-      
             $this->autoRender=false;
             $get_name = $this->request->data['fitnessfield'];
             $position = $this->request->data['position'];

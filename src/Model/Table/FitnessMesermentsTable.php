@@ -135,11 +135,11 @@ class FitnessMesermentsTable extends Table
 //            ->requirePresence('whr', 'create')
 //            ->notEmpty('whr');
 
-        $validator
-            ->scalar('fat')
-            ->maxLength('fat', 50)
-            ->requirePresence('fat', 'create')
-            ->notEmpty('fat');
+//        $validator
+//            ->scalar('fat')
+//            ->maxLength('fat', 50)
+//            ->requirePresence('fat', 'create')
+//            ->notEmpty('fat');
 
 //        $validator
 //            ->scalar('tricep')

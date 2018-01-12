@@ -15,7 +15,7 @@ $user_type = $this->Common->getType();
                 <div class="card">
                    <div class="header">
                             <h2>
-                               <?= __('fitnessMeserment Form') ?>
+                               <?= __('Body Meserment Form') ?>
                             </h2>
                             
                         </div>
@@ -40,60 +40,58 @@ $user_type = $this->Common->getType();
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('bmi', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Bmi</label>
+                                <label class="form-label">BMI</label>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('neck', ['class' => 'form-control', 'id'=>'neck', 'type' => 'text', 'label' => false,'value'=>'1' , 'onchange'=>'getLastValue("neck")']) ?> 
+                                <?= $this->Form->control('neck', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
                                 <label class="form-label">Neck</label>
-                                <div id="1neck"> </div>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('upper_arm', ['class' => 'form-control','id'=>'upper_arm', 'type' => 'text', 'label' => false, 'onchange'=>'getLastValue("upper_arm")']) ?> 
-                                <label class="form-label">Upper_arm</label>
-                                 <div id="1upper_arm"> </div>
+                                <?= $this->Form->control('upper_arm', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                <label class="form-label">Upper Arm</label>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('chest', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">chest</label>
+                                <label class="form-label">Chest</label>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('waist', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">waist</label>
+                                <label class="form-label">Waist</label>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('lower_abdomen', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">lower_abdomen</label>
+                                <label class="form-label">Lower Abdomen</label>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('hips', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">hips</label>
+                                <label class="form-label">Hips</label>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('thigh', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">thigh</label>
+                                <label class="form-label">Thigh</label>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('calf', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">calf</label>
+                                <label class="form-label">Calf</label>
                             </div>
                         </div>
-                        <div class="form-group form-float">
+<!--                        <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('whr', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
                                 <label class="form-label">whr</label>
@@ -122,18 +120,16 @@ $user_type = $this->Common->getType();
                                 <?= $this->Form->control('ad_hold', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
                                 <label class="form-label">ad_hold</label>
                             </div>
-                        </div>
+                        </div>-->
                        
                        <div class="form-group form-float">
                                     <div class="form-line">
-
-                                        <?= $this->Form->control('date', ['class' => 'form-control datetimepicker', 'type' => 'text', 'placeholder' => 'DOB', 'label' => FALSE ,'required', 'format'=>'YYYY-MM-DD']) ?>          
-
+                                        <?= $this->Form->control('date', ['class' => 'form-control datetimepicker', 'type' => 'text', 'placeholder' => 'Select Date', 'label' => FALSE ,'required', 'format'=>'YYYY-MM-DD']) ?>          
                                     </div>
                                 </div> 
                         
                         
-                        <?= $this->Form->button('Fitness User', ['class' => 'btn btn-primary waves-effect']) ?>
+                        <?= $this->Form->button('Submit', ['class' => 'btn btn-primary waves-effect']) ?>
 
                         <?= $this->Form->end() ?>
                     </div>
