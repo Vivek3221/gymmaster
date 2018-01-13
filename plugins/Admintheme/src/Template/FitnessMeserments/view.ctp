@@ -17,18 +17,24 @@ $getPayDuration = $this->Common->getPayDuration();
                         </div>
                         <div class="body">
                             <div class="contacts view large-6 medium-8 columns content">
-                            <h3><?= h($fitnessMeserment->first_name) ?></h3>
+                            <h3><?= __('Demo')?></h3>
                             <table class="vertical-table">
                                 <tr>
                                     <th scope="row"><?= __('weight') ?></th>
-                                    <td><?= ucfirst(h($fitnessMeserment['weight']));?></td>
+                                    <td><?= ucfirst(h($fitnessMeserment[0]['weight']));?></td>
+                                    <th scope="row"><?= __('Previous') ?></th>
+                                    <td><?= ucfirst(h($fitnessMeserment[1]['weight']));?></td>
                                 </tr><tr>
                                     <th scope="row"><?= __('height') ?></th>
-                                    <td><?=  h($fitnessMeserment['height']);?></td>
+                                    <td><?=  h($fitnessMeserment[0]['height']);?></td>
+                                    <th scope="row"><?= __('Previous') ?></th>
+                                    <td><?=  h($fitnessMeserment[1]['height']);?></td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><?= __('bmi') ?></th>
-                                    <td><?= h($fitnessMeserment['bmi']);?></td>
+                                    <td><?= h($fitnessMeserment[0]['bmi']);?></td>
+                                    <th scope="row"><?= __('Previous') ?></th>
+                                    <td><?= h($fitnessMeserment[1]['bmi']);?></td>
                                 </tr>
 
 

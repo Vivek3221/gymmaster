@@ -112,10 +112,15 @@ class FitnessMesermentsController extends AppController
     {
                      if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
+            
         }
-        $fitnessMeserment = $this->FitnessMeserments->get($id, [
-            'contain' => ['Users']
-        ]);
+        $user_id = $this->usersdetail['users_id'];
+        
+       $fitnessMeserment = $this->FitnessMeserments->find()
+                                   ->contain(['Users'])
+                                   ->where(['FitnessMeserments.user_id'=>$user_id, 'FitnessMeserments.id <=' =>$id])
+                                   ->order(['FitnessMeserments.id DESC'])->limit(2)->toArray();
+       //pr($fitnessMeserments); die;
 
         $this->set('fitnessMeserment', $fitnessMeserment);
         $this->set('_serialize', ['fitnessMeserment']);
