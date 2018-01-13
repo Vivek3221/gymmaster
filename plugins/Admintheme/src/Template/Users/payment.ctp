@@ -62,7 +62,13 @@ $getPayDuration = $this->Common->getPayDuration();
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('payment', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Payment Rs.</label>
+                                <label class="form-label">Payment Paid.</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?= $this->Form->control('b_payment', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                <label class="form-label">Payment Due.</label>
                             </div>
                         </div>
                         <div class="form-group form-float">

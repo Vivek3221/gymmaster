@@ -39,16 +39,20 @@ $nofrec = $this->Common->getNoOfRec();
                             <table class="table table-bordered table-striped table-hover dataTable responsive" id="userstable">
                                 <thead>
                                     <tr>
-                                        <th><?= __('weight') ?></th>
-                                        <th><?= __('height') ?></th>
+                                        <th><?= __('Weight') ?></th>
+                                        <th><?= __('Height') ?></th>
+                                        <th><?= __('BMI') ?></th>
+                                        <th><?= __('Date') ?></th>
                                         <th><?= __('Action') ?></th>
                                        
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
-                                        <th><?= __('weight') ?></th>
-                                        <th><?= __('height') ?></th>
+                                        <th><?= __('Weight') ?></th>
+                                        <th><?= __('Height') ?></th>
+                                        <th><?= __('BMI') ?></th>
+                                        <th><?= __('Date') ?></th>
                                         <th><?= __('Action') ?></th>
                                       
                                     </tr>
@@ -58,7 +62,9 @@ $nofrec = $this->Common->getNoOfRec();
                                     <?php foreach ($fitnessMeserments as $fitnessMeserment) { ?>
                                     <tr>
                                         <td><?= $fitnessMeserment['weight'] ?></td>
-                                        <td><?= ucfirst($fitnessMeserment['height']) ?></td>
+                                        <td><?= ($fitnessMeserment['height']) ?></td>
+                                        <td><?= ($fitnessMeserment['bmi']) ?></td>
+                                        <td><?= (date("d-m-Y", strtotime($fitnessMeserment['date']))) ?></td>
                                         <td><i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $fitnessMeserment['id']]) ?></i>
                                        <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $fitnessMeserment['id']]) ?></i>
                                       </td>

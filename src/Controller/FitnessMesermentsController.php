@@ -112,7 +112,6 @@ class FitnessMesermentsController extends AppController
     {
                      if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
-            
         }
         $user_id = $this->usersdetail['users_id'];
         
@@ -142,7 +141,7 @@ class FitnessMesermentsController extends AppController
         if ($this->request->is('post')) {
              $data = $this->request->data;
              $data['user_id'] = $this->usersdetail['users_id'];
-             
+             $data['bmi']     = floor($data['bmi']);
             $fitnessMeserment = $this->FitnessMeserments->patchEntity($fitnessMeserment, $data);
             //pr($fitnessMeserment); die;
             if ($this->FitnessMeserments->save($fitnessMeserment)) {

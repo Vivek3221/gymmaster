@@ -163,7 +163,11 @@ $(document).ready(function () {
                 required: true
             },
             payment: {
-                required: true
+                required: true,
+                regex: /[0-9]$/
+            },
+            b_payment: {
+                regex: /^$|^[0-9]$/
             },
             
             email: {
@@ -214,7 +218,11 @@ $(document).ready(function () {
                 required: 'Enter DOB'
             },
             payment: {
-                required: 'Enter payment'
+                required: 'Enter payment',
+                regex: 'Enter valid payment'
+            },
+            b_payment: {
+                regex: 'Enter valid due payment'
             },
            
             email: {
