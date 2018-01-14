@@ -19,110 +19,131 @@ $user_type = $this->Common->getType();
                             </h2>
                             
                         </div>
-                    <div class="body">
+                   <div class="body">
                         <!--                            <form id="form_validation" method="POST">-->
                         <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']); ?>
                         <?= $this->Form->create($fitnessMeserment, ['name'=>'bmiForm','id' => 'addusers','templates' => ['inputContainer' => '{{content}}']]) ?>
-      
+                        <div class="row"> 
+                        <div class="col-md-6">  
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('weight', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
                                 <label class="form-label">Weight</label>
                             </div>
+                             <small class="text-muted"> email with anyone else.</small>
                         </div>
+                        </div>
+                        <div class="col-md-6">
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('height', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
                                 <label class="form-label">Height</label>
                             </div>
+                            <small class="text-muted"> email with anyone else.</small>
                         </div>
-                              <input type="button" value="Calculate BMI" onClick="calculateBmi()">
+                        </div>
+                        </div>
+                           <div class="row">  
+                        <div class="col-md-6">
+                        <input type="button" value="Calculate BMI" onClick="calculateBmi()">
+                        <small class="text-muted"> email with anyone else.</small>
+                        </div>
+                        <div class="col-md-6">
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('bmi', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Bmi</label>
+                                <label class="form-label">BMI</label>
                             </div>
+                            <small class="text-muted"> email with anyone else.</small>
                         </div>
+                        </div>
+                        </div>
+                        
+                          <div class="row">  
+                        <div class="col-md-6">
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('neck', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
                                 <label class="form-label">Neck</label>
                             </div>
+                            <small class="text-muted"> email with anyone else.</small>
                         </div>
+                        </div>
+                        <div class="col-md-6">
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('upper_arm', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Upper_arm</label>
+                                <label class="form-label">Upper Arm</label>
+                            </div>
+                            <small class="text-muted"> email with anyone else.</small>
+                        </div>
                             </div>
                         </div>
+                        
+                          <div class="row">  
+                        <div class="col-md-6">
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('chest', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">chest</label>
+                                <label class="form-label">Chest</label>
                             </div>
+                            <small class="text-muted"> email with anyone else.</small>
                         </div>
+                        </div>
+                        <div class="col-md-6">
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('waist', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">waist</label>
+                                <label class="form-label">Waist</label>
+                            </div>
+                            <small class="text-muted"> email with anyone else.</small>
+                        </div>
                             </div>
                         </div>
+                        
+                          <div class="row">  
+                        <div class="col-md-6">
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('lower_abdomen', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">lower_abdomen</label>
+                                <label class="form-label">Lower Abdomen</label>
                             </div>
+                            <small class="text-muted"> email with anyone else.</small>
                         </div>
+                        </div> 
+                        <div class="col-md-6">
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('hips', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">hips</label>
+                                <label class="form-label">Hips</label>
+                            </div>
+                            <small class="text-muted"> email with anyone else.</small>
+                        </div>
                             </div>
                         </div>
+                          <div class="row">  
+                        <div class="col-md-6">
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('thigh', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">thigh</label>
+                                <label class="form-label">Thigh</label>
                             </div>
+                            <small class="text-muted"> email with anyone else.</small>
                         </div>
+                        </div>
+                        <div class="col-md-6">
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('calf', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">calf</label>
+                                <label class="form-label">Calf</label>
+                            </div>
+                            <small class="text-muted"> email with anyone else.</small>
+                        </div>
                             </div>
                         </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('whr', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">whr</label>
-                            </div>
-                        </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('fat', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">fat</label>
-                            </div>
-                        </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('tricep', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">tricep</label>
-                            </div>
-                        </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('abdomen', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">abdomen</label>
-                            </div>
-                        </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('ad_hold', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">ad_hold</label>
-                            </div>
-                        </div>
-                       
-                       <div class="form-group form-float">
+                          <div class="row">  
+                        <div class="col-md-6">
+                      <div class="form-group form-float">
                                     <div class="form-line">
                                         <?php
                                         $dob1 = $fitnessMeserment->date;
@@ -134,11 +155,14 @@ $user_type = $this->Common->getType();
                                         <?= $this->Form->control('date', ['class' => 'form-control datetimepicker', 'type' => 'text', 'placeholder' => 'DOB', 'label' => FALSE ,'required', 'value'=>$dob, 'format'=>'YYYY-MM-DD']) ?>          
 
                                     </div>
+                                </div>
+                            <small class="text-muted"> email with anyone else.</small>
                                 </div> 
+                        <div class="col-md-6">
                         
-                        
-                        <?= $this->Form->button('Fitness User', ['class' => 'btn btn-primary waves-effect']) ?>
-
+                        <?= $this->Form->button('Submit', ['class' => 'btn btn-primary waves-effect']) ?>
+                        </div>
+                        </div>
                         <?= $this->Form->end() ?>
                     </div>
                 </div>
