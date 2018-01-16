@@ -22,7 +22,7 @@ $user_type = $this->Common->getType();
                     <div class="body">
                         <!--                            <form id="form_validation" method="POST">-->
                         <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']); ?>
-                        <?= $this->Form->create($fitnessMeserment, ['name'=>'bmiForm','id' => 'addusers','templates' => ['inputContainer' => '{{content}}']]) ?>
+                        <?= $this->Form->create($fitnessMeserment, ['name'=>'bmiForm','id' => 'bodym','templates' => ['inputContainer' => '{{content}}']]) ?>
                         <div class="row"> 
                         <div class="col-md-6">  
                         <div class="form-group form-float">
@@ -30,7 +30,7 @@ $user_type = $this->Common->getType();
                                 <?= $this->Form->control('weight', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
                                 <label class="form-label">Weight</label>
                             </div>
-                             <small class="text-muted"> email with anyone else.</small>
+                             <small class="text-muted"> *Weight in KG.</small>
                         </div>
                         </div>
                         <div class="col-md-6">
@@ -39,22 +39,22 @@ $user_type = $this->Common->getType();
                                 <?= $this->Form->control('height', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
                                 <label class="form-label">Height</label>
                             </div>
-                            <small class="text-muted"> email with anyone else.</small>
+                            <small class="text-muted"> *Height in CM.</small>
                         </div>
                         </div>
                         </div>
                            <div class="row">  
                         <div class="col-md-6">
                         <input type="button" value="Calculate BMI" onClick="calculateBmi()">
-                        <small class="text-muted"> email with anyone else.</small>
+                        <small class="text-muted"> *Click here to autofill BMI.</small>
                         </div>
                         <div class="col-md-6">
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('bmi', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                <?= $this->Form->control('bmi', ['class' => 'form-control', 'type' => 'text','readonly', 'label' => false]) ?> 
                                 <label class="form-label">BMI</label>
                             </div>
-                            <small class="text-muted"> email with anyone else.</small>
+                            <small class="text-muted"> *It's autofill.</small>
                         </div>
                         </div>
                         </div>

@@ -396,6 +396,58 @@ $(document).ready(function () {
         }
     });
     
+    $("#bodym").validate({
+        ignore: ":hidden",
+        errorElement: 'span',
+        errorClass: 'help-inline',
+        
+        highlight: function (element) {
+            $(element).parent().addClass("error");
+        },
+        unhighlight: function (element) {
+            $(element).parent().removeClass("error");
+        },
+        rules: {
+
+            weight: {
+                required: true,
+               regex: /^[0-9]{1,3}$/
+
+            },
+            height: {
+                required: true,
+               regex: /^[0-9]{1,3}$/
+
+            },
+            neck: {
+                required: true,
+               regex: /^[0-9]{1,3}$/
+
+            },
+            password: {
+                required: true
+            }
+        },
+        messages: {
+            weight: {
+                required: 'Enter weight',
+                regex: 'Enter weight in KG'
+            },
+            height: {
+                required: 'Enter height',
+                regex: 'Enter height in CM'
+            },
+            neck: {
+                required: 'Enter neck',
+                regex: 'Enter neck in Inch'
+            },
+
+            password: {
+                required: 'Enter password',
+            }
+        }
+    });
+    
      $("#changepassword").validate({
         ignore: ":hidden",
         errorElement: 'span',
