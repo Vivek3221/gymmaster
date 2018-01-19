@@ -51,6 +51,9 @@ $action = $this->request['action'];
                    <li class="<?php if ($controller == 'FitnessMeserments' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
                         <?= $this->Html->link(__('Body Meserment List'), ['controller' => 'FitnessMeserments', 'action' => 'index']) ?>
                    </li>
+                   <li class="<?php if ($controller == 'FitnessType' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
+                        <?= $this->Html->link(__('FitnessType List'), ['controller' => 'FitnessType', 'action' => 'index']) ?>
+                   </li>
                     </ul>
                 </li>   
               
