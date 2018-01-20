@@ -2,6 +2,8 @@
 namespace App\Controller;
 use Cake\Event\Event;
 use App\Controller\AppController;
+use Cake\Core\Configure;
+use Cake\Network\Http\Client;
 
 /**
  * FitnessType Controller
@@ -75,26 +77,28 @@ class FitnessTypeController extends AppController
        $fitnessType = $this->FitnessType->newEntity();
         if ($this->request->is('post')) {
             $data1 =[];
-            //$data2 =[];
+            $data2 =[];
             $data = $this->request->data;
             $ids = $data['exercise_id'];
             $idl = $data['exercise_l'];
             $idr = $data['exerciser'];
+            $idt = $data['exercisert'];
             
-         // pr($ids); 
+         // pr($idt); die;
            $i=0;  
             foreach ($ids as $id)
             {
                // pr($value);
-                  $fitnessType = $this->FitnessType->newEntity();
+                $fitnessType = $this->FitnessType->newEntity();
                 $data1['exercise_id'] = $id;
                 pr($data1['exercise_id']);
                 $data1['status'] = 1;
-                $data1['exercise_l'] = $idl[$id];
-                $data1['exercise_r'] = $idr[$id];
-                $data1['excercie_type'] = $data1['exercise_l'] . $data1['exercise_r'];
-                //pr($data1['exercise_id']);
-                //pr($data1['excercie_type']);
+                $data2['exercise_left'] = $idl[$id];
+                $data2['exercise_right'] = $idr[$id];
+                $data2['exercise_top'] = $idt[$id];
+                $data1['excercie_type'] = json_encode($data2);
+               // pr($data1['excercie_type']);
+                // die;
                
                 $fitnessType = $this->FitnessType->patchEntity($fitnessType, $data1);
             if ($this->FitnessType->save($fitnessType)) {

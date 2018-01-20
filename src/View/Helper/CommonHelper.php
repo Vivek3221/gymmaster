@@ -169,6 +169,13 @@ class CommonHelper extends Helper {
         return [10 => 10, 20 => 20, 30 => 30, 40 => 40, 50 => 50, 100 => 100];
     }
     
+     public function getExercises()
+    {
+        
+        $get_exercises = TableRegistry::get('Exercises');
+        $exer_lists = $get_exercises->find()->select(['name', 'description','id'])->where(['status' => 1])->toArray();
+        return $exer_lists;
+    }
   
  
 
