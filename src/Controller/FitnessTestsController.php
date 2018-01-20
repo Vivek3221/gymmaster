@@ -37,10 +37,10 @@ class FitnessTestsController extends AppController
         $this->paginate = [
             'contain' => ['Exercises']
         ];
-        $fitnessTest = $this->paginate($this->FitnessTests);
-
-        $this->set(compact('fitnessTest'));
-        $this->set('_serialize', ['fitnessTest']);
+        $fitnessTests = $this->paginate($this->FitnessTests);
+//pr($fitnessTest); die;
+        $this->set(compact('fitnessTests'));
+        $this->set('_serialize', ['fitnessTests']);
     }
 
     /**
