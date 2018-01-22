@@ -47,29 +47,20 @@ class FitnessMesermentsController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-
-        $name = '';
-        $email = '';
-        $norec = 10;
-        $status = '';
+        $sdate ='';
+        $edate ='';
         $search = [];
-        if (isset($this->request->query['name']) && trim($this->request->query['name']) != "") {
-            $name = $this->request->query['name'];
-            $search['Users.name REGEXP'] = $name;
-        }
-        
-         if (isset($this->request->query['email']) && trim($this->request->query['email']) != "") {
-            $email = $this->request->query['email'];
-            $search['Users.email REGEXP'] = $email;
-        }
+         if (isset($this->request->query['from_date']) && trim($this->request->query['from_date']) != "" && isset($this->request->query['to_date']) && trim($this->request->query['to_date']) != "" ) {
+          
+            $sdate = date('Y-m-d H:i:s',strtotime($this->request->query['from_date'])); 
+            $edate = date('Y-m-d H:i:s',strtotime($this->request->query['to_date'])) ;
 
-        if (isset($this->request->query['status']) && trim($this->request->query['status']) != "") {
-            $status = $this->request->query['status'];
-            $search['Users.active'] = $status;
-        }
+            $search['FitnessMeserments.date >='] = $sdate;
+            $search['FitnessMeserments.date <='] = $edate;  
+            $sdate = $this->request->query['from_date']; 
+            $edate = $this->request->query['to_date'] ;
 
-        if (isset($this->request->query['norec']) && trim($this->request->query['norec']) != "") {
-            $norec = $this->request->query['norec'];
+             
         }
         
          if (isset($search)) {
@@ -82,20 +73,10 @@ class FitnessMesermentsController extends AppController
 
         //$count = $count->where(['Users.active !=' => '3']);
 
-
-
-
-        $this->paginate = ['limit' => $norec, 'order' => ['FitnessMeserments.id' => 'DESC'],'contain' => ['Users']];
-
+        $this->paginate = ['order' => ['FitnessMeserments.id' => 'DESC'],'contain' => ['Users']];
         $fitnessMeserments = $this->paginate($count)->toArray();
-
-        
-        
-        
-        
        // $users = $this->paginate($this->Users);
-
-        $this->set(compact('fitnessMeserments', 'name', 'status', 'norec','email'));
+        $this->set(compact('fitnessMeserments','sdate','edate' ));
         $this->set('_serialize', ['fitnessMeserments']);
         
         

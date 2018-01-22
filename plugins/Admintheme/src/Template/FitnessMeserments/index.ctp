@@ -18,17 +18,14 @@ $nofrec = $this->Common->getNoOfRec();
                         </div>
                         <div class="body">
                               <div class="box-body">
-                        <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'Users', 'action' => 'index']]) ?>
-                        <div class="col-md-3">
-                            <?php echo $this->Form->input('name', ['label' => __('Name'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Name'), 'value' => $name]); ?>
-                        </div>
-                      <div class="col-md-2">
-                            <?php echo $this->Form->input('email', ['label' => __('Email'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Email'), 'value' => $email]); ?>
-                        </div>            
-                                  
+                        <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'FitnessMeserments', 'action' => 'index']]) ?>
                                   <div class="col-md-2">
-                            <?php echo $this->Form->input('status', ['label' => __('Status'), 'class' => 'form-control', 'empty' => __('Select Status'), 'options' => $statu, 'value' => $status]); ?>
-                        </div>
+                                      <?php echo $this->Form->input('from_date', ['label' => __('From Date'), 'class' => 'form-control', 'id' => 'date-start', 'type' => 'text', 'placeholder' => __('From Date'), 'value' => $sdate]); ?>
+                                  </div>  
+                                  <div class="col-md-2">
+                                      <?php echo $this->Form->input('to_date', ['label' => __('To Date'), 'class' => 'form-control', 'id' => 'date-end', 'type' => 'text', 'placeholder' => __('To Date'), 'value' => $edate]); ?>
+                                  </div>  
+                                  
                         <div class="col-md-3 marginTop25">
                             <?= $this->Form->button(__('Search'), ['class' => 'btn btn-primary']) ?>
                             <?= $this->Html->link(__('Clear'), ['controller' => 'FitnessMeserments'], ['class' => 'btn btn-danger']) ?>
@@ -99,75 +96,14 @@ $nofrec = $this->Common->getNoOfRec();
         </div>
     </section>
 
-<script type="text/javascript" language="javascript">
-    
-    function updateVerified(clicked_id,verified)
-        {
-           
-            
-            var id = clicked_id;
-            $('#'+id+'').prop('disabled', true);  
-            var verified = verified;
-                
-           var urls = '<?= $this->Url->build(['controller' =>'Users', 'action' =>'verifiedUpdate'])?>';
-   
-           var data = '&id=' + escape(id)+ '&verified=' + escape(verified);
-           
-//           alert(data);
-     
-         if(confirm("Are you sure to verify user ?"))
-         {
-            $.ajax({
-                 
-        type: "POST",
-        
-        cache:false,
-       
-        data: data,
-        
-        url: urls,
-        
-        success: function(html)
-			{
-                           // alert(html);
-        
-                     $('#verified'+id+'').html(html); // here we pass danamic id and fill color
-             
-			} 
-    });
-    return false;  
-         }
-         else
-         {
-             return false;
-         }
-            
-        }
-    function updateStatus(Id, Status) {
-        var urllink = '<?php echo $this->Url->build(["controller" => "Users", "action" => "status"]); ?>';
-        var id = Id;
-        var status = Status;
-        urllink = urllink + '/' + id + '/' + status;
-        //alert(urllink);
-       // alert(urllink);
-        if (confirm("<?= __('Are you sure! you want to change user status?') ?>")) {
-            $.ajax({
-                url: urllink,
-                type: 'GET',
-                success: function (data) {
-                 
-                    $('#status' + id).html(data);
-                },
-                error: function () {
-                }
-            });
-        } else {
-            return false;
-        }
-    }
 
-      
-    
-    
-    
+<script>
+       $(document).ready(function () {
+            $('#date-end').bootstrapMaterialDatePicker({ format : 'YYYY/MM/DD HH:mm', weekStart : 0 });
+            $('#date-start').bootstrapMaterialDatePicker({format : 'YYYY/MM/DD HH:mm', weekStart : 0 }).on('change', function(e, date)
+            {
+            $('#date-end').bootstrapMaterialDatePicker('setMinDate', date);
+            });
+       });
+
 </script>
