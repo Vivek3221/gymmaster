@@ -116,12 +116,23 @@ class FitnessMesermentsController extends AppController
         $user_id = $this->usersdetail['users_id'];
         
        $fitnessMeserment = $this->FitnessMeserments->find()
+                                   ->select(['weight','height','created'])
                                    ->contain(['Users'])
                                    ->where(['FitnessMeserments.user_id'=>$user_id, 'FitnessMeserments.id <=' =>$id])
                                    ->order(['FitnessMeserments.id DESC'])->limit(2)->toArray();
-       //pr($fitnessMeserments); die;
-
-        $this->set('fitnessMeserment', $fitnessMeserment);
+       
+      // pr($fitnessMeserment); 
+               $chartshow = [];
+        foreach ($fitnessMeserment as $key => $value) {
+            $date = date(strtotime($value->created));
+            
+                $chartshow[$key] =  ["y" => $value->weight,"x" =>$date]; 
+            }
+         //pr($chartshow); die;
+       
+       
+       
+        $this->set(compact('fitnessMeserment', 'chartshow'));
         $this->set('_serialize', ['fitnessMeserment']);
     }
 
