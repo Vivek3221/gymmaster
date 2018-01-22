@@ -403,9 +403,12 @@ class UsersController extends AppController
               //pr($count); die;
                if($count == 1)
                {
+                    $this->Cookie->write('user_email', $data['email']);
+                    $this->request->session()->write('Auth.User.email', $data['email']);
+                    
                     $user_detail = $this->Users->find()->select(['id','user_type','name','email'])->where(['email' => $data['email'], 'active' => 1])->first();
-                 
                     $this->Cookie->write('users',['users_id'=>$user_detail->id,'users_name'=>$user_detail->name,'users_email'=>$user_detail->email,'users_type' =>$user_detail->user_type]);
+                    $this->request->session()->write('users',['users_id'=>$user_detail->id,'users_name'=>$user_detail->name,'users_email'=>$user_detail->email]);
              
                     return $this->redirect(['controller' => 'Users', 'action' => 'index']);
                }
@@ -413,24 +416,15 @@ class UsersController extends AppController
                 $this->Flash->error(__('This email and password not match'));
                  return $this->redirect(['controller' => 'Users', 'action' => 'adminLogin']);
                }
-               
     }
-         
-           
-            
         }
         
         
          public function logout()
     {
              $this->autoRender = false;
-            // echo 'hhhhh';
-             
-             $useremail =  $this->Cookie->read('users');
-          //pr($useremail); die;
-             
              $this->Cookie->delete('users');
-             return $this->redirect(['controller' => 'Users', 'action' => 'adminLogin']);
+             return $this->redirect(['controller' => '/']);
  }
        
     
