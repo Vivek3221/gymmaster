@@ -58,10 +58,10 @@ class FitnessMesermentsTable extends Table
             ->integer('id')
             ->allowEmpty('id', 'create');
 
-        $validator
-            ->dateTime('date')
-            ->requirePresence('date', 'create')
-            ->notEmpty('date');
+//        $validator
+//            ->dateTime('date')
+//            ->requirePresence('date', 'create')
+//            ->notEmpty('date');
 
         $validator
             ->scalar('weight')

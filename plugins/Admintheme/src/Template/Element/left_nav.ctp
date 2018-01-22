@@ -36,7 +36,7 @@ $action = $this->request['action'];
                         <span><?= __('Users') ?></span>
                     </a>
                 </li>
-             <li class="<?php if (($controller == 'Bodies') || ($controller == 'Exercises') || ($controller == 'FitnessMeserments')){echo "active";}?>">
+             <li class="<?php if (($controller == 'Bodies') || ($controller == 'Exercises') || ($controller == 'FitnessMeserments') || ($controller == 'FitnessTests')){echo "active";}?>">
                     <a href="javascript:void(0);" class="menu-toggle">
                         <i class="material-icons">view_list</i>
                         <span><?= __('Workout Directry') ?></span>
@@ -52,7 +52,7 @@ $action = $this->request['action'];
                         <?= $this->Html->link(__('Body Meserment List'), ['controller' => 'FitnessMeserments', 'action' => 'index']) ?>
                    </li>
                    <li class="<?php if ($controller == 'FitnessTests' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
-                        <?= $this->Html->link(__('FitnessTests List'), ['controller' => 'FitnessTests', 'action' => 'index']) ?>
+                        <?= $this->Html->link(__('Fitness Test'), ['controller' => 'FitnessTests', 'action' => 'index']) ?>
                    </li>
                     </ul>
                 </li>   

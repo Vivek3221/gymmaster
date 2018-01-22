@@ -94,7 +94,7 @@ class FitnessTestsController extends AppController
                // pr($value);
                 $fitnessTest = $this->FitnessTests->newEntity();
                 $data1['exercise_id'] = $id;
-                pr($data1['exercise_id']);
+             //   pr($data1['exercise_id']);
                 $data1['status'] = 1;
                 $data1['user_id'] = $user_id;
                 $data2['exercise_left'] = $idl[$id];

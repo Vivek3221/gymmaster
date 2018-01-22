@@ -16,7 +16,7 @@ $exercises = $this->Common->getExercises();
                 <div class="card">
                     <div class="header">
                         <h2>
-                            <?= __('Add Body') ?>
+                            <?= __('Fitness Test Form') ?>
                         </h2>
 
                     </div>
@@ -82,7 +82,7 @@ $exercises = $this->Common->getExercises();
                                 <?= $this->Form->input('status', ['empty' => __('Select status'), 'options' => $status, 'class' => 'form-control']); ?>
                             </div>
                         </div>
-                        <?= $this->Form->button('Add Body', ['class' => 'btn btn-primary waves-effect']) ?>
+                        <?= $this->Form->button('Submit', ['class' => 'btn btn-primary waves-effect']) ?>
                         <?= $this->Form->end() ?>
                     </div>
                 </div>
