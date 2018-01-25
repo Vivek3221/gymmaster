@@ -95,22 +95,42 @@ class FitnessMesermentsController extends AppController
             return $this->redirect('/');
         }
         $user_id = $this->usersdetail['users_id'];
+        $moredata ='weight';
+        if (isset($this->request->query['moredata']) && $this->request->query['moredata'] != "") {
+            $moredata = $this->request->query['moredata'];
+        }
         
        $fitnessMeserment = $this->FitnessMeserments->find()
-                                   ->select(['weight','height','created'])
+                                   ->select(['id','weight','height','bmi','created'])
                                    ->contain(['Users'])
                                    ->where(['FitnessMeserments.user_id'=>$user_id, 'FitnessMeserments.id <=' =>$id])
                                    ->order(['FitnessMeserments.id DESC'])->limit(2)->toArray();
        
-      // pr($fitnessMeserment); 
-               $chartshow = [];
-        foreach ($fitnessMeserment as $key => $value) {
-            $date = date(strtotime($value->created));
+      //pr($fitnessMeserment); die;
+       if  (isset($moredata) && !empty($moredata)) {
+                $fitnessMeserments = $this->FitnessMeserments->find()
+                                   ->select(['id',$moredata,'created'])
+                                   ->contain(['Users'])
+                                   ->where(['FitnessMeserments.user_id'=>$user_id])
+                                   ->order(['FitnessMeserments.id DESC'])->limit(10)->toArray();
+                
+                
+             $chartshow = [];
+        foreach ($fitnessMeserments as $key => $value) {
+            $date = date("Y-m-d",strtotime($value->created));
             
-                $chartshow[$key] =  ["y" => $value->weight,"x" =>$date]; 
+                $chartshow[$key] =  ['y' => $date,'Dates' =>$value->$moredata]; 
+               // $chartshow[$key] =  ['y' => $value->weight,'x' =>$value->height]; 
             }
-         //pr($chartshow); die;
+            }
        
+       
+            
+          //pr($chartshow); die;
+         //pr(json_encode($chartshow,JSON_NUMERIC_CHECK)); 
+        // $chartshow = preg_replace('/"([a-zA-Z]+[a-zA-Z0-9_]*)":/','$1:',json_encode($chartshow));
+       //pr($chartshow); 
+      // die;
        
        
         $this->set(compact('fitnessMeserment', 'chartshow'));
