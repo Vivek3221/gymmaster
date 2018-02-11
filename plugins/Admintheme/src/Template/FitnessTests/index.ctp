@@ -1,59 +1,106 @@
+
 <?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\FitnessTest[]|\Cake\Collection\CollectionInterface $fitnessTests
- */
+$statu = $this->Common->getstatus();
+$nofrec = $this->Common->getNoOfRec();
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('New Fitness Test'), ['action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Exercises'), ['controller' => 'Exercises', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Exercise'), ['controller' => 'Exercises', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
-<div class="fitnessTests index large-9 medium-8 columns content">
-    <h3><?= __('Fitness Tests') ?></h3>
-    <table cellpadding="0" cellspacing="0">
-        <thead>
-            <tr>
-                <th scope="col"><?= $this->Paginator->sort('id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('user_id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('exercise_id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('status') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('created') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('modified') ?></th>
-                <th scope="col" class="actions"><?= __('Actions') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($fitnessTests as $fitnessTest): ?>
-            <tr>
-                <td><?= $this->Number->format($fitnessTest->id) ?></td>
-                <td><?= $fitnessTest->has('user') ? $this->Html->link($fitnessTest->user->name, ['controller' => 'Users', 'action' => 'view', $fitnessTest->user->id]) : '' ?></td>
-                <td><?= $fitnessTest->has('exercise') ? $this->Html->link($fitnessTest->exercise->name, ['controller' => 'Exercises', 'action' => 'view', $fitnessTest->exercise->id]) : '' ?></td>
-                <td><?= $this->Number->format($fitnessTest->status) ?></td>
-                <td><?= h($fitnessTest->created) ?></td>
-                <td><?= h($fitnessTest->modified) ?></td>
-                <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $fitnessTest->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $fitnessTest->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $fitnessTest->id], ['confirm' => __('Are you sure you want to delete # {0}?', $fitnessTest->id)]) ?>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
-    </div>
-</div>
+<section class="content">
+        <div class="container-fluid">
+            <!-- Basic Examples -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="fixed-action-btn"><a href="<?= $this->Url->build(['controller' => 'FitnessTests', 'action' => 'add']); ?>" class="btn btn-primary waves-effect btn-floating waves-light btn-large red"><i class="material-icons">add</i></a></div>
+                        <?= $this->Flash->render() ?>
+                    <div class="card">
+                        <div class="header">
+                            <h2 >
+                               <?= __('FitnessTests') ?>
+                            </h2>
+                        </div>
+                        <div class="body">
+                              <div class="box-body">
+                        <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'FitnessTests', 'action' => 'index']]) ?>
+                                  <div class="col-md-2">
+                                      <?php echo $this->Form->input('from_date', ['label' => __('From Date'), 'class' => 'form-control', 'id' => 'date-start', 'type' => 'text', 'placeholder' => __('From Date'), 'value' => $sdate]); ?>
+                                  </div>  
+                                  <div class="col-md-2">
+                                      <?php echo $this->Form->input('to_date', ['label' => __('To Date'), 'class' => 'form-control', 'id' => 'date-end', 'type' => 'text', 'placeholder' => __('To Date'), 'value' => $edate]); ?>
+                                  </div>  
+                                  
+                        <div class="col-md-3 marginTop25">
+                            <?= $this->Form->button(__('Search'), ['class' => 'btn btn-primary']) ?>
+                            <?= $this->Html->link(__('Clear'), ['controller' => 'FitnessTests'], ['class' => 'btn btn-danger']) ?>
+                        </div>
+                        <?= $this->Form->end() ?>
+                    </div> 
+                            <?php if ($this->Paginator->counter(['format' => __('{{count}}')]) != 0) { ?>
+                            <table class="table table-bordered table-striped table-hover dataTable responsive" id="userstable">
+                                <thead>
+                                    <tr>
+                                        <th><?= __('Exercise') ?></th>
+                                        <th><?= __('Exercise Type') ?></th>
+                                        <th><?= __('Date') ?></th>
+                                        <th><?= __('Action') ?></th>
+                                       
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th><?= __('Exercise') ?></th>
+                                        <th><?= __('Exercise Type') ?></th>
+                                        <th><?= __('Date') ?></th>
+                                        <th><?= __('Action') ?></th>
+                                      
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                   
+                                    <?php foreach ($fitnessTests as $fitnessTest) { ?>
+                                    <tr>
+                                        <td><?= $fitnessTest->exercise->name ?></td>
+                                        <td><?= ($fitnessTest['exercise_type']) ?></td>
+                                        <td><?= (date("d-m-Y", strtotime($fitnessTest['created']))) ?></td>
+                                        <td><i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $fitnessTest['id']]) ?></i>
+                                       <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $fitnessTest['id']]) ?></i>
+                                      </td>
+                                     
+                                    </tr>
+                                    <?php } ?> 
+                                </tbody>
+                            </table>
+                                  <div class="paginator">
+                                <ul class="pagination">
+                                    <?= $this->Paginator->first('<< ' . __('first')) ?>
+                                    <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                                    <?= $this->Paginator->numbers() ?>
+                                    <?= $this->Paginator->next(__('next') . ' >') ?>
+                                    <?= $this->Paginator->last(__('last') . ' >>') ?>
+                                </ul>
+                                <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+
+                            </div>
+                              <?php } else { ?>
+                            <div>&nbsp;</div>
+                        <div class="text-center">
+                            <div class="text-center noDataFound">
+                                <strong><?= __('Record') ?></strong> <?= __('not found') ?>
+                            </div>
+                        </div>
+                    <?php } ?>             </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #END# Basic Examples -->
+        </div>
+    </section>
+
+
+<script>
+       $(document).ready(function () {
+            $('#date-end').bootstrapMaterialDatePicker({ format : 'YYYY/MM/DD HH:mm', weekStart : 0 });
+            $('#date-start').bootstrapMaterialDatePicker({format : 'YYYY/MM/DD HH:mm', weekStart : 0 }).on('change', function(e, date)
+            {
+            $('#date-end').bootstrapMaterialDatePicker('setMinDate', date);
+            });
+       });
+
+</script>
