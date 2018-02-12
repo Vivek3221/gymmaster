@@ -1,36 +1,99 @@
 <?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\FitnessTest $fitnessTest
- */
+$status = $this->Common->getstatus();
+$exercises = $this->Common->getExercises();
+$val ='1';
+//pr($exercises);
+//pr($fitnessTest->exercise_id);
+$exercise_id = explode(',', $fitnessTest->exercise_id);
+$exercise_id1 = $exercise_id[0];
+$exercise_id2 = $exercise_id[1];
+
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $fitnessTest->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $fitnessTest->id)]
-            )
-        ?></li>
-        <li><?= $this->Html->link(__('List Fitness Tests'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Exercises'), ['controller' => 'Exercises', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Exercise'), ['controller' => 'Exercises', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
-<div class="fitnessTests form large-9 medium-8 columns content">
-    <?= $this->Form->create($fitnessTest) ?>
-    <fieldset>
-        <legend><?= __('Edit Fitness Test') ?></legend>
-        <?php
-            echo $this->Form->control('user_id', ['options' => $users]);
-            echo $this->Form->control('exercise_id', ['options' => $exercises]);
-            echo $this->Form->control('exercise_type');
-            echo $this->Form->control('status');
-        ?>
-    </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
-    <?= $this->Form->end() ?>
-</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+
+        </div>
+        <!-- Basic Validation -->
+        <div class="row clearfix">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <?= $this->Flash->render() ?>
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            <?= __('Fitness Test Form') ?>
+                        </h2>
+
+                    </div>
+                    <div class="body">
+                        <!--                            <form id="form_validation" method="POST">-->
+                        <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']);  ?>
+                        <?= $this->Form->create($fitnessTest, ['id' => 'addbody', 'templates' => ['inputContainer' => '{{content}}']]) ?>
+
+                        <div class="form-group form-float">
+                            <label class="form-label text-center"><?= $exercises[0]->name ?></label>
+                            <div class="form-line">
+                                <?= $this->Form->control('exercise_id['.$exercises[0]->id.']', ['class' => 'form-control', 'type' => 'hidden', 'value'=>$exercises[0]->id , 'label' => false, 'hidden']) ?> 
+                                
+                            </div>
+                        </div>
+                        <div class="row"> 
+                         <div class="col-md-6"> 
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?= $this->Form->control('exercise_l['.$exercises[0]->id.']', ['class' => 'form-control', 'type' => 'text', 'value'=> $exercise_value->exercise_left->$exercise_id1, 'label' => false]) ?> 
+                                <label class="form-label">Left</label>
+                            </div>
+                        </div>
+                        </div>
+                            <div class="col-md-6"> 
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?= $this->Form->control('exerciser['.$exercises[0]->id.']', ['class' => 'form-control', 'type' => 'text', 'value'=> $exercise_value->exercise_right->$exercise_id1, 'label' => false]) ?> 
+                                <label class="form-label">Right</label>
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+                         <div class="form-group form-float">
+                            <label class="form-label text-center"><?= $exercises[1]->name ?></label>
+                            <div class="form-line">
+                                <?= $this->Form->control('exercise_id['.$exercises[1]->id.']', ['class' => 'form-control',  'value'=>$exercises[1]->id,'type' => 'hidden', 'label' => false, 'hidden']) ?> 
+                                
+                            </div>
+                        </div>
+                        <div class="row"> 
+                         <div class="col-md-6"> 
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?= $this->Form->control('exercise_l['.$exercises[1]->id.']', ['class' => 'form-control', 'type' => 'text','value'=> $exercise_value->exercise_left->$exercise_id2, 'label' => false]) ?> 
+                                <label class="form-label">Left</label>
+                            </div>
+                        </div>
+                        </div>
+                            <div class="col-md-6"> 
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?= $this->Form->control('exerciser['.$exercises[1]->id.']', ['class' => 'form-control', 'type' => 'text','value'=> $exercise_value->exercise_right->$exercise_id2, 'label' => false]) ?> 
+                                <label class="form-label">Right</label>
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+                      
+
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?= $this->Form->input('status', ['empty' => __('Select status'), 'options' => $status, 'class' => 'form-control']); ?>
+                            </div>
+                        </div>
+                        <?= $this->Form->button('Submit', ['class' => 'btn btn-primary waves-effect']) ?>
+                        <?= $this->Form->end() ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>

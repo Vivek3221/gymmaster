@@ -85,7 +85,7 @@ class FitnessTestsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
-        $rules->add($rules->existsIn(['exercise_id'], 'Exercises'));
+        //$rules->add($rules->existsIn(['exercise_id'], 'Exercises'));
 
         return $rules;
     }
