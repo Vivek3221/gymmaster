@@ -174,6 +174,35 @@ class ExercisesController extends AppController
         return $this->redirect(['action' => 'index']);
     }
     
+     public function status() {
+                       if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        $id = $this->request->params['pass'][0];
+        $status = $this->request->params['pass'][1];
+        $user = $this->Exercises->get($id);
+        if ($status == 1) {
+            $user_data['status'] = 0;
+            $user_data['id'] = $id;
+            $user = $this->Exercises->patchEntity($user, $user_data);
+            if ($this->Exercises->save($user)) {
+                $st = $user_data['status'] ? '<span class="label label-success">' . __('Active') . '</span>' : '<span class="label label-danger">' . __('Inactive') . '</span>';
+                // echo "<a href= '#' onclick = 'updateStatus(" . $id . "," . $user_data['status'] . ")'> " . $st . " </a>";
+                echo '<button id=' . $id . ' class="btn btn-primary waves-effect status" value=' . $user_data['status'] . ' onclick="updateStatus(this.id,' . $user_data['status'] . ')" type="submit">Inactive</button>';
+                exit;
+            }
+        } else {
+            $user_data['status'] = 1;
+            $user_data['id'] = $id;
+            $user = $this->Exercises->patchEntity($user, $user_data);
+            if ($this->Exercises->save($user)) {
+                $st = $user_data['status'] ? '<span class="label label-success">' . __('Active') . '</span>' : '<span class="label label-danger">' . __('Inactive') . '</span>';
+                echo '<button id=' . $id . ' class="btn btn-success waves-effect status" value=' . $user_data['status'] . ' onclick="updateStatus(this.id,' . $user_data['status'] . ')" type="submit">Active</button>';
+                exit;
+            }
+        }
+    }
+    
      public function beforeRender(\Cake\Event\Event $event) {
         parent::beforeRender($event);
         $this->viewBuilder()->theme('Admintheme');
