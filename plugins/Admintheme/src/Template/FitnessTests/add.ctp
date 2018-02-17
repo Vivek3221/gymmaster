@@ -24,7 +24,7 @@ $exercises = $this->Common->getExercises();
                         <!--                            <form id="form_validation" method="POST">-->
                         <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']);  ?>
                         <?= $this->Form->create($fitnessTest, ['id' => 'addbody', 'templates' => ['inputContainer' => '{{content}}']]) ?>
-
+                           <?php if(!empty($exercises[0]->name)) {?>
                         <div class="form-group form-float">
                             <label class="form-label text-center"><?= $exercises[0]->name ?></label>
                             <div class="form-line">
@@ -50,6 +50,8 @@ $exercises = $this->Common->getExercises();
                         </div>
                         </div>
                         </div>
+                             <?php } ?>
+                        <?php if(!empty($exercises[1]->name)) {?>
                          <div class="form-group form-float">
                             <label class="form-label text-center"><?= $exercises[1]->name ?></label>
                             <div class="form-line">
@@ -75,7 +77,7 @@ $exercises = $this->Common->getExercises();
                         </div>
                         </div>
                         </div>
-                      
+                        <?php }?>
 
                         <div class="form-group form-float">
                             <div class="form-line">

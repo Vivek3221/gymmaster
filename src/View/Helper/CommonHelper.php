@@ -171,7 +171,6 @@ class CommonHelper extends Helper {
     
      public function getExercises()
     {
-        
         $get_exercises = TableRegistry::get('Exercises');
         $exer_lists = $get_exercises->find()->select(['name', 'description','id'])->where(['status' => 1])->toArray();
         return $exer_lists;
