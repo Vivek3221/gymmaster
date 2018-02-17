@@ -133,7 +133,7 @@ class FitnessMesermentsController extends AppController
       // die;
        
        
-        $this->set(compact('fitnessMeserment', 'chartshow'));
+        $this->set(compact('fitnessMeserment', 'chartshow','moredata'));
         $this->set('_serialize', ['fitnessMeserment']);
     }
 

@@ -36,10 +36,10 @@ class FitnessTestsController extends AppController
         $sdate ='';
         $edate ='';
         $this->paginate = [
-            'contain' => ['Exercises']
+            'contain' => ['Exercises','Users']
         ];
         $fitnessTests = $this->paginate($this->FitnessTests);
-//pr($fitnessTest); die;
+//pr($fitnessTests); die;
         $this->set(compact('fitnessTests','sdate','edate'));
         $this->set('_serialize', ['fitnessTests']);
     }
@@ -90,7 +90,7 @@ class FitnessTestsController extends AppController
             }
             }
            
-        $this->set(compact('fitnessTest', 'chartshow'));
+        $this->set(compact('fitnessTest', 'chartshow','excerise_type'));
         $this->set('_serialize', ['fitnessTest']);
     }
     

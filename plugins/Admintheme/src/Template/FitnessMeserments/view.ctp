@@ -191,7 +191,7 @@ $getPayDuration = $this->Common->getPayDuration();
         data: <?= json_encode($chartshow) ?>,
             xkey: 'y',
             ykeys: ['Dates'],
-            labels: ['Values'],
+            labels: ['<?= $moredata ?>'],
             lineColors: ['rgb(233, 30, 99)'],
             lineWidth: 3
     });

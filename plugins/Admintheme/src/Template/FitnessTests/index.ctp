@@ -36,8 +36,7 @@ $nofrec = $this->Common->getNoOfRec();
                             <table class="table table-bordered table-striped table-hover dataTable responsive" id="userstable">
                                 <thead>
                                     <tr>
-                                        <th><?= __('Exercise') ?></th>
-                                        <th><?= __('Exercise Type') ?></th>
+                                        <th><?= __('Name') ?></th>
                                         <th><?= __('Date') ?></th>
                                         <th><?= __('Action') ?></th>
                                        
@@ -45,8 +44,7 @@ $nofrec = $this->Common->getNoOfRec();
                                 </thead>
                                 <tfoot>
                                     <tr>
-                                        <th><?= __('Exercise') ?></th>
-                                        <th><?= __('Exercise Type') ?></th>
+                                        <th><?= __('Name') ?></th>
                                         <th><?= __('Date') ?></th>
                                         <th><?= __('Action') ?></th>
                                       
@@ -56,8 +54,7 @@ $nofrec = $this->Common->getNoOfRec();
                                    
                                     <?php foreach ($fitnessTests as $fitnessTest) { ?>
                                     <tr>
-                                        <td><?= $fitnessTest->exercise->name ?></td>
-                                        <td><?= ($fitnessTest['exercise_type']) ?></td>
+                                        <td><?= $fitnessTest->user->name ?></td>
                                         <td><?= (date("d-m-Y", strtotime($fitnessTest['created']))) ?></td>
                                         <td><i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $fitnessTest['id']]) ?></i>
                                        <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $fitnessTest['id']]) ?></i>
