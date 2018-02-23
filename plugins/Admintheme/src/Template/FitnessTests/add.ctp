@@ -1,7 +1,8 @@
 <?php
 $status = $this->Common->getstatus();
-$exercises = $this->Common->getExercises();
-//pr($exercises[0]->name); die;
+//$exercises = $this->Common->getExercises();
+$bodies_lists = $this->Common->getBodies();
+//pr($bodies_lists); die;
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -24,62 +25,33 @@ $exercises = $this->Common->getExercises();
                         <!--                            <form id="form_validation" method="POST">-->
                         <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']);  ?>
                         <?= $this->Form->create($fitnessTest, ['id' => 'addbody', 'templates' => ['inputContainer' => '{{content}}']]) ?>
-                           <?php if(!empty($exercises[0]->name)) {?>
+                           <?php if(!empty($bodies_lists)) {
+                                        foreach ($bodies_lists as $bodies_list):
+                                        ?>
                         <div class="form-group form-float">
-                            <label class="form-label text-center"><?= $exercises[0]->name ?></label>
-                            <div class="form-line">
-                                <?= $this->Form->control('exercise_id['.$exercises[0]->id.']', ['class' => 'form-control', 'type' => 'hidden', 'value'=>$exercises[0]->id , 'label' => false, 'hidden']) ?> 
-                                
-                            </div>
+                            <label class="form-label text-center"><?= $bodies_list->name ?></label>
+                          
                         </div>
                         <div class="row"> 
+                            <?php   $exercises = $this->Common->getExercises($bodies_list->id);    foreach ($exercises as $exercise):  ?>
                          <div class="col-md-6"> 
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('exercise_l['.$exercises[0]->id.']', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Left</label>
+                                <?= $this->Form->control($bodies_list->id.'['.$exercise->id.']', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                <label class="form-label"><?= $exercise->name ?></label>
                             </div>
                         </div>
                         </div>
-                            <div class="col-md-6"> 
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('exerciser['.$exercises[0]->id.']', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Right</label>
-                            </div>
+                            <?php endforeach;   ?>
                         </div>
-                        </div>
-                        </div>
-                             <?php } ?>
-                        <?php if(!empty($exercises[1]->name)) {?>
-                         <div class="form-group form-float">
-                            <label class="form-label text-center"><?= $exercises[1]->name ?></label>
-                            <div class="form-line">
-                                <?= $this->Form->control('exercise_id['.$exercises[1]->id.']', ['class' => 'form-control',  'value'=>$exercises[1]->id,'type' => 'hidden', 'label' => false, 'hidden']) ?> 
-                                
-                            </div>
-                        </div>
-                        <div class="row"> 
-                         <div class="col-md-6"> 
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('exercise_l['.$exercises[1]->id.']', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Left</label>
-                            </div>
-                        </div>
-                        </div>
-                            <div class="col-md-6"> 
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('exerciser['.$exercises[1]->id.']', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Right</label>
-                            </div>
-                        </div>
-                        </div>
-                        </div>
-                        <?php }?>
+                         <?php endforeach;  } ?>
+                       
 
                         <div class="form-group form-float">
+                             <div class="form-line">
+                                <?= $this->Form->control('exercise_id', ['class' => 'form-control', 'type' => 'hidden', 'value'=>5 , 'label' => false, 'hidden']) ?> 
+                                
+                            </div>
                             <div class="form-line">
                                 <?= $this->Form->input('status', ['empty' => __('Select status'), 'options' => $status, 'class' => 'form-control']); ?>
                             </div>

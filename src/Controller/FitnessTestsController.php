@@ -56,14 +56,19 @@ class FitnessTestsController extends AppController
                       if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
+      $excerise_name = 'demo';
         
-        $excerise_type = 'exercise_left';
-        if (isset($this->request->query['excerise_type']) && $this->request->query['excerise_type'] != "") {
-            $excerise_type = $this->request->query['excerise_type'];
+         if (isset($this->request->query['body_id']) && $this->request->query['body_id'] != "") {
+            $body_id = $this->request->query['body_id'];
         }
-        $exercise_id = 1;
-        if (isset($this->request->query['exercise_id']) && $this->request->query['exercise_id'] != "") {
+        
+         if (isset($this->request->query['exercise_id']) && $this->request->query['exercise_id'] != "") {
             $exercise_id = $this->request->query['exercise_id'];
+            
+        }
+         if (isset($this->request->query['exercise_name']) && $this->request->query['exercise_name'] != "") {
+            $excerise_name = $this->request->query['exercise_name'];
+            
         }
         
         $user_id = $this->usersdetail['users_id'];
@@ -73,24 +78,31 @@ class FitnessTestsController extends AppController
                                    ->where(['FitnessTests.user_id'=>$user_id, 'FitnessTests.id <=' =>$id])
                                    ->order(['FitnessTests.id DESC'])->limit(2)->toArray();
         
+        //pr($fitnessTest); die;
+        
        if  (isset($exercise_id) && !empty($exercise_id)) {
                 $fitnessTests = $this->FitnessTests->find()
-                                   ->select(['id','exercise_id','exercise_type','created'])
+                                   ->select(['id','exercise_type','created'])
                                    ->where(['FitnessTests.user_id'=>$user_id, 'FitnessTests.id <=' =>$id])
                                    ->order(['FitnessTests.id DESC'])->limit(10)->toArray();
+                
+                //pr($fitnessTests); 
                 
              $chartshow = [];
         foreach ($fitnessTests as $key => $value) {
             $date = date("Y-m-d",strtotime($value->created));
               $preValue = json_decode($value->exercise_type); 
-               $exercise_show = $preValue->$excerise_type->$exercise_id;
+              
+              $exercise_show = $preValue->$body_id->$exercise_id;
             
                 $chartshow[$key] =  ['y' => $date,'Dates' =>$exercise_show]; 
                // $chartshow[$key] =  ['y' => $value->weight,'x' =>$value->height]; 
             }
             }
+         // pr($chartshow);
+          //die;
            
-        $this->set(compact('fitnessTest', 'chartshow','excerise_type'));
+        $this->set(compact('fitnessTest', 'chartshow','excerise_name'));
         $this->set('_serialize', ['fitnessTest']);
     }
     
@@ -108,25 +120,14 @@ class FitnessTestsController extends AppController
        $fitnessTest = $this->FitnessTests->newEntity();
         if ($this->request->is('post')) {
             $data1 =[];
-            $data2 =[];
             $data = $this->request->data;
-            
-            //pr($data); 
-            $ids = implode(",", $data['exercise_id']);
-            //pr($ids); die;
-            $idl = $data['exercise_l'];
-            $idr = $data['exerciser'];
-            //$idt = $data['exercisert'];
-            $user_id = $this->usersdetail['users_id'];
-
-                $data2['exercise_left'] = $idl;
-                $data2['exercise_right'] = $idr;
+            //pr($data);
+                $user_id = $this->usersdetail['users_id'];
+                $data1['exercise_type'] = json_encode($data);
                 $data1['status'] = $data['status'];
+                $data1['exercise_id'] = $data['exercise_id'];
                 $data1['user_id'] = $user_id;
-                $data1['exercise_id'] = $ids;
-             
-                $data1['exercise_type'] = json_encode($data2);
-               
+               //pr($data1); die;
                
                 $fitnessTest = $this->FitnessTests->patchEntity($fitnessTest, $data1);
             if ($this->FitnessTests->save($fitnessTest)) {
@@ -160,26 +161,15 @@ class FitnessTestsController extends AppController
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $fitnessTest = $this->FitnessTests->patchEntity($fitnessTest, $this->request->getData());
-             $data1 =[];
-            $data2 =[];
+               $data1 =[];
             $data = $this->request->data;
-            
-            //pr($data); 
-            $ids = implode(",", $data['exercise_id']);
-            //pr($ids); die;
-            $idl = $data['exercise_l'];
-            $idr = $data['exerciser'];
-            //$idt = $data['exercisert'];
-            $user_id = $this->usersdetail['users_id'];
-
-                $data2['exercise_left'] = $idl;
-                $data2['exercise_right'] = $idr;
+            //pr($data);
+                $user_id = $this->usersdetail['users_id'];
+                $data1['exercise_type'] = json_encode($data);
                 $data1['status'] = $data['status'];
-                //$data1['user_id'] = $user_id;
-                $data1['exercise_id'] = $ids;
-             
-                $data1['exercise_type'] = json_encode($data2);
-               
+                $data1['exercise_id'] = $data['exercise_id'];
+                $data1['user_id'] = $user_id;
+               //pr($data1); die;
                
                 $fitnessTest = $this->FitnessTests->patchEntity($fitnessTest, $data1);
             if ($this->FitnessTests->save($fitnessTest)) {
@@ -192,7 +182,7 @@ class FitnessTestsController extends AppController
         }
         //$val = '1';
         $exercise_value = json_decode($fitnessTest->exercise_type);
-        //pr($exercise_value->exercise_left->$val); die;
+        //pr($exercise_value); die;
         
         $exercises = $this->FitnessTests->Exercises->find('list', ['limit' => 200]);
         $this->set(compact('fitnessTest', 'exercises','exercise_value'));

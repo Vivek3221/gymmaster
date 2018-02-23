@@ -1,17 +1,13 @@
 <?php
-//pr($fitnessTest[0]->exercise_id); die;
-$exercises = $this->Common->getExercises();
-//pr($exercises);
-$exercise_id = explode(',', $fitnessTest[0]->exercise_id);
-$exercise_id1 = $exercise_id[0];
-$exercise_id2 = $exercise_id[1];
-$exercises[$exercise_id1]; 
-$currentValue = json_decode($fitnessTest[0]->exercise_type); 
-if(isset($fitnessTest[1]->exercise_type))
+
+$bodies_lists = $this->Common->getBodies();
+//$excerise_type = 'dddd';
+$fitness1  = json_decode($fitnessTest[0]->exercise_type);
+if(isset($fitnessTest[1]) && !empty($fitnessTest[1]))
 {
-$preValue = json_decode($fitnessTest[1]->exercise_type); 
+$fitness2  = json_decode($fitnessTest[1]->exercise_type);
 }
-//pr($currentValue);die;
+//pr($fitness1->$vvv); die;
 ?>
 
 
@@ -42,53 +38,39 @@ $preValue = json_decode($fitnessTest[1]->exercise_type);
                             <div class="contacts view large-9 medium-8 columns content">
                             
                             <table class="vertical-table">
+                                <?php if(!empty($bodies_lists)) {
+                                        foreach ($bodies_lists as $bodies_list):
+                                            $body_id = $bodies_list->id;
+                                        ?>
                                 <tr>
-                                    <th scope="row"><?= $exercises[0]->name ?></th>
+                                    <th scope="row"><?= $bodies_list->name ?></th>
                                     <th scope="row"><?= __('Current') ?></th>
+                                    <?php if(isset($fitness2) && !empty($fitness2))
+                                    {?>
                                     <th scope="row"><?= __('Previous') ?></th>
-                                </tr>
-                                 <tr>
-                                    <th scope="row"><a href="?excerise_type=exercise_left&exercise_id=<?= $exercise_id1 ?>" class="waves-effect "><?= __('Left') ?></a></th>
-                                    
-                                        <td><?= $currentValue->exercise_left->$exercise_id1 ?></td>
-                                    <?php if(isset($fitnessTest[1]->exercise_type))
-                                    {?>
-
-                                        <td><?= $preValue->exercise_left->$exercise_id1 ?></td>
-                                    <?php } ?>
-                                   </tr>
-                                 <tr>
-                                    <th scope="row"><a href="?excerise_type=exercise_right&exercise_id=<?= $exercise_id1 ?>" class="waves-effect "><?= __('Right') ?></a></th>
-                                    
-                                        <td><?= $currentValue->exercise_right->$exercise_id1 ?></td>
-                                    <?php if(isset($fitnessTest[1]->exercise_type))
-                                    {?>
-                                        <td><?= $preValue->exercise_right->$exercise_id1 ?></td>
-                                    <?php } ?>
-                                   </tr> 
-                                   <tr>
-                                    <th scope="row"><?= $exercises[1]->name ?></th>
-                                    <th scope="row"><?= __('Current') ?></th>
-                                    <th scope="row"><?= __('Previous') ?></th>
-                                </tr>
-                                 <tr>
-                                    <th scope="row"><a href="?excerise_type=exercise_left&exercise_id=<?= $exercise_id2 ?>" class="waves-effect "><?= __('Left') ?></a></th>
-                                    
-                                        <td><?= $currentValue->exercise_left->$exercise_id2 ?></td>
-                                    <?php if(isset($fitnessTest[1]->exercise_type))
-                                    {?>
-                                        <td><?= $preValue->exercise_left->$exercise_id2 ?></td>
-                                    <?php } ?>
-                                   </tr>
-                                 <tr>
-                                    <th scope="row"><a href="?excerise_type=exercise_right&exercise_id=<?= $exercise_id2 ?>" class="waves-effect "><?= __('Right') ?></a></th>
-                                    
-                                        <td><?= $currentValue->exercise_right->$exercise_id2 ?></td>
-                                    <?php if(isset($fitnessTest[1]->exercise_type))
-                                    {?>
-                                        <td><?= $preValue->exercise_right->$exercise_id2 ?></td>
                                     <?php }?>
-                                   </tr>  
+                                </tr>
+                                <?php   $exercises = $this->Common->getExercises($bodies_list->id);    foreach ($exercises as $exercise): 
+                                    
+                                    $exercise_id = $exercise->id;
+                                    ?>
+                                 <tr>
+                                    <th scope="row"><a href="?body_id=<?= $bodies_list->id ?>&exercise_id=<?= $exercise->id ?>&exercise_name=<?= $exercise->name ?>" class="waves-effect "><?= $exercise->name ?></a></th>
+                                    
+                                        <td><?=  $fitness1->$body_id->$exercise_id  ?></td>
+                                <?php if(isset($fitness2) && !empty($fitness2))
+                                    {
+                                    if(isset($fitness2->$body_id->$exercise_id) && !empty($fitness2->$body_id->$exercise_id))
+                                    {
+                                    ?>
+                                        <td><?=  $fitness2->$body_id->$exercise_id  ?></td>
+                                    <?php } } ?>
+                                   </tr>
+                                   <?php endforeach;   ?>
+                                
+                                <?php endforeach;  } ?>
+                                
+                                 
                                 
                                 
                             </table>
@@ -113,7 +95,7 @@ $preValue = json_decode($fitnessTest[1]->exercise_type);
         data: <?= json_encode($chartshow) ?>,
             xkey: 'y',
             ykeys: ['Dates'],
-            labels: ['<?= $excerise_type ?>'],
+            labels: ['<?= $excerise_name ?>'],
             lineColors: ['rgb(233, 30, 99)'],
             lineWidth: 3
     });
