@@ -178,8 +178,20 @@ class CommonHelper extends Helper {
     
      public function getBodies()
     {
+        $get_exercises = TableRegistry::get('Exercises');
+        $get_body_ids = $get_exercises->find()
+                                    ->select(['Exercises.body_id'])
+                                    ->where(['status' => 1])
+                                    ->distinct(['body_id'])
+                                    ->toArray(); 
+        foreach ($get_body_ids as $get_body_id)
+                            {
+                                $body_id[] = $get_body_id->body_id;
+                            }
+                           // pr($body_id); die;
+         
         $get_bodies = TableRegistry::get('Bodies');
-        $bodies_lists = $get_bodies->find()->select(['name', 'description','id'])->where(['status' => 1])->limit(5)->toArray();
+        $bodies_lists = $get_bodies->find()->select(['name', 'description','id'])->where(['status' => 1,'id IN'=>$body_id])->toArray();
         return $bodies_lists;
     }
   
