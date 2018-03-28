@@ -172,10 +172,6 @@ class UsersController extends AppController
                      
                      }
                 
-                die;
-                
-                
-            
            $userDataArr['name']      = $data['name'];
            $userDataArr['email']     = $data['email'];
             $toEmail                 = $data['email'];
