@@ -37,6 +37,11 @@ class UsersTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        
+         $this->belongsTo('Partners', [
+            'foreignKey' => 'partner_id',
+            'joinType' => 'INNER'
+        ]);
     }
 
     /**

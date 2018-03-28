@@ -129,12 +129,19 @@ class UsersController extends AppController
      if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
      return $this->redirect('/');
    }
+   
+        $users_type = $this->usersdetail['users_type'];
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             
             $data = $this->request->data;
+            $user_types = '';
+            if(isset($this->request->data['user_type']) && !empty($this->request->data['user_type']))
+            {
+              $user_types = $this->request->data['user_type'];   
+            }
            
-           // pr($data); 
+           
             $t = time();
             $name = $data['name'] . $t;
             
@@ -143,11 +150,31 @@ class UsersController extends AppController
             $data['guestid'] = '11';
             $data['verified'] = '1';
             $data['active'] = '2';
-//             pr($data);exit;
+           // pr($data);exit;
            
             $user = $this->Users->patchEntity($user, $data);
             $useradd =$this->Users->save($user);
             if ($useradd) {
+                
+                if(isset($user_types) && ($user_types == 2))
+                {
+                     $this->Partners = TableRegistry::get('Partners');
+                     $partner = $this->Partners->newEntity();
+                     $data1['user_id'] = $useradd->id;
+                     $partner = $this->Partners->patchEntity($partner, $data1);
+                     $partner_add = $this->Partners->save($partner);
+                      if ($partner_add) {
+                $userUpdate = $this->Users->get($useradd->id);
+                $userData['partner_id'] = $partner_add->id;
+                $userUpdate = $this->Users->patchEntity($userUpdate, $userData);
+                $this->Users->save($userUpdate);
+                      }
+                     
+                     }
+                
+                die;
+                
+                
             
            $userDataArr['name']      = $data['name'];
            $userDataArr['email']     = $data['email'];
@@ -171,7 +198,7 @@ class UsersController extends AppController
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
-        $this->set(compact('user'));
+        $this->set(compact('user','users_type'));
         $this->set('_serialize', ['user']);
     }
     
@@ -408,7 +435,7 @@ class UsersController extends AppController
                     
                     $user_detail = $this->Users->find()->select(['id','user_type','name','email'])->where(['email' => $data['email'], 'active' => 1])->first();
                     $this->Cookie->write('users',['users_id'=>$user_detail->id,'users_name'=>$user_detail->name,'users_email'=>$user_detail->email,'users_type' =>$user_detail->user_type]);
-                    $this->request->session()->write('users',['users_id'=>$user_detail->id,'users_name'=>$user_detail->name,'users_email'=>$user_detail->email]);
+                    $this->request->session()->write('users',['users_id'=>$user_detail->id,'users_name'=>$user_detail->name,'users_email'=>$user_detail->email,'users_type' =>$user_detail->user_type]);
              
                     return $this->redirect(['controller' => 'Users', 'action' => 'index']);
                }

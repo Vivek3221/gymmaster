@@ -1,6 +1,7 @@
 <?php
 $status = $this->Common->getstatus();
 $user_type = $this->Common->getType();
+//pr($users_type); die;
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -23,7 +24,8 @@ $user_type = $this->Common->getType();
                         <!--                            <form id="form_validation" method="POST">-->
                         <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']); ?>
                         <?= $this->Form->create($user, ['id' => 'addusers','templates' => ['inputContainer' => '{{content}}']]) ?>
-      
+                    <?php  if(isset($users_type) && ($users_type == 1))
+                    {?>
                         <div class="form-group form-float">
                             <div class="form-line">
 <!--                                        <input type="text" class="form-control" name="name" required>-->
@@ -31,6 +33,7 @@ $user_type = $this->Common->getType();
                                 
                             </div>
                         </div>
+                    <?php } ?>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('name', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
