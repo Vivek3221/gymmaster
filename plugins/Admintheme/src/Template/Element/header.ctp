@@ -26,11 +26,11 @@
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
                  <a href="" class="navbar-brand">
-                <?= __('Gym Admin') ?></a>
+                <?= __('Data Moniter') ?></a>
             </div>
-            <div class="collapse navbar-collapse" id="navbar-collapse">
+<!--            <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <!-- Notifications -->
+                     Notifications 
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             <i class="material-icons">notifications</i>
@@ -138,8 +138,8 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- #END# Notifications -->
+                     #END# Notifications 
                 </ul>
-            </div>
+            </div>-->
         </div>
     </nav>

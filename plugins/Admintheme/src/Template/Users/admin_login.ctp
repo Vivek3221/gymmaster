@@ -5,7 +5,7 @@
 <div class="login-page">
     <div class="login-box">
         <div class="logo">
-            <a href="javascript:void(0);">Gym Admin</a>
+            <a href="javascript:void(0);">Data Moniter</a>
            <?= $this->Flash->render() ?>
         </div>
         <div class="card">

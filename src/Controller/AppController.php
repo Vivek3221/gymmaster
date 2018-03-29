@@ -63,7 +63,16 @@ class AppController extends Controller
            $usersdetail          = $this->request->session()->read('users');
            //pr($usersdetail);exit;
            $this->usersdetail    = $this->request->session()->read('users');
-       
+        
+        //Guest User ID
+        $session_id      = session_id();
+        $this->Cookie->write('session_id', $session_id);
+        if ($this->Cookie->read('guest_id') == null || $this->Cookie->read('guest_id') == '') {
+            $user_agent = $this->request->env('HTTP_USER_AGENT');
+            $user_ip = $this->request->env('REMOTE_ADDR');
+            $guest_id = md5($user_agent . $user_ip . $session_id);
+            $this->Cookie->write('guest_id', $guest_id);
+        }
 
         $this->set(compact('usersdetail','username'));
         $this->set('_serialize', ['cookie_value']);

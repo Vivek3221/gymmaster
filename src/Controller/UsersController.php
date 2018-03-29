@@ -124,151 +124,134 @@ class UsersController extends AppController
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add()
-    {
-     if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
-     return $this->redirect('/');
-   }
-   
+    public function add() {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $users_type = $this->usersdetail['users_type'];
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
-            
+
             $data = $this->request->data;
             $user_types = '';
-            if(isset($this->request->data['user_type']) && !empty($this->request->data['user_type']))
-            {
-              $user_types = $this->request->data['user_type'];   
+            if (isset($this->request->data['user_type']) && !empty($this->request->data['user_type'])) {
+                $user_types = $this->request->data['user_type'];
             }
-           
-           
+
+
             $t = time();
             $name = $data['name'] . $t;
-            
+
 
             $data['username'] = $this->slugify($name);
-            $data['guestid'] = '11';
+            $data['guestid'] = $this->Cookie->read('guest_id');
             $data['verified'] = '1';
             $data['active'] = '2';
-           // pr($data);exit;
-           
+            // pr($data);exit;
+
             $user = $this->Users->patchEntity($user, $data);
-            $useradd =$this->Users->save($user);
+            $useradd = $this->Users->save($user);
             if ($useradd) {
-                
-                if(isset($user_types) && ($user_types == 2))
-                {
-                     $this->Partners = TableRegistry::get('Partners');
-                     $partner = $this->Partners->newEntity();
-                     $data1['user_id'] = $useradd->id;
-                     $partner = $this->Partners->patchEntity($partner, $data1);
-                     $partner_add = $this->Partners->save($partner);
-                      if ($partner_add) {
-                $userUpdate = $this->Users->get($useradd->id);
-                $userData['partner_id'] = $partner_add->id;
-                $userUpdate = $this->Users->patchEntity($userUpdate, $userData);
-                $this->Users->save($userUpdate);
-                      }
-                     
-                     }
-                
-           $userDataArr['name']      = $data['name'];
-           $userDataArr['email']     = $data['email'];
-            $toEmail                 = $data['email'];
-            $subject                 = 'Inquery Successful | Gym-Admin';
-            $email                   = new Email();
-            $email->transport('default');
-            try {
-                $email->emailFormat('html');
-                $email->template('inquery')
-                        ->from(['support@datamonitering.com' => 'Gym-Admin'])
-                        ->to($toEmail)
-                        ->subject($subject)
-                        ->viewVars($userDataArr)
-                        ->send();
-            } catch (Exception $e) {
 
-            }$this->Flash->success(__('The user has been saved.'));
+                if (isset($user_types) && ($user_types == 2)) {
+                    $this->Partners = TableRegistry::get('Partners');
+                    $partner = $this->Partners->newEntity();
+                    $data1['user_id'] = $useradd->id;
+                    $partner = $this->Partners->patchEntity($partner, $data1);
+                    $partner_add = $this->Partners->save($partner);
+                    if ($partner_add) {
+                        $userUpdate = $this->Users->get($useradd->id);
+                        $userData['partner_id'] = $partner_add->id;
+                        $userUpdate = $this->Users->patchEntity($userUpdate, $userData);
+                        $this->Users->save($userUpdate);
+                    }
+                }
 
-                return $this->redirect(['action' => 'payment',$useradd->id]);
+                $userDataArr['name'] = $data['name'];
+                $userDataArr['email'] = $data['email'];
+                $toEmail = $data['email'];
+                $subject = 'Inquery Successful | Datamonitoring';
+                $email = new Email();
+                $email->transport('default');
+                try {
+                    $email->emailFormat('html');
+                    $email->template('inquery')
+                            ->from(['support@datamonitering.com' => 'Datamonitoring'])
+                            ->to($toEmail)
+                            ->subject($subject)
+                            ->viewVars($userDataArr)
+                            ->send();
+                } catch (Exception $e) {
+                    
+                }$this->Flash->success(__('The user has been saved.'));
+
+                return $this->redirect(['action' => 'payment', $useradd->id]);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
-        $this->set(compact('user','users_type'));
+        $this->set(compact('user', 'users_type'));
         $this->set('_serialize', ['user']);
     }
-    
-    
-     public function payment($id ='')
-    {
-     if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
-     return $this->redirect('/');
-   }
-              $user = $this->Users->get($id, [
+
+    public function payment($id = '') {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        $user = $this->Users->get($id, [
             'contain' => []
         ]);
-             
-              if ($this->request->is(['patch', 'post', 'put'])) {
-                  
-               $data = $this->request->data;
-               if($data['password'] != $data['cpassword'])
-               {
-                  return $this->redirect(['action' => 'payment',$id]); 
-               }
-               $data['password'] = md5($data['password']);
-               
-                if (isset($this->request->data['images']['name']) && $data['images']['name'] != "") {
+
+        if ($this->request->is(['patch', 'post', 'put'])) {
+
+            $data = $this->request->data;
+            if ($data['password'] != $data['cpassword']) {
+                return $this->redirect(['action' => 'payment', $id]);
+            }
+            $data['password'] = md5($data['password']);
+
+            if (isset($this->request->data['images']['name']) && $data['images']['name'] != "") {
                 $flname = time() . str_replace(" ", "", $data['images']['name']);
                 $flpath = WWW_ROOT . "img/" . $flname;
                 if (move_uploaded_file($data['images']['tmp_name'], $flpath)) {
                     $data['photo'] = $flname;
                 }
             }
-               
-               //pr($data); die;
-              $user = $this->Users->patchEntity($user, $data);
-              
-             // pr($user); die;
-              $useradd =$this->Users->save($user);
-           if ($useradd) {
-            
-           $userDataArr['name']      = $data['name'];
-           $userDataArr['password']  = $data['cpassword'];
-           $userDataArr['email']     = $data['email'];
-           $userDataArr['login_url'] = Router::url('/',['controller' => 'Users', 'action' => 'login']);
-            $toEmail                 = $data['email'];
-            $subject                 = 'Inquery Successful | Gym-Admin';
-            $email                   = new Email();
-            $email->transport('default');
-            try {
-                $email->emailFormat('html');
-                $email->template('userpass')
-                        ->from(['noreply@gymadmin.com' => 'Gym-Admin'])
-                        ->to($toEmail)
-                        ->subject($subject)
-                        ->viewVars($userDataArr)
-                        ->send();
-            } catch (Exception $e) {
 
-            }$this->Flash->success(__('The user has been saved.'));
+            //pr($data); die;
+            $user = $this->Users->patchEntity($user, $data);
 
-                return $this->redirect(['action' => 'view',$useradd->id]);
+            // pr($user); die;
+            $useradd = $this->Users->save($user);
+            if ($useradd) {
+
+                $userDataArr['name'] = $data['name'];
+                $userDataArr['password'] = $data['cpassword'];
+                $userDataArr['email'] = $data['email'];
+                $userDataArr['login_url'] = Router::url('/', ['controller' => 'Users', 'action' => 'login']);
+                $toEmail = $data['email'];
+                $subject = 'Inquery Successful | Gym-Admin';
+                $email = new Email();
+                $email->transport('default');
+                try {
+                    $email->emailFormat('html');
+                    $email->template('userpass')
+                            ->from(['support@datamonitering.com' => 'Datamonitoring'])
+                            ->to($toEmail)
+                            ->subject($subject)
+                            ->viewVars($userDataArr)
+                            ->send();
+                } catch (Exception $e) {
+                    
+                }$this->Flash->success(__('The user has been saved.'));
+
+                return $this->redirect(['action' => 'view', $useradd->id]);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
-               
-                  
-              }
-              
-              
-              
-              
-       
-   
+        }
         $user_id = $id;
-        $this->set(compact('user_id','user'));
-        $this->set('_serialize', ['user_id','user']);
+        $this->set(compact('user_id', 'user'));
+        $this->set('_serialize', ['user_id', 'user']);
     }
-    
 
     /**
      * Edit method
@@ -287,7 +270,7 @@ class UsersController extends AppController
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->data;
-            $data['guestid'] = '11';
+           // $data['guestid'] = '11';
             
            if (isset($this->request->data['images']['name']) && $data['images']['name'] != "") {
                 $flname = time() . str_replace(" ", "", $data['images']['name']);
