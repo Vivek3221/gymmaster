@@ -51,6 +51,9 @@ class CommonHelper extends Helper {
     public function getStatus() {
         return['1' => 'Active', '0' => 'Inactive'];
     }
+    public function getUserStatus() {
+        return['1' => 'Active', '0' => 'Inactive','2'=>'Enquiry'];
+    }
     public function getModPayment() {
         return['0' => 'By Cash', '1' => 'By Check', '2' => 'By Online'];
     }
@@ -67,52 +70,19 @@ class CommonHelper extends Helper {
         return['2' => 'Partner', '3' => 'User'];
     }
     
-     public function targetType() {
-        return['1' => 'Achive', '0' => 'Fail'];
-    }
-    
-    public function getCategorytype() {
-        return['1' => 'News', '2' => 'Faqs'];
-    }
-    public function getNimbuzzCategorytype() {
-        return['1' => 'News', '2' => 'Faqs','3'=>'Articles'];
-    }
+   
      public function getGender() {
         return['Male' => 'Male', 'Female' => 'Female'];
     }
     /*
      * Frequency options for news site
      */
-    public function getfrequency() {
-        return['1' => 'Frequency 1', '2' => 'Frequency 2', '3' => 'Frequency 3', '4' => 'Frequency 4'];
-    }
     
-    public function getLanguagenibuzzName() {
-        return['en_US' => 'English', 'hi_IN' => 'Hindi', 'fr_FR' => 'French'];
-    }
-    
-    /*
-     * Limitation options for news site
-     */
-    public function getlimitation() {
-        return['1' => 'Limitation 1', '2' => 'Limitation 2', '3' => 'Limitation 3', '4' => 'Limitation 4'];
-    }
-
-  
     
     
     /*
      * get the name in particular language
-     */
-    public function getLangValue($val, $lan){
-        $value = json_decode($val);
-        if(isset($value->$lan) && $value->$lan != ""){
-            return $value->$lan;
-        } else if(isset($value->en_US)){
-            return $value->en_US;
-        }
-    }
-    
+   
     /*
      * truncate description
      */
@@ -155,15 +125,7 @@ class CommonHelper extends Helper {
         return $nameData;
     }
     
-      public function getCommonName($id, $tableName) {
-        $tableEntity = TableRegistry::get($tableName);
-        $data = $tableEntity->find()
-                ->select(['id', 'name'])
-                ->where(['id' => $id])
-                ->first();
-        return $data['name'];
-    }    
-
+    
     
     public function getNoOfRec() {
         return [10 => 10, 20 => 20, 30 => 30, 40 => 40, 50 => 50, 100 => 100];

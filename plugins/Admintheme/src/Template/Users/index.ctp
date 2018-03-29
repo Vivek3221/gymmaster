@@ -1,6 +1,6 @@
 
 <?php
-$statu = $this->Common->getstatus();
+$statu = $this->Common->getUserStatus();
 $nofrec = $this->Common->getNoOfRec();
 ?>
 <section class="content">
@@ -45,9 +45,8 @@ $nofrec = $this->Common->getNoOfRec();
                                     <tr>
                                         <th><?= __('User Id') ?></th>
                                         <th><?= __('Name') ?></th>
-                                        <th><?= __('Username') ?></th>
                                         <th><?= __('Email') ?></th>
-                                        <!--<th><?= __('Groups(s)') ?></th>-->
+                                        <th><?= __('User Type') ?></th>
                                          <th><?= __('Verified') ?></th>
                                         <th><?= __('Status') ?></th>
                                         <th><?= __('Action') ?></th>
@@ -57,9 +56,8 @@ $nofrec = $this->Common->getNoOfRec();
                                     <tr>
                                         <th><?= __('User Id') ?></th>
                                         <th><?= __('Name') ?></th>
-                                        <th><?= __('Username') ?></th>
                                         <th><?= __('Email') ?></th>
-                                        <!--<th><?= __('Groups(s)') ?></th>-->
+                                        <th><?= __('User Type') ?></th>
                                         <th><?= __('Verified') ?></th>
                                         <th><?= __('Status') ?></th>
                                         <th><?= __('Action') ?></th>
@@ -71,11 +69,8 @@ $nofrec = $this->Common->getNoOfRec();
                                     <tr>
                                         <td><?= $user['id'] ?></td>
                                         <td><?= ucfirst($user['name']) ?></td>
-                                        <td><?= $user['username'] ?></td>
-                                        <td><?= ($user['email'])
-                                            
-                                             ?></td>
-                                        <!--<td><?= $user['user_group_name'] ?></td>-->
+                                        <td><?= ($user['email'])?></td>
+                                        <td><?= ($user['user_type'])?></td>
                                         <td id='verified<?= $user->id ?>'>
                                             <?php
                                            
