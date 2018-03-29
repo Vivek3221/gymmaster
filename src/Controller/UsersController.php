@@ -181,7 +181,7 @@ class UsersController extends AppController
             try {
                 $email->emailFormat('html');
                 $email->template('inquery')
-                        ->from(['noreply@gymadmin.com' => 'Gym-Admin'])
+                        ->from(['support@datamonitering.com' => 'Gym-Admin'])
                         ->to($toEmail)
                         ->subject($subject)
                         ->viewVars($userDataArr)
