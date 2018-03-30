@@ -27,14 +27,16 @@ $getPayDuration = $this->Common->getPayDuration();
                         <!--                            <form id="form_validation" method="POST">-->
                         <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']); ?>
                         <?= $this->Form->create($user, ['enctype' => 'multipart/form-data','id' => 'editusers','templates' => ['inputContainer' => '{{content}}']]) ?>
-      
+      <?php  if(isset($users_type) && ($users_type == 1))
+                    {?>
                         <div class="form-group form-float">
                             <div class="form-line">
 <!--                                        <input type="text" class="form-control" name="name" required>-->
-                                <?= $this->Form->control('user_type', ['class' => 'form-control', 'type' => 'select','options'=>$user_type]) ?>          
+                                <?= $this->Form->control('user_type', ['class' => 'form-control', 'type' => 'select', 'empty'=>__('Select Type'),'options'=>$user_type]) ?>          
                                 
                             </div>
                         </div>
+                    <?php } ?>
                         
                             <div class="form-group form-float">
                             <div class="form-line">

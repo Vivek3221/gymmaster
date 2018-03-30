@@ -53,6 +53,10 @@ class UsersController extends AppController
         $norec = 10;
         $status = '';
         $search = [];
+        $users_type = $this->usersdetail['users_type'];
+        $users_id = $this->usersdetail['users_id'];
+        
+        
         if (isset($this->request->query['name']) && trim($this->request->query['name']) != "") {
             $name = $this->request->query['name'];
             $search['Users.name REGEXP'] = $name;
@@ -71,6 +75,10 @@ class UsersController extends AppController
         if (isset($this->request->query['norec']) && trim($this->request->query['norec']) != "") {
             $norec = $this->request->query['norec'];
         }
+        
+         if (isset($users_type) && ($users_type == 2)) {
+          $search['Users.partner_id'] = $users_id;
+          }
         
          if (isset($search)) {
 
@@ -128,20 +136,22 @@ class UsersController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
+       // pr($this->usersdetail);die;
         $users_type = $this->usersdetail['users_type'];
+        $users_id = $this->usersdetail['users_id'];
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
 
             $data = $this->request->data;
-            $user_types = '';
-            if (isset($this->request->data['user_type']) && !empty($this->request->data['user_type'])) {
-                $user_types = $this->request->data['user_type'];
-            }
-
-
+            //pr($users_type);
+           // pr($data); die;
+            
             $t = time();
             $name = $data['name'] . $t;
-
+          if (isset($users_type) && ($users_type == 2)) {
+          $data['user_type'] = '3';
+          $data['partner_id'] = $users_id;
+          }
 
             $data['username'] = $this->slugify($name);
             $data['guestid'] = $this->Cookie->read('guest_id');
@@ -153,19 +163,19 @@ class UsersController extends AppController
             $useradd = $this->Users->save($user);
             if ($useradd) {
 
-                if (isset($user_types) && ($user_types == 2)) {
-                    $this->Partners = TableRegistry::get('Partners');
-                    $partner = $this->Partners->newEntity();
-                    $data1['user_id'] = $useradd->id;
-                    $partner = $this->Partners->patchEntity($partner, $data1);
-                    $partner_add = $this->Partners->save($partner);
-                    if ($partner_add) {
-                        $userUpdate = $this->Users->get($useradd->id);
-                        $userData['partner_id'] = $partner_add->id;
-                        $userUpdate = $this->Users->patchEntity($userUpdate, $userData);
-                        $this->Users->save($userUpdate);
-                    }
-                }
+//                if (isset($users_type) && ($users_type == 2)) {
+//                    $this->Partners = TableRegistry::get('Partners');
+//                    $partner = $this->Partners->newEntity();
+//                    $data1['user_id'] = $users_id;
+//                    $partner = $this->Partners->patchEntity($partner, $data1);
+//                    $partner_add = $this->Partners->save($partner);
+//                    if ($partner_add) {
+//                        $userUpdate = $this->Users->get($useradd->id);
+//                        $userData['partner_id'] = $partner_add->id;
+//                        $userUpdate = $this->Users->patchEntity($userUpdate, $userData);
+//                        $this->Users->save($userUpdate);
+//                    }
+//                }
 
                 $userDataArr['name'] = $data['name'];
                 $userDataArr['email'] = $data['email'];
@@ -265,6 +275,7 @@ class UsersController extends AppController
      if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
       return $this->redirect('/');
         }
+        $users_type = $this->usersdetail['users_type'];
         $user = $this->Users->get($id, [
             'contain' => []
         ]);
@@ -290,7 +301,7 @@ class UsersController extends AppController
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
         //pr($user); die;
-        $this->set(compact('user'));
+        $this->set(compact('user','users_type'));
         $this->set('_serialize', ['user']);
     }
 
