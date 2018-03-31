@@ -43,22 +43,20 @@ $nofrec = $this->Common->getNoOfRec();
                             <table class="table table-bordered table-striped table-hover dataTable responsive" id="userstable">
                                 <thead>
                                     <tr>
-                                        <th><?= __('User Id') ?></th>
                                         <th><?= __('Name') ?></th>
                                         <th><?= __('Email') ?></th>
                                         <th><?= __('User Type') ?></th>
-                                         <th><?= __('Verified') ?></th>
+                                         <th><?= __('Gender') ?></th>
                                         <th><?= __('Status') ?></th>
                                         <th><?= __('Action') ?></th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
-                                        <th><?= __('User Id') ?></th>
                                         <th><?= __('Name') ?></th>
                                         <th><?= __('Email') ?></th>
                                         <th><?= __('User Type') ?></th>
-                                        <th><?= __('Verified') ?></th>
+                                        <th><?= __('Gender') ?></th>
                                         <th><?= __('Status') ?></th>
                                         <th><?= __('Action') ?></th>
                                     </tr>
@@ -67,16 +65,18 @@ $nofrec = $this->Common->getNoOfRec();
                                    
                                     <?php foreach ($users as $user) { ?>
                                     <tr>
-                                        <td><?= $user['id'] ?></td>
                                         <td><?= ucfirst($user['name']) ?></td>
                                         <td><?= ($user['email'])?></td>
                                         <td><?= ($user['user_type'])?></td>
-                                        <td id='verified<?= $user->id ?>'>
+                                        <td><?php if($user['gender'] == 1){
+                                            echo 'Male';
+                                        } else {
+                                            echo 'Female';
+                                        }?></td>
+<!--                                        <td id='verified<?= $user->id ?>'>
                                             <?php
-                                           
                                             if(isset($user->verified)  && $user->verified == '1'){
                                             ?>
-
   <?= $this->Form->button('Approved',['class'=>'btn btn-success waves-effect','id'=>$user->id,'value'=>$user->verified,'onclick'=>'updateVerified(this.id,'.$user->verified.')' ]) ?>
                                             <?php
                                             } elseif(isset($user['verified'])  && $user['verified'] == '0'){
@@ -88,10 +88,7 @@ $nofrec = $this->Common->getNoOfRec();
                                                      echo '';
                                             }
                                             ?>
-                                          
-                                          
-                                          
-                                            </td>
+                                            </td>-->
                                         
                                         
                                         <?php if ($user->active  != '2'){ ?>

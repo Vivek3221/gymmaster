@@ -254,7 +254,7 @@ class UsersController extends AppController
                     
                 }$this->Flash->success(__('The user has been saved.'));
 
-                return $this->redirect(['action' => 'view', $useradd->id]);
+                return $this->redirect(['controller'=>'FitnessMeserments', 'action' => 'add']);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }

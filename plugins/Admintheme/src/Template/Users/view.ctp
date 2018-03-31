@@ -13,18 +13,16 @@ $getPayDuration = $this->Common->getPayDuration();
                             <h2 >
                                <?= __('View User') ?>
                             </h2>
-              
                         </div>
                         <div class="body">
                             <div class="contacts view large-6 medium-8 columns content">
-                            <h3><?= h($user->first_name) ?></h3>
                             <table class="vertical-table">
                                 <tr>
                                     <th scope="row"><?= __('Name') ?></th>
                                     <td><?= ucfirst(h($user['name']));?></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><?= __('Group(s)') ?></th>
+                                    <th scope="row"><?= __('Uesr Type') ?></th>
                                     <td><?=  h($user['user_type'])? __('Admin') : __('User');?></td>
                                 </tr>
                                 <tr>
@@ -50,8 +48,14 @@ $getPayDuration = $this->Common->getPayDuration();
                                     <td><?php echo ($user['active']) ? __('Active') : __('Inactive');?></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><?= __('Verified') ?></th>
-                                    <td><?php echo ($user['verified']) ? __('Yes') : __('No');?></td>
+                                    <th scope="row"><?= __('Gender') ?></th>
+                                    <td><?php
+                                        if ($user['gender'] == 1)
+                                            echo 'Male';
+                                        else {
+                                            echo 'Female';
+                                        }
+                                        ?></td>
                                 </tr>
 
 
@@ -66,7 +70,13 @@ $getPayDuration = $this->Common->getPayDuration();
                                     <td><?= $user->payment ?></td>
                                 </tr>
                                  <?php } ?>
-                                  <?php if(!empty($user->mode_ofpay)) {    ?>
+                                  <?php if(isset($user->b_payment)) {    ?>
+                                <tr>
+                                    <th scope="row"><?= __('Due Payment') ?></th>
+                                    <td><?= $user->b_payment ?></td>
+                                </tr>
+                                 <?php } ?>
+                                  <?php if(isset($user->mode_ofpay)) {    ?>
                                 <tr>
                                     <th scope="row"><?= __('Mode ofpay') ?></th>
                                     <td><?= $getModPayment[$user->mode_ofpay] ?></td>
