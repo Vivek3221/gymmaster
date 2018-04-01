@@ -52,6 +52,7 @@ class UsersController extends AppController
         $email = '';
         $norec = 10;
         $status = '';
+        $user_type = '';
         $search = [];
         $users_type = $this->usersdetail['users_type'];
         $users_id = $this->usersdetail['users_id'];
@@ -75,6 +76,10 @@ class UsersController extends AppController
         if (isset($this->request->query['norec']) && trim($this->request->query['norec']) != "") {
             $norec = $this->request->query['norec'];
         }
+        if (isset($this->request->query['user_type']) && trim($this->request->query['user_type']) != "") {
+            $user_type = $this->request->query['user_type'];
+            $search['Users.user_type'] = $user_type;
+        }
         
          if (isset($users_type) && ($users_type == 2)) {
           $search['Users.partner_id'] = $users_id;
@@ -88,7 +93,7 @@ class UsersController extends AppController
             $count = $this->Users->find('all');
         }
 
-        $count = $count->where(['Users.active !=' => '3']);
+        $count = $count->where(['Users.active !=' => '3','Users.user_type !='=>'1']);
 
 
 
@@ -103,7 +108,7 @@ class UsersController extends AppController
         
        // $users = $this->paginate($this->Users);
 
-        $this->set(compact('users', 'name', 'status', 'norec','email'));
+        $this->set(compact('users', 'name', 'status', 'norec','email','user_type','users_type'));
         $this->set('_serialize', ['users']);
     }
 

@@ -2,6 +2,8 @@
 <?php
 $statu = $this->Common->getUserStatus();
 $nofrec = $this->Common->getNoOfRec();
+$user_type = $this->Common->getType();
+
 ?>
 <section class="content">
         <div class="container-fluid">
@@ -26,7 +28,11 @@ $nofrec = $this->Common->getNoOfRec();
                             <?php echo $this->Form->input('email', ['label' => __('Email'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Email'), 'value' => $email]); ?>
                         </div>            
                                   
-                             
+                            <?php  if(isset($users_type) && ($users_type == 1))
+                    {?>  
+                        <div class="col-md-2">
+                            <?= $this->Form->input('user_type', ['label' => __('User type'), 'type' => 'select', 'class' => 'form-control', 'empty' => __('Select User'),'options' => $user_type, 'value'=>$user_type]); ?>
+                    </div><?php } ?>
                         <div class="col-md-2">
                             <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'),'options' => $nofrec, 'value'=>$norec]); ?>
                         </div>
@@ -67,7 +73,7 @@ $nofrec = $this->Common->getNoOfRec();
                                     <tr>
                                         <td><?= ucfirst($user['name']) ?></td>
                                         <td><?= ($user['email'])?></td>
-                                        <td><?= ($user['user_type'])?></td>
+                                        <td><?= $user_type[($user['user_type'])]?></td>
                                         <td><?php if($user['gender'] == 1){
                                             echo 'Male';
                                         } else {

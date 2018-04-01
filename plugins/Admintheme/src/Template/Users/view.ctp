@@ -1,6 +1,7 @@
 <?php
 $getModPayment = $this->Common->getModPayment();
 $getPayDuration = $this->Common->getPayDuration();
+$user_type = $this->Common->getType();
 ?>
 
 <section class="content">
@@ -23,7 +24,7 @@ $getPayDuration = $this->Common->getPayDuration();
                                 </tr>
                                 <tr>
                                     <th scope="row"><?= __('Uesr Type') ?></th>
-                                    <td><?=  h($user['user_type'])? __('Admin') : __('User');?></td>
+                                    <td><?=  $user_type[h($user['user_type'])];?></td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><?= __('Username') ?></th>
