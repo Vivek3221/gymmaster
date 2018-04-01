@@ -1,69 +1,63 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<title><?= __('Gym-Admin') ?></title>
-</head>
-
-<body style="margin:0px;">
-<table style="width:600px; margin:0 auto; padding:0px; font-family:Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; border-left:1px solid #eee; border-right:1px solid #eee;" cellpadding="0" cellspacing="0">
-    	<tr>
-        	<td>
-            	<a href="http://new.nimbuzz.com/in/"><img src="https://s3-eu-west-1.amazonaws.com/nimbuzz-new/NimbuzzNews/mailer/header.jpg" alt="header" style="border-image:0px;"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <table width="600" cellpadding="0" cellspacing="0">
-                    <tr><td align="center" style="font-weight: bold; font-size: 18px; color:#ff6600; padding-top: 15px;">Registration Successful</td></tr>
-                    <tr>
-                        <td style="padding:20px; font-size:12px; width:300px; text-align:justify;">
-                            <p>
-                               <?= __('Hi') ?> <strong><?= $name ?></strong>
-                            </p>
-                           <br>
-                              <p>
-                               <?= __('Email') ?> <strong><?= $email ?></strong>
-                            </p>
-
-                            <p>
-                               <?= __('Password') ?> <strong><?= $password ?></strong>
-                            </p>
-                           
-                            
-                            <p style="line-height:25px;"><?= __('Congratulations! You have successfully registered as User') ?> </p>
-                            <p align="center" style="margin-top:20px;">
-                            <a href="<?= $login_url ?>" target="_blank" style="width: 100%; height:50px; background-color:#da2128; color:#fff; font-weight: normal; font-size: 14px; border: 0px; text-decoration: none; padding: 10px;">Click here to login</a>
-                            </p>
-                            <p style="line-height:25px;"><?= __('For any query, complaint or Suggestion, Just shoot us an email! We’re always here to help you.') ?></p>
-                            <p style="line-height:25px;">
-                                <?= __('Regards,') ?><br>
-                                <?= __('Support Team,') ?><br>
-                                <?= __('Gym-Admin') ?>
-                            </p>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>         
-        <tr>
-            <td>
-                <table width="600" cellpadding="0" cellspacing="0" style="background-color:#fff;">
-                    <tr><td align="center"><hr style="width: 90%; border: 0.5px solid #ff6600; text-align: center"/></td></tr>
-                    <tr>
-                        <td align="center"><p style="font-size:11px; padding-left:15px;"><?= __('You have recived this message from') ?> <a href="#" style="color:#ff6600; text-decoration:none;"><?= __('Gym-Admin') ?></a></p></td>
-                    </tr>
-                    <tr>
-                        <td align="center"><img src="https://s3-eu-west-1.amazonaws.com/nimbuzz-new/NimbuzzNews/mailer/social-icon.png" alt="social" usemap="#Map">
-                        </td>
-                    </tr>
-                </table>    
-            </td>
-        </tr>   
-    </table>
-<map name="Map">  
-  <area shape="circle" coords="23,23,19" href="https://www.facebook.com/Nimbuzz" target="_blank" alt="facebook">
-  <area shape="circle" coords="73,22,17" href="https://twitter.com/nimbuzz" target="_blank" alt="twitter">
-</map>
-</body>
+    <head>
+        <title>Mailer</title>
+        <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+    <body style="margin:0 auto; font-size: 14px; font-family: arial;">
+        <table cellpadding="0" cellspacing="0" align="center" border="0" style="background-color: #f9f9f9;">
+            <tr>
+                <td width="100%">
+                    <table cellspacing="0" width="600" cellpadding="0" height="80" style="background-color: #cd1214;">
+                        <tr>	
+                            <td style="padding-left: 15px; color: #fff; font-size: 24px; text-align: left; width: 600px;">Reset Password</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table cellpadding="0" cellspacing="0" align="center">
+                        <tr>
+                            <td align="center" style="text-align: justify; padding: 0px 15px;">
+                                <p>
+                                    Dear :- <strong><?= $name ?>,</strong>
+                                </p>
+                                <p>
+                                    Your Email :- <strong><?= $email ?>,</strong>
+                                </p>
+                                <p>
+                                    Your Password :- <strong><?= $password ?>,</strong>
+                                </p>
+                                <p style="line-height:10px;"> Congratulations! You have successfully registered as User </p>
+                                <p align="center" style="margin-top:20px;">
+                                    <a href="http://datamonitering.com/" target="_blank" style="width: 100%; height:50px; background-color:#cd1214; color:#fff; font-weight: normal; font-size: 14px; border: 0px; text-decoration: none; padding: 10px;">Click here to login</a>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:12px; text-align:justify; padding: 0px 15px;">
+                                <p style="line-height:25px; font-weight: bold; color: #6f6e6e;">
+                                    <?= __('Regards,') ?><br>
+                                    <?= __('Support Team,') ?><br>
+                                    <?= __('Datamonitering') ?>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="background-color: #333;" align="center" hight="45">
+                        <tr>
+                            <td align="center" style="width: 600px">
+                                <p style="font-size:11px; padding-left:15px; color: #fff;">You have recived this message from <a href="#!" style="color:#f3f3f3; text-decoration:none;">datamonitering.com</a></p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
 </html>
