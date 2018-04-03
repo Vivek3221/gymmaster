@@ -30,24 +30,26 @@ $action = $this->request['action'];
         <div class="menu">
             <ul class="list">
                 <li class="header"><?= __('MAIN NAVIGATION') ?></li>
+                 <?php if($usersdetail['users_type'] != 3){; ?>
                  <li class="<?php if (($controller == 'Users' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'logoutqq' || $action == 'payment'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>">
                         <i class="material-icons">list</i>
                         <span><?= __('Users') ?></span>
                     </a>
                 </li>
+                 <?php } ?>
              <li class="<?php if (($controller == 'Bodies') || ($controller == 'Exercises') || ($controller == 'FitnessMeserments') || ($controller == 'FitnessTests')){echo "active";}?>">
                     <a href="javascript:void(0);" class="menu-toggle">
                         <i class="material-icons">view_list</i>
                         <span><?= __('Workout Directry') ?></span>
                     </a>
                     <ul class="ml-menu">
-                        <li class="<?php if ($controller == 'Bodies' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
+<!--                        <li class="<?php if ($controller == 'Bodies' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
                         <?= $this->Html->link(__('Body Parts'), ['controller' => 'Bodies', 'action' => 'index']) ?>
                         </li>  
                    <li class="<?php if ($controller == 'Exercises' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
                         <?= $this->Html->link(__('Exercise List'), ['controller' => 'Exercises', 'action' => 'index']) ?>
-                   </li>
+                   </li>-->
                    <li class="<?php if ($controller == 'FitnessMeserments' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
                         <?= $this->Html->link(__('Body Meserment List'), ['controller' => 'FitnessMeserments', 'action' => 'index']) ?>
                    </li>

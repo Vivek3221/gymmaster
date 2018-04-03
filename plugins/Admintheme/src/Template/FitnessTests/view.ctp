@@ -25,7 +25,7 @@ $fitness2  = json_decode($fitnessTest[1]->exercise_type);
                         </div>
                         <div class="body">
                             
-                             <div class="text-right" style="margin-bottom: 15px;">
+<!--                             <div class="text-right" style="margin-bottom: 15px;">
                                             <a href="<?= $this->Url->build([ 'controller' => 'FitnessTests','action' => 'edit', $fitnessTest[0]->id]);?>" class="btn btn-primary waves-effect">
                                                 Edit
                                             </a>
@@ -33,7 +33,7 @@ $fitness2  = json_decode($fitnessTest[1]->exercise_type);
                                             <a href="<?= $this->Url->build([ 'controller' => 'FitnessTests','action' => 'delete', $fitnessTest[0]->id]);?>" class="btn btn-primary waves-effect" style="margin-left: 15px;">
                                                 Delete
                                             </a>
-                                        </div>
+                                        </div>-->
                         
                             <div class="contacts view large-9 medium-8 columns content">
                             

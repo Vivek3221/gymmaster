@@ -431,8 +431,11 @@ class UsersController extends AppController
                     $user_detail = $this->Users->find()->select(['id','user_type','name','email'])->where(['email' => $data['email'], 'active' => 1])->first();
                     $this->Cookie->write('users',['users_id'=>$user_detail->id,'users_name'=>$user_detail->name,'users_email'=>$user_detail->email,'users_type' =>$user_detail->user_type]);
                     $this->request->session()->write('users',['users_id'=>$user_detail->id,'users_name'=>$user_detail->name,'users_email'=>$user_detail->email,'users_type' =>$user_detail->user_type]);
-             
-                    return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+             if($user_detail->user_type == 3){
+                 return $this->redirect(['controller' => 'FitnessMeserments', 'action' => 'index']);
+             } else {
+                  return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+             }
                }
             else {
                 $this->Flash->error(__('This email and password not match'));
