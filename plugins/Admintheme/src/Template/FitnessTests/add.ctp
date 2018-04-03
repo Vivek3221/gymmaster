@@ -2,6 +2,7 @@
 $status = $this->Common->getstatus();
 //$exercises = $this->Common->getExercises();
 $bodies_lists = $this->Common->getBodies();
+$user_name = $this->Common->getUsers();
 //pr($bodies_lists); die;
 ?>
 <section class="content">
@@ -25,7 +26,16 @@ $bodies_lists = $this->Common->getBodies();
                         <!--                            <form id="form_validation" method="POST">-->
                         <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']);  ?>
                         <?= $this->Form->create($fitnessTest, ['id' => 'addbody', 'templates' => ['inputContainer' => '{{content}}']]) ?>
-                           <?php if(!empty($bodies_lists)) {
+                            <?php if($user_type !=3)
+                       {?>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?= $this->Form->control('user_id', ['class' => 'form-control', 'type' => 'select','empty'=>__('Select User'),'options' => $user_name]) ?> 
+                            </div>
+                        </div>
+                       <?php }?>
+
+                         <?php if(!empty($bodies_lists)) {
                                         foreach ($bodies_lists as $bodies_list):
                                         ?>
                         <div class="form-group form-float">

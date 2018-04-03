@@ -156,6 +156,25 @@ class CommonHelper extends Helper {
         $bodies_lists = $get_bodies->find()->select(['name', 'description','id'])->where(['status' => 1,'id IN'=>$body_id])->toArray();
         return $bodies_lists;
     }
+     public function getUsers()
+    {
+        $users_type = $this->request->session()->read('users'); 
+        //pr($users_type);
+        if($users_type['users_type'] == 2)
+        {
+        $partner_id = $users_type['users_id'];
+        $get_users = TableRegistry::get('Users');
+        $get_users_name = $get_users->find('list')
+                                    ->where(['active' => 1,'user_type' =>3,'partner_id'=>$partner_id])
+                                    ->toArray(); 
+        }else{
+            $get_users = TableRegistry::get('Users');
+        $get_users_name = $get_users->find('list')
+                                    ->where(['active' => 1,'user_type' =>3])
+                                    ->toArray(); 
+        }
+        return $get_users_name;
+    }
   
  
 

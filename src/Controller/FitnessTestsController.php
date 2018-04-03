@@ -118,15 +118,19 @@ class FitnessTestsController extends AppController
             return $this->redirect('/');
         }
        $fitnessTest = $this->FitnessTests->newEntity();
+       $user_type = $this->usersdetail['users_type'];
         if ($this->request->is('post')) {
             $data1 =[];
             $data = $this->request->data;
             //pr($data);
-                $user_id = $this->usersdetail['users_id'];
+             if($user_type == 3)
+        {
+            $data['user_id'] = $this->usersdetail['users_id'];     
+        }
+         
                 $data1['exercise_type'] = json_encode($data);
                 $data1['status'] = $data['status'];
                 $data1['exercise_id'] = $data['exercise_id'];
-                $data1['user_id'] = $user_id;
                //pr($data1); die;
                
                 $fitnessTest = $this->FitnessTests->patchEntity($fitnessTest, $data1);
@@ -139,7 +143,7 @@ class FitnessTestsController extends AppController
 
         }
         $exercises = $this->FitnessTests->Exercises->find('list', ['limit' => 200]);
-        $this->set(compact('fitnessTest', 'exercises'));
+        $this->set(compact('fitnessTest', 'exercises','user_type'));
         $this->set('_serialize', ['fitnessTest']);
     }
 
@@ -159,16 +163,14 @@ class FitnessTestsController extends AppController
         $fitnessTest = $this->FitnessTests->get($id, [
             'contain' => []
         ]);
+        $user_type = $this->usersdetail['users_type'];
         if ($this->request->is(['patch', 'post', 'put'])) {
             $fitnessTest = $this->FitnessTests->patchEntity($fitnessTest, $this->request->getData());
                $data1 =[];
             $data = $this->request->data;
-            //pr($data);
-                $user_id = $this->usersdetail['users_id'];
-                $data1['exercise_type'] = json_encode($data);
+            $data1['exercise_type'] = json_encode($data);
                 $data1['status'] = $data['status'];
                 $data1['exercise_id'] = $data['exercise_id'];
-                $data1['user_id'] = $user_id;
                //pr($data1); die;
                
                 $fitnessTest = $this->FitnessTests->patchEntity($fitnessTest, $data1);
@@ -185,7 +187,7 @@ class FitnessTestsController extends AppController
         //pr($exercise_value); die;
         
         $exercises = $this->FitnessTests->Exercises->find('list', ['limit' => 200]);
-        $this->set(compact('fitnessTest', 'exercises','exercise_value'));
+        $this->set(compact('fitnessTest', 'exercises','exercise_value','user_type'));
         $this->set('_serialize', ['fitnessTest']);
     }
 

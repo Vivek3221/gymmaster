@@ -1,6 +1,8 @@
 <?php
 $status = $this->Common->getstatus();
 $user_type = $this->Common->getType();
+$user_name = $this->Common->getUsers();
+//pr($user_name); die;
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -20,6 +22,14 @@ $user_type = $this->Common->getType();
                         </div>
                     <div class="body">
                         <?= $this->Form->create($fitnessMeserment, ['name'=>'bmiForm','id' => 'bodym','templates' => ['inputContainer' => '{{content}}']]) ?>
+                       <?php if($user_type !=3)
+                       {?>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?= $this->Form->control('user_id', ['class' => 'form-control', 'type' => 'select','empty'=>__('Select User'),'options' => $user_name]) ?> 
+                            </div>
+                        </div>
+                       <?php }?>
                         <div class="row"> 
                         <div class="col-md-6">  
                         <div class="form-group form-float">

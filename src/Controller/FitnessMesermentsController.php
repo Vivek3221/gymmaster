@@ -150,9 +150,16 @@ class FitnessMesermentsController extends AppController
         }
         
         $fitnessMeserment = $this->FitnessMeserments->newEntity();
+        $user_type = $this->usersdetail['users_type'];
         if ($this->request->is('post')) {
              $data = $this->request->data;
-             $data['user_id'] = $this->usersdetail['users_id'];
+             
+             if($user_type == 3)
+        {
+            $data['user_id'] = $this->usersdetail['users_id'];     
+        }
+       // pr($data); die;
+             
              $data['bmi']     = floor($data['bmi']);
             $fitnessMeserment = $this->FitnessMeserments->patchEntity($fitnessMeserment, $data);
             //pr($fitnessMeserment); die;
@@ -164,7 +171,7 @@ class FitnessMesermentsController extends AppController
             $this->Flash->error(__('The body meserment could not be saved. Please, try again.'));
         }
         $users = $this->FitnessMeserments->Users->find('list', ['limit' => 200]);
-        $this->set(compact('fitnessMeserment', 'users'));
+        $this->set(compact('fitnessMeserment', 'users','user_type'));
         $this->set('_serialize', ['fitnessMeserment']);
     }
 
@@ -184,10 +191,9 @@ class FitnessMesermentsController extends AppController
         $fitnessMeserment = $this->FitnessMeserments->get($id, [
             'contain' => []
         ]);
+        $user_type = $this->usersdetail['users_type'];
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->data;
-            $data['user_id'] = $this->usersdetail['users_id'];
-            
             $fitnessMeserment = $this->FitnessMeserments->patchEntity($fitnessMeserment, $data);
             if ($this->FitnessMeserments->save($fitnessMeserment)) {
                 $this->Flash->success(__('The body meserment has been saved.'));
@@ -197,7 +203,7 @@ class FitnessMesermentsController extends AppController
             $this->Flash->error(__('The body meserment could not be saved. Please, try again.'));
         }
         $users = $this->FitnessMeserments->Users->find('list', ['limit' => 200]);
-        $this->set(compact('fitnessMeserment', 'users'));
+        $this->set(compact('fitnessMeserment', 'users','user_type'));
         $this->set('_serialize', ['fitnessMeserment']);
     }
 
