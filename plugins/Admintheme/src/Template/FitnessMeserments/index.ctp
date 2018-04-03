@@ -36,6 +36,9 @@ $nofrec = $this->Common->getNoOfRec();
                             <table class="table table-bordered table-striped table-hover dataTable responsive" id="userstable">
                                 <thead>
                                     <tr>
+                                        <?php if($usersdetail['users_type'] != 3){; ?>
+                                        <th><?=__('User')?></th>
+                                        <?php }?>
                                         <th><?= __('Weight') ?></th>
                                         <th><?= __('Height') ?></th>
                                         <th><?= __('BMI') ?></th>
@@ -46,6 +49,9 @@ $nofrec = $this->Common->getNoOfRec();
                                 </thead>
                                 <tfoot>
                                     <tr>
+                                        <?php if($usersdetail['users_type'] != 3){; ?>
+                                        <th><?=__('User')?></th>
+                                        <?php }?>
                                         <th><?= __('Weight') ?></th>
                                         <th><?= __('Height') ?></th>
                                         <th><?= __('BMI') ?></th>
@@ -58,6 +64,9 @@ $nofrec = $this->Common->getNoOfRec();
                                    
                                     <?php foreach ($fitnessMeserments as $fitnessMeserment) { ?>
                                     <tr>
+                                        <?php if($usersdetail['users_type'] != 3){; ?>
+                                        <td><?= ($fitnessMeserment['user']['name'])?></td>
+                                        <?php }?>
                                         <td><?= $fitnessMeserment['weight'] ?></td>
                                         <td><?= ($fitnessMeserment['height']) ?></td>
                                         <td><?= ($fitnessMeserment['bmi']) ?></td>
