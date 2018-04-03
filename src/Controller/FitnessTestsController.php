@@ -122,12 +122,13 @@ class FitnessTestsController extends AppController
         if ($this->request->is('post')) {
             $data1 =[];
             $data = $this->request->data;
-            //pr($data);
+           
              if($user_type == 3)
         {
-            $data['user_id'] = $this->usersdetail['users_id'];     
+            $data1['user_id'] = $this->usersdetail['users_id'];     
+        } else {
+            $data1['user_id'] = $this->request->data['user_id'];
         }
-         
                 $data1['exercise_type'] = json_encode($data);
                 $data1['status'] = $data['status'];
                 $data1['exercise_id'] = $data['exercise_id'];
