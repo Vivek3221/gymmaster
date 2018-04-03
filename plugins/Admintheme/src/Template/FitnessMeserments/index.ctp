@@ -63,8 +63,11 @@ $nofrec = $this->Common->getNoOfRec();
                                         <td><?= ($fitnessMeserment['bmi']) ?></td>
                                         <td><?= (date("d-m-Y", strtotime($fitnessMeserment['date']))) ?></td>
                                         <td><i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $fitnessMeserment['id']]) ?></i>
-                                       <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $fitnessMeserment['id']]) ?></i>
-                                      </td>
+                                     <?php if($usersdetail['users_type'] == 1){; ?>
+                                      <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $fitnessMeserment['id']]) ?></i>
+                                      <?php } ?>
+                                        </td>
+                                     
                                      
                                     </tr>
                                     <?php } ?> 

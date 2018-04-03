@@ -424,8 +424,33 @@ $(document).ready(function () {
                regex: /^[0-9]{1,3}$/
 
             },
-            password: {
-                required: true
+            upper_arm: {
+                required: true,
+               regex: /^[0-9]{1,3}$/
+            },
+            chest: {
+                required: true,
+               regex: /^[0-9]{1,3}$/
+            },
+            waist: {
+                required: true,
+               regex: /^[0-9]{1,3}$/
+            },
+            lower_abdomen: {
+                required: true,
+               regex: /^[0-9]{1,3}$/
+            },
+            hips: {
+                required: true,
+               regex: /^[0-9]{1,3}$/
+            },
+            thigh: {
+                required: true,
+               regex: /^[0-9]{1,3}$/
+            },
+            calf: {
+                required: true,
+               regex: /^[0-9]{1,3}$/
             }
         },
         messages: {
@@ -442,8 +467,33 @@ $(document).ready(function () {
                 regex: 'Enter neck in Inch'
             },
 
-            password: {
-                required: 'Enter password',
+            upper_arm: {
+                required: 'Enter uper arm',
+                regex: 'Enter uper arm in Inch'
+            },
+            chest: {
+                required: 'Enter chest',
+                regex: 'Enter chest in Inch'
+            },
+            waist: {
+                required: 'Enter waist',
+                regex: 'Enter waist in Inch'
+            },
+            lower_abdomen: {
+                required: 'Enter lower abdomen',
+                regex: 'Enter lower abdomen in Inch'
+            },
+            hips: {
+                required: 'Enter hips',
+                regex: 'Enter hips in Inch'
+            },
+            thigh: {
+                required: 'Enter thigh',
+                regex: 'Enter thigh in Inch'
+            },
+            calf: {
+                required: 'Enter calf',
+                regex: 'Enter calf in Inch'
             }
         }
     });

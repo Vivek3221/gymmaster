@@ -10,7 +10,7 @@
                 <td width="100%">
                     <table cellspacing="0" width="600" cellpadding="0" height="80" style="background-color: #cd1214;">
                         <tr>	
-                            <td style="padding-left: 15px; color: #fff; font-size: 24px; text-align: left; width: 600px;">Reset Password</td>
+                            <td style="padding-left: 15px; color: #fff; font-size: 24px; text-align: left; width: 600px;">Registration Success</td>
                         </tr>
                     </table>
                 </td>

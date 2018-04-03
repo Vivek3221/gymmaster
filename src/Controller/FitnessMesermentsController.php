@@ -159,7 +159,7 @@ class FitnessMesermentsController extends AppController
             if ($this->FitnessMeserments->save($fitnessMeserment)) {
                 $this->Flash->success(__('The body meserment has been saved.'));
 
-                return $this->redirect(['controller'=>'FitnessTests', 'actiFitnesson' => 'add']);
+                return $this->redirect(['controller'=>'FitnessTests', 'action' => 'add']);
             }
             $this->Flash->error(__('The body meserment could not be saved. Please, try again.'));
         }

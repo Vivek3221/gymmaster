@@ -57,8 +57,10 @@ $nofrec = $this->Common->getNoOfRec();
                                         <td><?= $fitnessTest->user->name ?></td>
                                         <td><?= (date("d-m-Y", strtotime($fitnessTest['created']))) ?></td>
                                         <td><i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $fitnessTest['id']]) ?></i>
-                                       <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $fitnessTest['id']]) ?></i>
-                                      </td>
+                                        <?php if($usersdetail['users_type'] == 1){; ?>
+                                            <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $fitnessTest['id']]) ?></i>
+                                        <?php } ?>
+                                        </td>
                                      
                                     </tr>
                                     <?php } ?> 

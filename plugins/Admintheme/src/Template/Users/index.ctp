@@ -106,7 +106,9 @@ $nofrec = $this->Common->getNoOfRec();
             <td><?= $this->Form->button('Enquiry',['class'=>'btn btn-primary waves-effect non-click','id'=>$user->id,'value'=>$user->active ]) ?>
                                         </td>  <?php } ?>
                                         <td><i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $user['id']]) ?></i>
-                                       <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $user['id']]) ?></i>
+                                        <?php if($usersdetail['users_type'] == 1){; ?>
+                                            <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $user['id']]) ?></i>
+                                        <?php }?>
                                     <?php if (empty($user->payment)){?>
                                         <i class="material-icons"><?= $this->Html->link(__('find_in_page'), ['action' => 'payment', $user['id']]) ?></i>
                                     <?php } ?>

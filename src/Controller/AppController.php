@@ -61,7 +61,7 @@ class AppController extends Controller
          //  $this->usersdetail    =      $this->Cookie->read('users');
            
            $usersdetail          = $this->request->session()->read('users');
-           //pr($usersdetail);exit;
+//           pr($usersdetail);exit;
            $this->usersdetail    = $this->request->session()->read('users');
         
         //Guest User ID
