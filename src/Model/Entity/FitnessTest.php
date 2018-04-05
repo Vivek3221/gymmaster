@@ -33,6 +33,7 @@ class FitnessTest extends Entity
         'user_id' => true,
         'exercise_id' => true,
         'exercise_type' => true,
+        'partner_id' => true,
         'status' => true,
         'created' => true,
         'modified' => true,

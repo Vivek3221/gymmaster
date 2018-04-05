@@ -47,6 +47,7 @@ class FitnessMesermentsController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
+        $users_type = $this->usersdetail['users_type'];
         $sdate ='';
         $edate ='';
         $search = [];
@@ -63,6 +64,17 @@ class FitnessMesermentsController extends AppController
              
         }
         
+        
+        
+        
+        
+        if (isset($users_type) && ($users_type == 3)) {
+          $search['FitnessMeserments.user_id'] = $users_id;
+          }
+        if (isset($users_type) && ($users_type == 2)) {
+          $search['FitnessMeserments.partner_id'] = $this->usersdetail['partner_id'];
+          }
+          
          if (isset($search)) {
 
             $count = $this->FitnessMeserments->find('all')
@@ -94,7 +106,12 @@ class FitnessMesermentsController extends AppController
                      if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-        $user_id = $this->usersdetail['users_id'];
+        $fitnessMeserment = $this->FitnessMeserments->get($id, [
+            'contain' => []
+        ]);
+        
+        $user_id = $fitnessMeserment->user_id;
+        //pr($user_id); die;
         $moredata ='weight';
         if (isset($this->request->query['moredata']) && $this->request->query['moredata'] != "") {
             $moredata = $this->request->query['moredata'];
@@ -156,7 +173,12 @@ class FitnessMesermentsController extends AppController
              
              if($user_type == 3)
         {
-            $data['user_id'] = $this->usersdetail['users_id'];     
+            $data['user_id'] = $this->usersdetail['users_id']; 
+            $data['Partner_id'] = $this->usersdetail['partner_id'];  
+        }
+             if($user_type != 3)
+        {
+            $data['Partner_id'] = $this->usersdetail['users_id'];     
         }
        // pr($data); die;
              

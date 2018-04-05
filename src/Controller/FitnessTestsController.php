@@ -35,10 +35,27 @@ class FitnessTestsController extends AppController
         }
         $sdate ='';
         $edate ='';
+        if (isset($users_type) && ($users_type == 3)) {
+          $search['FitnessTests.user_id'] = $users_id;
+          }
+        if (isset($users_type) && ($users_type == 2)) {
+          $search['FitnessTests.partner_id'] = $this->usersdetail['partner_id'];
+          }
+          
+         if (isset($search)) {
+
+            $count = $this->FitnessTests->find('all')
+                    ->where([$search]);
+        } else {
+            $count = $this->FitnessTests->find('all');
+        }
+        
+        
+        
         $this->paginate = [
             'contain' => ['Exercises','Users']
         ];
-        $fitnessTests = $this->paginate($this->FitnessTests);
+        $fitnessTests = $this->paginate($count);
 //pr($fitnessTests); die;
         $this->set(compact('fitnessTests','sdate','edate'));
         $this->set('_serialize', ['fitnessTests']);
@@ -70,8 +87,13 @@ class FitnessTestsController extends AppController
             $excerise_name = $this->request->query['exercise_name'];
             
         }
+         $fitnessMeserment = $this->FitnessTests->get($id, [
+            'contain' => []
+        ]);
         
-        $user_id = $this->usersdetail['users_id'];
+        $user_id = $fitnessMeserment->user_id;
+        
+        //$user_id = $this->usersdetail['users_id'];
         $fitnessTest = $this->FitnessTests->find()
                                    ->select(['id','exercise_id','exercise_type'])
                                    ->contain(['Exercises'])
@@ -122,12 +144,17 @@ class FitnessTestsController extends AppController
         if ($this->request->is('post')) {
             $data1 =[];
             $data = $this->request->data;
+            //pr($data); die;
            
-             if($user_type == 3)
+                 if($user_type == 3)
         {
-            $data1['user_id'] = $this->usersdetail['users_id'];     
-        } else {
-            $data1['user_id'] = $this->request->data['user_id'];
+            $data1['user_id'] = $this->usersdetail['users_id']; 
+            $data1['partner_id'] = $this->usersdetail['partner_id'];  
+        }
+             if($user_type != 3)
+        {
+            $data1['partner_id'] = $this->usersdetail['users_id'];     
+            $data1['user_id'] = $this->request->data['user_id'];     
         }
                 $data1['exercise_type'] = json_encode($data);
                 $data1['status'] = $data['status'];

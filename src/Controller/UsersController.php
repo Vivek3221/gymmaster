@@ -428,9 +428,9 @@ class UsersController extends AppController
                     $this->Cookie->write('user_email', $data['email']);
                     $this->request->session()->write('Auth.User.email', $data['email']);
                     
-                    $user_detail = $this->Users->find()->select(['id','user_type','name','email'])->where(['email' => $data['email'], 'active' => 1])->first();
-                    $this->Cookie->write('users',['users_id'=>$user_detail->id,'users_name'=>$user_detail->name,'users_email'=>$user_detail->email,'users_type' =>$user_detail->user_type]);
-                    $this->request->session()->write('users',['users_id'=>$user_detail->id,'users_name'=>$user_detail->name,'users_email'=>$user_detail->email,'users_type' =>$user_detail->user_type]);
+                    $user_detail = $this->Users->find()->select(['id','user_type','name','email','partner_id'])->where(['email' => $data['email'], 'active' => 1])->first();
+                    $this->Cookie->write('users',['users_id'=>$user_detail->id,'users_name'=>$user_detail->name,'users_email'=>$user_detail->email,'users_type' =>$user_detail->user_type,'partner_id' =>$user_detail->partner_id]);
+                    $this->request->session()->write('users',['users_id'=>$user_detail->id,'users_name'=>$user_detail->name,'users_email'=>$user_detail->email,'users_type' =>$user_detail->user_type,'partner_id' =>$user_detail->partner_id]);
              if($user_detail->user_type == 3){
                  return $this->redirect(['controller' => 'FitnessMeserments', 'action' => 'index']);
              } else {

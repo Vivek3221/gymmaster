@@ -63,6 +63,7 @@ class FitnessMeserment extends Entity
         'ad_hold' => true,
         'created' => true,
         'modified' => true,
+        'partner_id' => true,
         'user' => true
     ];
 }
