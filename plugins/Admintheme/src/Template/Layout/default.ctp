@@ -21,36 +21,25 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title><?= __('Welcome Admin') ?></title>
+    <title><?= __('Welcome to datamonitoring') ?></title>
     <!-- Favicon-->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
-
     <!-- Bootstrap Core Css -->
     <?= $this->Html->css('bootstrap.css') ?>
     
-    
-    <?= $this->Html->css('waves.css') ?>
-    <?= $this->Html->css('animate.css') ?>
     <?= $this->Html->css('datetimepicker.css') ?>
     <?= $this->Html->css('waitMe.min.css') ?>
     <?= $this->Html->css('bootstrap-material-datetimepicker.css') ?>
     <!-- Waves Effect Css -->
-    
-
     <!-- Animation Css -->
-    
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css">
     <!-- Custom Css -->
-    <?= $this->Html->css('morris.css') ?>
-    <?= $this->Html->css('style.css') ?>
-<!--    <link href="css/style.css" rel="stylesheet">-->
+     <?= $this->Html->css('morris.css') ?>
      <?= $this->Html->css('style.css') ?>
      <?= $this->Html->css('bootstrap-select.min.css') ?>
-
 <!--  table css -->
  <?= $this->Html->css('dataTables.bootstrap.css') ?>
     <!-- Albuzzer Themes. You can choose a theme from css/themes instead of get all themes -->
@@ -88,22 +77,14 @@
 <body>
     <?php if (($this->request->action != 'adminLogin')) { ?>
     <?php
-    
      echo $this->element('header');
      echo $this->element('left_nav');
     ?>
     <?php } ?>
-     
-
-    
     <?= $this->fetch('content') ?>
-        
-   
-
     <!-- Bootstrap Core Js -->
- 
     <?= $this->Html->script('bootstrap.js') ?>
-    <?= $this->Html->script('ckeditor/ckeditor.js') ?>
+    <?php // echo  $this->Html->script('ckeditor/ckeditor.js') ?>
     <!-- Select Plugin Js -->
     <?= $this->Html->script('autosize.js') ?>
     <?= $this->Html->script('moment.js') ?>
@@ -131,63 +112,27 @@
     <!-- Jquery CountTo Plugin Js -->
    
    <?= $this->Html->script('waitMe.min.js') ?>
-
-    
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <!-- Sparkline Chart Plugin Js -->
-   
      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.js"></script>
-    
     <!--  table js -->
-      
       <?= $this->Html->script('jquery.dataTables.js') ?>
       <?= $this->Html->script('dataTables.bootstrap.js') ?>
       <?= $this->Html->script('dataTables.buttons.min.js') ?>
       <?= $this->Html->script('buttons.flash.min.js') ?>
-      <?= $this->Html->script('jszip.min.js') ?>
-      <?= $this->Html->script('pdfmake.min.js') ?>
-      <?= $this->Html->script('vfs_fonts.js') ?>
       <?= $this->Html->script('buttons.html5.min.js') ?>
       <?= $this->Html->script('buttons.print.min.js') ?>
-      
-  
-      
-           
-           
     <!-- Custom Js -->
-    
     <?= $this->Html->script('pages/tables/jquery-datatable.js') ?>
     <?= $this->Html->script('admin.js') ?>
      <?= $this->Html->script('basic-form-elements.js') ?>
     <?= $this->Html->script('demo.js') ?>
     <?php //echo $this->Html->script('pages/index.js') ?>
-    
-   
-
     <!-- Demo Js -->
 <!--    <script src="js/demo.js"></script>-->
-    
     <script>
-        $(".addLangDv").click(function () {
-
-                $header = $(this);
-                //getting the next element
-                $LangContent = $header.closest('.MoreLang').find('.LangContent');
-                //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
-                $LangContent.slideToggle(500, function () {
-                    //execute this after slideToggle is done
-                    //change text of header based on visibility of content div
-                    $header.html(function () {
-                        //change text based on condition
-                        return $LangContent.is(":visible") ? "<i class='material-icons'>remove</i><span>Post in another language</span>" : "<i class='material-icons'>add</i> <span>Post in another language</span> ";
-                    });
-                });
-
-            });
             $('.select2').select2();
     </script>   
-        
-    
     <footer>
     </footer>
 </body>
