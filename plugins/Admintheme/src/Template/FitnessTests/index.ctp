@@ -19,10 +19,10 @@ $nofrec = $this->Common->getNoOfRec();
                         <div class="body">
                               <div class="box-body">
                         <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'FitnessTests', 'action' => 'index']]) ?>
-                                  <div class="col-md-2">
+                                  <div class="col-md-3">
                                       <?php echo $this->Form->input('from_date', ['label' => __('From Date'), 'class' => 'form-control', 'id' => 'date-start', 'type' => 'text', 'placeholder' => __('From Date'), 'value' => $sdate]); ?>
                                   </div>  
-                                  <div class="col-md-2">
+                                  <div class="col-md-3">
                                       <?php echo $this->Form->input('to_date', ['label' => __('To Date'), 'class' => 'form-control', 'id' => 'date-end', 'type' => 'text', 'placeholder' => __('To Date'), 'value' => $edate]); ?>
                                   </div>  
                                   

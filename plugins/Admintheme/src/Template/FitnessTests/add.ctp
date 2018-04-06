@@ -30,7 +30,7 @@ $user_name = $this->Common->getUsers();
                        {?>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('user_id', ['class' => 'form-control', 'type' => 'select','empty'=>__('Select User'),'options' => $user_name]) ?> 
+                                <?= $this->Form->control('user_id', ['class' => 'form-control select2', 'type' => 'select','empty'=>__('Select User'),'options' => $user_name]) ?> 
                             </div>
                         </div>
                        <?php }?>
@@ -47,16 +47,15 @@ $user_name = $this->Common->getUsers();
                          <div class="col-md-6"> 
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control($bodies_list->id.'['.$exercise->id.']', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                <?= $this->Form->control($bodies_list->id.'['.$exercise->id.']', ['class' => 'form-control', 'type' => 'number', 'label' => false ,'required']) ?> 
                                 <label class="form-label"><?= $exercise->name ?></label>
                             </div>
+                            <small class="text-muted"> * <?= $exercise->description ?></small>
                         </div>
                         </div>
                             <?php endforeach;   ?>
                         </div>
                          <?php endforeach;  } ?>
-                       
-
                         <div class="form-group form-float">
                              <div class="form-line">
                                 <?= $this->Form->control('exercise_id', ['class' => 'form-control', 'type' => 'hidden', 'value'=>5 , 'label' => false, 'hidden']) ?> 

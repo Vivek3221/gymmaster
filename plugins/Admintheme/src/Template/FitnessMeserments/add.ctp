@@ -26,7 +26,7 @@ $user_name = $this->Common->getUsers();
                        {?>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('user_id', ['class' => 'form-control', 'type' => 'select','empty'=>__('Select User'),'options' => $user_name]) ?> 
+                                <?= $this->Form->control('user_id', ['class' => 'form-control select2', 'type' => 'select','empty'=>__('Select User'),'options' => $user_name]) ?> 
                             </div>
                         </div>
                        <?php }?>

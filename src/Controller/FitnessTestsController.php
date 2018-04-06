@@ -33,8 +33,22 @@ class FitnessTestsController extends AppController
                       if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-        $sdate ='';
+       $sdate ='';
         $edate ='';
+        $search = [];
+         if (isset($this->request->query['from_date']) && trim($this->request->query['from_date']) != "" && isset($this->request->query['to_date']) && trim($this->request->query['to_date']) != "" ) {
+          
+            $sdate = date('Y-m-d H:i:s',strtotime($this->request->query['from_date'])); 
+            $edate = date('Y-m-d H:i:s',strtotime($this->request->query['to_date'])) ;
+
+            $search['FitnessTests.created >='] = $sdate;
+            $search['FitnessTests.created <='] = $edate;  
+            $sdate = $this->request->query['from_date']; 
+            $edate = $this->request->query['to_date'] ;
+
+             
+        }
+        
         if (isset($users_type) && ($users_type == 3)) {
           $search['FitnessTests.user_id'] = $users_id;
           }

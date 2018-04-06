@@ -19,32 +19,37 @@ $user_type = $this->Common->getType();
                             </h2>
                         </div>
                         <div class="body">
-                              <div class="box-body">
-                        <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'Users', 'action' => 'index']]) ?>
-                        <div class="col-md-3">
-                            <?php echo $this->Form->input('name', ['label' => __('Name'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Name'), 'value' => $name]); ?>
-                        </div>
-                      <div class="col-md-2">
-                            <?php echo $this->Form->input('email', ['label' => __('Email'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Email'), 'value' => $email]); ?>
-                        </div>            
-                                  
-                            <?php  if(isset($users_type) && ($users_type == 1))
-                    {?>  
-                        <div class="col-md-2">
-                            <?= $this->Form->input('user_type', ['label' => __('User type'), 'type' => 'select', 'class' => 'form-control', 'empty' => __('Select User'),'options' => $user_type, 'value'=>$user_type]); ?>
-                    </div><?php } ?>
-                        <div class="col-md-2">
-                            <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'),'options' => $nofrec, 'value'=>$norec]); ?>
-                        </div>
-                                  <div class="col-md-2">
-                            <?php echo $this->Form->input('status', ['label' => __('Status'), 'class' => 'form-control', 'empty' => __('Select Status'), 'options' => $statu, 'value' => $status]); ?>
-                        </div>
-                        <div class="col-md-3 marginTop25">
-                            <?= $this->Form->button(__('Search'), ['class' => 'btn btn-primary']) ?>
-                            <?= $this->Html->link(__('Clear'), ['controller' => 'Users'], ['class' => 'btn btn-danger']) ?>
-                        </div>
-                        <?= $this->Form->end() ?>
-                    </div> 
+                            <div class="box-body">
+                                <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'Users', 'action' => 'index']]) ?>
+                                <div class="col-md-3">
+                                    <?php echo $this->Form->input('name', ['label' => __('Name'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Name'), 'value' => $name]); ?>
+                                </div>
+                                <div class="col-md-2">
+                                    <?php echo $this->Form->input('email', ['label' => __('Email'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Email'), 'value' => $email]); ?>
+                                </div>            
+
+                                <?php if (isset($users_type) && ($users_type == 1)) {
+                                    ?>  
+                                    <div class="col-md-2">
+                                        <?= $this->Form->input('user_type', ['label' => __('User type'), 'type' => 'select', 'class' => 'form-control', 'empty' => __('Select User'), 'options' => $user_type, 'value' => $user_type]); ?>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <?= $this->Form->input('partners', ['label' => __('Partners'), 'type' => 'select', 'class' => 'form-control select2', 'empty' => __('Select Partners'), 'options' => $partners,'value'=>$partner]); ?>
+                                    </div>
+                                        
+                                 <?php } ?>
+                                <div class="col-md-2">
+                                    <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'), 'options' => $nofrec, 'value' => $norec]); ?>
+                                </div>
+                                <div class="col-md-2">
+                                    <?php echo $this->Form->input('status', ['label' => __('Status'), 'class' => 'form-control', 'empty' => __('Select Status'), 'options' => $statu, 'value' => $status]); ?>
+                                </div>
+                                <div class="col-md-3 marginTop25">
+                                    <?= $this->Form->button(__('Search'), ['class' => 'btn btn-primary']) ?>
+                                    <?= $this->Html->link(__('Clear'), ['controller' => 'Users'], ['class' => 'btn btn-danger']) ?>
+                                </div>
+                                <?= $this->Form->end() ?>
+                            </div> 
                             <?php if ($this->Paginator->counter(['format' => __('{{count}}')]) != 0) { ?>
                             <table class="table table-bordered table-striped table-hover dataTable responsive" id="userstable">
                                 <thead>
