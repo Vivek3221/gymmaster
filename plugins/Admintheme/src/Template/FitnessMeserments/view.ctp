@@ -17,6 +17,8 @@ $getPayDuration = $this->Common->getPayDuration();
                     </div>
                     <div class="body">
                         <div class="contacts view large-6 medium-8 columns content">
+                            <div class="row">
+                            <div class="col-md-4"> 
                             <table class="vertical-table">
 
                                 <tr>
@@ -150,10 +152,110 @@ $getPayDuration = $this->Common->getPayDuration();
 
 
                             </table>
-
                         </div>
+                      <div class="col-md-4"> 
+                          <div class="text-center">
+                           <h1>Current</h1>
+                          </div>
+                           <?php if (isset($fitnessMeserment[0]['imagesl']) && !empty($fitnessMeserment[0]['imagesl'])) {
+                               $cover = '/img/' .$fitnessMeserment[0]['imagesl'];
+                                        ?>
+                           <div class="text-center">
+         <?= $this->Html->image($cover, ['alt' => 'related-news','class'=>'img-rounded ', 'accept' => 'image/*']); ?>
+          <div class="caption text-center">
+            <p>Left</p>
+          </div>
+        
+                   </div>
+                           <?php } ?>
+                           <?php if (isset($fitnessMeserment[0]['imagesr']) && !empty($fitnessMeserment[0]['imagesr'])) {
+                               $coverr = '/img/' .$fitnessMeserment[0]['imagesr'];
+                                        ?>
+                           <div class="text-center">
+         <?= $this->Html->image($coverr, ['alt' => 'related-news','class'=>'img-rounded', 'accept' => 'image/*']); ?>
+          <div class="caption text-center">
+            <p>Right</p>
+          </div>
+        
+                   </div>
+                           <?php } ?>
+                           <?php if (isset($fitnessMeserment[0]['imagesf'])&& !empty($fitnessMeserment[0]['imagesf'])) {
+                               $coverf = '/img/' .$fitnessMeserment[0]['imagesf'];
+                                        ?>
+                           <div class="text-center">
+         <?= $this->Html->image($coverf, ['alt' => 'related-news', 'class'=>'img-rounded','accept' => 'image/*']); ?>
+          <div class="caption text-center">
+            <p>Front</p>
+          </div>
+        
+                   </div>
+                           <?php } ?>
+                           <?php if (isset($fitnessMeserment[0]['imagesb'])&& !empty($fitnessMeserment[0]['imagesb'])) {
+                               $coverb = '/img/' .$fitnessMeserment[0]['imagesb'];
+                                        ?>
+                           <div class="text-center">
+         <?= $this->Html->image($coverb, ['alt' => 'related-news', 'class'=>'img-rounded','accept' => 'image/*']); ?>
+          <div class="caption text-center">
+            <p>Back</p>
+          </div>
+        
+                   </div>
+                           <?php } ?>
+                   
 
+                    </div>
+                      <div class="col-md-4"> 
+                          <div class="text-center">
+                              <h1>Previous</h1></div>
+                   <?php if (isset($fitnessMeserment[1]['imagesl'])&& !empty($fitnessMeserment[1]['imagesl'])) {
+                               $cover = '/img/' .$fitnessMeserment[1]['imagesl'];
+                                        ?>
+                           <div class="text-center">
+         <?= $this->Html->image($cover, ['alt' => 'related-news','class'=>'img-rounded', 'accept' => 'image/*']); ?>
+          <div class="caption text-center">
+            <p>Left</p>
+          </div>
+        
+                   </div>
+                           <?php } ?>
+                           <?php if (isset($fitnessMeserment[1]['imagesr'])&& !empty($fitnessMeserment[1]['imagesl'])) {
+                               $coverr = '/img/' .$fitnessMeserment[1]['imagesr'];
+                                        ?>
+                           <div class="text-center">
+         <?= $this->Html->image($coverr, ['alt' => 'related-news','class'=>'img-rounded', 'accept' => 'image/*']); ?>
+          <div class="caption text-center">
+            <p>Right</p>
+          </div>
+        
+                   </div>
+                           <?php } ?>
+                           <?php if (isset($fitnessMeserment[1]['imagesf'])&& !empty($fitnessMeserment[1]['imagesf'])) {
+                               $coverf = '/img/' .$fitnessMeserment[1]['imagesf'];
+                                        ?>
+                           <div class="text-center">
+         <?= $this->Html->image($coverf, ['alt' => 'related-news','class'=>'img-rounded', 'accept' => 'image/*']); ?>
+          <div class="caption text-center">
+            <p>Front</p>
+          </div>
+        
+                   </div>
+                           <?php } ?>
+                           <?php if (isset($fitnessMeserment[1]['imagesb'])&& !empty($fitnessMeserment[1]['imagesb'])) {
+                               $coverb = '/img/' .$fitnessMeserment[1]['imagesb'];
+                                        ?>
+                           <div class="text-center">
+         <?= $this->Html->image($coverb, ['alt' => 'related-news','class'=>'img-rounded', 'accept' => 'image/*']); ?>
+          <div class="caption text-center">
+            <p>Back</p>
+          </div>
+        
+                   </div>
+                           <?php } ?>
 
+                    </div>
+                    </div>
+                        </div>
+                      
                     </div>
                 </div>
             </div>

@@ -118,7 +118,7 @@ class FitnessMesermentsController extends AppController
         }
         
        $fitnessMeserment = $this->FitnessMeserments->find()
-                                   ->select(['id','weight','height','bmi','created','date','thigh','hips','waist','chest','neck','upper_arm'])
+                                   ->select(['id','weight','height','bmi','created','date','thigh','hips','waist','chest','neck','upper_arm','imagesl','imagesr','imagesf','imagesb'])
                                    ->contain(['Users'])
                                    ->where(['FitnessMeserments.user_id'=>$user_id, 'FitnessMeserments.id <=' =>$id])
                                    ->order(['FitnessMeserments.id DESC'])->limit(2)->toArray();
@@ -170,6 +170,7 @@ class FitnessMesermentsController extends AppController
         $user_type = $this->usersdetail['users_type'];
         if ($this->request->is('post')) {
              $data = $this->request->data;
+            // pr($data); die;
              
              if($user_type == 3)
         {
@@ -180,7 +181,40 @@ class FitnessMesermentsController extends AppController
         {
             $data['Partner_id'] = $this->usersdetail['users_id'];     
         }
-       // pr($data); die;
+        
+        if (isset($this->request->data['imagesl']['name']) && $data['imagesl']['name'] != "") {
+                $flname = time() . str_replace(" ", "", $data['imagesl']['name']);
+                $flpath = WWW_ROOT . "img/" . $flname;
+                if (move_uploaded_file($data['imagesl']['tmp_name'], $flpath)) {
+                    $data['imagesl'] = $flname;
+                }
+            }
+            
+            if (isset($this->request->data['imagesr']['name']) && $data['imagesr']['name'] != "") {
+                $flname = time() . str_replace(" ", "", $data['imagesr']['name']);
+                $flpath = WWW_ROOT . "img/" . $flname;
+                if (move_uploaded_file($data['imagesr']['tmp_name'], $flpath)) {
+                    $data['imagesr'] = $flname;
+                }
+            }
+            
+            if (isset($this->request->data['imagesf']['name']) && $data['imagesf']['name'] != "") {
+                $flname = time() . str_replace(" ", "", $data['imagesf']['name']);
+                $flpath = WWW_ROOT . "img/" . $flname;
+                if (move_uploaded_file($data['imagesf']['tmp_name'], $flpath)) {
+                    $data['imagesf'] = $flname;
+                }
+            }
+            
+            if (isset($this->request->data['imagesb']['name']) && $data['imagesb']['name'] != "") {
+                $flname = time() . str_replace(" ", "", $data['imagesb']['name']);
+                $flpath = WWW_ROOT . "img/" . $flname;
+                if (move_uploaded_file($data['imagesb']['tmp_name'], $flpath)) {
+                    $data['imagesb'] = $flname;
+                }
+            }
+        
+       //pr($data); die;
              
              $data['bmi']     = floor($data['bmi']);
             $fitnessMeserment = $this->FitnessMeserments->patchEntity($fitnessMeserment, $data);
@@ -216,6 +250,43 @@ class FitnessMesermentsController extends AppController
         $user_type = $this->usersdetail['users_type'];
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->data;
+           // pr($data);
+              if (isset($this->request->data['imageslu']['name']) && $data['imageslu']['name'] != "") {
+                $flname = time() . str_replace(" ", "", $data['imageslu']['name']);
+                $flpath = WWW_ROOT . "img/" . $flname;
+                if (move_uploaded_file($data['imageslu']['tmp_name'], $flpath)) {
+                    $data['imagesl'] = $flname;
+                }
+            }
+            
+            if (isset($this->request->data['imagesru']['name']) && $data['imagesru']['name'] != "") {
+                $flname = time() . str_replace(" ", "", $data['imagesru']['name']);
+                $flpath = WWW_ROOT . "img/" . $flname;
+                if (move_uploaded_file($data['imagesru']['tmp_name'], $flpath)) {
+                    $data['imagesr'] = $flname;
+                }
+            }
+            
+            if (isset($this->request->data['imagesfu']['name']) && $data['imagesfu']['name'] != "") {
+                $flname = time() . str_replace(" ", "", $data['imagesfu']['name']);
+                $flpath = WWW_ROOT . "img/" . $flname;
+                if (move_uploaded_file($data['imagesfu']['tmp_name'], $flpath)) {
+                    $data['imagesf'] = $flname;
+                }
+            }
+            
+            if (isset($this->request->data['imagesbu']['name']) && $data['imagesbu']['name'] != "") {
+                $flname = time() . str_replace(" ", "", $data['imagesbu']['name']);
+                $flpath = WWW_ROOT . "img/" . $flname;
+                if (move_uploaded_file($data['imagesbu']['tmp_name'], $flpath)) {
+                    $data['imagesb'] = $flname;
+                }
+            }
+            
+            //pr($data); die;
+        
+            
+            
             $fitnessMeserment = $this->FitnessMeserments->patchEntity($fitnessMeserment, $data);
             if ($this->FitnessMeserments->save($fitnessMeserment)) {
                 $this->Flash->success(__('The body meserment has been saved.'));

@@ -19,7 +19,7 @@ $user_type = $this->Common->getType();
                         </h2>
                     </div>
                     <div class="body">
-                        <?= $this->Form->create($fitnessMeserment, ['name' => 'bmiForm', 'id' => 'bodym', 'templates' => ['inputContainer' => '{{content}}']]) ?>
+                        <?= $this->Form->create($fitnessMeserment, ['enctype' => 'multipart/form-data','name' => 'bmiForm', 'id' => 'bodym', 'templates' => ['inputContainer' => '{{content}}']]) ?>
                         <div class="row"> 
                             <div class="col-md-6">  
                                 <div class="form-group form-float">
@@ -158,10 +158,49 @@ $user_type = $this->Common->getType();
                                 <small class="text-muted">*Select date.</small>
                             </div> 
                             <div class="col-md-6">
-
-                                <?= $this->Form->button('Submit', ['class' => 'btn btn-primary waves-effect']) ?>
+<div class="form-group form-float">
+                                    <div class="form-line image">
+                                                    <?= $this->Form->control('imageslu', ['label' => 'Left Image', 'class' => 'form-control', 'type' => 'file', 'onchange' => "ImageFilesizelu();"]) ?>            
+                                                </div>
+                                </div> 
                             </div>
                         </div>
+                     <div class="row">  
+                        <div class="col-md-6">
+                       <div class="form-group form-float">
+                                    <div class="form-line image">
+                                                    <?= $this->Form->control('imagesru', ['label' => 'Right Image', 'class' => 'form-control', 'type' => 'file', 'onchange' => "ImageFilesizeru();"]) ?>            
+                                                </div>
+                                </div> 
+                            <small class="text-muted">*Select Right.</small>
+                                </div> 
+                        <div class="col-md-6">
+                            <div class="form-group form-float">
+                        <div class="form-line image">
+                                                    <?= $this->Form->control('imagesfu', ['label' => 'Front Image', 'class' => 'form-control', 'type' => 'file', 'onchange' => "ImageFilesizefu();"]) ?>            
+                                                </div>
+                                                </div>
+                        </div>
+                        </div>
+                          <div class="row">  
+                        <div class="col-md-6">
+                       <div class="form-group form-float">
+                                   <div class="form-line image">
+                                                    <?= $this->Form->control('imagesbu', ['label' => 'Back Image', 'class' => 'form-control', 'type' => 'file', 'onchange' => "ImageFilesizebu();"]) ?>            
+                                                </div>
+                                </div> 
+                            <small class="text-muted">*Select Back.</small>
+                                </div> 
+                        <div class="col-md-6">
+                        
+                        <?= $this->Form->button('Submit', ['class' => 'btn btn-primary waves-effect']) ?>
+                        </div>
+                        </div>   
+                        
+                        
+                        
+                        
+                        
                         <?= $this->Form->end() ?>
                     </div>
                 </div>
@@ -231,5 +270,114 @@ $user_type = $this->Common->getType();
         $('.datetimepicker').bootstrapMaterialDatePicker({format: 'YYYY-MM-DD', lang: 'fr', weekStart: 1, cancelText: 'Cancel', maxDate: new Date(), time: 'false'});
         $('').bootstrapMaterialDatePicker({format: 'DD/MM/YYYY HH:mm', minDate: new Date()});
     });
+    
+      function ImageFilesizelu() {
+      
+        var Extension = '';
+        if (window.ActiveXObject) {
+            var fso = new ActiveXObject("Scripting.FileSystemObject");
+            var filepath = document.getElementById('imageslu').value;
+            var thefile = fso.getFile(filepath);
+            var sizeinbytes = thefile.size;
+        } else {
+            var filepath = document.getElementById('imageslu').value;
+            var Extension = filepath.substring(filepath.lastIndexOf('.') + 1).toLowerCase();
+            var sizeinbytes = document.getElementById('imageslu').files[0].size;
+        }
+        var size = sizeinbytes / 1024 / 1024;
+        if (Extension == "gif" || Extension == "png" || Extension == "bmp" || Extension == "jpeg" || Extension == "jpg") {
+            if (size <= 2) {
+            } else {
+                alert('Allowed maximum imagelu sizes is 2MB.');
+                document.getElementById('imagesl').value = '';
+            }
+        } else {
+            alert('Allowed only .gif,.png,.bmp,.jpg,.jpeg image files.');
+            document.getElementById('imageslu').value = '';
+        }
+
+    }   
+    
+      function ImageFilesizeru() {
+      
+        var Extension = '';
+        if (window.ActiveXObject) {
+            var fso = new ActiveXObject("Scripting.FileSystemObject");
+            var filepath = document.getElementById('imagesru').value;
+            var thefile = fso.getFile(filepath);
+            var sizeinbytes = thefile.size;
+        } else {
+            var filepath = document.getElementById('imagesru').value;
+            var Extension = filepath.substring(filepath.lastIndexOf('.') + 1).toLowerCase();
+            var sizeinbytes = document.getElementById('imagesru').files[0].size;
+        }
+        var size = sizeinbytes / 1024 / 1024;
+        if (Extension == "gif" || Extension == "png" || Extension == "bmp" || Extension == "jpeg" || Extension == "jpg") {
+            if (size <= 2) {
+            } else {
+                alert('Allowed maximum imageru sizes is 2MB.');
+                document.getElementById('imagesru').value = '';
+            }
+        } else {
+            alert('Allowed only .gif,.png,.bmp,.jpg,.jpeg image files.');
+            document.getElementById('imagesru').value = '';
+        }
+
+    }
+    
+      function ImageFilesizefu() {
+      
+        var Extension = '';
+        if (window.ActiveXObject) {
+            var fso = new ActiveXObject("Scripting.FileSystemObject");
+            var filepath = document.getElementById('imagesfu').value;
+            var thefile = fso.getFile(filepath);
+            var sizeinbytes = thefile.size;
+        } else {
+            var filepath = document.getElementById('imagesfu').value;
+            var Extension = filepath.substring(filepath.lastIndexOf('.') + 1).toLowerCase();
+            var sizeinbytes = document.getElementById('imagesfu').files[0].size;
+        }
+        var size = sizeinbytes / 1024 / 1024;
+        if (Extension == "gif" || Extension == "png" || Extension == "bmp" || Extension == "jpeg" || Extension == "jpg") {
+            if (size <= 2) {
+            } else {
+                alert('Allowed maximum imagefu sizes is 2MB.');
+                document.getElementById('imagesf').value = '';
+            }
+        } else {
+            alert('Allowed only .gif,.png,.bmp,.jpg,.jpeg image files.');
+            document.getElementById('imagesfu').value = '';
+        }
+
+    }
+    
+      function ImageFilesizebu() {
+      
+        var Extension = '';
+        if (window.ActiveXObject) {
+            var fso = new ActiveXObject("Scripting.FileSystemObject");
+            var filepath = document.getElementById('imagesbu').value;
+            var thefile = fso.getFile(filepath);
+            var sizeinbytes = thefile.size;
+        } else {
+            var filepath = document.getElementById('imagesbu').value;
+            var Extension = filepath.substring(filepath.lastIndexOf('.') + 1).toLowerCase();
+            var sizeinbytes = document.getElementById('imagesbu').files[0].size;
+        }
+        var size = sizeinbytes / 1024 / 1024;
+        if (Extension == "gif" || Extension == "png" || Extension == "bmp" || Extension == "jpeg" || Extension == "jpg") {
+            if (size <= 2) {
+            } else {
+                alert('Allowed maximum imagebu sizes is 2MB.');
+                document.getElementById('imagesbu').value = '';
+            }
+        } else {
+            alert('Allowed only .gif,.png,.bmp,.jpg,.jpeg image files.');
+            document.getElementById('imagesbu').value = '';
+        }
+
+    } 
+    
 
 </script>
