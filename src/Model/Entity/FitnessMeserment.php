@@ -64,6 +64,10 @@ class FitnessMeserment extends Entity
         'created' => true,
         'modified' => true,
         'partner_id' => true,
+        'imagesl' => true,
+        'imagesr' => true,
+        'imagesf' => true,
+        'imagesb' => true,
         'user' => true
     ];
 }
