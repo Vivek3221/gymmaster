@@ -175,11 +175,11 @@ class FitnessMesermentsController extends AppController
              if($user_type == 3)
         {
             $data['user_id'] = $this->usersdetail['users_id']; 
-            $data['Partner_id'] = $this->usersdetail['partner_id'];  
+            $data['partner_id'] = $this->usersdetail['partner_id'];  
         }
              if($user_type != 3)
         {
-            $data['Partner_id'] = $this->usersdetail['users_id'];     
+            $data['partner_id'] = $this->usersdetail['users_id'];     
         }
         
         if (isset($this->request->data['imagesl']['name']) && $data['imagesl']['name'] != "") {
