@@ -55,7 +55,7 @@ class FitnessTestsController extends AppController
           $search['FitnessTests.user_id'] = $users_id;
           }
         if (isset($users_type) && ($users_type == 2)) {
-          $search['FitnessTests.partner_id'] = $this->usersdetail['partner_id'];
+          $search['FitnessTests.partner_id'] = $users_id;
           }
           
          if (isset($search)) {

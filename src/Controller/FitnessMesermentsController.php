@@ -49,7 +49,7 @@ class FitnessMesermentsController extends AppController
         }
         $users_type = $this->usersdetail['users_type'];
         $users_id = $this->usersdetail['users_id'];
-     //  pr($users_type);die;
+       //pr($this->usersdetail['users_id']);die;
         $sdate ='';
         $edate ='';
         $search = [];
@@ -74,7 +74,7 @@ class FitnessMesermentsController extends AppController
           $search['FitnessMeserments.user_id'] = $users_id;
           }
         if (isset($users_type) && ($users_type == 2)) {
-          $search['FitnessMeserments.partner_id'] = $this->usersdetail['partner_id'];
+          $search['FitnessMeserments.partner_id'] = $users_id;
           }
           
          if (isset($search)) {
