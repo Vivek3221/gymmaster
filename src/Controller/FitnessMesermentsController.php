@@ -48,6 +48,8 @@ class FitnessMesermentsController extends AppController
             return $this->redirect('/');
         }
         $users_type = $this->usersdetail['users_type'];
+        $users_id = $this->usersdetail['users_id'];
+       // pr($users_type);
         $sdate ='';
         $edate ='';
         $search = [];
@@ -87,6 +89,7 @@ class FitnessMesermentsController extends AppController
 
         $this->paginate = ['order' => ['FitnessMeserments.id' => 'DESC'],'contain' => ['Users']];
         $fitnessMeserments = $this->paginate($count)->toArray();
+        //pr($fitnessMeserments);
        // $users = $this->paginate($this->Users);
         $this->set(compact('fitnessMeserments','sdate','edate' ));
         $this->set('_serialize', ['fitnessMeserments']);

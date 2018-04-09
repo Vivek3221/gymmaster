@@ -33,6 +33,8 @@ class FitnessTestsController extends AppController
                       if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
+        $users_type = $this->usersdetail['users_type'];
+        $users_id = $this->usersdetail['users_id'];
        $sdate ='';
         $edate ='';
         $search = [];
