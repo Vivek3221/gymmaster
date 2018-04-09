@@ -49,7 +49,7 @@ class FitnessMesermentsController extends AppController
         }
         $users_type = $this->usersdetail['users_type'];
         $users_id = $this->usersdetail['users_id'];
-       // pr($users_type);
+     //  pr($users_type);die;
         $sdate ='';
         $edate ='';
         $search = [];
@@ -171,6 +171,7 @@ class FitnessMesermentsController extends AppController
         
         $fitnessMeserment = $this->FitnessMeserments->newEntity();
         $user_type = $this->usersdetail['users_type'];
+        //pr($user_type); die;
         if ($this->request->is('post')) {
              $data = $this->request->data;
             // pr($data); die;

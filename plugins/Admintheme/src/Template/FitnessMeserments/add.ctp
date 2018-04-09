@@ -1,6 +1,6 @@
 <?php
 $status = $this->Common->getstatus();
-$user_type = $this->Common->getType();
+//$user_types = $this->Common->getType();
 $user_name = $this->Common->getUsers();
 //pr($user_name); die;
 ?>
