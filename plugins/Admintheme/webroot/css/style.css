@@ -8046,3 +8046,8 @@ td, th {padding:5px;}
 .datepicker{top: 180px;}
 
 .img-rounded{max-width: 134px;}
+
+/*for error message*/
+.help-inline{
+    color: red;
+}

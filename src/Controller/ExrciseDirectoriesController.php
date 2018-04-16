@@ -20,7 +20,6 @@ class ExrciseDirectoriesController extends AppController
      */
     public function index()
     {
-        
          if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
@@ -68,6 +67,9 @@ class ExrciseDirectoriesController extends AppController
      */
     public function view($id = null)
     {
+         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $exrciseDirectory = $this->ExrciseDirectories->get($id, [
             'contain' => []
         ]);
@@ -83,6 +85,9 @@ class ExrciseDirectoriesController extends AppController
      */
     public function add()
     {
+         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $exrciseDirectory = $this->ExrciseDirectories->newEntity();
         if ($this->request->is('post')) {
             $exrciseDirectory = $this->ExrciseDirectories->patchEntity($exrciseDirectory, $this->request->getData());
@@ -106,6 +111,9 @@ class ExrciseDirectoriesController extends AppController
      */
     public function edit($id = null)
     {
+         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $exrciseDirectory = $this->ExrciseDirectories->get($id, [
             'contain' => []
         ]);
@@ -131,6 +139,9 @@ class ExrciseDirectoriesController extends AppController
      */
     public function delete($id = null)
     {
+         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
        // $this->request->allowMethod(['post', 'delete']);
         $exrciseDirectory = $this->ExrciseDirectories->get($id);
         if ($this->ExrciseDirectories->delete($exrciseDirectory)) {
