@@ -40,14 +40,14 @@ $action = $this->request['action'];
                 <?php if($usersdetail['users_type'] == 1){; ?>
                 <li class="<?php if (($controller == 'ExrciseDirectories' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'logoutqq' || $action == 'payment'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'index']); ?>">
-                        <i class="material-icons">list</i>
+                        <i class="material-icons">home</i>
                         <span><?= __('Exercise Directory') ?></span>
                     </a>
                 </li>
                 <?php } ?>
              <li class="<?php if (($controller == 'Bodies') || ($controller == 'Exercises') || ($controller == 'FitnessMeserments') || ($controller == 'FitnessTests')){echo "active";}?>">
                     <a href="javascript:void(0);" class="menu-toggle">
-                        <i class="material-icons">view_list</i>
+                        <i class="material-icons">text_fields</i>
                         <span><?= __('Workout Directry') ?></span>
                     </a>
                     <ul class="ml-menu">
@@ -65,7 +65,12 @@ $action = $this->request['action'];
                    </li>
                     </ul>
                 </li>   
-              
+              <li class="<?php if (($controller == 'Sessions' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'logoutqq' || $action == 'payment'))){echo "active";}?>">
+                    <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'add']); ?>">
+                        <i class="material-icons">perm_media</i>
+                        <span><?= __('Create Session') ?></span>
+                    </a>
+                </li>
             </ul>
 
         </div>

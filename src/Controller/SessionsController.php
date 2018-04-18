@@ -20,6 +20,9 @@ class SessionsController extends AppController
      */
     public function index()
     {
+          if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $this->paginate = [
             'contain' => ['Users', 'Partners']
         ];
@@ -38,6 +41,9 @@ class SessionsController extends AppController
      */
     public function view($id = null)
     {
+          if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $session = $this->Sessions->get($id, [
             'contain' => ['Users', 'Partners']
         ]);
@@ -53,6 +59,9 @@ class SessionsController extends AppController
      */
     public function add()
     {
+          if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $session = $this->Sessions->newEntity();
         if ($this->request->is('post')) {
             $session = $this->Sessions->patchEntity($session, $this->request->getData());
@@ -78,6 +87,9 @@ class SessionsController extends AppController
      */
     public function edit($id = null)
     {
+          if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $session = $this->Sessions->get($id, [
             'contain' => []
         ]);
@@ -105,7 +117,10 @@ class SessionsController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
+          if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+       // $this->request->allowMethod(['post', 'delete']);
         $session = $this->Sessions->get($id);
         if ($this->Sessions->delete($session)) {
             $this->Flash->success(__('The session has been deleted.'));
@@ -114,5 +129,10 @@ class SessionsController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+    
+     public function beforeRender(\Cake\Event\Event $event) {
+        parent::beforeRender($event);
+        $this->viewBuilder()->theme('Admintheme');
     }
 }
