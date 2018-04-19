@@ -13,7 +13,7 @@ $nofrec = $this->Common->getNoOfRec();
                     <div class="card">
                         <div class="header">
                             <h2 >
-                               <?= __('Body Meserments') ?>
+                               <?= __('Body Measurement') ?>
                             </h2>
                         </div>
                         <div class="body">

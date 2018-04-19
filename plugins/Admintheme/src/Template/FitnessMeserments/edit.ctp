@@ -15,7 +15,7 @@ $user_type = $this->Common->getType();
                 <div class="card">
                     <div class="header">
                         <h2>
-                            <?= __('Body Meserment Form') ?>
+                            <?= __('Body Measurement ') ?>
                         </h2>
                     </div>
                     <div class="body">

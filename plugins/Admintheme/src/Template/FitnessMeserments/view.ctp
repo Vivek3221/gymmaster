@@ -11,7 +11,7 @@ $getPayDuration = $this->Common->getPayDuration();
                 <div class="card">
                     <div class="header">
                         <h2 >
-                            <?= __('View Boody Meserment') ?>
+                            <?= __('View Boody Measurement') ?>
                         </h2>
 
                     </div>
