@@ -135,5 +135,16 @@
     </script>   
     <footer>
     </footer>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <?php if($this->request->env('HTTP_HOST')=='datamonitering.com' || $this->request->env('HTTP_HOST')=='datamonitering.com'){ ?>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-117829826-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-117829826-1');
+</script>
+    <?php } ?>
 </body>
 </html>
