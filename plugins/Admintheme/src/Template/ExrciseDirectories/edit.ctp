@@ -30,25 +30,25 @@ $status = $this->Common->getstatus();
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('tecnical1', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Technical 1</label>
+                                <label class="form-label">Number of repetetion</label>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('tecnical2', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Technical 2</label>
+                                <label class="form-label">Time</label>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('tecnical3', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Technical 3</label>
+                                <label class="form-label">Rest</label>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('tecnical4', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Technical 4</label>
+                                <label class="form-label">Tempo</label>
                             </div>
                         </div>
 
