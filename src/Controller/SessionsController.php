@@ -62,9 +62,24 @@ class SessionsController extends AppController
           if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
+        $user_type = $this->usersdetail['users_type'];
         $session = $this->Sessions->newEntity();
         if ($this->request->is('post')) {
-            $session = $this->Sessions->patchEntity($session, $this->request->getData());
+             $data1 =[];
+            $data = $this->request->data;
+            //pr($data); die;
+              
+            $data1['partner_id'] =1;     
+          //  $data1['partner_id'] = $this->usersdetail['users_id'];     
+            $data1['user_id'] = $this->request->data['user_id'];     
+       
+                $data1['ex_detail'] = json_encode($data);
+                $data1['status'] = $data['status'];
+                $data1['date'] = $data['date'];
+                
+             //   pr($data1); die;
+            $session = $this->Sessions->patchEntity($session, $data1);
+            //pr($session); die;
             if ($this->Sessions->save($session)) {
                 $this->Flash->success(__('The session has been saved.'));
 
@@ -74,7 +89,7 @@ class SessionsController extends AppController
         }
         $users = $this->Sessions->Users->find('list', ['limit' => 200]);
         $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
-        $this->set(compact('session', 'users', 'partners'));
+        $this->set(compact('session', 'users', 'partners','user_type'));
         $this->set('_serialize', ['session']);
     }
 

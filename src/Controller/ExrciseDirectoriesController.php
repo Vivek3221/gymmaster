@@ -2,6 +2,9 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Event\Event;
+use Cake\Core\Configure;
+use Cake\Network\Http\Client;
 
 /**
  * ExrciseDirectories Controller
@@ -13,6 +16,13 @@ use App\Controller\AppController;
 class ExrciseDirectoriesController extends AppController
 {
 
+    
+       public function beforeFilter(Event $event) {
+        parent::beforeFilter($event);
+       // $this->Users->userAuth = $this->UserAuth;
+        $this->Auth->allow(['index','add','view','delete','edit','status','addExrice']);
+        
+    }
     /**
      * Index method
      *
@@ -180,6 +190,16 @@ class ExrciseDirectoriesController extends AppController
                 exit;
             }
         }
+    }
+    
+    
+       public function addExrice() {
+             $this->viewBuilder()->layout("ajax");
+             $exrcisedirectorie_id = $this->request->data['exrcisedirectorie_id'];
+             
+              $get_exrcisedirectories = $this->ExrciseDirectories->find()->select(['name', 'tecnical1','id','tecnical2','tecnical3','tecnical4'])->where(['status' => 1,'id'=>$exrcisedirectorie_id])->first();
+  //pr($get_exrcisedirectories); die;
+       $this->set(compact('get_exrcisedirectories'));
     }
     
      public function beforeRender(\Cake\Event\Event $event) {
