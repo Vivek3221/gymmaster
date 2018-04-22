@@ -20,7 +20,7 @@ $nofrec = $this->Common->getNoOfRec();
                         <div class="box-body">
                             <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'ExrciseDirectories', 'action' => 'index']]) ?>
                             <div class="col-md-3">
-                                <?php echo $this->Form->input('name', ['label' => __('Name'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Name'),'value'=> $name]); ?>
+                                <?php echo $this->Form->input('name', ['label' => __('Name'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Name'), 'value' => $name]); ?>
                             </div>
                             <div class="col-md-2">
                                 <?php echo $this->Form->input('status', ['label' => __('Status'), 'class' => 'form-control', 'empty' => __('Select Status'), 'options' => $statu, 'value' => $status]); ?>
@@ -94,7 +94,8 @@ $nofrec = $this->Common->getNoOfRec();
                                     <strong><?= __('Record') ?></strong> <?= __('not found') ?>
                                 </div>
                             </div>
-                        <?php } ?>             </div>
+                        <?php } ?>   
+                    </div>
                 </div>
             </div>
         </div>
