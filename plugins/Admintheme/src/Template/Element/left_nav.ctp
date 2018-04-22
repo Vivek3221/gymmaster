@@ -66,7 +66,7 @@ $action = $this->request['action'];
                     </ul>
                 </li>   
               <li class="<?php if (($controller == 'Sessions' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'logoutqq' || $action == 'payment'))){echo "active";}?>">
-                    <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'add']); ?>">
+                    <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index']); ?>">
                         <i class="material-icons">perm_media</i>
                         <span><?= __('Create Session') ?></span>
                     </a>
