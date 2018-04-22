@@ -84,7 +84,7 @@ $user_name = $this->Common->getUsers();
         $("#exrcisedirectorie").click(function () {
 
             var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
-              alert(exrcisedirectorie_id);
+//              alert(exrcisedirectorie_id);
             //  
             if (exrcisedirectorie_id)
             {
@@ -98,7 +98,7 @@ $user_name = $this->Common->getUsers();
                     data: data,
                     url: urls,
                     success: function (html) {
-                          alert(html);
+//                          alert(html);
                         $('#getexercise').append(html);
                     }
                 });
