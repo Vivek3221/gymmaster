@@ -36,12 +36,23 @@ $user_name = $this->Common->getUsers();
                                 <?= $this->Form->control('date', ['class' => 'form-control datetimepicker', 'type' => 'text', 'placeholder' => 'Select Date', 'label' => FALSE, 'required', 'format' => 'YYYY-MM-DD']) ?>          
                             </div>
                         </div> 
-                        <div class="form-group form-float">
-                            <div class="form-line">
+<!--                        <div class="input-group mb-3" >
+                            <label class="form-label">Exercise</label>
+                            <div class="">
                                 <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists , 'label'=>FALSE]) ?> 
-                                <button id="exrcisedirectorie"  class="btn btn-success"><?= __('+ Add Excercise') ?></button>
+                                <div class="input-group-append">
+                                    <button id="exrcisedirectorie"  class="btn btn-success"><?= __('+ Add Excercise') ?></button>
+                                </div>
                             </div>
-                        </div>
+                        </div>-->
+                        <div class="input-group">
+                            <label class="form-label">Exercise</label>
+    <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists , 'label'=>FALSE]) ?>
+                            <span class="input-group-btn" style="padding-top: 23px;">
+        <button id="exrcisedirectorie"  class="btn btn-success"><?= __('+ Add Excercise') ?></button>
+   </span>
+</div>
+                        
                         <div class="row" id="getexercise">
                         </div>
                         <div class="form-group form-float">
@@ -58,9 +69,9 @@ $user_name = $this->Common->getUsers();
 
     </div>
 </section>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
 
 <script type="text/javascript">
     $(document).ready(function () {
