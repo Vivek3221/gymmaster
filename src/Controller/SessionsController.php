@@ -98,16 +98,19 @@ class SessionsController extends AppController
         if ($this->request->is('post')) {
              $data1 =[];
             $data = $this->request->data;
-            //pr($data); die;
-              
-           // $data1['partner_id'] =1;     
-          //  $data1['partner_id'] = $this->usersdetail['users_id'];     
+          
+             if($user_type != 3)
+        {
+            $data1['partner_id'] = $this->usersdetail['users_id'];     
             $data1['user_id'] = $this->request->data['user_id'];     
-                $data1['ex_detail'] = json_encode($data);
+        }   
+        
+            //pr($data); die;
+                $data1['ex_detail'] = json_encode($data['excrcise']);
                 $data1['status'] = $data['status'];
                 $data1['date'] = $data['date'];
                 
-             //   pr($data1); die;
+             //  pr($data1); die;
             $session = $this->Sessions->patchEntity($session, $data1);
            // pr($session); die;
             if ($this->Sessions->save($session)) {
@@ -138,8 +141,22 @@ class SessionsController extends AppController
         $session = $this->Sessions->get($id, [
             'contain' => []
         ]);
+        $user_type = $this->usersdetail['users_type'];
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $session = $this->Sessions->patchEntity($session, $this->request->getData());
+            $data1 =[];
+            $data = $this->request->data;
+          
+             if($user_type != 3)
+        {
+            $data1['partner_id'] = $this->usersdetail['users_id'];     
+            $data1['user_id'] = $this->request->data['user_id'];     
+        }     
+                $data1['ex_detail'] = json_encode($data);
+                $data1['status'] = $data['status'];
+                $data1['date'] = $data['date'];
+                
+             //   pr($data1); die;
+            $session = $this->Sessions->patchEntity($session, $data1);
             if ($this->Sessions->save($session)) {
                 $this->Flash->success(__('The session has been saved.'));
 
@@ -147,9 +164,11 @@ class SessionsController extends AppController
             }
             $this->Flash->error(__('The session could not be saved. Please, try again.'));
         }
-        $users = $this->Sessions->Users->find('list', ['limit' => 200]);
-        $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
-        $this->set(compact('session', 'users', 'partners'));
+         $session_values = json_decode($session->ex_detail);
+      // pr($session_values); die;
+        //$users = $this->Sessions->Users->find('list', ['limit' => 200]);
+       // $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
+        $this->set(compact('session', 'users', 'partners','user_type','session_values'));
         $this->set('_serialize', ['session']);
     }
 
