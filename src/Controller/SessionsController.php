@@ -145,13 +145,13 @@ class SessionsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data1 =[];
             $data = $this->request->data;
-          
+       //   pr($data); die;
              if($user_type != 3)
         {
             $data1['partner_id'] = $this->usersdetail['users_id'];     
             $data1['user_id'] = $this->request->data['user_id'];     
         }     
-                $data1['ex_detail'] = json_encode($data);
+                 $data1['ex_detail'] = json_encode($data['excrcise']);
                 $data1['status'] = $data['status'];
                 $data1['date'] = $data['date'];
                 

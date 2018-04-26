@@ -49,7 +49,7 @@ $user_name = $this->Common->getUsers();
                             <label class="form-label">Exercise</label>
     <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists , 'label'=>FALSE]) ?>
                             <span class="input-group-btn" style="padding-top: 23px;">
-        <button id="exrcisedirectorie"  class="btn btn-success"><?= __('+ Add Excercise') ?></button>
+        <span id="exrcisedirectorie" onclick="getExcercise()" class="btn btn-success"><?= __('+ Add Excercise') ?></span>
    </span>
 </div>
                         
@@ -90,12 +90,11 @@ $user_name = $this->Common->getUsers();
         //alert(id);
 
     }
-    $(function () {
-
-        $("#exrcisedirectorie").click(function () {
+    
+  function getExcercise() {
 
             var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
-//              alert(exrcisedirectorie_id);
+              //alert(exrcisedirectorie_id);
             //  
             if (exrcisedirectorie_id)
             {
@@ -114,8 +113,6 @@ $user_name = $this->Common->getUsers();
                     }
                 });
             }
-        });
-
-    });
+        }
 
 </script>
