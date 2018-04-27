@@ -171,6 +171,38 @@ class SessionsController extends AppController
         $this->set(compact('session', 'users', 'partners','user_type','session_values'));
         $this->set('_serialize', ['session']);
     }
+    public function userEdit($id = null)
+    {
+      //  echo 'ffffffff'; die;
+          if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        $session = $this->Sessions->get($id, [
+            'contain' => []
+        ]);
+        $user_type = $this->usersdetail['users_type'];
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $data1 =[];
+            $data = $this->request->data;
+            
+            $data1['user_detail'] = json_encode($data['userexcrcise']);
+               
+             //  pr($data1); die;
+            $session = $this->Sessions->patchEntity($session, $data1);
+            if ($this->Sessions->save($session)) {
+                $this->Flash->success(__('The session has been saved.'));
+
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(__('The session could not be saved. Please, try again.'));
+        }
+         $session_values = json_decode($session->ex_detail);
+      // pr($session_values); die;
+        //$users = $this->Sessions->Users->find('list', ['limit' => 200]);
+       // $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
+        $this->set(compact('session', 'users', 'partners','user_type','session_values'));
+        $this->set('_serialize', ['session']);
+    }
 
     /**
      * Delete method

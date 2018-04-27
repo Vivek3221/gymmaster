@@ -35,6 +35,7 @@ class Session extends Entity
         'partner_id' => true,
         'date' => true,
         'ex_detail' => true,
+        'user_detail' => true,
         'status' => true,
         'created' => true,
         'modified' => true,

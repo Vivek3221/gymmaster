@@ -74,7 +74,7 @@ $nofrec = $this->Common->getNoOfRec();
                                             </td>
                                             <td><i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $session['id']]) ?></i>
                                                <?php if($user_type == 1){?>
-                                                <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $session['id']]) ?></i>
+                                                <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'userEdit', $session['id']]) ?></i>
                                                <?php } ?>
                                             </td>
                                         </tr>
