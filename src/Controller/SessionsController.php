@@ -78,8 +78,13 @@ class SessionsController extends AppController
         $session = $this->Sessions->get($id, [
             'contain' => ['Users']
         ]);
+   
+      $session_values = json_decode($session->ex_detail);
+//pr($session_values);
+      $user_values = json_decode($session->user_detail);
+//pr($user_values); die;
 
-        $this->set('session', $session);
+        $this->set(compact('session', 'user_values', 'partners','user_type','session_values'));
         $this->set('_serialize', ['session']);
     }
 

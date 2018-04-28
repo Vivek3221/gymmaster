@@ -1,56 +1,145 @@
 <?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Session $session
- */
+$status = $this->Common->getstatus();
+
+//$exercises = $this->Common->getExercises();
+$get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories();
+//$get_exrcisedirectorie_name = $this->Common->getExrciseDirectoriesname(1);
+
+$user_name = $this->Common->getUsers();
+//pr($bodies_lists); die;
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit Session'), ['action' => 'edit', $session->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete Session'), ['action' => 'delete', $session->id], ['confirm' => __('Are you sure you want to delete # {0}?', $session->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Sessions'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Session'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Partners'), ['controller' => 'Partners', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Partner'), ['controller' => 'Partners', 'action' => 'add']) ?> </li>
-    </ul>
-</nav>
-<div class="sessions view large-9 medium-8 columns content">
-    <h3><?= h($session->id) ?></h3>
-    <table class="vertical-table">
-        <tr>
-            <th scope="row"><?= __('User') ?></th>
-            <td><?= $session->has('user') ? $this->Html->link($session->user->name, ['controller' => 'Users', 'action' => 'view', $session->user->id]) : '' ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Partner') ?></th>
-            <td><?= $session->has('partner') ? $this->Html->link($session->partner->id, ['controller' => 'Partners', 'action' => 'view', $session->partner->id]) : '' ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Id') ?></th>
-            <td><?= $this->Number->format($session->id) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Status') ?></th>
-            <td><?= $this->Number->format($session->status) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Date') ?></th>
-            <td><?= h($session->date) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Created') ?></th>
-            <td><?= h($session->created) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Modified') ?></th>
-            <td><?= h($session->modified) ?></td>
-        </tr>
-    </table>
-    <div class="row">
-        <h4><?= __('Ex Detail') ?></h4>
-        <?= $this->Text->autoParagraph(h($session->ex_detail)); ?>
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+        </div>
+        <!-- Basic Validation -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <?= $this->Flash->render() ?>
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            <?= __('Create Session') ?>
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <!--                            <form id="form_validation" method="POST">-->
+                        <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']);  ?>
+                        <?= $this->Form->create($session, ['id' => 'addbodys', 'templates' => ['inputContainer' => '{{content}}']]) ?>
+
+
+                        <div class="row" id="getexercise">
+                            <div class="col-sm-6" style="background-color:#eae7e0;">
+                                <div>
+                            <span class="">  <h3 class="text-center">Planned</h3></span> 
+                                </div>
+                                <?php foreach ($session_values as $key => $value) {
+                                    ?>
+                                <div>
+                            <span class=""> <?= ucfirst($this->Common->getExrciseDirectoriesname($key)) ?></span> 
+                                </div>
+                                    <div class="body">
+            
+                                        <?php foreach ($value as $val => $vale) {
+                                            ?>
+                                            <div class=""> 
+                                                <div class="">
+                                                    <label class="form-label" style="margin-right : 20px;"><?= ucfirst($val) ?></label>
+                                                    <span><?= $vale ?> </span>
+
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+
+                                    </div><?php } ?>
+
+                            </div>
+                            <div class="col-sm-6" style="background-color:#efefef;">
+                                <div>
+                            <span class=""> <h3 class="text-center">Report</h3> </span> 
+                                </div>
+                                <?php foreach ($user_values as $key => $value) {
+                                    ?>
+                                <div>
+                            <span class=""> <?= ucfirst($this->Common->getExrciseDirectoriesname($key)) ?></span> 
+                                </div>  <div class="body">
+ 
+                                        <?php foreach ($value as $val => $vale) {
+                                            ?>
+                                            <div class=""> 
+                                                <div class="">
+                                                    <label class="form-label" style="margin-right : 20px;"><?= ucfirst($val) ?></label>
+                                                   <span><?= $vale ?> </span>
+
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+
+                                    </div><?php } ?>
+
+                            </div>
+                        </div>
+
+                        <?= $this->Form->button('Submit', ['class' => 'btn btn-primary waves-effect']) ?>
+                        <?= $this->Form->end() ?>  
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
+
 </div>
+</section>
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datetimepicker').bootstrapMaterialDatePicker({format: 'YYYY-MM-DD', lang: 'fr', weekStart: 1, cancelText: 'Cancel', minDate: new Date(), time: 'false'});
+        $('').bootstrapMaterialDatePicker({format: 'DD/MM/YYYY HH:mm', minDate: new Date()});
+    });
+
+</script>
+<script>
+
+    function removeExcercise(clicked_id)
+    {
+
+        var id = 'remove' + clicked_id;
+        $('#' + id).remove();
+        //alert(id);
+
+    }
+
+    //$(function () {
+
+    function getExcercise() {
+
+        var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
+        //alert(exrcisedirectorie_id);
+        //  
+        if (exrcisedirectorie_id)
+        {
+            var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
+            // alert(urls)
+            //urllink = urls + '/' + bank_name ;
+            var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                data: data,
+                url: urls,
+                success: function (html) {
+//                          alert(html);
+                    $('#getexercise').append(html);
+                }
+            });
+        }
+    }
+
+    //});
+
+</script>
