@@ -19,7 +19,7 @@ $user_name = $this->Common->getUsers();
                 <div class="card">
                     <div class="header">
                         <h2>
-                            <?= __('Create Session') ?>
+                            <?= __('Session Reports') ?>
                         </h2>
                     </div>
                     <div class="body">
