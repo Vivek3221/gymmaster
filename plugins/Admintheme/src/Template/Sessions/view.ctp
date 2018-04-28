@@ -19,14 +19,11 @@ $user_name = $this->Common->getUsers();
                 <div class="card">
                     <div class="header">
                         <h2>
-                            <?= __('Create Session') ?>
+                            <?= __('View Session') ?>
                         </h2>
                     </div>
                     <div class="body">
-                        <!--                            <form id="form_validation" method="POST">-->
-                        <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']);  ?>
-                        <?= $this->Form->create($session, ['id' => 'addbodys', 'templates' => ['inputContainer' => '{{content}}']]) ?>
-
+                      
 
                         <div class="row" id="getexercise">
                             <div class="col-sm-6" style="background-color:#eae7e0;">
@@ -79,9 +76,6 @@ $user_name = $this->Common->getUsers();
 
                             </div>
                         </div>
-
-                        <?= $this->Form->button('Submit', ['class' => 'btn btn-primary waves-effect']) ?>
-                        <?= $this->Form->end() ?>  
 
                     </div>
 
