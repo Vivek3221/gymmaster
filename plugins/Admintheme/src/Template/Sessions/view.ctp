@@ -8,6 +8,7 @@ $get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories();
 $user_name = $this->Common->getUsers();
 //pr($bodies_lists); die;
 ?>
+
 <section class="content">
     <div class="container-fluid">
         <div class="block-header">
@@ -26,7 +27,7 @@ $user_name = $this->Common->getUsers();
                       
 
                         <div class="row" id="getexercise">
-                            <div class="col-sm-6" style="background-color:#eae7e0;">
+                            <div class="col-sm-6" style="background-color:lavender;">
                                 <div>
                             <span class="">  <h3 class="text-center">Planned</h3></span> 
                                 </div>
@@ -40,10 +41,13 @@ $user_name = $this->Common->getUsers();
                                         <?php foreach ($value as $val => $vale) {
                                             ?>
                                             <div class=""> 
-                                                <div class="">
+                                                <div class="row">
+                                                     <div class="col-sm-4">
                                                     <label class="form-label" style="margin-right : 20px;"><?= ucfirst($val) ?></label>
-                                                    <span><?= $vale ?> </span>
-
+                                                   </div>
+                                                     <div class="col-sm-4">
+                                                    <span id="" value=""><?= $vale ?> </span>
+                                                     </div>
                                                 </div>
                                             </div>
                                         <?php } ?>
@@ -51,7 +55,7 @@ $user_name = $this->Common->getUsers();
                                     </div><?php } ?>
 
                             </div>
-                            <div class="col-sm-6" style="background-color:#efefef;">
+                            <div class="col-sm-6" style="background-color:#ecd6d1;" >
                                 <div>
                             <span class=""> <h3 class="text-center">Report</h3> </span> 
                                 </div>
@@ -63,11 +67,17 @@ $user_name = $this->Common->getUsers();
  
                                         <?php foreach ($value as $val => $vale) {
                                             ?>
-                                            <div class=""> 
-                                                <div class="">
-                                                    <label class="form-label" style="margin-right : 20px;"><?= ucfirst($val) ?></label>
-                                                   <span><?= $vale ?> </span>
-
+                                            <div class="ddd"> 
+                                                <div class="row">
+                                                    <div class="col-sm-3">
+                                                   <label class="form-label" style="margin-right : 20px;"><?= ucfirst($val) ?></label>
+                                                    </div>
+                                                     <div class="col-sm-3">
+                                                   <span id="" value="" style="margin-right : 20px;"><?= $vale ?> </span>
+                                                     </div>
+                                                     <div class="col-sm-3">
+                                                   <span id="" > @ <?=  $vale - $session_values->$key->$val ?> </span>
+                                                     </div>
                                                 </div>
                                             </div>
                                         <?php } ?>
@@ -83,57 +93,10 @@ $user_name = $this->Common->getUsers();
             </div>
         </div>
     </div>
-
 </div>
 </section>
+
+
 <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.datetimepicker').bootstrapMaterialDatePicker({format: 'YYYY-MM-DD', lang: 'fr', weekStart: 1, cancelText: 'Cancel', minDate: new Date(), time: 'false'});
-        $('').bootstrapMaterialDatePicker({format: 'DD/MM/YYYY HH:mm', minDate: new Date()});
-    });
-
-</script>
-<script>
-
-    function removeExcercise(clicked_id)
-    {
-
-        var id = 'remove' + clicked_id;
-        $('#' + id).remove();
-        //alert(id);
-
-    }
-
-    //$(function () {
-
-    function getExcercise() {
-
-        var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
-        //alert(exrcisedirectorie_id);
-        //  
-        if (exrcisedirectorie_id)
-        {
-            var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
-            // alert(urls)
-            //urllink = urls + '/' + bank_name ;
-            var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id);
-            $.ajax({
-                type: "POST",
-                cache: false,
-                data: data,
-                url: urls,
-                success: function (html) {
-//                          alert(html);
-                    $('#getexercise').append(html);
-                }
-            });
-        }
-    }
-
-    //});
-
-</script>
