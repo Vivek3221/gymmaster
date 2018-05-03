@@ -53,7 +53,11 @@ class SessionsController extends AppController
         } else {
             $count = $this->Sessions->find('all');
         }
-        $count = $count->where(['Sessions.status !=' => '2']);
+        if (isset($user_type) && ($user_type == 3)) {
+        $count = $count->where(['Sessions.status ' => '1']);
+        } else {
+             $count = $count->where(['Sessions.status !=' => '2']);
+        }
         $this->paginate = [
             'limit' => $norec, 
             'order' => ['Sessions.id' => 'DESC'],

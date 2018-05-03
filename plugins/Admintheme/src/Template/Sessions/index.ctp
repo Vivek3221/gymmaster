@@ -67,7 +67,7 @@ $nofrec = $this->Common->getNoOfRec();
                                             <td><?= ucfirst($session->user->name) ?></td>
                                             <td> <?= date('d-m-Y', strtotime($session->date))?>
                                         <?php if($user_type != 3) {?>
-                                            <td> <?php
+                                            <td id='status<?= $session->id ?>'> <?php
                                                 if (isset($session->status) && $session->status == '1') {
                                                     ?>
 
@@ -134,6 +134,7 @@ $nofrec = $this->Common->getNoOfRec();
                 url: urllink,
                 type: 'GET',
                 success: function (data) {
+                  //  alert(data);
 
                     $('#status' + id).html(data);
                 },
