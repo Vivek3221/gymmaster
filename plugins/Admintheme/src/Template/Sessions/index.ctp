@@ -42,14 +42,20 @@ $nofrec = $this->Common->getNoOfRec();
                                 <thead>
                                     <tr>
                                         <th><?= __('User') ?></th>
+                                        <th><?= __('Date') ?></th>
+                                       <?php if($user_type != 3) {?>
                                         <th><?= __('Status') ?></th>
+                                       <?php } ?>
                                         <th><?= __('Action') ?></th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
                                         <th><?= __('User') ?></th>
+                                        <th><?= __('Date') ?></th>
+                                       <?php if($user_type != 3) {?>
                                         <th><?= __('Status') ?></th>
+                                       <?php } ?>
                                         <th><?= __('Action') ?></th>
                                     </tr>
                                 </tfoot>
@@ -59,6 +65,8 @@ $nofrec = $this->Common->getNoOfRec();
                                         <tr>
 
                                             <td><?= ucfirst($session->user->name) ?></td>
+                                            <td> <?= date('d-m-Y', strtotime($session->date))?>
+                                        <?php if($user_type != 3) {?>
                                             <td> <?php
                                                 if (isset($session->status) && $session->status == '1') {
                                                     ?>
@@ -72,10 +80,11 @@ $nofrec = $this->Common->getNoOfRec();
                                                 }
                                                 ?>
                                             </td>
+                                        <?php } ?>
                                             <td>
-                                                <?php if(($user_type == 3) && $session) { ?>
+                                                <?php if(($user_type == 3) && (empty($session->user_detail))) { ?>
                                                      <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'userEdit', $session['id']]) ?></i>
-                                             <?php   }?>
+                                             <?php   } ?>
                                                 <i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $session['id']]) ?></i>
                                                <?php if($user_type == 1){?>
                                                 <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $session['id']]) ?></i>
