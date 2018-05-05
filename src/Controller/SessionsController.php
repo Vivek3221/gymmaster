@@ -25,6 +25,7 @@ class SessionsController extends AppController
         }
         
         $user_type = $this->usersdetail['users_type'];
+         $users_id = $this->usersdetail['users_id'];
         $name = '';
         $norec = 10;
         $status = '';
