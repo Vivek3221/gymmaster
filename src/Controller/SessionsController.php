@@ -25,8 +25,10 @@ class SessionsController extends AppController
         }
         
         $user_type = $this->usersdetail['users_type'];
-         $users_id = $this->usersdetail['users_id'];
+        $users_id = $this->usersdetail['users_id'];
         $name = '';
+        $sdate ='';
+        $edate ='';
         $norec = 10;
         $status = '';
         $search = [];
@@ -40,6 +42,18 @@ class SessionsController extends AppController
         }
         if (isset($this->request->query['norec']) && trim($this->request->query['norec']) != "") {
             $norec = $this->request->query['norec'];
+        }
+        if (isset($this->request->query['from_date']) && trim($this->request->query['from_date']) != "" && isset($this->request->query['to_date']) && trim($this->request->query['to_date']) != "" ) {
+          
+            $sdate = date('Y-m-d H:i:s',strtotime($this->request->query['from_date'])); 
+            $edate = date('Y-m-d H:i:s',strtotime($this->request->query['to_date'])) ;
+
+            $search['Sessions.date >='] = $sdate;
+            $search['Sessions.date <='] = $edate;  
+            $sdate = $this->request->query['from_date']; 
+            $edate = $this->request->query['to_date'] ;
+
+             
         }
         
         if (isset($user_type) && ($user_type == 3)) {
@@ -70,7 +84,7 @@ class SessionsController extends AppController
         ];
         $sessions = $this->paginate($count);
         $users = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.user_type'=> '3']);
-        $this->set(compact('sessions','name','status','norec','users','user_type'));
+        $this->set(compact('sessions','name','status','norec','users','user_type','sdate','edate'));
         $this->set('_serialize', ['sessions']);
     }
 

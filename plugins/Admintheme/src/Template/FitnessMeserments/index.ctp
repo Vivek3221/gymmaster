@@ -111,8 +111,8 @@ $nofrec = $this->Common->getNoOfRec();
 
 <script>
        $(document).ready(function () {
-            $('#date-end').bootstrapMaterialDatePicker({ format : 'YYYY/MM/DD HH:mm', weekStart : 0 });
-            $('#date-start').bootstrapMaterialDatePicker({format : 'YYYY/MM/DD HH:mm', weekStart : 0 }).on('change', function(e, date)
+            $('#date-end').bootstrapMaterialDatePicker({ format : 'YYYY/MM/DD HH:mm', weekStart : 0 , time: 'false'});
+            $('#date-start').bootstrapMaterialDatePicker({format : 'YYYY/MM/DD HH:mm', weekStart : 0 , time: 'false'}).on('change', function(e, date)
             {
             $('#date-end').bootstrapMaterialDatePicker('setMinDate', date);
             });

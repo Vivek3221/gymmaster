@@ -34,86 +34,86 @@ $user_name = $this->Common->getUsers();
                             </div>
                         <?php } ?>
                         <div class="form-group form-float">
-                             <?php
-                                        $dob1 = $session->date;
-                                        //pr($dob1);
-                                    $dob  =   date_format($dob1,"y-m-d");
-                                    //pr($dob); 
-                                        ?>
+                            <?php
+                            $dob1 = $session->date;
+                            //pr($dob1);
+                            $dob = date_format($dob1, "y-m-d");
+                            //pr($dob); 
+                            ?>
                             <div class="form-line">
-                                <?= $this->Form->control('date', ['class' => 'form-control datetimepicker', 'type' => 'text', 'placeholder' => 'Select Date', 'label' => FALSE, 'required','value'=>$dob, 'format' => 'YYYY-MM-DD']) ?>          
+                                <?= $this->Form->control('date', ['class' => 'form-control datetimepicker', 'type' => 'text', 'placeholder' => 'Select Date', 'label' => FALSE, 'required', 'value' => $dob, 'format' => 'YYYY-MM-DD']) ?>          
                             </div>
                         </div> 
-<!--                        <div class="input-group mb-3" >
-                            <label class="form-label">Exercise</label>
-                            <div class="">
-                                <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists , 'label'=>FALSE]) ?> 
-                                <div class="input-group-append">
-                                    <button id="exrcisedirectorie"  class="btn btn-success"><?= __('+ Add Excercise') ?></button>
-                                </div>
-                            </div>
-                        </div>-->
+                        <!--                        <div class="input-group mb-3" >
+                                                    <label class="form-label">Exercise</label>
+                                                    <div class="">
+                        <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists, 'label' => FALSE]) ?> 
+                                                        <div class="input-group-append">
+                                                            <button id="exrcisedirectorie"  class="btn btn-success"><?= __('+ Add Excercise') ?></button>
+                                                        </div>
+                                                    </div>
+                                                </div>-->
                         <div class="input-group">
                             <label class="form-label">Exercise</label>
-    <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists , 'label'=>FALSE]) ?>
+                            <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists, 'label' => FALSE]) ?>
                             <span class="input-group-btn" style="padding-top: 23px;">
-        <span id="exrcisedirectorie" onclick="getExcercise()" class="btn btn-success"><?= __('+ Add Excercise') ?></span>
-   </span>
-</div>
-                        
-                        <div class="row" id="getexercise">
-                            
-                             <?php foreach($session_values as $key=> $value)
-                             {?>
-    <div class="body">
-<div class="form-group row" id="remove<?= $key ?>">
-  <div>
-    <div class="col-xs-6">
-    <span class="pull-left"> <?= ucfirst($this->Common->getExrciseDirectoriesname($key)) ?></span>
-    </div>
-    <div class="col-xs-6">
- <span class="pull-right">
-     <button type="button" class="btn btn-default btn-sm" id="<?= $key ?>" onclick="removeExcercise(this.id,<?= $key ?>)">
-        <i class="material-icons">clear</i> 
-    </button></span>
-    </div>
-    </div> 
-    
-    
-    <?php foreach ($value as $val=>$vale)  
-                                  {?>
-    <div class="col-md-3"> 
-        <div class="form-group form-float">
-            <label class="form-label"><?= ucfirst($val) ?></label>
-            <div class="form-line">
-                <?= $this->Form->control('excrcise['. $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'value'=>$vale, 'label' => false, 'required']) ?> 
-            </div>
+                                <span id="exrcisedirectorie" onclick="getExcercise()" class="btn btn-success"><?= __('+ Add Excercise') ?></span>
+                            </span>
+                        </div>
 
-        </div>
-    </div>
-                             <?php }   ?>
-    
-</div>
-                             </div><?php }?>
-                                 
-                             </div>
- 
-                          <div class="form-group form-float">
+                        <div class="row" id="getexercise">
+
+                            <?php foreach ($session_values as $key => $value) {
+                                ?>
+                                <div class="body">
+                                    <div class="form-group row" id="remove<?= $key ?>">
+                                        <div>
+                                            <div class="col-xs-6">
+                                                <span class="pull-left"> <?= ucfirst($this->Common->getExrciseDirectoriesname($key)) ?></span>
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <span class="pull-right">
+                                                    <button type="button" class="btn btn-default btn-sm" id="<?= $key ?>" onclick="removeExcercise(this.id,<?= $key ?>)">
+                                                        <i class="material-icons">clear</i> 
+                                                    </button></span>
+                                            </div>
+                                        </div> 
+
+
+                                        <?php foreach ($value as $val => $vale) {
+                                            ?>
+                                            <div class="col-md-3"> 
+                                                <div class="form-group form-float">
+                                                    <label class="form-label"><?= ucfirst($val) ?></label>
+                                                    <div class="form-line">
+                                                        <?= $this->Form->control('excrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $vale, 'label' => false, 'required']) ?> 
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+
+                                    </div>
+                                </div><?php } ?>
+
+                        </div>
+
+                        <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->input('status', ['empty' => __('Select status'), 'options' => $status, 'class' => 'form-control']); ?>
                             </div>
                         </div>
                         <?= $this->Form->button('Submit', ['class' => 'btn btn-primary waves-effect']) ?>
                         <?= $this->Form->end() ?>  
-                            
-                        </div>
-                        
+
                     </div>
+
                 </div>
             </div>
         </div>
-
     </div>
+
+</div>
 </section>
 <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -136,32 +136,32 @@ $user_name = $this->Common->getUsers();
         //alert(id);
 
     }
-    
+
     //$(function () {
 
-        function getExcercise() {
+    function getExcercise() {
 
-            var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
-              //alert(exrcisedirectorie_id);
-            //  
-            if (exrcisedirectorie_id)
-            {
-                var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
-                // alert(urls)
-                //urllink = urls + '/' + bank_name ;
-                var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id);
-                $.ajax({
-                    type: "POST",
-                    cache: false,
-                    data: data,
-                    url: urls,
-                    success: function (html) {
+        var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
+        //alert(exrcisedirectorie_id);
+        //  
+        if (exrcisedirectorie_id)
+        {
+            var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
+            // alert(urls)
+            //urllink = urls + '/' + bank_name ;
+            var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                data: data,
+                url: urls,
+                success: function (html) {
 //                          alert(html);
-                        $('#getexercise').append(html);
-                    }
-                });
-            }
+                    $('#getexercise').append(html);
+                }
+            });
         }
+    }
 
     //});
 

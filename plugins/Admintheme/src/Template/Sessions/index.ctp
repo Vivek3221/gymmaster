@@ -26,6 +26,12 @@ $nofrec = $this->Common->getNoOfRec();
                                 <?php echo $this->Form->input('name', ['label' => __('User Name'), 'class' => 'form-control select2', 'type' => 'select', 'empty' => __('User Name'), 'value' => $name,'options'=> $users]); ?>
                             </div>
                             <div class="col-md-2">
+                                <?php echo $this->Form->input('from_date', ['label' => __('From Date'), 'class' => 'form-control', 'id' => 'date-start', 'type' => 'text', 'placeholder' => __('From Date'), 'value' => $sdate]); ?>
+                            </div>  
+                            <div class="col-md-2">
+                                <?php echo $this->Form->input('to_date', ['label' => __('To Date'), 'class' => 'form-control', 'id' => 'date-end', 'type' => 'text', 'placeholder' => __('To Date'), 'value' => $edate]); ?>
+                            </div>
+                            <div class="col-md-2">
                                 <?php echo $this->Form->input('status', ['label' => __('Status'), 'class' => 'form-control', 'empty' => __('Select Status'), 'options' => $statu, 'value' => $status]); ?>
                             </div>
                             <div class="col-md-2">
@@ -149,5 +155,15 @@ $nofrec = $this->Common->getNoOfRec();
 
 
 
+
+</script>
+<script>
+       $(document).ready(function () {
+            $('#date-end').bootstrapMaterialDatePicker({ format : 'YYYY/MM/DD', weekStart : 0 , time: 'false'});
+            $('#date-start').bootstrapMaterialDatePicker({format : 'YYYY/MM/DD', weekStart : 0, time: 'false' }).on('change', function(e, date)
+            {
+            $('#date-end').bootstrapMaterialDatePicker('setMinDate', date);
+            });
+       });
 
 </script>
