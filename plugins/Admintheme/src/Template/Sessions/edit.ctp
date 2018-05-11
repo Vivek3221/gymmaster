@@ -162,6 +162,22 @@ $user_name = $this->Common->getUsers();
             });
         }
     }
+    
+        function getSum(clicked_id)
+    {
+          //alert(clicked_id);
+        var res = clicked_id.slice(1,2); 
+        var val1 = $('#a'+res).val();
+        var val2 = $('#'+clicked_id).val();
+        //alert(val1);
+       // alert(val2);
+     document.getElementById('c'+res).value = val1 * val2;
+        
+       
+              //  $('#get_sub_category').html(html);
+          
+        return false;
+    }
 
     //});
 
