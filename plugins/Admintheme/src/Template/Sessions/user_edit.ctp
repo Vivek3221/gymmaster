@@ -66,18 +66,29 @@ $user_name = $this->Common->getUsers();
                             <span class=""> <?= ucfirst($this->Common->getExrciseDirectoriesname($key)) ?></span> 
                                 </div>  <div class="body">
  
-                                        <?php foreach ($value as $val => $vale) {
+                                        <?php $i =1; foreach ($value as $val => $vale) {
                                             ?>
                                             <div class="col-md-3"> 
                                                 <div class="form-group form-float">
                                                     <label class="form-label"><?= ucfirst($val) ?></label>
                                                     <div class="form-line">
-                                                        <?= $this->Form->control('userexcrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'label' => false, 'required']) ?> 
+                                                    <?php
+                                                         if($i == 1)
+                                                         {
+                                                       echo $this->Form->control('userexcrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$key, 'label' => false, 'required']) ;
+                                                         } elseif ($i == 2) {
+                                                        echo $this->Form->control('userexcrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text','id'=>'b'.$key,'onblur'=>'getSum(this.id)', 'label' => false, 'required']); 
+                                                         } elseif ($i == 3) {
+                                                        echo $this->Form->control('userexcrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'id'=>'d'.$key, 'label' => false, 'required']) ;
+                                                        } else {
+                                                      echo $this->Form->control('userexcrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text','id'=>'c'.$key, 'label' => false, 'required', 'readonly']) ;
+                                                       }
+                                                          ?> 
                                                     </div>
 
                                                 </div>
                                             </div>
-                                        <?php } ?>
+                                        <?php $i++; } ?>
 
                                     </div><?php } ?>
 
@@ -142,6 +153,22 @@ $user_name = $this->Common->getUsers();
                 }
             });
         }
+    }
+    
+    function getSum(clicked_id)
+    {
+          //alert(clicked_id);
+        var res = clicked_id.slice(1,2); 
+        var val1 = $('#a'+res).val();
+        var val2 = $('#'+clicked_id).val();
+        //alert(val1);
+       // alert(val2);
+     document.getElementById('c'+res).value = val1 * val2;
+        
+       
+              //  $('#get_sub_category').html(html);
+          
+        return false;
     }
 
     //});

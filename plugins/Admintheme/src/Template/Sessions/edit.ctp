@@ -79,19 +79,31 @@ $user_name = $this->Common->getUsers();
                                             </div>
                                         </div> 
 
-
-                                        <?php foreach ($value as $val => $vale) {
+                                           
+                                        <?php $i = 1;  foreach ($value as $val => $vale) {
                                             ?>
                                             <div class="col-md-3"> 
                                                 <div class="form-group form-float">
                                                     <label class="form-label"><?= ucfirst($val) ?></label>
                                                     <div class="form-line">
-                                                        <?= $this->Form->control('excrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $vale, 'label' => false, 'required']) ?> 
+                                                        <?php
+                                                         if($i == 1)
+                                                         {
+                                                       echo $this->Form->control('excrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $vale, 'id'=>'a'.$key, 'label' => false, 'required']) ;
+                                                         } elseif ($i == 2) {
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $vale, 'id'=>'b'.$key,'onblur'=>'getSum(this.id)', 'label' => false, 'required']); 
+                                                         } elseif ($i == 3) {
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $vale, 'id'=>'d'.$key, 'label' => false, 'required']) ;
+                                                        } else {
+                                                      echo $this->Form->control('excrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $vale, 'id'=>'c'.$key, 'label' => false, 'required', 'readonly']) ;
+                                                       }
+                                                          ?> 
+                                                         
                                                     </div>
 
                                                 </div>
                                             </div>
-                                        <?php } ?>
+                                        <?php $i++; } ?>
 
                                     </div>
                                 </div><?php } ?>
