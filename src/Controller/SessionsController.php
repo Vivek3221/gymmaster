@@ -128,11 +128,15 @@ class SessionsController extends AppController
         if ($this->request->is('post')) {
              $data1 =[];
             $data = $this->request->data;
-          
+            $users = $this->request->data['user_id'];
+        // pr($users); die;
+          foreach($users as $value)
+          {
+              
              if($user_type != 3)
         {
             $data1['partner_id'] = $this->usersdetail['users_id'];     
-            $data1['user_id'] = $this->request->data['user_id'];     
+            $data1['user_id'] = $value;     
         }   
         
             //pr($data); die;
@@ -141,14 +145,17 @@ class SessionsController extends AppController
                 $data1['date'] = $data['date'];
                 
              //  pr($data1); die;
-            $session = $this->Sessions->patchEntity($session, $data1);
+                $sessione = $this->Sessions->newEntity();
+            $session = $this->Sessions->patchEntity($sessione, $data1);
            // pr($session); die;
             if ($this->Sessions->save($session)) {
-                $this->Flash->success(__('The session has been saved.'));
+                //$this->Flash->success(__('The session has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+               // return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The session could not be saved. Please, try again.'));
+           // $this->Flash->error(__('The session could not be saved. Please, try again.'));
+        }
+         return $this->redirect(['action' => 'index']);
         }
 //        $users = $this->Sessions->Users->find('list', ['limit' => 200]);
 //        $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
