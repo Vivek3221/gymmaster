@@ -81,7 +81,7 @@ class SessionsController extends AppController
         }
         if(isset($sessions_value) && !empty($sessions_value))
         {
-           $count = $count->where(['Sessions.user_detail is NULL']);  
+           $count = $count->where(['date <' => date('Y-m-d') ,'user_detail Is Null']);  
         }
         $this->paginate = [
             'limit' => $norec, 
