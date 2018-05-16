@@ -19,15 +19,15 @@ $(document).ready(function () {
     //$("#phone_full").val($("#phoneno").intlTelInput("getNumber"));
 
 
-   
-    
-    
-    
+
+
+
+
     $("#editProfileForm").validate({
         ignore: ":hidden",
         errorElement: 'span',
         errorClass: 'help-inline',
-        
+
         highlight: function (element) {
             $(element).parent().addClass("error");
         },
@@ -60,7 +60,7 @@ $(document).ready(function () {
         ignore: ":hidden",
         errorElement: 'span',
         errorClass: 'help-inline',
-        
+
         highlight: function (element) {
             $(element).parent().addClass("error");
         },
@@ -82,13 +82,13 @@ $(document).ready(function () {
             dob: {
                 required: true
             },
-            
+
             email: {
                 required: true,
                regex: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$|^[0-9]{5,15}$/
                 },
-            
-            
+
+
             mobile_no: {
                 required: true,
                // isValidCmobileNo: true,
@@ -112,7 +112,7 @@ $(document).ready(function () {
             dob: {
                 required: 'Enter DOB'
             },
-           
+
             email: {
                 required: 'Enter email Id',
                 regex: 'Enter valid email Id'
@@ -131,7 +131,7 @@ $(document).ready(function () {
         ignore: ":hidden",
         errorElement: 'span',
         errorClass: 'help-inline',
-        
+
         highlight: function (element) {
             $(element).parent().addClass("error");
         },
@@ -167,15 +167,15 @@ $(document).ready(function () {
                 regex: /[0-9]$/
             },
             b_payment: {
-                regex: /^$|^[0-9]$/
+                regex: /^$|^[0-9]{1,50}$/
             },
-            
+
             email: {
                 required: true,
                regex: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$|^[0-9]{5,15}$/
                 },
-            
-            
+
+
             mobile_no: {
                 required: true,
                // isValidCmobileNo: true,
@@ -224,7 +224,7 @@ $(document).ready(function () {
             b_payment: {
                 regex: 'Enter valid due payment'
             },
-           
+
             email: {
                 required: 'Enter email Id',
                 regex: 'Enter valid email Id'
@@ -251,7 +251,7 @@ $(document).ready(function () {
         ignore: ":hidden",
         errorElement: 'span',
         errorClass: 'help-inline',
-        
+
         highlight: function (element) {
             $(element).parent().addClass("error");
         },
@@ -267,13 +267,13 @@ $(document).ready(function () {
                 required: true,
                regex: /^[a-zA-Z ]{3,50}$/
             },
-            
+
             email: {
                 required: true,
                regex: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$|^[0-9]{5,15}$/
                 },
-            
-            
+
+
             mobile_no: {
                 required: true,
                // isValidCmobileNo: true,
@@ -288,7 +288,7 @@ $(document).ready(function () {
                 required: 'Enter User Name',
                 regex: 'Enter valid  name'
             },
-           
+
             email: {
                 required: 'Enter Email Id',
                 regex: 'Enter valid Email Id'
@@ -304,7 +304,7 @@ $(document).ready(function () {
         ignore: ":hidden",
         errorElement: 'span',
         errorClass: 'help-inline',
-        
+
         highlight: function (element) {
             $(element).parent().addClass("error");
         },
@@ -335,7 +335,7 @@ $(document).ready(function () {
         ignore: ":hidden",
         errorElement: 'span',
         errorClass: 'help-inline',
-        
+
         highlight: function (element) {
             $(element).parent().addClass("error");
         },
@@ -366,7 +366,7 @@ $(document).ready(function () {
         ignore: ":hidden",
         errorElement: 'span',
         errorClass: 'help-inline',
-        
+
         highlight: function (element) {
             $(element).parent().addClass("error");
         },
@@ -395,12 +395,12 @@ $(document).ready(function () {
             }
         }
     });
-    
+
     $("#bodym").validate({
         ignore: ":hidden",
         errorElement: 'span',
         errorClass: 'help-inline',
-        
+
         highlight: function (element) {
             $(element).parent().addClass("error");
         },
@@ -497,7 +497,7 @@ $(document).ready(function () {
             }
         }
     });
-    
+
      $("#changepassword").validate({
         ignore: ":hidden",
         errorElement: 'span',
@@ -540,7 +540,7 @@ $(document).ready(function () {
             }
         }
     });
-    
+
 
 });
 

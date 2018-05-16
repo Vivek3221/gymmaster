@@ -188,6 +188,14 @@ class CommonHelper extends Helper {
         return $get_users_name;
     }
   
+    public function getSession(){
+        $get_sessions = TableRegistry::get('Sessions');
+        $session  = $get_sessions->find()
+                                 ->where(['date <' => date('Y-m-d') ,'user_detail Is Null'])
+                                 ->count();
+        return $session;
+        
+    }
  
 
 

@@ -6,7 +6,7 @@ $action = $this->request['action'];
 
 
 <section>
-    <!-- Left Sidebar -->
+     <!--Left Sidebar--> 
     <aside id="leftsidebar" class="sidebar">
         <!-- User Info -->
         <div class="user-info">
