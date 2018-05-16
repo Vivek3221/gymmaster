@@ -37,8 +37,8 @@ $session = $this->Common->getSession();
                         <li><a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']); ?>"><?= __('Sign Out') ?></a></li>
                    
 </ul>
-            </div>
-          <div class="collapse navbar-collapse" id="navbar-collapse">
+<!--            </div>
+          <div class="collapse navbar-collapse" id="navbar-collapse">-->
                 <ul class="nav navbar-nav navbar-right">
           <?php if ($usersdetail['users_type'] != 3) {?>
                     <li class="dropdown">
@@ -53,7 +53,7 @@ $session = $this->Common->getSession();
                                     
                                     
                                     <li>
-                                        <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index',]) ?>?sessions=0">
+                                        <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index',]) ?>?sessions=notedit">
                                             <div class="icon-circle bg-light-green">
                                               <i class="material-icons">library_books</i>
                                             </div>

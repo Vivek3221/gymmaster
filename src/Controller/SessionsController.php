@@ -36,6 +36,11 @@ class SessionsController extends AppController
             $name = $this->request->query['name'];
             $search['Sessions.user_id'] = $name;
         }
+        //sessions=notedit
+         if (isset($this->request->query['sessions']) && trim($this->request->query['sessions']) != "") {
+            $sessions_value = $this->request->query['sessions'];
+            //$search['Sessions.user_id'] = $name;
+        }
          if (isset($this->request->query['status']) && trim($this->request->query['status']) != "") {
             $status = $this->request->query['status'];
             $search['Sessions.status'] = $status;
@@ -56,6 +61,7 @@ class SessionsController extends AppController
              
         }
         
+        
         if (isset($user_type) && ($user_type == 3)) {
           $search['Sessions.user_id'] = $users_id;
           }
@@ -72,6 +78,10 @@ class SessionsController extends AppController
         $count = $count->where(['Sessions.status ' => '1']);
         } else {
              $count = $count->where(['Sessions.status !=' => '2']);
+        }
+        if(isset($sessions_value) && !empty($sessions_value))
+        {
+           $count = $count->where(['Sessions.user_detail is NULL']);  
         }
         $this->paginate = [
             'limit' => $norec, 
