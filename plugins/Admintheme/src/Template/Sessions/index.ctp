@@ -95,6 +95,9 @@ $nofrec = $this->Common->getNoOfRec();
                                                <?php if($user_type == 1){?>
                                                 <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $session['id']]) ?></i>
                                                <?php } ?>
+                                               <?php if($user_type != 3){?>
+                                                <i class="material-icons"><?= $this->Html->link(__('content_copy'), ['action' => 'addMore', $session['id']],['title'=> 'Add Duplicate'] ) ?></i>
+                                               <?php } ?>
                                             </td>
                                         </tr>
                                     <?php } ?> 

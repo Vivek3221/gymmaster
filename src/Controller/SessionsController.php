@@ -218,6 +218,55 @@ class SessionsController extends AppController
         $this->set(compact('session', 'users', 'partners','user_type','session_values'));
         $this->set('_serialize', ['session']);
     }
+    
+    public function addMore($id = null){
+         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        $session = $this->Sessions->get($id, [
+            'contain' => []
+        ]);
+        $user_type = $this->usersdetail['users_type'];
+        if ($this->request->is(['patch', 'post', 'put'])) {
+           $data1 =[];
+            $data = $this->request->data;
+            $users = $this->request->data['user_id'];
+        // pr($users); die;
+          foreach($users as $value)
+          {
+              
+             if($user_type != 3)
+        {
+            $data1['partner_id'] = $this->usersdetail['users_id'];     
+            $data1['user_id'] = $value;     
+        }   
+        
+            //pr($data); die;
+                $data1['ex_detail'] = json_encode($data['excrcise']);
+                $data1['status'] = $data['status'];
+                $data1['date'] = $data['date'];
+                
+             //  pr($data1); die;
+            $sessione = $this->Sessions->newEntity();
+            $sessions  = $this->Sessions->patchEntity($sessione, $data1);
+           // pr($session); die;
+            if ($this->Sessions->save($sessions)) {
+                //$this->Flash->success(__('The session has been saved.'));
+
+               // return $this->redirect(['action' => 'index']);
+            }
+           // $this->Flash->error(__('The session could not be saved. Please, try again.'));
+        }
+         return $this->redirect(['action' => 'index']);
+        }
+         $session_values = json_decode($session->ex_detail);
+      // pr($session_values); die;
+        //$users = $this->Sessions->Users->find('list', ['limit' => 200]);
+       // $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
+        $this->set(compact('session', 'users', 'partners','user_type','session_values'));
+        $this->set('_serialize', ['session']);
+    }
+    
     public function userEdit($id = null)
     {
       //  echo 'ffffffff'; die;
