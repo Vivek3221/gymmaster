@@ -14,7 +14,7 @@ $status = $this->Common->getstatus();
                 <div class="card">
                     <div class="header">
                         <h2>
-                            <?= __('Add Exercise Directory') ?>
+                            <?= __('Edit Exercise Directory') ?>
                         </h2>
 
                     </div>
