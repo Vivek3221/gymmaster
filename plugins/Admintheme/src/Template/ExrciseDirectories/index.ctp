@@ -13,14 +13,14 @@ $nofrec = $this->Common->getNoOfRec();
                 <div class="card">
                     <div class="header">
                         <h2 >
-                            <?= __('Exercise Directory') ?>
+                            <?= __('Exercise Directory List') ?>
                         </h2>
                     </div>
                     <div class="body">
                         <div class="box-body">
                             <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'ExrciseDirectories', 'action' => 'index']]) ?>
                             <div class="col-md-3">
-                                <?php echo $this->Form->input('name', ['label' => __('Name'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Name'), 'value' => $name]); ?>
+                                <?php echo $this->Form->input('name', ['label' => __('Exercise Name'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('-- Exercise Name --'), 'value' => $name]); ?>
                             </div>
                             <div class="col-md-2">
                                 <?php echo $this->Form->input('status', ['label' => __('Status'), 'class' => 'form-control', 'empty' => __('Select Status'), 'options' => $statu, 'value' => $status]); ?>
