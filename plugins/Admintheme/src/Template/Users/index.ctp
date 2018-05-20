@@ -15,14 +15,14 @@ $user_type = $this->Common->getType();
                     <div class="card">
                         <div class="header">
                             <h2 >
-                               <?= __('Users') ?>
+                               <?= __('Users List') ?>
                             </h2>
                         </div>
                         <div class="body">
                             <div class="box-body">
                                 <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'Users', 'action' => 'index']]) ?>
                                 <div class="col-md-3">
-                                    <?php echo $this->Form->input('name', ['label' => __('Name'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Name'), 'value' => $name]); ?>
+                                    <?php echo $this->Form->input('name', ['label' => __('User Name'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('-- User Name --'), 'value' => $name]); ?>
                                 </div>
                                 <div class="col-md-2">
                                     <?php echo $this->Form->input('email', ['label' => __('Email'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Email'), 'value' => $email]); ?>
