@@ -413,7 +413,12 @@ class UsersController extends AppController
       {
      
        }
-      
+      public function dashboard(){
+          $uesrs                 = TableRegistry::get('Users');
+          $users_count           = $uesrs->find()->select(['Users.id'])->where(['Users.active !=' => 2])->count();
+//          pr($users_count);exit;
+          $this->set(compact('users_count'));
+          }
        
        
         public function login()
@@ -442,7 +447,7 @@ class UsersController extends AppController
              if($user_detail->user_type == 3){
                  return $this->redirect(['controller' => 'FitnessMeserments', 'action' => 'index']);
              } else {
-                  return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+                  return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
              }
                }
             else {

@@ -29,6 +29,12 @@ $action = $this->request['action'];
         <div class="menu">
             <ul class="list">
                 <li class="header"><?= __('MAIN NAVIGATION') ?></li>
+                <li class="<?php if (($controller == 'Users' && ($action == 'dashboard'))){echo "active";}?>">
+                        <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'dashboard']); ?>">
+                            <i class="material-icons">home</i>
+                            <span><?=__('Dashboard')?></span>
+                        </a>
+                    </li>
                  <?php if($usersdetail['users_type'] != 3){; ?>
                  <li class="<?php if (($controller == 'Users' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'logoutqq' || $action == 'payment'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>">
@@ -64,13 +70,22 @@ $action = $this->request['action'];
                         <?= $this->Html->link(__('Fitness Test'), ['controller' => 'FitnessTests', 'action' => 'index']) ?>
                    </li>
                     </ul>
-                </li>   
-              <li class="<?php if (($controller == 'Sessions' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'userEdit' || $action == 'addMore'))){echo "active";}?>">
+                </li> 
+                <?php if($usersdetail['users_type'] != 3){;?>
+               <li class="<?php if (($controller == 'Sessions' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'userEdit' || $action == 'addMore'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index']); ?>">
                         <i class="material-icons">perm_media</i>
                         <span><?= __('Create Session') ?></span>
                     </a>
                 </li>
+                <?php }else {?>
+              <li class="<?php if (($controller == 'Sessions' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'userEdit' || $action == 'addMore'))){echo "active";}?>">
+                    <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index']); ?>">
+                        <i class="material-icons">perm_media</i>
+                        <span><?= __('Report Session') ?></span>
+                    </a>
+                </li>
+                <?php } ?>
             </ul>
 
         </div>

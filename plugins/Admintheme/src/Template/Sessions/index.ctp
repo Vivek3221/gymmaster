@@ -22,9 +22,11 @@ $nofrec = $this->Common->getNoOfRec();
                     <div class="body">
                         <div class="box-body">
                             <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'Sessions', 'action' => 'index']]) ?>
+                            <?php if($user_type == 1){?>
                             <div class="col-md-3">
                                 <?php echo $this->Form->input('name', ['label' => __('User Name'), 'class' => 'form-control select2', 'type' => 'select', 'empty' => __('User Name'), 'value' => $name,'options'=> $users]); ?>
                             </div>
+                            <?php } ?>
                             <div class="col-md-2">
                                 <?php echo $this->Form->input('from_date', ['label' => __('From Date'), 'class' => 'form-control', 'id' => 'date-start', 'type' => 'text', 'placeholder' => __('From Date'), 'value' => $sdate]); ?>
                             </div>  
@@ -94,7 +96,8 @@ $nofrec = $this->Common->getNoOfRec();
                                                 <i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $session['id']]) ?></i>
                                                <?php if($user_type == 1){?>
                                                 <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $session['id']]) ?></i>
-                                               <?php } ?>
+                                               <i class="material-icons" title="<?= __('Delete') ?>"><?= $this->Form->postLink(__('delete'), ['action' => 'delete', $session['id']], ['confirm' => __('Are you sure you want to delete Session ?', $session['id'])]) ?></i>
+                                                <?php } ?>
                                                <?php if($user_type != 3){?>
                                                 <i class="material-icons"><?= $this->Html->link(__('content_copy'), ['action' => 'addMore', $session['id']],['title'=> 'Add Duplicate'] ) ?></i>
                                                <?php } ?>

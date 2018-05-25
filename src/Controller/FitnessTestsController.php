@@ -69,7 +69,8 @@ class FitnessTestsController extends AppController
         
         
         $this->paginate = [
-            'contain' => ['Exercises','Users']
+            'contain' => ['Exercises','Users'],
+            'order' =>  ['FitnessTests.id' => 'DESC'],
         ];
         $fitnessTests = $this->paginate($count);
 //pr($fitnessTests); die;

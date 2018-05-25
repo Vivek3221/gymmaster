@@ -84,14 +84,13 @@ class SessionsController extends AppController
            $count = $count->where(['date <' => date('Y-m-d') ,'user_detail Is Null']);  
         }
         $this->paginate = [
+            'contain' => ['Users'],
             'limit' => $norec, 
             'order' => ['Sessions.id' => 'DESC'],
             
         ];
         
-        $this->paginate = [
-            'contain' => ['Users']
-        ];
+       
         $sessions = $this->paginate($count);
         $users = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.user_type'=> '3']);
         $this->set(compact('sessions','name','status','norec','users','user_type','sdate','edate'));
