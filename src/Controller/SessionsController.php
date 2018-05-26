@@ -138,7 +138,7 @@ class SessionsController extends AppController
              $data1 =[];
             $data = $this->request->data;
             $users = $this->request->data['user_id'];
-      //  pr($data); die;
+    // pr($data); die;
           foreach($users as $value)
           {
               

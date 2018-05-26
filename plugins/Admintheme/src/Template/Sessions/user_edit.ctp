@@ -1,6 +1,6 @@
 <?php
 $status = $this->Common->getstatus();
-
+$new_id = '';
 //$exercises = $this->Common->getExercises();
 $get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories();
 //$get_exrcisedirectorie_name = $this->Common->getExrciseDirectoriesname(1);
@@ -41,17 +41,18 @@ $user_name = $this->Common->getUsers();
                                     <div class="body">
             
                                         <?php foreach ($value as $val => $vale) {
+                                            foreach ($vale as $valn => $valen) {
                                             ?>
                                             <div class="col-md-3"> 
                                                 <div class="form-group form-float">
-                                                    <label class="form-label"><?= ucfirst($val) ?></label>
+                                                    <label class="form-label"><?= ucfirst($valn) ?></label>
                                                     <div class="form-line">
-                                                        <?= $this->Form->control('excrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $vale, 'label' => false, 'readonly']) ?> 
+                                                        <?= $this->Form->control('excrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'label' => false, 'readonly']) ?> 
                                                     </div>
 
                                                 </div>
                                             </div>
-                                        <?php } ?>
+                                        <?php } } ?>
 
                                     </div><?php } ?>
 
@@ -67,28 +68,30 @@ $user_name = $this->Common->getUsers();
                                 </div>  <div class="body">
  
                                         <?php $i =1; foreach ($value as $val => $vale) {
+                                            
+                                            foreach ($vale as $valn => $valen) {
                                             ?>
                                             <div class="col-md-3"> 
                                                 <div class="form-group form-float">
-                                                    <label class="form-label"><?= ucfirst($val) ?></label>
+                                                    <label class="form-label"><?= ucfirst($valn) ?></label>
                                                     <div class="form-line">
                                                     <?php
                                                          if($i == 1)
                                                          {
-                                                       echo $this->Form->control('userexcrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$key, 'label' => false, 'required']) ;
+                                                       echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$key, 'label' => false, 'required']) ;
                                                          } elseif ($i == 2) {
-                                                        echo $this->Form->control('userexcrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text','id'=>'b'.$key,'onblur'=>'getSum(this.id)', 'label' => false, 'required']); 
+                                                        echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text','id'=>'b'.$key,'onblur'=>'getSum(this.id)', 'label' => false, 'required']); 
                                                          } elseif ($i == 3) {
-                                                        echo $this->Form->control('userexcrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'id'=>'d'.$key, 'label' => false, 'required']) ;
+                                                        echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'id'=>'d'.$key, 'label' => false, 'required']) ;
                                                         } else {
-                                                      echo $this->Form->control('userexcrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text','id'=>'c'.$key, 'label' => false, 'required', 'readonly']) ;
+                                                      echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text','id'=>'c'.$key, 'label' => false, 'required', 'readonly2']) ;
                                                        }
                                                           ?> 
                                                     </div>
 
                                                 </div>
                                             </div>
-                                        <?php $i++; } ?>
+                                            <?php } $i++; } ?>
 
                                     </div><?php } ?>
 
