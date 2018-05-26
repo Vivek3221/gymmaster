@@ -22,7 +22,7 @@ $nofrec = $this->Common->getNoOfRec();
                     <div class="body">
                         <div class="box-body">
                             <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'Sessions', 'action' => 'index']]) ?>
-                            <?php if($user_type == 1){?>
+                            <?php if($user_type != 3){?>
                             <div class="col-md-3">
                                 <?php echo $this->Form->input('name', ['label' => __('User Name'), 'class' => 'form-control select2', 'type' => 'select', 'empty' => __('User Name'), 'value' => $name,'options'=> $users]); ?>
                             </div>
@@ -33,9 +33,11 @@ $nofrec = $this->Common->getNoOfRec();
                             <div class="col-md-2">
                                 <?php echo $this->Form->input('to_date', ['label' => __('To Date'), 'class' => 'form-control', 'id' => 'date-end', 'type' => 'text', 'placeholder' => __('To Date'), 'value' => $edate]); ?>
                             </div>
+                            <?php if($user_type != 3){?>
                             <div class="col-md-2">
                                 <?php echo $this->Form->input('status', ['label' => __('Status'), 'class' => 'form-control', 'empty' => __('Select Status'), 'options' => $statu, 'value' => $status]); ?>
                             </div>
+                            <?php  } ?>
                             <div class="col-md-2">
                                 <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'), 'options' => $nofrec, 'value' => $norec]); ?>
                             </div>

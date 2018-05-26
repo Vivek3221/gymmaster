@@ -25,13 +25,13 @@ $user_name = $this->Common->getUsers();
                     <div class="body">
                         <!--                            <form id="form_validation" method="POST">-->
                         <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']);  ?>
-                        <?= $this->Form->create($session, ['id' => 'addbodys', 'templates' => ['inputContainer' => '{{content}}']]) ?>
+                        <?= $this->Form->create($session, ['id' => 'addsession', 'templates' => ['inputContainer' => '{{content}}']]) ?>
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                 <?= $this->Form->control('body_weight', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                        <label class="form-label">Body Weight</label>
+                                    <label class="form-label">Body Weight</label>
                                     </div>
                                      <small class="text-muted"> *Body Weight in KG.</small>
                                 </div>
@@ -51,7 +51,7 @@ $user_name = $this->Common->getUsers();
                                 <?= $this->Form->control('sleep', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
                                         <label class="form-label">Sleep in Hours</label>
                                     </div>
-                                    <small class="text-muted"> *Sleep in KG.</small>
+                                    <small class="text-muted"> *Sleep in Hours.</small>
                                 </div>
                             </div>
                         </div>
@@ -59,7 +59,7 @@ $user_name = $this->Common->getUsers();
                             <div class="col-sm-12">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                <?= $this->Form->control('notes', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                <?= $this->Form->control('notes', ['class' => 'form-control', 'type' => 'text', 'label' => false , 'maxlength'=>250]) ?> 
                                         <label class="form-label">Comment/Notes regarding this session.</label>
                                     </div>
                                     <small class="text-muted"> *Maximum 250 characters.</small>
