@@ -6,7 +6,8 @@ $get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories();
 //$get_exrcisedirectorie_name = $this->Common->getExrciseDirectoriesname(1);
 
 $user_name = $this->Common->getUsers();
-//pr($bodies_lists); die;
+//pr($session_values);
+//pr($user_values); die;
 ?>
 
 <section class="content">
@@ -39,18 +40,20 @@ $user_name = $this->Common->getUsers();
                                     <div class="body">
             
                                         <?php foreach ($value as $val => $vale) {
+                                            
+                                            foreach ($vale as $valn => $valen) {
                                             ?>
                                             <div class=""> 
                                                 <div class="row">
                                                      <div class="col-sm-4">
-                                                    <label class="form-label" style="margin-right : 20px;"><?= ucfirst($val) ?></label>
+                                                    <label class="form-label" style="margin-right : 20px;"><?= ucfirst($valn) ?></label>
                                                    </div>
                                                      <div class="col-sm-4">
-                                                    <span id="" value=""><?= $vale ?> </span>
+                                                    <span id="" value=""><?= $valen ?> </span>
                                                      </div>
                                                 </div>
                                             </div>
-                                        <?php } ?>
+                                        <?php } } ?>
 
                                     </div><?php } ?>
 
@@ -66,21 +69,24 @@ $user_name = $this->Common->getUsers();
                                 </div>  <div class="body">
  
                                         <?php foreach ($value as $val => $vale) {
+                                            
+                                            foreach ($vale as $valn => $valen) {
                                             ?>
                                             <div class="ddd"> 
                                                 <div class="row">
                                                     <div class="col-sm-3">
-                                                   <label class="form-label" style="margin-right : 20px;"><?= ucfirst($val) ?></label>
+                                                   <label class="form-label" style="margin-right : 20px;"><?= ucfirst($valn) ?></label>
                                                     </div>
                                                      <div class="col-sm-3">
-                                                   <span id="" value="" style="margin-right : 20px;"><?= $vale ?> </span>
+                                                   <span id="" value="" style="margin-right : 20px;"><?= $valen ?> </span>
                                                      </div>
                                                      <div class="col-sm-3">
-                                                   <span id="" > @ <?=  $vale - $session_values->$key->$val ?> </span>
+                                                         <?php // pr($session_values->$key->$val->$valn); die; ?>
+                                                   <span id="" > @ <?=  $valen ?> </span>
                                                      </div>
                                                 </div>
                                             </div>
-                                        <?php } ?>
+                                        <?php } } ?>
 
                                     </div><?php } ?>
 
