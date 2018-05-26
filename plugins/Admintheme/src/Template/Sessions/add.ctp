@@ -94,15 +94,21 @@ $user_name = $this->Common->getUsers();
   function getExcercise() {
 
             var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
-              //alert(exrcisedirectorie_id);
+           //alert(exrcisedirectorie_id);
+            var next_id = $('#exrcisedirectorie_id').val();
+             // alert(exrcisedirectorie_id);
+              
+              
+              
             //  
             if (exrcisedirectorie_id)
             {
                 var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
                 // alert(urls)
                 //urllink = urls + '/' + bank_name ;
-                var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id);
-                $.ajax({
+                var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&next_id='+escape(next_id);
+                //alert(data);
+                    $.ajax({
                     type: "POST",
                     cache: false,
                     data: data,

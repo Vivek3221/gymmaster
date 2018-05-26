@@ -138,7 +138,7 @@ class SessionsController extends AppController
              $data1 =[];
             $data = $this->request->data;
             $users = $this->request->data['user_id'];
-        // pr($users); die;
+      //  pr($data); die;
           foreach($users as $value)
           {
               
@@ -187,11 +187,12 @@ class SessionsController extends AppController
         $session = $this->Sessions->get($id, [
             'contain' => []
         ]);
+        $new_id = '';
         $user_type = $this->usersdetail['users_type'];
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data1 =[];
             $data = $this->request->data;
-       //   pr($data); die;
+    // pr($data); die;
              if($user_type != 3)
         {
             $data1['partner_id'] = $this->usersdetail['users_id'];     
@@ -214,7 +215,7 @@ class SessionsController extends AppController
       // pr($session_values); die;
         //$users = $this->Sessions->Users->find('list', ['limit' => 200]);
        // $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
-        $this->set(compact('session', 'users', 'partners','user_type','session_values'));
+        $this->set(compact('session', 'users', 'partners','user_type','session_values','new_id'));
         $this->set('_serialize', ['session']);
     }
     
