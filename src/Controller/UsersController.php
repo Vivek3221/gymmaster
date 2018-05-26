@@ -414,6 +414,9 @@ class UsersController extends AppController
      
        }
       public function dashboard(){
+             if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
           $uesrs                 = TableRegistry::get('Users');
           $users_count           = $uesrs->find()->select(['Users.id'])->where(['Users.active !=' => 2])->count();
 //          pr($users_count);exit;
