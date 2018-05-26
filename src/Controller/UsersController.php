@@ -465,6 +465,7 @@ class UsersController extends AppController
     {
              $this->autoRender = false;
              $this->Cookie->delete('users');
+              $this->Auth->logout();
              return $this->redirect(['controller' => '/']);
  }
        

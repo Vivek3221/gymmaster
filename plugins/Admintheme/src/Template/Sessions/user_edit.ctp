@@ -26,8 +26,46 @@ $user_name = $this->Common->getUsers();
                         <!--                            <form id="form_validation" method="POST">-->
                         <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']);  ?>
                         <?= $this->Form->create($session, ['id' => 'addbodys', 'templates' => ['inputContainer' => '{{content}}']]) ?>
-
-
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                <?= $this->Form->control('body_weight', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                        <label class="form-label">Body Weight</label>
+                                    </div>
+                                     <small class="text-muted"> *Body Weight in KG.</small>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                <?= $this->Form->control('hydration', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                        <label class="form-label">Hydration</label>
+                                    </div>
+                                    <small class="text-muted"> *Hydration in Liters.</small>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                <?= $this->Form->control('sleep', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                        <label class="form-label">Sleep in Hours</label>
+                                    </div>
+                                    <small class="text-muted"> *Sleep in KG.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                <?= $this->Form->control('notes', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                        <label class="form-label">Comment/Notes regarding this session.</label>
+                                    </div>
+                                    <small class="text-muted"> *Maximum 250 characters.</small>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row" id="getexercise">
                             <div class="col-sm-6" style="background-color:lavender;">
                                 <div>
