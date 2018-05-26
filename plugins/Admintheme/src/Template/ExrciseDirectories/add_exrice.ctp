@@ -17,7 +17,7 @@
         <div class="form-float">
             <label class="form-label"><?= ucfirst($get_exrcisedirectories->tecnical1) ?></label>
             <div class="form-line">
-                <?= $this->Form->control('excrcise['.$get_exrcisedirectories->id . '][' . $get_exrcisedirectories->tecnical1 . '][' . $new_id . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$get_exrcisedirectories->id, 'label' => false, 'required']) ?> 
+                <?= $this->Form->control('excrcise['.$get_exrcisedirectories->id . '][' . $new_id . '][' . $get_exrcisedirectories->tecnical1 . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$get_exrcisedirectories->id, 'label' => false, 'required']) ?> 
             </div>
 
         </div>
@@ -26,7 +26,7 @@
         <div class="form-float">
             <label class="form-label"><?= ucfirst($get_exrcisedirectories->tecnical2) ?></label>
             <div class="form-line">
-                <?= $this->Form->control('excrcise['.$get_exrcisedirectories->id . '][' . $get_exrcisedirectories->tecnical2 . '][' . $new_id . ']', ['class' => 'form-control', 'type' => 'text','id'=>'b'.$get_exrcisedirectories->id, 'onblur'=>'getSum(this.id)','label' => false, 'required']) ?> 
+                <?= $this->Form->control('excrcise['.$get_exrcisedirectories->id . '][' . $new_id . '][' . $get_exrcisedirectories->tecnical2 . '][' . $new_id . ']', ['class' => 'form-control', 'type' => 'text','id'=>'b'.$get_exrcisedirectories->id, 'onblur'=>'getSum(this.id)','label' => false, 'required']) ?> 
             </div>
 
         </div>
@@ -35,7 +35,7 @@
         <div class="form-float">
             <label class="form-label"><?= ucfirst($get_exrcisedirectories->tecnical3) ?></label>
             <div class="form-line">
-                <?= $this->Form->control('excrcise['.$get_exrcisedirectories->id . '][' .  $get_exrcisedirectories->tecnical3 . '][' . $new_id . ']', ['class' => 'form-control', 'type' => 'text', 'label' => false, 'required']) ?> 
+                <?= $this->Form->control('excrcise['.$get_exrcisedirectories->id . '][' . $new_id . '][' .  $get_exrcisedirectories->tecnical3 . ']', ['class' => 'form-control', 'type' => 'text', 'label' => false, 'required']) ?> 
             </div>
 
         </div>
@@ -44,7 +44,7 @@
         <div class="form-float">
             <label class="form-label"><?= ucfirst($get_exrcisedirectories->tecnical4) ?></label>
             <div class="form-line">
-                <?= $this->Form->control('excrcise['.$get_exrcisedirectories->id . '][' . $get_exrcisedirectories->tecnical4 . '][' . $new_id . ']', ['class' => 'form-control', 'type' => 'text','id'=>'c'.$get_exrcisedirectories->id, 'label' => false, 'required', 'readonlyy']) ?> 
+                <?= $this->Form->control('excrcise['.$get_exrcisedirectories->id . '][' . $new_id . '][' . $get_exrcisedirectories->tecnical4 . ']', ['class' => 'form-control', 'type' => 'text','id'=>'c'.$get_exrcisedirectories->id, 'label' => false, 'required', 'readonlyy']) ?> 
             </div>
         </div>
     </div>
