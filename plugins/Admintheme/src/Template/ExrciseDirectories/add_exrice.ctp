@@ -26,7 +26,7 @@
         <div class="form-float">
             <label class="form-label"><?= ucfirst($get_exrcisedirectories->tecnical2) ?></label>
             <div class="form-line">
-                <?= $this->Form->control('excrcise['.$get_exrcisedirectories->id . '][' . $new_id . '][' . $get_exrcisedirectories->tecnical2 . '][' . $new_id . ']', ['class' => 'form-control', 'type' => 'text','id'=>'b'.$get_exrcisedirectories->id, 'onblur'=>'getSum(this.id)','label' => false, 'required']) ?> 
+                <?= $this->Form->control('excrcise['.$get_exrcisedirectories->id . '][' . $new_id . '][' . $get_exrcisedirectories->tecnical2 . ']', ['class' => 'form-control', 'type' => 'text','id'=>'b'.$get_exrcisedirectories->id, 'onblur'=>'getSum(this.id)','label' => false, 'required']) ?> 
             </div>
 
         </div>
