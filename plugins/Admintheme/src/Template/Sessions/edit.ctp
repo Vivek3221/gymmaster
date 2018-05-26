@@ -81,29 +81,34 @@ $user_name = $this->Common->getUsers();
 
                                            
                                         <?php $i = 1;  foreach ($value as $val => $vale) {
+                                            
+                                             foreach ($vale as $valn => $valen) {
                                             ?>
                                             <div class="col-md-3"> 
                                                 <div class="form-group form-float">
                                                     <label class="form-label"><?= ucfirst($val) ?></label>
                                                     <div class="form-line">
                                                         <?php
+                                                       
+                                                        
+                                                        
                                                          if($i == 1)
                                                          {
-                                                       echo $this->Form->control('excrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $vale, 'id'=>'a'.$key, 'label' => false, 'required']) ;
+                                                       echo $this->Form->control('excrcise[' . $key . '][' . $val . '][' . $new_id . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'a'.$key, 'label' => false, 'required']) ;
                                                          } elseif ($i == 2) {
-                                                        echo $this->Form->control('excrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $vale, 'id'=>'b'.$key,'onblur'=>'getSum(this.id)', 'label' => false, 'required']); 
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $val . '][' . $new_id . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'b'.$key,'onblur'=>'getSum(this.id)', 'label' => false, 'required']); 
                                                          } elseif ($i == 3) {
-                                                        echo $this->Form->control('excrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $vale, 'id'=>'d'.$key, 'label' => false, 'required']) ;
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $val . '][' . $new_id . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'d'.$key, 'label' => false, 'required']) ;
                                                         } else {
-                                                      echo $this->Form->control('excrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $vale, 'id'=>'c'.$key, 'label' => false, 'required', 'readonly']) ;
+                                                      echo $this->Form->control('excrcise[' . $key . '][' . $val . '][' . $new_id . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'c'.$key, 'label' => false, 'required', 'readonly']) ;
                                                        }
-                                                          ?> 
+                                                        ?> 
                                                          
                                                     </div>
 
                                                 </div>
                                             </div>
-                                        <?php $i++; } ?>
+                                        <?php }  $i++; } ?>
 
                                     </div>
                                 </div><?php } ?>
