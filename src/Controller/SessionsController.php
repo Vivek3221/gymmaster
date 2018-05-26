@@ -282,8 +282,8 @@ class SessionsController extends AppController
             $data = $this->request->data;
             
             $data1['user_detail'] = json_encode($data['userexcrcise']);
-               
-             //  pr($data1); die;
+            $data1['user_date']   = date('Y-m-d');
+//               pr($data1); die;
             $session = $this->Sessions->patchEntity($session, $data1);
             if ($this->Sessions->save($session)) {
                 $this->Flash->success(__('The session has been saved.'));

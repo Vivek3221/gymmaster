@@ -448,7 +448,7 @@ class UsersController extends AppController
                     $this->Cookie->write('users',['users_id'=>$user_detail->id,'users_name'=>$user_detail->name,'users_email'=>$user_detail->email,'users_type' =>$user_detail->user_type,'partner_id' =>$user_detail->partner_id]);
                     $this->request->session()->write('users',['users_id'=>$user_detail->id,'users_name'=>$user_detail->name,'users_email'=>$user_detail->email,'users_type' =>$user_detail->user_type,'partner_id' =>$user_detail->partner_id]);
              if($user_detail->user_type == 3){
-                 return $this->redirect(['controller' => 'FitnessMeserments', 'action' => 'index']);
+                 return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
              } else {
                   return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
              }

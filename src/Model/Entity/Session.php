@@ -31,15 +31,6 @@ class Session extends Entity
      * @var array
      */
     protected $_accessible = [
-        'user_id' => true,
-        'partner_id' => true,
-        'date' => true,
-        'ex_detail' => true,
-        'user_detail' => true,
-        'status' => true,
-        'created' => true,
-        'modified' => true,
-        'user' => true,
-        'partner' => true
+       '*'=>true,
     ];
 }
