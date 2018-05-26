@@ -8,7 +8,24 @@ $get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories();
 
 $user_name = $this->Common->getUsers();
 //pr($session_values);
-//pr($user_values); die;
+//pr($user_values);
+//foreach ($session_values as $key => $val)
+//{
+//   // pr($user_values->$key);
+//    foreach ($val as $key1 => $vals)
+//    {
+//         
+//       foreach ($vals as $key2 => $las)
+//       {
+//           pr($las);
+//           pr($user_values->$key[$key1]->$key2);
+//       }
+//    }
+//}
+//pr($user_values);
+//
+//
+//die;
 ?>
 
 <section class="content">
@@ -83,7 +100,7 @@ $user_name = $this->Common->getUsers();
                                             </div>
                                             <div class="col-sm-3">
                                                          <?php // pr($session_values->$key->$val->$valn); die; ?>
-                                                <span id="" > @ <?=  $valen ?> </span>
+                                                <span id="" > @ <?= $session_values->$key[$val]->$valn - $valen ?> </span>
                                             </div>
                                         </div>
                                     </div>
