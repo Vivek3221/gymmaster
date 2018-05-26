@@ -15,7 +15,7 @@
                <?php if($usersdetail['users_type'] != 3){; ?>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-cyan hover-expand-effect">
-                        <a><div class="icon">
+                        <a href="edit"><div class="icon">
                             <i class="material-icons">person</i>
                         </div></a>
 
