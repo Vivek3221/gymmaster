@@ -280,10 +280,14 @@ class SessionsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data1 =[];
             $data = $this->request->data;
-            
+           // pr($data); die;
             $data1['user_detail'] = json_encode($data['userexcrcise']);
             $data1['user_date']   = date('Y-m-d');
-//               pr($data1); die;
+            $data1['body_weight']   = $this->request->data('body_weight');
+            $data1['hydration']   = $this->request->data('hydration');
+            $data1['sleep']   = $this->request->data('sleep');
+            $data1['notes']   = $this->request->data('notes');
+             //  pr($data1); die;
             $session = $this->Sessions->patchEntity($session, $data1);
             if ($this->Sessions->save($session)) {
                 $this->Flash->success(__('The session has been saved.'));
