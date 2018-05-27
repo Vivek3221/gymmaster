@@ -43,8 +43,35 @@ $user_name = $this->Common->getUsers();
                         </h2>
                     </div>
                     <div class="body">
-
-
+                        <div class="row">
+                            <?php if(!empty($session->body_weight)) {    ?>
+                           <div class="col-sm-3">
+                                <th scope="row"><?= __('Body Weight :-') ?></th>
+                                <td><?= h($session->body_weight) ?>  KG</td>
+                            </div><?php } ?>
+                             <?php if(!empty($session->hydration)) {    ?>
+                          <div class="col-sm-3">
+                                <th scope="row"><?= __('Hydration :-') ?></th>
+                                <td><?= h($session->hydration) ?>  Liters</td>
+                             </div><?php } ?>
+                            <?php if(!empty($session->sleep)) {    ?>
+                          <div class="col-sm-3">
+                                <th scope="row"><?= __('Sleep :-') ?></th>
+                                <td><?= h($session->sleep) ?>  Hours</td>
+                            </div><?php  } ?>
+                            <?php if(!empty($session->user_date)) {    ?>
+                          <div class="col-sm-3">
+                                <th scope="row"><?= __('Report Date :-') ?></th>
+                                <td><?= date('d M Y',strtotime($session->user_date)) ?> </td>
+                            </div><?php } ?>
+                        </div>
+                        <div class="row">
+                            <?php if(!empty($session->notes)) {    ?>
+                            <div class="col-sm-9">
+                                <th scope="row"><?= __('Users Comments :-') ?></th>
+                                <td><?= h($session->notes) ?> </td>
+                            </div><?php } ?>
+                        </div>
                         <div class="row" id="getexercise">
                             <div class="col-sm-6" style="background-color:lavender;">
                                 <div>
