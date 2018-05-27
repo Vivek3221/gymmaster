@@ -100,7 +100,7 @@ $user_name = $this->Common->getUsers();
                                             </div>
                                             <div class="col-sm-3">
                                                          <?php // pr($session_values->$key->$val->$valn); die; ?>
-                                                <span id="" > @ <?= $session_values->$key[$val]->$valn - $valen ?> </span>
+                                                <span id="" > @ <?= $valen - $session_values->$key[$val]->$valn ?> </span>
                                             </div>
                                         </div>
                                     </div>
