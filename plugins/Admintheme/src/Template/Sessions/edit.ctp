@@ -94,13 +94,13 @@ $user_name = $this->Common->getUsers();
                                                         
                                                          if($i == 1)
                                                          {
-                                                       echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'a'.$key, 'label' => false, 'required']) ;
-                                                         } elseif ($i == 2) {
-                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'b'.$key,'onblur'=>'getSum(this.id)', 'label' => false, 'required']); 
+                                                       echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'a'.$key.$i, 'label' => false, 'required']) ;
+                                                         } elseif ($i == 2 OR $i == 6 OR $i == 10 OR $i == 14 OR $i == 18 OR $i == 22) {
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'a'.$key.$i,'onkeyup'=>'getSum(this.id)', 'label' => false, 'required']); 
                                                          } elseif ($i == 3) {
-                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'d'.$key, 'label' => false, 'required']) ;
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'a'.$key.$i, 'label' => false, 'required']) ;
                                                         } else {
-                                                      echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'c'.$key, 'label' => false, 'required', 'readonly']) ;
+                                                      echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'a'.$key.$i, 'label' => false, 'required', 'readonly']) ;
                                                        }
                                                         ?> 
                                                          
@@ -180,21 +180,45 @@ $user_name = $this->Common->getUsers();
         }
     }
     
-        function getSum(clicked_id)
+    
+    function getSum(clicked_id)
     {
-          //alert(clicked_id);
-        var res = clicked_id.slice(1,2); 
-        var val1 = $('#a'+res).val();
+         // alert(clicked_id);
+        var res = clicked_id.slice(1,9); 
+         //alert(res);
+         var sum2 = 3;
+        var firstv = res - 1 ;
+        var lastv = firstv + sum2 ;
+        //alert(firstv);
+       // alert(lastv);
+       
+        var val1 = $('#a'+firstv).val();
         var val2 = $('#'+clicked_id).val();
         //alert(val1);
        // alert(val2);
-     document.getElementById('c'+res).value = val1 * val2;
+     document.getElementById('a'+lastv).value = val1 * val2;
         
        
               //  $('#get_sub_category').html(html);
           
         return false;
     }
+    
+//        function getSum(clicked_id)
+//    {
+//          //alert(clicked_id);
+//        var res = clicked_id.slice(1,2); 
+//        var val1 = $('#a'+res).val();
+//        var val2 = $('#'+clicked_id).val();
+//        //alert(val1);
+//       // alert(val2);
+//     document.getElementById('c'+res).value = val1 * val2;
+//        
+//       
+//              //  $('#get_sub_category').html(html);
+//          
+//        return false;
+//    }
 
     //});
 
