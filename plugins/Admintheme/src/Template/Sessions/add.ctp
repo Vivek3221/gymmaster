@@ -90,11 +90,12 @@ $user_name = $this->Common->getUsers();
         //alert(id);
 
     }
-    
+    var start = 100;
   function getExcercise() {
+          // alert(start);
 
             var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
-           //alert(exrcisedirectorie_id);
+          // alert(exrcisedirectorie_id);
             var next_id = $('#exrcisedirectorie_id').val();
              // alert(exrcisedirectorie_id);
               
@@ -106,7 +107,7 @@ $user_name = $this->Common->getUsers();
                 var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
                 // alert(urls)
                 //urllink = urls + '/' + bank_name ;
-                var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&next_id='+escape(next_id);
+                var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start);
                 //alert(data);
                     $.ajax({
                     type: "POST",
@@ -114,17 +115,25 @@ $user_name = $this->Common->getUsers();
                     data: data,
                     url: urls,
                     success: function (html) {
+                      
 //                          alert(html);
                         $('#getexercise').append(html);
                     }
                 });
+                
+                
             }
+            start = start + 1;
+            return false;
         }
         
-         function getSum(clicked_id)
+         function getSum2(clicked_id)
     {
           //alert(clicked_id);
-        var res = clicked_id.slice(1,2); 
+          //var curr = $(this);
+          // var gg =   curr.parents('#'+remove2).find('#'+clicked_id).val();
+          //alert(gg);
+        var res = clicked_id.slice(1,9); 
         var val1 = $('#a'+res).val();
         var val2 = $('#'+clicked_id).val();
         //alert(val1);

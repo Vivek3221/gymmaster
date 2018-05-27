@@ -155,7 +155,7 @@ $user_name = $this->Common->getUsers();
     }
 
     //$(function () {
-
+   var start = 100; 
     function getExcercise() {
 
         var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
@@ -166,8 +166,8 @@ $user_name = $this->Common->getUsers();
             var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
             // alert(urls)
             //urllink = urls + '/' + bank_name ;
-            var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id);
-            $.ajax({
+           var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start);
+                $.ajax({
                 type: "POST",
                 cache: false,
                 data: data,
@@ -178,14 +178,34 @@ $user_name = $this->Common->getUsers();
                 }
             });
         }
+        start = start + 1;
+            return false;
     }
     
+        function getSum2(clicked_id)
+    {
+          //alert(clicked_id);
+          //var curr = $(this);
+          // var gg =   curr.parents('#'+remove2).find('#'+clicked_id).val();
+          //alert(gg);
+        var res = clicked_id.slice(1,9); 
+        var val1 = $('#a'+res).val();
+        var val2 = $('#'+clicked_id).val();
+        //alert(val1);
+       // alert(val2);
+     document.getElementById('c'+res).value = val1 * val2;
+        
+       
+              //  $('#get_sub_category').html(html);
+          
+        return false;
+    }
     
     function getSum(clicked_id)
     {
          // alert(clicked_id);
         var res = clicked_id.slice(1,9); 
-         //alert(res);
+        // alert(res);
          var sum2 = 3;
         var firstv = res - 1 ;
         var lastv = firstv + sum2 ;
@@ -194,7 +214,7 @@ $user_name = $this->Common->getUsers();
        
         var val1 = $('#a'+firstv).val();
         var val2 = $('#'+clicked_id).val();
-        //alert(val1);
+       // alert(val1);
        // alert(val2);
      document.getElementById('a'+lastv).value = val1 * val2;
         
