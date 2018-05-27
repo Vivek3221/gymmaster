@@ -395,6 +395,51 @@ $(document).ready(function () {
             }
         }
     });
+    $("#addsession").validate({
+        ignore: ":hidden",
+        errorElement: 'span',
+        errorClass: 'help-inline',
+
+        highlight: function (element) {
+            $(element).parent().addClass("error");
+        },
+        unhighlight: function (element) {
+            $(element).parent().removeClass("error");
+        },
+        rules: {
+
+            body_weight: {
+               regex: /^$|^[0-9]$|^[0-9]+\.?[0-9]+$/ 
+
+            },
+            hydration: {
+               regex: /^$|^[0-9]$|^[0-9]+\.?[0-9]+$/ 
+
+            },
+            sleep: {
+               regex: /^$|^[0-9]$|^[0-9]+\.?[0-9]+$/ 
+
+            },
+            password: {
+                required: true
+            }
+        },
+        messages: {
+            body_weight: {
+                regex: 'Enter numeric value.'
+            },
+            hydration: {
+                regex: 'Enter numeric value.'
+            },
+            sleep: {
+                regex: 'Enter numeric value.'
+            },
+
+            password: {
+                required: 'Enter password',
+            }
+        }
+    });
 
     $("#bodym").validate({
         ignore: ":hidden",
