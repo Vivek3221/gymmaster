@@ -105,7 +105,7 @@ $user_name = $this->Common->getUsers();
                             <span class=""> <?= ucfirst($this->Common->getExrciseDirectoriesname($key)) ?></span> 
                                 </div>  <div class="body">
  
-                                        <?php $i =1; foreach ($value as $val => $vale) {
+                                        <?php $i =10; foreach ($value as $val => $vale) {
                                             
                                             foreach ($vale as $valn => $valen) {
                                             ?>
@@ -114,15 +114,15 @@ $user_name = $this->Common->getUsers();
                                                     <label class="form-label"><?= ucfirst($valn) ?></label>
                                                     <div class="form-line">
                                                     <?php
-                                                         if($i == 1)
+                                                         if($i == 10)
                                                          {
                                                        echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$key.$i, 'label' => false, 'required']) ;
-                                                         } elseif ($i == 2 OR $i == 6 OR $i == 10 OR $i == 14 OR $i == 18 OR $i == 22) {
+                                                         } elseif ($i == 11 OR $i == 15 OR $i == 19 OR $i == 23 OR $i == 27 OR $i == 31) {
                                                         echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$key.$i,'onkeyup'=>'getSum(this.id)', 'label' => false, 'required']); 
-                                                         } elseif ($i == 3) {
-                                                        echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'id'=>'a'.$key.$i, 'label' => false, 'required']) ;
+                                                         } elseif ($i == 13 OR $i == 17 OR $i == 21 OR $i == 25 OR $i == 29 OR $i == 33) {
+                                                        echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => '', 'id'=>'a'.$key.$i, 'label' => false, 'required', 'readonly']) ;
                                                         } else {
-                                                      echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$key.$i, 'label' => false, 'required', 'readonly2']) ;
+                                                      echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$key.$i, 'label' => false, 'required']) ;
                                                        }
                                                           ?> 
                                                     </div>
