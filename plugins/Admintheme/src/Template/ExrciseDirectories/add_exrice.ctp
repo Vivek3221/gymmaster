@@ -44,7 +44,7 @@
         <div class="form-float">
             <label class="form-label"><?= ucfirst($get_exrcisedirectories->tecnical4) ?></label>
             <div class="form-line">
-                <?= $this->Form->control('excrcise['.$get_exrcisedirectories->id . '][' . $new_id . '][' . $get_exrcisedirectories->tecnical4 . ']', ['class' => 'form-control', 'type' => 'text','id'=>'c'.$get_exrcisedirectories->id.$start_id, 'label' => false, 'required', 'readonlyy']) ?> 
+                <?= $this->Form->control('excrcise['.$get_exrcisedirectories->id . '][' . $new_id . '][' . $get_exrcisedirectories->tecnical4 . ']', ['class' => 'form-control', 'type' => 'text','id'=>'c'.$get_exrcisedirectories->id.$start_id, 'label' => false, 'required', 'readonly']) ?> 
             </div>
         </div>
     </div>
