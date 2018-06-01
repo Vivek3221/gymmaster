@@ -178,12 +178,13 @@ class CommonHelper extends Helper {
         $partner_id = $users_type['users_id'];
         $get_users = TableRegistry::get('Users');
         $get_users_name = $get_users->find('list')
-                                    ->where(['active' => 1,'user_type' =>3,'partner_id'=>$partner_id])
+                                    ->where(['active' => 1,'user_type' =>3,'Users.partner_id'=>$partner_id])
                                     ->toArray(); 
         }else{
+            $partner_id = $users_type['users_id'];
             $get_users = TableRegistry::get('Users');
         $get_users_name = $get_users->find('list')
-                                    ->where(['active' => 1,'user_type' =>3])
+                                    ->where(['active' => 1,'user_type' =>3,'Users.partner_id'=>$partner_id])
                                     ->toArray(); 
         }
         return $get_users_name;

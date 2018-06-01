@@ -5,7 +5,7 @@ $status = $this->Common->getstatus();
 $get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories($users_id);
 //pr($get_exrcisedirectorie_lists); die;
 $user_name = $this->Common->getUsers();
-//pr($bodies_lists); die;
+//pr($user_name); die;
 ?>
 <section class="content">
     <div class="container-fluid">

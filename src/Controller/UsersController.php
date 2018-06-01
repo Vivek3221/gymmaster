@@ -163,8 +163,8 @@ class UsersController extends AppController
             $name = $data['name'] . $t;
           if (isset($users_type) && ($users_type == 2)) {
           $data['user_type'] = '3';
-          $data['partner_id'] = $users_id;
           }
+          $data['partner_id'] = $users_id;
 
             $data['username'] = $this->slugify($name);
             $data['guestid'] = $this->Cookie->read('guest_id');
