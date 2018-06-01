@@ -28,8 +28,9 @@ $user_name = $this->Common->getUsers();
                         <?php if ($user_type != 3) {
                             ?>
                             <div class="form-group form-float">
+                                <label class="form-label">Select Users</label>
                                 <div class="form-line">
-                                    <?= $this->Form->control('user_id', ['class' => 'form-control select2 ','multiple'=>'multiple', 'type' => 'select', 'empty' => __('Select User'), 'options' => $user_name]) ?> 
+                                    <?= $this->Form->control('user_id', ['class' => 'form-control select2 ','multiple'=>'multiple', 'type' => 'select', 'empty' => __('Select User'), 'options' => $user_name ,'label'=>false]) ?> 
                                 </div>
                             </div>
                         <?php } ?>
