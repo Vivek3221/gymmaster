@@ -1,7 +1,9 @@
 <?php
 $status = $this->Common->getstatus();
+
 //$exercises = $this->Common->getExercises();
-$get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories();
+$get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories($users_id);
+//pr($get_exrcisedirectorie_lists); die;
 $user_name = $this->Common->getUsers();
 //pr($bodies_lists); die;
 ?>

@@ -2,7 +2,7 @@
 $status = $this->Common->getstatus();
 $new_id = '';
 //$exercises = $this->Common->getExercises();
-$get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories();
+$get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories($users_id);
 //$get_exrcisedirectorie_name = $this->Common->getExrciseDirectoriesname(1);
 
 $user_name = $this->Common->getUsers();

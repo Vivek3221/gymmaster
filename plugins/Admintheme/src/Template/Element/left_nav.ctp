@@ -43,7 +43,7 @@ $action = $this->request['action'];
                     </a>
                 </li>
                  <?php } ?>
-                <?php if($usersdetail['users_type'] == 1){; ?>
+                <?php if($usersdetail['users_type'] != 3){; ?>
                 <li class="<?php if (($controller == 'ExrciseDirectories' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'logoutqq' || $action == 'payment'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'index']); ?>">
                         <i class="material-icons">home</i>

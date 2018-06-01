@@ -36,6 +36,7 @@ class ExrciseDirectory extends Entity
         'tecnical4' => true,
         'status' => true,
         'created' => true,
+        'user_id' => true,
         'modified' => true
     ];
 }

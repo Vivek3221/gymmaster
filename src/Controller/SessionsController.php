@@ -65,7 +65,7 @@ class SessionsController extends AppController
         if (isset($user_type) && ($user_type == 3)) {
           $search['Sessions.user_id'] = $users_id;
           }
-        if (isset($user_type) && ($user_type == 2)) {
+        if (isset($user_type) && ($user_type != 3)) {
           $search['Sessions.partner_id'] = $users_id;
           }
         if (isset($search)) {
@@ -109,6 +109,7 @@ class SessionsController extends AppController
           if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
+           $users_id = $this->usersdetail['users_id'];
         $session = $this->Sessions->get($id, [
             'contain' => ['Users']
         ]);
@@ -118,7 +119,7 @@ class SessionsController extends AppController
       $user_values = json_decode($session->user_detail);
 //pr($user_values); die;
 
-        $this->set(compact('session', 'user_values', 'partners','user_type','session_values'));
+        $this->set(compact('session', 'user_values', 'partners','user_type','session_values','users_id'));
         $this->set('_serialize', ['session']);
     }
 
@@ -133,6 +134,7 @@ class SessionsController extends AppController
             return $this->redirect('/');
         }
         $user_type = $this->usersdetail['users_type'];
+        $users_id = $this->usersdetail['users_id'];
         $session = $this->Sessions->newEntity();
         if ($this->request->is('post')) {
              $data1 =[];
@@ -168,7 +170,7 @@ class SessionsController extends AppController
         }
 //        $users = $this->Sessions->Users->find('list', ['limit' => 200]);
 //        $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
-        $this->set(compact('session', 'users', 'partners','user_type'));
+        $this->set(compact('session', 'users', 'partners','user_type','users_id'));
         $this->set('_serialize', ['session']);
     }
 
@@ -188,6 +190,7 @@ class SessionsController extends AppController
             'contain' => []
         ]);
         $new_id = '';
+        $users_id = $this->usersdetail['users_id'];
         $user_type = $this->usersdetail['users_type'];
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data1 =[];
@@ -215,7 +218,7 @@ class SessionsController extends AppController
       // pr($session_values); die;
         //$users = $this->Sessions->Users->find('list', ['limit' => 200]);
        // $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
-        $this->set(compact('session', 'users', 'partners','user_type','session_values','new_id'));
+        $this->set(compact('session', 'users', 'partners','user_type','session_values','new_id','users_id'));
         $this->set('_serialize', ['session']);
     }
     
@@ -226,6 +229,7 @@ class SessionsController extends AppController
         $session = $this->Sessions->get($id, [
             'contain' => []
         ]);
+          $users_id = $this->usersdetail['users_id'];
         $user_type = $this->usersdetail['users_type'];
         if ($this->request->is(['patch', 'post', 'put'])) {
            $data1 =[];
@@ -263,7 +267,7 @@ class SessionsController extends AppController
       // pr($session_values); die;
         //$users = $this->Sessions->Users->find('list', ['limit' => 200]);
        // $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
-        $this->set(compact('session', 'users', 'partners','user_type','session_values'));
+        $this->set(compact('session', 'users', 'partners','user_type','session_values','users_id'));
         $this->set('_serialize', ['session']);
     }
     
@@ -276,6 +280,7 @@ class SessionsController extends AppController
         $session = $this->Sessions->get($id, [
             'contain' => []
         ]);
+        $users_id = $this->usersdetail['users_id'];
         $user_type = $this->usersdetail['users_type'];
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data1 =[];
@@ -300,7 +305,7 @@ class SessionsController extends AppController
       // pr($session_values); die;
         //$users = $this->Sessions->Users->find('list', ['limit' => 200]);
        // $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
-        $this->set(compact('session', 'users', 'partners','user_type','session_values'));
+        $this->set(compact('session', 'users', 'partners','user_type','session_values','users_id'));
         $this->set('_serialize', ['session']);
     }
 

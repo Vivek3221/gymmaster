@@ -50,6 +50,9 @@ class ExrciseDirectoriesTable extends Table
         $validator
             ->integer('id')
             ->allowEmpty('id', 'create');
+        $validator
+            ->integer('user_id')
+            ->notEmpty('user_id', 'create');
 
         $validator
             ->scalar('name')

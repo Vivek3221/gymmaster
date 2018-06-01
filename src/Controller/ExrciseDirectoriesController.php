@@ -37,6 +37,7 @@ class ExrciseDirectoriesController extends AppController
         $norec = 10;
         $status = '';
         $search = [];
+        $users_id = $this->usersdetail['users_id'];
         if (isset($this->request->query['name']) && trim($this->request->query['name']) != "") {
             $name = $this->request->query['name'];
             $search['ExrciseDirectories.name REGEXP'] = $name;
@@ -55,7 +56,7 @@ class ExrciseDirectoriesController extends AppController
         } else {
             $count = $this->ExrciseDirectories->find('all');
         }
-        $count = $count->where(['ExrciseDirectories.status !=' => '2']);
+        $count = $count->where(['ExrciseDirectories.status !=' => '2','ExrciseDirectories.user_id'=>$users_id]);
         $this->paginate = [
             'limit' => $norec, 
             'order' => ['ExrciseDirectories.id' => 'DESC'],
@@ -98,9 +99,13 @@ class ExrciseDirectoriesController extends AppController
          if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
+        $users_id = $this->usersdetail['users_id'];
         $exrciseDirectory = $this->ExrciseDirectories->newEntity();
         if ($this->request->is('post')) {
-            $exrciseDirectory = $this->ExrciseDirectories->patchEntity($exrciseDirectory, $this->request->getData());
+            $data = $this->request->data;
+            $data['user_id'] = $users_id;
+            
+            $exrciseDirectory = $this->ExrciseDirectories->patchEntity($exrciseDirectory, $data);
             if ($this->ExrciseDirectories->save($exrciseDirectory)) {
                 $this->Flash->success(__('The exrcise directory has been saved.'));
 
