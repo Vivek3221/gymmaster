@@ -50,10 +50,11 @@ class FitnessMesermentsController extends AppController
         $users_type = $this->usersdetail['users_type'];
         $users_id = $this->usersdetail['users_id'];
        //pr($this->usersdetail['users_id']);die;
-        $sdate ='';
-        $edate ='';
+        $sdate  ='';
+        $edate  ='';
         $search = [];
-         if (isset($this->request->query['from_date']) && trim($this->request->query['from_date']) != "" && isset($this->request->query['to_date']) && trim($this->request->query['to_date']) != "" ) {
+         if (isset($this->request->query['from_date']) && trim($this->request->query['from_date']) != "" 
+            && isset($this->request->query['to_date']) && trim($this->request->query['to_date']) != "" ) {
           
             $sdate = date('Y-m-d H:i:s',strtotime($this->request->query['from_date'])); 
             $edate = date('Y-m-d H:i:s',strtotime($this->request->query['to_date'])) ;
@@ -62,14 +63,8 @@ class FitnessMesermentsController extends AppController
             $search['FitnessMeserments.date <='] = $edate;  
             $sdate = $this->request->query['from_date']; 
             $edate = $this->request->query['to_date'] ;
-
              
         }
-        
-        
-        
-        
-        
         if (isset($users_type) && ($users_type == 3)) {
           $search['FitnessMeserments.user_id'] = $users_id;
           }
@@ -78,13 +73,11 @@ class FitnessMesermentsController extends AppController
           }
           
          if (isset($search)) {
-
             $count = $this->FitnessMeserments->find('all')
                     ->where([$search]);
         } else {
             $count = $this->FitnessMeserments->find('all');
         }
-
         //$count = $count->where(['Users.active !=' => '3']);
 
         $this->paginate = ['order' => ['FitnessMeserments.id' => 'DESC'],'contain' => ['Users']];

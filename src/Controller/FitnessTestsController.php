@@ -34,11 +34,12 @@ class FitnessTestsController extends AppController
             return $this->redirect('/');
         }
         $users_type = $this->usersdetail['users_type'];
-        $users_id = $this->usersdetail['users_id'];
-       $sdate ='';
-        $edate ='';
-        $search = [];
-         if (isset($this->request->query['from_date']) && trim($this->request->query['from_date']) != "" && isset($this->request->query['to_date']) && trim($this->request->query['to_date']) != "" ) {
+        $users_id   = $this->usersdetail['users_id'];
+        $sdate      ='';
+        $edate      ='';
+        $search     = [];
+         if (isset($this->request->query['from_date']) && trim($this->request->query['from_date']) != "" 
+          && isset($this->request->query['to_date']) && trim($this->request->query['to_date']) != "" ) {
           
             $sdate = date('Y-m-d H:i:s',strtotime($this->request->query['from_date'])); 
             $edate = date('Y-m-d H:i:s',strtotime($this->request->query['to_date'])) ;
@@ -47,27 +48,20 @@ class FitnessTestsController extends AppController
             $search['FitnessTests.created <='] = $edate;  
             $sdate = $this->request->query['from_date']; 
             $edate = $this->request->query['to_date'] ;
-
-             
         }
-        
         if (isset($users_type) && ($users_type == 3)) {
-          $search['FitnessTests.user_id'] = $users_id;
-          }
+            $search['FitnessTests.user_id'] = $users_id;
+        }
         if (isset($users_type) && ($users_type == 2)) {
-          $search['FitnessTests.partner_id'] = $users_id;
-          }
-          
-         if (isset($search)) {
+            $search['FitnessTests.partner_id'] = $users_id;
+        }
 
+        if (isset($search)) {
             $count = $this->FitnessTests->find('all')
                     ->where([$search]);
         } else {
             $count = $this->FitnessTests->find('all');
         }
-        
-        
-        
         $this->paginate = [
             'contain' => ['Exercises','Users'],
             'order' =>  ['FitnessTests.id' => 'DESC'],
@@ -87,64 +81,61 @@ class FitnessTestsController extends AppController
      */
     public function view($id = null)
     {
-                      if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-      $excerise_name = 'demo';
-        
-         if (isset($this->request->query['body_id']) && $this->request->query['body_id'] != "") {
+        $excerise_name = 'demo';
+
+        if (isset($this->request->query['body_id']) && $this->request->query['body_id'] != "") {
             $body_id = $this->request->query['body_id'];
         }
-        
-         if (isset($this->request->query['exercise_id']) && $this->request->query['exercise_id'] != "") {
+
+        if (isset($this->request->query['exercise_id']) && $this->request->query['exercise_id'] != "") {
             $exercise_id = $this->request->query['exercise_id'];
-            
         }
-         if (isset($this->request->query['exercise_name']) && $this->request->query['exercise_name'] != "") {
+        if (isset($this->request->query['exercise_name']) && $this->request->query['exercise_name'] != "") {
             $excerise_name = $this->request->query['exercise_name'];
-            
         }
-         $fitnessMeserment = $this->FitnessTests->get($id, [
+        $fitnessMeserment = $this->FitnessTests->get($id, [
             'contain' => []
         ]);
-        
+
         $user_id = $fitnessMeserment->user_id;
-        
+
         //$user_id = $this->usersdetail['users_id'];
         $fitnessTest = $this->FitnessTests->find()
-                                   ->select(['id','exercise_id','exercise_type'])
-                                   ->contain(['Exercises'])
-                                   ->where(['FitnessTests.user_id'=>$user_id, 'FitnessTests.id <=' =>$id])
-                                   ->order(['FitnessTests.id DESC'])->limit(2)->toArray();
-        
+                        ->select(['id', 'exercise_id', 'exercise_type'])
+                        ->contain(['Exercises'])
+                        ->where(['FitnessTests.user_id' => $user_id, 'FitnessTests.id <=' => $id])
+                        ->order(['FitnessTests.id DESC'])->limit(2)->toArray();
+
         //pr($fitnessTest); die;
-        
-       if  (isset($exercise_id) && !empty($exercise_id)) {
-                $fitnessTests = $this->FitnessTests->find()
-                                   ->select(['id','exercise_type','created'])
-                                   ->where(['FitnessTests.user_id'=>$user_id, 'FitnessTests.id <=' =>$id])
-                                   ->order(['FitnessTests.id DESC'])->limit(10)->toArray();
-                
-                //pr($fitnessTests); 
-                
-             $chartshow = [];
-        foreach ($fitnessTests as $key => $value) {
-            $date = date("Y-m-d",strtotime($value->created));
-              $preValue = json_decode($value->exercise_type); 
-              
-              $exercise_show = $preValue->$body_id->$exercise_id;
-            
-                $chartshow[$key] =  ['y' => $date,'Dates' =>$exercise_show]; 
-               // $chartshow[$key] =  ['y' => $value->weight,'x' =>$value->height]; 
+
+        if (isset($exercise_id) && !empty($exercise_id)) {
+            $fitnessTests = $this->FitnessTests->find()
+                            ->select(['id', 'exercise_type', 'created'])
+                            ->where(['FitnessTests.user_id' => $user_id, 'FitnessTests.id <=' => $id])
+                            ->order(['FitnessTests.id DESC'])->limit(10)->toArray();
+
+            //pr($fitnessTests); 
+
+            $chartshow = [];
+            foreach ($fitnessTests as $key => $value) {
+                $date = date("Y-m-d", strtotime($value->created));
+                $preValue = json_decode($value->exercise_type);
+
+                $exercise_show = $preValue->$body_id->$exercise_id;
+
+                $chartshow[$key] = ['y' => $date, 'Dates' => $exercise_show];
+                // $chartshow[$key] =  ['y' => $value->weight,'x' =>$value->height]; 
             }
-            }
-         // pr($chartshow);
-          //die;
-           
-        $this->set(compact('fitnessTest', 'chartshow','excerise_name'));
+        }
+        // pr($chartshow);
+        //die;
+
+        $this->set(compact('fitnessTest', 'chartshow', 'excerise_name'));
         $this->set('_serialize', ['fitnessTest']);
     }
-    
 
     /**
      * Add method

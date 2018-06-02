@@ -18,11 +18,11 @@
                         <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>">
                             <div class="icon">
                             <i class="material-icons">person</i>
-                        </div>
+                        </div></a>
                         <div class="content">
                             <div class="text"><?=__('Users')?></div>
                             <div class="number count-to" data-from="0" data-to="<?php echo $users_count ?>" data-speed="1000" data-fresh-interval="20"></div>
-                        </div></a>
+                        </div>
                     </div>
                 </div>
                <?php } ?>
