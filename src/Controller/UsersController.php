@@ -89,7 +89,7 @@ class UsersController extends AppController
          if (isset($users_type) && ($users_type == 2)) {
           $search['Users.partner_id'] = $users_id;
           }
-        
+     //   pr($search);exit;
          if (isset($search)) {
 
             $count = $this->Users->find('all')
@@ -109,11 +109,6 @@ class UsersController extends AppController
         $this->paginate = ['limit' => $norec, 'order' => ['Users.id' => 'DESC']];
 
         $users = $this->paginate($count)->toArray();
-
-        
-        
-        
-        
        // $users = $this->paginate($this->Users);
 
         $this->set(compact('users', 'name', 'status', 'norec','email','user_type','users_type','partners','partner'));
@@ -151,50 +146,31 @@ class UsersController extends AppController
         }
        // pr($this->usersdetail);die;
         $users_type = $this->usersdetail['users_type'];
-        $users_id = $this->usersdetail['users_id'];
-        $user = $this->Users->newEntity();
+        $users_id   = $this->usersdetail['users_id'];
+        $user       = $this->Users->newEntity();
         if ($this->request->is('post')) {
-
             $data = $this->request->data;
-            //pr($users_type);
-           // pr($data); die;
-            
-            $t = time();
+            $t    = time();
             $name = $data['name'] . $t;
-          if (isset($users_type) && ($users_type == 2)) {
-          $data['user_type'] = '3';
-          }
-          $data['partner_id'] = $users_id;
-
-            $data['username'] = $this->slugify($name);
-            $data['guestid'] = $this->Cookie->read('guest_id');
-            $data['verified'] = '1';
-            $data['active'] = '2';
+            if (isset($users_type) && ($users_type == 2)) {
+                $data['user_type'] = '3';
+            }
+            $data['partner_id'] = $users_id;
+            $data['username']   = $this->slugify($name);
+            $data['guestid']    = $this->Cookie->read('guest_id');
+            $data['verified']   = '1';
+            $data['active']     = '2';
             // pr($data);exit;
 
             $user = $this->Users->patchEntity($user, $data);
             $useradd = $this->Users->save($user);
             if ($useradd) {
 
-//                if (isset($users_type) && ($users_type == 2)) {
-//                    $this->Partners = TableRegistry::get('Partners');
-//                    $partner = $this->Partners->newEntity();
-//                    $data1['user_id'] = $users_id;
-//                    $partner = $this->Partners->patchEntity($partner, $data1);
-//                    $partner_add = $this->Partners->save($partner);
-//                    if ($partner_add) {
-//                        $userUpdate = $this->Users->get($useradd->id);
-//                        $userData['partner_id'] = $partner_add->id;
-//                        $userUpdate = $this->Users->patchEntity($userUpdate, $userData);
-//                        $this->Users->save($userUpdate);
-//                    }
-//                }
-
-                $userDataArr['name'] = $data['name'];
+                $userDataArr['name']  = $data['name'];
                 $userDataArr['email'] = $data['email'];
-                $toEmail = $data['email'];
-                $subject = 'Inquery Successful | Datamonitoring';
-                $email = new Email();
+                $toEmail              = $data['email'];
+                $subject              = 'Inquery Successful | Datamonitoring';
+                $email                = new Email();
                 $email->transport('default');
                 try {
                     $email->emailFormat('html');
@@ -239,21 +215,17 @@ class UsersController extends AppController
                     $data['photo'] = $flname;
                 }
             }
-
-            //pr($data); die;
-            $user = $this->Users->patchEntity($user, $data);
-
-            // pr($user); die;
+            $user    = $this->Users->patchEntity($user, $data);
             $useradd = $this->Users->save($user);
             if ($useradd) {
 
-                $userDataArr['name'] = $data['name'];
-                $userDataArr['password'] = $data['cpassword'];
-                $userDataArr['email'] = $data['email'];
+                $userDataArr['name']      = $data['name'];
+                $userDataArr['password']  = $data['cpassword'];
+                $userDataArr['email']     = $data['email'];
                 $userDataArr['login_url'] = Router::url('/', ['controller' => 'Users', 'action' => 'login']);
-                $toEmail = $data['email'];
-                $subject = 'Inquery Successful | Gym-Admin';
-                $email = new Email();
+                $toEmail                  = $data['email'];
+                $subject                  = 'Inquery Successful | Gym-Admin';
+                $email                    = new Email();
                 $email->transport('default');
                 try {
                     $email->emailFormat('html');
@@ -267,7 +239,7 @@ class UsersController extends AppController
                     
                 }$this->Flash->success(__('The user has been saved.'));
 
-                return $this->redirect(['controller'=>'FitnessMeserments', 'action' => 'add']);
+                return $this->redirect(['controller' => 'FitnessMeserments', 'action' => 'add']);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
