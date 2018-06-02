@@ -57,7 +57,12 @@ $user_name = $this->Common->getUsers();
 </div>
                         
                         <div class="row" id="getexercise">
-                        </div>
+                       </div>
+                   <span class="pull-right" id="getexercisemore" hidden >
+     <button type="button" class="btn btn-default btn-sm" id="" onclick="getExcercise()">
+        <i class="material-icons">add</i> 
+         </button></span>
+<br>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->input('status', ['empty' => __('Select status'), 'options' => $status, 'class' => 'form-control']); ?>
@@ -121,6 +126,42 @@ $user_name = $this->Common->getUsers();
                       
 //                          alert(html);
                         $('#getexercise').append(html);
+                        $('#getexercisemore').show();
+                    }
+                });
+                
+                
+            }
+            start = start + 1;
+            return false;
+        }
+  function getExcercisemore(clickid) {
+           alert(clickid);
+
+            var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
+         alert(exrcisedirectorie_id);
+            var next_id = $('#exrcisedirectorie_id').val();
+             // alert(exrcisedirectorie_id);
+              
+              
+              
+            //  
+            if (exrcisedirectorie_id)
+            {
+                var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExriceMore']) ?>';
+                 alert(urls)
+                //urllink = urls + '/' + bank_name ;
+                var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start);
+                alert(data);
+                    $.ajax({
+                    type: "POST",
+                    cache: false,
+                    data: data,
+                    url: urls,
+                    success: function (html) {
+                      
+                         alert(html);
+                        $('#more'+clickid).append(html);
                     }
                 });
                 

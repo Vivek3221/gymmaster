@@ -113,8 +113,13 @@ $user_name = $this->Common->getUsers();
 
                                     </div>
                                 </div><?php } ?>
-
+                    
                         </div>
+                        <span class="pull-right" id="getexercisemore" hidden >
+     <button type="button" class="btn btn-default btn-sm" id="" onclick="getExcercise()">
+        <i class="material-icons">add</i> 
+         </button></span>
+                            <br>
 
                         <div class="form-group form-float">
                             <div class="form-line">
@@ -176,6 +181,7 @@ $user_name = $this->Common->getUsers();
                 success: function (html) {
 //                          alert(html);
                     $('#getexercise').append(html);
+                     $('#getexercisemore').show();
                 }
             });
         }
