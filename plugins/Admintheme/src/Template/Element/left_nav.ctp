@@ -6,7 +6,7 @@ $action = $this->request['action'];
 
 
 <section>
-     <!--Left Sidebar--> 
+     <!--Left Sidebar-->
     <aside id="leftsidebar" class="sidebar">
         <!-- User Info -->
         <div class="user-info">
@@ -54,12 +54,12 @@ $action = $this->request['action'];
              <li class="<?php if (($controller == 'Bodies') || ($controller == 'Exercises') || ($controller == 'FitnessMeserments') || ($controller == 'FitnessTests')){echo "active";}?>">
                     <a href="javascript:void(0);" class="menu-toggle">
                         <i class="material-icons">text_fields</i>
-                        <span><?= __('Workout Directry') ?></span>
+                        <span><?= __('Workout Directory') ?></span>
                     </a>
                     <ul class="ml-menu">
 <!--                        <li class="<?php if ($controller == 'Bodies' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
                         <?= $this->Html->link(__('Body Parts'), ['controller' => 'Bodies', 'action' => 'index']) ?>
-                        </li>  
+                        </li>
                    <li class="<?php if ($controller == 'Exercises' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
                         <?= $this->Html->link(__('Exercise List'), ['controller' => 'Exercises', 'action' => 'index']) ?>
                    </li>-->
@@ -70,7 +70,7 @@ $action = $this->request['action'];
                         <?= $this->Html->link(__('Fitness Test'), ['controller' => 'FitnessTests', 'action' => 'index']) ?>
                    </li>
                     </ul>
-                </li> 
+                </li>
                 <?php if($usersdetail['users_type'] != 3){;?>
                <li class="<?php if (($controller == 'Sessions' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'userEdit' || $action == 'addMore'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index']); ?>">

@@ -43,6 +43,20 @@ class AppController extends Controller
     public function initialize()
     {
         parent::initialize();
+        
+         $this->loadComponent('Auth', [
+        'loginAction' => [
+            'controller' => 'Users',
+            'action' => 'login'
+        ],
+        'authError' => 'Without login you can not be access any action.',
+        'authenticate' => [
+            'Form' => [
+                'fields' => ['username' => 'username','password'=>'password'], 'userModel' => 'Users'
+            ]
+        ],
+        'storage' => 'Session'
+        ]);
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');

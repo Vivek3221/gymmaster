@@ -25,82 +25,83 @@ $getPayDuration = $this->Common->getPayDuration();
                         <div  id="hidePayment"class="form-btn text-center">
 
                             <button  class="btn btn-primary waves-effect" onclick="makePayment()">Make Payment</button>
-                            
+
                             <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']) ?>" class="">Later Payment</a>
                         </div>
                         <div class="" id="makepayment" hidden="">
                         <!--                            <form id="form_validation" method="POST">-->
                         <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']); ?>
                         <?= $this->Form->create($user, ['enctype' => 'multipart/form-data','id' => 'payment','templates' => ['inputContainer' => '{{content}}']]) ?>
-      
+
                         <div class="form-group form-float">
                             <div class="form-line">
 <!--                                        <input type="text" class="form-control" name="name" required>-->
-                                <?= $this->Form->control('user_type', ['class' => 'form-control', 'type' => 'select','options'=>$user_type, 'empty'=>__('Select Type')]) ?>          
-                                
+                                <?= $this->Form->control('user_type', ['class' => 'form-control', 'type' => 'select','options'=>$user_type, 'empty'=>__('Select Type')]) ?>
+
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('name', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                <?= $this->Form->control('name', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?>
                                 <label class="form-label">Name</label>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('email', ['class' => 'form-control', 'label' => false]) ?> 
+                                <?= $this->Form->control('email', ['class' => 'form-control', 'label' => false]) ?>
                                 <label class="form-label">Email</label>
                             </div>
                         </div>
-                       
+
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('mobile_no', ['class' => 'form-control','type'=>'text', 'label' => false]) ?> 
+                                <?= $this->Form->control('mobile_no', ['class' => 'form-control','type'=>'text', 'label' => false]) ?>
                                 <label class="form-label">Mobile No.</label>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('payment', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                <?= $this->Form->control('payment', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?>
                                 <label class="form-label">Payment Paid.</label>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('b_payment', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                <?= $this->Form->control('b_payment', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?>
                                 <label class="form-label">Payment Due.</label>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
 <!--                                        <input type="text" class="form-control" name="name" required>-->
-                                <?= $this->Form->control('mode_ofpay', ['class' => 'form-control', 'type' => 'select','empty'=>'Select Mode Of Payment','options'=>$getModPayment]) ?>          
-                                
+                                <?= $this->Form->control('mode_ofpay', ['class' => 'form-control', 'type' => 'select','empty'=>'Select Mode Of Payment','options'=>$getModPayment]) ?>
+
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
 <!--                                        <input type="text" class="form-control" name="name" required>-->
-                                <?= $this->Form->control('course_duration', ['class' => 'form-control', 'type' => 'select','empty'=>'Select Course Of Duration','options'=>$getPayDuration]) ?>          
-                                
+                                <?= $this->Form->control('course_duration', ['class' => 'form-control', 'type' => 'select','empty'=>'Select Course Of Duration','options'=>$getPayDuration]) ?>
+
                             </div>
                         </div>
-                        
+
                          <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('password', ['class' => 'form-control', 'type' => 'password', 'label' => false,'id'=>'npassword']) ?> 
+                                <?= $this->Form->control('password', ['class' => 'form-control', 'type' => 'password', 'label' => false,'id'=>'npassword']) ?>
                                 <label class="form-label">Password</label>
                             </div>
+                            <small class="text-muted"> *Enter password 6-16 alphanumeric & one special character.</small>
                         </div>
                          <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('cpassword', ['class' => 'form-control', 'type' => 'password', 'label' => false]) ?> 
+                                <?= $this->Form->control('cpassword', ['class' => 'form-control', 'type' => 'password', 'label' => false]) ?>
                                 <label class="form-label">Confirm Password</label>
                             </div>
                         </div>
                          <div class="form-group form-floa">
                                                 <div class="form-line image">
-                                                    <?= $this->Form->control('images', ['label' => 'Cover Image', 'class' => 'form-control', 'type' => 'file', 'onchange' => "ImageFilesize();"]) ?>            
+                                                    <?= $this->Form->control('images', ['label' => 'Cover Image', 'class' => 'form-control', 'type' => 'file', 'onchange' => "ImageFilesize();"]) ?>
                                                 </div>
                                             </div>
                         <div class="form-group">
@@ -108,18 +109,18 @@ $getPayDuration = $this->Common->getPayDuration();
                                 <?= $this->Form->input('active', ['options' => $status, 'class' => 'form-control', 'empty' => __('Select Status')]); ?>
                             </div>
                         </div>
-                        
+
                        <div class="form-btn text-center">
 
                             <?= $this->Form->button('Make Payment', ['class' => 'btn btn-primary waves-effect']) ?>
                            <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']) ?>" class="">Later Payment</a>
                         </div>
-                        
-                        
+
+
 
                         <?= $this->Form->end() ?>
-                    </div>      
-                        
+                    </div>
+
                     </div>
                 </div>
             </div>
@@ -129,9 +130,9 @@ $getPayDuration = $this->Common->getPayDuration();
 </section>
 
 <script type="text/javascript">
-    
+
     function ImageFilesize() {
-      
+
         var Extension = '';
         if (window.ActiveXObject) {
             var fso = new ActiveXObject("Scripting.FileSystemObject");
@@ -156,19 +157,19 @@ $getPayDuration = $this->Common->getPayDuration();
         }
 
     }
-    
-    
+
+
    function makePayment()
     {
             $('#makepayment').show();
             $('#hidePayment').hide();
     }
-    
+
     $(document).ready(function () {
-        
-    
-        
-        
+
+
+
+
         $('.datetimepicker').bootstrapMaterialDatePicker({format: 'YYYY-MM-DD HH:mm', lang: 'fr', weekStart: 1, cancelText: 'Cancel', maxDate: new Date()});
         $('').bootstrapMaterialDatePicker({format: 'DD/MM/YYYY HH:mm', minDate: new Date()});
     });

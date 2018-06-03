@@ -59,9 +59,9 @@ $user_name = $this->Common->getUsers();
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('bmi', ['class' => 'form-control', 'type' => 'text','readonly', 'label' => false]) ?> 
-                                <label class="form-label">BMI</label>
+                                <!--<label class="form-label">BMI</label>-->
                             </div>
-                            <small class="text-muted"> *It's autofill.</small>
+                            <small class="text-muted"> *BMI autofill.</small>
                         </div>
                         </div>
                         </div>

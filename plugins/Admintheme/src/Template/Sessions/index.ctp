@@ -29,7 +29,7 @@ $nofrec = $this->Common->getNoOfRec();
                             <?php } ?>
                             <div class="col-md-2">
                                 <?php echo $this->Form->input('from_date', ['label' => __('From Date'), 'class' => 'form-control', 'id' => 'date-start', 'type' => 'text', 'placeholder' => __('From Date'), 'value' => $sdate]); ?>
-                            </div>  
+                            </div>
                             <div class="col-md-2">
                                 <?php echo $this->Form->input('to_date', ['label' => __('To Date'), 'class' => 'form-control', 'id' => 'date-end', 'type' => 'text', 'placeholder' => __('To Date'), 'value' => $edate]); ?>
                             </div>
@@ -46,12 +46,13 @@ $nofrec = $this->Common->getNoOfRec();
                                 <?= $this->Html->link(__('Clear'), ['controller' => 'Sessions'], ['class' => 'btn btn-danger']) ?>
                             </div>
                             <?= $this->Form->end() ?>
-                        </div> 
+                        </div>
                         <?php if ($this->Paginator->counter(['format' => __('{{count}}')]) != 0) { ?>
                             <table class="table table-bordered table-striped table-hover dataTable responsive" id="userstable">
                                 <thead>
                                     <tr>
                                         <th><?= __('User') ?></th>
+                                        <th><?= __('Body Weight') ?></th>
                                         <th><?= __('Date') ?></th>
                                        <?php if($user_type != 3) {?>
                                         <th><?= __('Status') ?></th>
@@ -62,6 +63,7 @@ $nofrec = $this->Common->getNoOfRec();
                                 <tfoot>
                                     <tr>
                                         <th><?= __('User') ?></th>
+                                        <th><?= __('Body Weight') ?></th>
                                         <th><?= __('Date') ?></th>
                                        <?php if($user_type != 3) {?>
                                         <th><?= __('Status') ?></th>
@@ -75,6 +77,7 @@ $nofrec = $this->Common->getNoOfRec();
                                         <tr>
 
                                             <td><?= ucfirst($session->user->name) ?></td>
+                                            <td><?= ucfirst($session->body_weight) ?></td>
                                             <td> <?= date('d-m-Y', strtotime($session->date))?>
                                         <?php if($user_type != 3) {?>
                                             <td id='status<?= $session->id ?>'> <?php
@@ -105,7 +108,7 @@ $nofrec = $this->Common->getNoOfRec();
                                                <?php } ?>
                                             </td>
                                         </tr>
-                                    <?php } ?> 
+                                    <?php } ?>
                                 </tbody>
                             </table>
                             <div class="paginator">
@@ -126,7 +129,7 @@ $nofrec = $this->Common->getNoOfRec();
                                     <strong><?= __('Record') ?></strong> <?= __('not found') ?>
                                 </div>
                             </div>
-                        <?php } ?>   
+                        <?php } ?>
                     </div>
                 </div>
             </div>

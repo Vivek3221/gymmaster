@@ -409,15 +409,18 @@ $(document).ready(function () {
         rules: {
 
             body_weight: {
-               regex: /^$|^[0-9]$|^[0-9]+\.?[0-9]+$/ 
+               required: true,
+               regex: /^$|^[0-9]$|^[0-9]+\.?[0-9]+$/
 
             },
             hydration: {
-               regex: /^$|^[0-9]$|^[0-9]+\.?[0-9]+$/ 
+               required: true,
+               regex: /^$|^[0-9]$|^[0-9]+\.?[0-9]+$/
 
             },
             sleep: {
-               regex: /^$|^[0-9]$|^[0-9]+\.?[0-9]+$/ 
+               required: true,
+               regex: /^$|^[0-9]$|^[0-9]+\.?[0-9]+$/
 
             },
             password: {
@@ -426,12 +429,15 @@ $(document).ready(function () {
         },
         messages: {
             body_weight: {
+                required: 'Enter body weight',
                 regex: 'Enter numeric value.'
             },
             hydration: {
+                required: 'Enter hydration',
                 regex: 'Enter numeric value.'
             },
             sleep: {
+                required: 'Enter sleeping hours',
                 regex: 'Enter numeric value.'
             },
 
@@ -456,46 +462,47 @@ $(document).ready(function () {
 
             weight: {
                 required: true,
-               regex: /^[0-9]{1,3}$/
+               regex: /^[0-9]$|^[0-9]+\.?[0-9]+$/
 
             },
             height: {
                 required: true,
-               regex: /^[0-9]{1,3}$/
+               regex: /^[0-9]$|^[0-9]+\.?[0-9]+$/
 
             },
             neck: {
                 required: true,
-               regex: /^[0-9]{1,3}$/
+               regex: /^[0-9]$|^[0-9]+\.?[0-9]+$/
+                       
 
             },
             upper_arm: {
                 required: true,
-               regex: /^[0-9]{1,3}$/
+               regex: /^[0-9]$|^[0-9]+\.?[0-9]+$/
             },
             chest: {
                 required: true,
-               regex: /^[0-9]{1,3}$/
+               regex: /^[0-9]$|^[0-9]+\.?[0-9]+$/
             },
             waist: {
                 required: true,
-               regex: /^[0-9]{1,3}$/
+               regex: /^[0-9]$|^[0-9]+\.?[0-9]+$/
             },
             lower_abdomen: {
                 required: true,
-               regex: /^[0-9]{1,3}$/
+               regex: /^[0-9]$|^[0-9]+\.?[0-9]+$/
             },
             hips: {
                 required: true,
-               regex: /^[0-9]{1,3}$/
+               regex: /^[0-9]$|^[0-9]+\.?[0-9]+$/
             },
             thigh: {
                 required: true,
-               regex: /^[0-9]{1,3}$/
+               regex: /^[0-9]$|^[0-9]+\.?[0-9]+$/
             },
             calf: {
                 required: true,
-               regex: /^[0-9]{1,3}$/
+               regex: /^[0-9]$|^[0-9]+\.?[0-9]+$/
             }
         },
         messages: {
