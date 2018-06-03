@@ -1,11 +1,11 @@
-<div class="form-group row" style="margin-bottom: 10px;" id="remove<?= $get_exrcisedirectories->id ?>">
+<div class="form-group row" style="margin-bottom: 10px;" id="remove<?= $get_exrcisedirectories->id.$start_id ?>">
   <div>
     <div class="col-xs-6" style="margin-bottom: 0px;">
     <span class="pull-left"> <?= ucfirst($get_exrcisedirectories->name) ?></span>
     </div>
     <div class="col-xs-6" style="margin-bottom: 0px;">
  <span class="pull-right">
-     <button type="button" class="btn btn-default btn-sm" id="<?= $get_exrcisedirectories->id ?>" onclick="removeExcercise(this.id,<?= $get_exrcisedirectories->id ?>)">
+     <button type="button" class="btn btn-default btn-sm" id="<?= $get_exrcisedirectories->id.$start_id ?>" onclick="removeExcercise(this.id,<?= $get_exrcisedirectories->id.$start_id ?>)">
         <i class="material-icons">clear</i> 
     </button></span>
     </div>
