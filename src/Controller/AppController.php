@@ -27,7 +27,6 @@ use Cake\Event\Event;
  */
 class AppController extends Controller
 {
-    
     public $captcha    = "6Lf_JygUAAAAALYOstCso54v8y3yu5hiw9hYpOUg";
     public $components = ['Flash', 'Auth', 'Cookie'/* , 'Security', 'Csrf' */];
    // public $helpers    = ['Usermgmt.UserAuth', 'Usermgmt.Image', 'Form'];
