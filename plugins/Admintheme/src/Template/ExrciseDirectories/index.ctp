@@ -70,7 +70,19 @@ $nofrec = $this->Common->getNoOfRec();
                                                 ?>
                                             </td>
                                             <td><i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $exrciseDirectory['id']]) ?></i>
+                                                <?php if($user_type == 1 )
+                                                { ?>
                                                 <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $exrciseDirectory['id']]) ?></i>
+                                                <?php } ?>
+                                                
+                                                <?php if($user_type == 2 )
+                                                { 
+                                                 if($exrciseDirectory['user_type'] == 2 )
+                                                { ?>
+                                                <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $exrciseDirectory['id']]) ?></i>
+                                                <?php } else { ?>
+                                                 <i class="material-icons"><?= __('mode_edit')?></i>
+                                               <?php  } } ?>
                                             </td>
                                         </tr>
                                     <?php } ?> 
