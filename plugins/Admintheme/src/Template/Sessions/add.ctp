@@ -1,3 +1,10 @@
+
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+</style>
 <?php
 $status = $this->Common->getstatus();
 
@@ -56,7 +63,10 @@ $user_name = $this->Common->getUsers();
    </span>
 </div>
                         
-                        <div class="row" id="getexercise">
+                    <div class="row" >
+                            <table id="getexercise">
+                               
+                            </table>
                        </div>
                    <span class="pull-right" id="getexercisemore" hidden >
      <button type="button" class="btn btn-default btn-sm" id="" onclick="getExcercise()">
@@ -99,8 +109,9 @@ $user_name = $this->Common->getUsers();
 
     }
     var start = 100;
+
   function getExcercise() {
-          // alert(start);
+          var dstart = start;
 
             var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
           // alert(exrcisedirectorie_id);
@@ -124,8 +135,19 @@ $user_name = $this->Common->getUsers();
                     url: urls,
                     success: function (html) {
                       
-//                          alert(html);
+                         alert(exrcisedirectorie_id);
+                         
+                       
                         $('#getexercise').append(html);
+                        if(start!=100){
+                            var last = (exrcisedirectorie_id+dstart)-1;
+                            var newdstart= exrcisedirectorie_id+dstart;
+                           $('#a'+newdstart).val($('#a'+last).val());
+                           $('#b'+newdstart).val($('#b'+last).val());
+                            $('#c'+newdstart).val($('#c'+last).val());
+                            $('#d'+newdstart).val($('#d'+last).val());
+                        }
+                        $('#getexercise').attr('border','1px solid black');
                         $('#getexercisemore').show();
                     }
                 });

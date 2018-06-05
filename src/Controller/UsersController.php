@@ -31,7 +31,7 @@ class UsersController extends AppController
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
        // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment']);
+        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment','forgetPassword']);
         
     }
 
@@ -381,10 +381,12 @@ class UsersController extends AppController
         }
     }
     
-     public function adminLogin()
-      {
+    /*
+    *Login UI function
+    */
+    public function adminLogin() {
      
-       }
+    }
       public function dashboard(){
              if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
@@ -441,12 +443,18 @@ class UsersController extends AppController
              return $this->redirect(['controller' => '/']);
  }
        
-    
-    
+    /*
+     * forget password
+     */
+    public function forgetPassword() {
+        $this->autoRender = false;
+        
+        $result = ['msg_type' => 'success', 'msg' => 'Reset password link sent on your registered email.'];
+        echo json_encode($result);
+        exit();
+    }
 
-    
-    
-     public function beforeRender(\Cake\Event\Event $event) {
+    public function beforeRender(\Cake\Event\Event $event) {
         parent::beforeRender($event);
         $this->viewBuilder()->theme('Admintheme');
     }
