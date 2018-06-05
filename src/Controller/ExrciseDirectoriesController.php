@@ -38,6 +38,9 @@ class ExrciseDirectoriesController extends AppController
         $status = '';
         $search = [];
         $users_id = $this->usersdetail['users_id'];
+        $user_type = $this->usersdetail['users_type'];
+       // pr($user_type); die;
+        
         if (isset($this->request->query['name']) && trim($this->request->query['name']) != "") {
             $name = $this->request->query['name'];
             $search['ExrciseDirectories.name REGEXP'] = $name;
@@ -56,7 +59,16 @@ class ExrciseDirectoriesController extends AppController
         } else {
             $count = $this->ExrciseDirectories->find('all');
         }
-        $count = $count->where(['ExrciseDirectories.status !=' => '2','ExrciseDirectories.user_id'=>$users_id]);
+        if($user_type ==1)
+        {
+        $count = $count->where(['ExrciseDirectories.status !=' => '2']);
+        }
+        if($user_type ==2)
+        {
+       $count = $count->where(['ExrciseDirectories.status !=' => '2']);     
+       $count = $count->where(['OR' =>['ExrciseDirectories.user_id' => $users_id ,'ExrciseDirectories.user_type' =>1]]);    
+       // $count = $count->where(['ExrciseDirectories.status !=' => '2','ExrciseDirectories.user_id'=>$users_id]);
+        }
         $this->paginate = [
             'limit' => $norec, 
             'order' => ['ExrciseDirectories.id' => 'DESC'],
@@ -65,7 +77,7 @@ class ExrciseDirectoriesController extends AppController
         
         $exrciseDirectories = $this->paginate($count);
 
-        $this->set(compact('exrciseDirectories','name','status','norec'));
+        $this->set(compact('exrciseDirectories','name','status','norec','user_type'));
         $this->set('_serialize', ['exrciseDirectories']);
     }
 
@@ -100,10 +112,12 @@ class ExrciseDirectoriesController extends AppController
             return $this->redirect('/');
         }
         $users_id = $this->usersdetail['users_id'];
+        $user_type = $this->usersdetail['users_type'];
         $exrciseDirectory = $this->ExrciseDirectories->newEntity();
         if ($this->request->is('post')) {
             $data = $this->request->data;
             $data['user_id'] = $users_id;
+            $data['user_type'] = $user_type;
             
             $exrciseDirectory = $this->ExrciseDirectories->patchEntity($exrciseDirectory, $data);
             if ($this->ExrciseDirectories->save($exrciseDirectory)) {
