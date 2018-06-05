@@ -131,7 +131,48 @@
     <!-- Demo Js -->
 <!--    <script src="js/demo.js"></script>-->
     <script>
-            $('.select2').select2();
+        $('.select2').select2();
+        $('#forgetPasswordDiv').hide();    
+        $("#showForgetForm").click(function(){
+            $('#forgetPasswordDiv').show();
+            $('#loginDiv').hide();
+        });
+        $("#showLoginForm").click(function(){
+            $('#loginDiv').show();
+            $('#forgetPasswordDiv').hide();
+        });
+        $("#forgetPasswordBtn").click(function(){
+            var formId = '#forgetPasswordForm';
+            var errorDiv = $("#forgetPasswordDiv .customerror");
+            var btn = $("#forgetPasswordBtn");
+            if ($(formId).valid()) {
+                var urllink = '<?= $this->Url->build(['controller' => 'Users', 'action' => 'forgetPassword']) ?>';
+                btn.attr("disabled", "disabled");
+                var postdata = $(formId).serialize();
+                errorDiv.css("display", "none");
+                $.ajax({
+                    url: urllink,
+                    type: 'POST',
+                    data: postdata,
+                    success: function (data) {
+                        var myjson = JSON.parse(data);
+                        if (myjson.msg_type === 'fail') {
+                            errorDiv.html(myjson.msg);
+                            errorDiv.css("display", "block");
+                            btn.removeAttr("disabled");
+                        } else if (myjson.msg_type === 'success') {
+                            errorDiv.html(myjson.msg);
+                            errorDiv.css("display", "block");
+                            btn.removeAttr("disabled");
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+            return false;
+        });
     </script>   
     <footer>
     </footer>
@@ -144,6 +185,7 @@
   gtag('js', new Date());
 
   gtag('config', 'UA-117829826-1');
+  
 </script>
     <?php } ?>
 </body>
