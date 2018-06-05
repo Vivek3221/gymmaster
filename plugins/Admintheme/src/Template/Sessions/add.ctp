@@ -134,10 +134,6 @@ $user_name = $this->Common->getUsers();
                     data: data,
                     url: urls,
                     success: function (html) {
-                      
-                         alert(exrcisedirectorie_id);
-                         
-                       
                         $('#getexercise').append(html);
                         if(start!=100){
                             var last = (exrcisedirectorie_id+dstart)-1;
@@ -171,7 +167,7 @@ $user_name = $this->Common->getUsers();
             if (exrcisedirectorie_id)
             {
                 var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExriceMore']) ?>';
-                 alert(urls)
+                // alert(urls)
                 //urllink = urls + '/' + bank_name ;
                 var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start);
                 alert(data);
