@@ -87,7 +87,7 @@ class ExrciseDirectoriesController extends AppController
         
         $exrciseDirectories = $this->paginate($count);
 
-        $this->set(compact('exrciseDirectories','name','status','norec','user_type','partner','Admin'));
+        $this->set(compact('exrciseDirectories','name','status','norec','user_type','partner','Admin','users_id'));
         $this->set('_serialize', ['exrciseDirectories']);
     }
 

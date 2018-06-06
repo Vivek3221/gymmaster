@@ -19,9 +19,25 @@ $getAdmin = $this->Common->getAdmin();
                         </h2>
                     </div>
                     <div class="body">
+                        <?php if($user_type == 1)
+                            { ?>
+                        <div class="row">
+                        <div class="col-md-3">
+                                <?= $this->Html->link(__('Admin'), ['controller' => 'ExrciseDirectories','admin'=>1], ['class' => 'btn btn-primary']) ?>
+                            </div>
+                            </div>
+                            <?php } ?>
+                        <?php if($user_type == 2)
+                            { ?>
+                        <div class="row">
+                        <div class="col-md-3">
+                                <?= $this->Html->link(__('partner'), ['controller' => 'ExrciseDirectories','partner'=>$users_id], ['class' => 'btn btn-primary']) ?>
+                            </div>
+                            </div>
+                            <?php } ?>
                         <div class="box-body">
                             <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'ExrciseDirectories', 'action' => 'index']]) ?>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <?php echo $this->Form->input('name', ['label' => __('Exercise Name'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('-- Exercise Name --'), 'value' => $name]); ?>
                             </div>
                             <div class="col-md-2">
@@ -32,6 +48,9 @@ $getAdmin = $this->Common->getAdmin();
                             <div class="col-md-2">
                                 <?php echo $this->Form->input('partner', ['label' => __('Partner'), 'class' => 'form-control', 'empty' => __('Select Partner'), 'options' => $getpartner, 'value' => $partner]); ?>
                             </div>
+<!--                            <div class="col-md-2">
+                                <?php echo $this->Form->input('admin', ['label' => __('Admin'), 'class' => 'form-control', 'empty' => __('Select Admin'), 'options' => $getAdmin, 'value' => $Admin]); ?>
+                            </div>-->
                             <?php } ?>
                             <?php if($user_type == 2)
                             { ?>
