@@ -1,13 +1,11 @@
 
 <?php if($start_id == "100"){ ?>
 <tr class="thead">
-    
     <td><?= ucfirst($get_exrcisedirectories->tecnical1); ?> </td>
     <td><?= ucfirst($get_exrcisedirectories->tecnical2); ?></td>
     <td><?= ucfirst($get_exrcisedirectories->tecnical3); ?></td>
     <td><?= ucfirst($get_exrcisedirectories->tecnical4); ?> </td>
     <td><?= ucfirst('action') ?></th>
-  
  </tr>
 <?php } ?>
 
