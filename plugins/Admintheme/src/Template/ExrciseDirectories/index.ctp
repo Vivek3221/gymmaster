@@ -90,15 +90,54 @@ $getAdmin = $this->Common->getAdmin();
 
                                             <td><?= $exrciseDirectory['name'] ?></td>
                                             <td> <?php
+                                            if($user_type == 1 )
+                                                {
                                                 if (isset($exrciseDirectory->status) && $exrciseDirectory->status == '1') {
                                                     ?>
 
                                                     <?= $this->Form->button('Active', ['class' => 'btn btn-success waves-effect', 'id' => $exrciseDirectory->id, 'value' => $exrciseDirectory->status, 'onclick' => 'updateStatus(this.id,' . $exrciseDirectory->status . ')']) ?>
-                                                    <?php
+                                                    
+                                                        <?php
                                                 } else {
                                                     ?>
                                                     <?= $this->Form->button('Inactive', ['class' => 'btn btn-primary waves-effect', 'id' => $exrciseDirectory->id, 'value' => $exrciseDirectory->status, 'onclick' => 'updateStatus(this.id,' . $exrciseDirectory->status . ')']) ?>
                                                     <?php
+                                                }
+                                                }
+                                            if($user_type == 2 )
+                                                {
+                                                if (isset($exrciseDirectory->status) && $exrciseDirectory->status == '1') {
+                                                    if($exrciseDirectory['user_type'] == 2 )
+                                                {
+                                                    ?>
+
+                                                    <?= $this->Form->button('Active', ['class' => 'btn btn-success waves-effect', 'id' => $exrciseDirectory->id, 'value' => $exrciseDirectory->status, 'onclick' => 'updateStatus(this.id,' . $exrciseDirectory->status . ')']) ?>
+                                                    
+                                                        <?php
+                                                } else {
+                                                   ?>
+
+                                                    <?= $this->Form->button('Active',['class' => 'btn btn-success waves-effect']) ?>
+                                                    
+                                                        <?php 
+                                                    
+                                                }  } else {
+                                                    if($exrciseDirectory['user_type'] == 2 )
+                                                {
+                                                    ?>
+                                                    <?= $this->Form->button('Inactive', ['class' => 'btn btn-primary waves-effect', 'id' => $exrciseDirectory->id, 'value' => $exrciseDirectory->status, 'onclick' => 'updateStatus(this.id,' . $exrciseDirectory->status . ')']) ?>
+                                                    <?php
+                                                }
+                                                else {
+                                                   ?>
+
+                                                    <?= $this->Form->button('Inactive',['class' => 'btn btn-primary waves-effect']) ?>
+                                                    
+                                                        <?php 
+                                                    
+                                                }
+                                                
+                                                }
                                                 }
                                                 ?>
                                             </td>
