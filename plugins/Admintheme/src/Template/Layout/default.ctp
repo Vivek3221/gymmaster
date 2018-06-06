@@ -75,7 +75,7 @@
   <?= $this->Html->script('jquery.min.js') ?>
 </head>
 <body>
-    <?php if (($this->request->action != 'adminLogin')) { ?>
+    <?php if ($this->request->action != 'adminLogin' && $this->request->action != 'resetPassword') { ?>
     <?php
      echo $this->element('header');
      echo $this->element('left_nav');

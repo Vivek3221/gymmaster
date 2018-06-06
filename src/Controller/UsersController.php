@@ -31,7 +31,7 @@ class UsersController extends AppController
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
        // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment','forgetPassword']);
+        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment','forgetPassword','resetPassword']);
         
     }
 
@@ -490,6 +490,17 @@ class UsersController extends AppController
         
         echo json_encode($result);
         exit();
+    }
+    
+    /*
+     * forget password
+     */
+    public function resetPassword($token) {
+        //step-1 check token is valid and not expired
+        //if post 
+        // check password and confirm password are same
+        // update password in users table
+        // redirect to login page
     }
 
     public function beforeRender(\Cake\Event\Event $event) {
