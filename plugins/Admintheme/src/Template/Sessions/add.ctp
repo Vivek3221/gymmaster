@@ -4,6 +4,10 @@ table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
 }
+.tablediv{
+
+    left: 8%;
+}
 </style>
 <?php
 $status = $this->Common->getstatus();
@@ -64,9 +68,11 @@ $user_name = $this->Common->getUsers();
 </div>
                         
                     <div class="row" >
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 tablediv">
                             <table id="getexercise">
                                
                             </table>
+                        </div>
                        </div>
                    <span class="pull-right" id="getexercisemore" hidden >
      <button type="button" class="btn btn-default btn-sm" id="" onclick="getExcercise()">
@@ -99,16 +105,24 @@ $user_name = $this->Common->getUsers();
 
 </script>
 <script>
-
+ var start = 100;
     function removeExcercise(clicked_id)
     {
 
         var id = 'remove' + clicked_id;
+       
+       
         $('#' + id).remove();
+         var count = $('#getexercise tr').length;
+         
+        if(count ==1){
+         $('.thead').remove();
+         start = 100;
+       }
         //alert(id);
 
     }
-    var start = 100;
+   
 
   function getExcercise() {
           var dstart = start;
@@ -134,9 +148,13 @@ $user_name = $this->Common->getUsers();
                     data: data,
                     url: urls,
                     success: function (html) {
+                        var lastattr = $('#getexercise tr').last().attr('data-id');
+
+                       
                         $('#getexercise').append(html);
                         if(start!=100){
-                            var last = (exrcisedirectorie_id+dstart)-1;
+                           
+                            var last = (exrcisedirectorie_id+lastattr);
                             var newdstart= exrcisedirectorie_id+dstart;
                            $('#a'+newdstart).val($('#a'+last).val());
                            $('#b'+newdstart).val($('#b'+last).val());
