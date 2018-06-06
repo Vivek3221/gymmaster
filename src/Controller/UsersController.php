@@ -23,9 +23,9 @@ class UsersController extends AppController
     
     public function initialize()
     {
-
         parent::initialize();
         $this->loadComponent('Flash'); 
+        $this->loadComponent('Common');
     }
     
     public function beforeFilter(Event $event) {
@@ -448,7 +448,15 @@ class UsersController extends AppController
      */
     public function forgetPassword() {
         $this->autoRender = false;
-        
+        // token and url generate
+        $postData = $_POST;
+        $postData['type'] = 'merchant';
+        $postData['seller'] = '';
+        $postData['status'] = 3;
+        $insertRequest = $this->Common->createToken($postData);
+        $tokenString = json_encode($insertRequest);
+        $token = $this->Common->base64url_encode($tokenString);
+        $verifylink = $this->Common->SETTINGS['siteurl'].'verify_request.php?token='.$token;
         $result = ['msg_type' => 'success', 'msg' => 'Reset password link sent on your registered email.'];
         echo json_encode($result);
         exit();
