@@ -1,4 +1,4 @@
-
+    
 <?php
 $statu = $this->Common->getstatus();
 $nofrec = $this->Common->getNoOfRec();
@@ -31,7 +31,7 @@ $getAdmin = $this->Common->getAdmin();
                             { ?>
                         <div class="row">
                         <div class="col-md-3">
-                                <?= $this->Html->link(__('partner'), ['controller' => 'ExrciseDirectories','partner'=>$users_id], ['class' => 'btn btn-primary']) ?>
+                                <?= $this->Html->link(__('Own Exercise'), ['controller' => 'ExrciseDirectories','partner'=>$users_id], ['class' => 'btn btn-primary']) ?>
                             </div>
                             </div>
                             <?php } ?>
@@ -46,7 +46,7 @@ $getAdmin = $this->Common->getAdmin();
                             <?php if($user_type == 1)
                             { ?>
                             <div class="col-md-2">
-                                <?php echo $this->Form->input('partner', ['label' => __('Partner'), 'class' => 'form-control', 'empty' => __('Select Partner'), 'options' => $getpartner, 'value' => $partner]); ?>
+                                <?php echo $this->Form->input('partner', ['label' => __('Partner'), 'class' => 'form-control select2', 'empty' => __('Select Partner'), 'options' => $getpartner, 'value' => $partner]); ?>
                             </div>
 <!--                            <div class="col-md-2">
                                 <?php echo $this->Form->input('admin', ['label' => __('Admin'), 'class' => 'form-control', 'empty' => __('Select Admin'), 'options' => $getAdmin, 'value' => $Admin]); ?>
