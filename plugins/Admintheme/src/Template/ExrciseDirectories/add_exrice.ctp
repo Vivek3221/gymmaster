@@ -1,31 +1,30 @@
 
-<span  id="remove<?= $get_exrcisedirectories->id.$start_id ?>">
-   
-
-    <input type="text" id="<?= $exrcisedirectorie_id ?>" value="<?= $exrcisedirectorie_id ?>" hidden>
-   
 <?php if($start_id == "100"){ ?>
-<tr>
-    
-    <th><?= ucfirst($get_exrcisedirectories->tecnical1); ?> </th>
-    <th><?= ucfirst($get_exrcisedirectories->tecnical2); ?></th>
-    <th><?= ucfirst($get_exrcisedirectories->tecnical3); ?></th>
-    <th><?= ucfirst($get_exrcisedirectories->tecnical4); ?> </th>
-    <th><?= ucfirst('action') ?></th>
-  
+<tr class="thead">
+    <td><?= ucfirst($get_exrcisedirectories->tecnical1); ?> </td>
+    <td><?= ucfirst($get_exrcisedirectories->tecnical2); ?></td>
+    <td><?= ucfirst($get_exrcisedirectories->tecnical3); ?></td>
+    <td><?= ucfirst($get_exrcisedirectories->tecnical4); ?> </td>
+    <td><?= ucfirst('action') ?></th>
  </tr>
 <?php } ?>
-    <tr>
+
+   
+
+   
+   
+    <tr  id="remove<?= $get_exrcisedirectories->id.$start_id ?>" data-id="<?=$start_id ?>">
         <td> 
+             <input type="text" id="<?= $exrcisedirectorie_id ?>" value="<?= $exrcisedirectorie_id ?>" hidden>
 
             <?= $this->Form->control('excrcise['.$get_exrcisedirectories->id . '][' . $new_id . '][' . $get_exrcisedirectories->tecnical1 . ']', [ 'type' => 'text','id'=>'a'.$get_exrcisedirectories->id.$start_id, 'templates' => [
                     'inputContainer' => '{{content}}'
-                ], 'label' => false, 'required']) ?> 
-        <td/>
+                ], 'label' => false, 'required']); ?> 
+        </td>
         <td>
              <?= $this->Form->control('excrcise['.$get_exrcisedirectories->id . '][' . $new_id . '][' . $get_exrcisedirectories->tecnical2 . ']', [ 'type' => 'text','id'=>'b'.$get_exrcisedirectories->id.$start_id, 'templates' => [
             'inputContainer' => '{{content}}'
-        ], 'onkeyup'=>'getSum2(this.id)','label' => false, 'required']) ?> 
+        ], 'onkeyup'=>'getSum2(this.id)','label' => false, 'required']); ?> 
         </td>
         <td>
              
@@ -47,5 +46,4 @@
     </tr>
     
 
-</span>
 

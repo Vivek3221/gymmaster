@@ -1,7 +1,9 @@
-
+    
 <?php
 $statu = $this->Common->getstatus();
 $nofrec = $this->Common->getNoOfRec();
+$getpartner = $this->Common->getpartner();
+$getAdmin = $this->Common->getAdmin();
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -17,14 +19,45 @@ $nofrec = $this->Common->getNoOfRec();
                         </h2>
                     </div>
                     <div class="body">
+                        <?php if($user_type == 1)
+                            { ?>
+                        <div class="row">
+                        <div class="col-md-3">
+                                <?= $this->Html->link(__('Admin'), ['controller' => 'ExrciseDirectories','admin'=>1], ['class' => 'btn btn-primary']) ?>
+                            </div>
+                            </div>
+                            <?php } ?>
+                        <?php if($user_type == 2)
+                            { ?>
+                        <div class="row">
+                        <div class="col-md-3">
+                                <?= $this->Html->link(__('Own Exercise'), ['controller' => 'ExrciseDirectories','partner'=>$users_id], ['class' => 'btn btn-primary']) ?>
+                            </div>
+                            </div>
+                            <?php } ?>
                         <div class="box-body">
                             <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'ExrciseDirectories', 'action' => 'index']]) ?>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <?php echo $this->Form->input('name', ['label' => __('Exercise Name'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('-- Exercise Name --'), 'value' => $name]); ?>
                             </div>
                             <div class="col-md-2">
                                 <?php echo $this->Form->input('status', ['label' => __('Status'), 'class' => 'form-control', 'empty' => __('Select Status'), 'options' => $statu, 'value' => $status]); ?>
                             </div>
+                            <?php if($user_type == 1)
+                            { ?>
+                            <div class="col-md-2">
+                                <?php echo $this->Form->input('partner', ['label' => __('Partner'), 'class' => 'form-control select2', 'empty' => __('Select Partner'), 'options' => $getpartner, 'value' => $partner]); ?>
+                            </div>
+<!--                            <div class="col-md-2">
+                                <?php echo $this->Form->input('admin', ['label' => __('Admin'), 'class' => 'form-control', 'empty' => __('Select Admin'), 'options' => $getAdmin, 'value' => $Admin]); ?>
+                            </div>-->
+                            <?php } ?>
+                            <?php if($user_type == 2)
+                            { ?>
+                            <div class="col-md-2">
+                                <?php echo $this->Form->input('admin', ['label' => __('Admin'), 'class' => 'form-control', 'empty' => __('Select Admin'), 'options' => $getAdmin, 'value' => $Admin]); ?>
+                            </div>
+                            <?php } ?>
                             <div class="col-md-2">
                                 <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'), 'options' => $nofrec, 'value' => $norec]); ?>
                             </div>
