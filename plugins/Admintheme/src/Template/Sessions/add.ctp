@@ -111,7 +111,6 @@ $user_name = $this->Common->getUsers();
 
         var id = 'remove' + clicked_id;
        
-       
         $('#' + id).remove();
          var count = $('#getexercise tr').length;
          
@@ -119,8 +118,7 @@ $user_name = $this->Common->getUsers();
          $('.thead').remove();
          start = 100;
        }
-        //alert(id);
-
+     
     }
    
 
@@ -128,13 +126,9 @@ $user_name = $this->Common->getUsers();
           var dstart = start;
 
             var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
-          // alert(exrcisedirectorie_id);
+     
             var next_id = $('#exrcisedirectorie_id').val();
-             // alert(exrcisedirectorie_id);
-              
-              
-              
-            //  
+            
             if (exrcisedirectorie_id)
             {
                 var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
@@ -149,15 +143,12 @@ $user_name = $this->Common->getUsers();
                     url: urls,
                     success: function (html) {
                         var lastattr = $('#getexercise tr').last().attr('data-id');
-
-                       
                         $('#getexercise').append(html);
                         if(start!=100){
-                           
                             var last = (exrcisedirectorie_id+lastattr);
                             var newdstart= exrcisedirectorie_id+dstart;
-                           $('#a'+newdstart).val($('#a'+last).val());
-                           $('#b'+newdstart).val($('#b'+last).val());
+                            $('#a'+newdstart).val($('#a'+last).val());
+                            $('#b'+newdstart).val($('#b'+last).val());
                             $('#c'+newdstart).val($('#c'+last).val());
                             $('#d'+newdstart).val($('#d'+last).val());
                         }
