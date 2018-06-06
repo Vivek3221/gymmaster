@@ -36,6 +36,8 @@ class ExrciseDirectoriesController extends AppController
         $name = '';
         $norec = 10;
         $status = '';
+        $partner = '';
+        $Admin = '';
         $search = [];
         $users_id = $this->usersdetail['users_id'];
         $user_type = $this->usersdetail['users_type'];
@@ -48,6 +50,14 @@ class ExrciseDirectoriesController extends AppController
          if (isset($this->request->query['status']) && trim($this->request->query['status']) != "") {
             $status = $this->request->query['status'];
             $search['ExrciseDirectories.status'] = $status;
+        }
+         if (isset($this->request->query['partner']) && trim($this->request->query['partner']) != "") {
+            $partner = $this->request->query['partner'];
+            $search['ExrciseDirectories.user_id'] = $partner;
+        }
+         if (isset($this->request->query['admin']) && trim($this->request->query['admin']) != "") {
+            $Admin = $this->request->query['admin'];
+            $search['ExrciseDirectories.user_type'] = $Admin;
         }
         if (isset($this->request->query['norec']) && trim($this->request->query['norec']) != "") {
             $norec = $this->request->query['norec'];
@@ -77,7 +87,7 @@ class ExrciseDirectoriesController extends AppController
         
         $exrciseDirectories = $this->paginate($count);
 
-        $this->set(compact('exrciseDirectories','name','status','norec','user_type'));
+        $this->set(compact('exrciseDirectories','name','status','norec','user_type','partner','Admin'));
         $this->set('_serialize', ['exrciseDirectories']);
     }
 

@@ -2,6 +2,8 @@
 <?php
 $statu = $this->Common->getstatus();
 $nofrec = $this->Common->getNoOfRec();
+$getpartner = $this->Common->getpartner();
+$getAdmin = $this->Common->getAdmin();
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -25,6 +27,18 @@ $nofrec = $this->Common->getNoOfRec();
                             <div class="col-md-2">
                                 <?php echo $this->Form->input('status', ['label' => __('Status'), 'class' => 'form-control', 'empty' => __('Select Status'), 'options' => $statu, 'value' => $status]); ?>
                             </div>
+                            <?php if($user_type == 1)
+                            { ?>
+                            <div class="col-md-2">
+                                <?php echo $this->Form->input('partner', ['label' => __('Partner'), 'class' => 'form-control', 'empty' => __('Select Partner'), 'options' => $getpartner, 'value' => $partner]); ?>
+                            </div>
+                            <?php } ?>
+                            <?php if($user_type == 2)
+                            { ?>
+                            <div class="col-md-2">
+                                <?php echo $this->Form->input('admin', ['label' => __('Admin'), 'class' => 'form-control', 'empty' => __('Select Admin'), 'options' => $getAdmin, 'value' => $Admin]); ?>
+                            </div>
+                            <?php } ?>
                             <div class="col-md-2">
                                 <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'), 'options' => $nofrec, 'value' => $norec]); ?>
                             </div>
