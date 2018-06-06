@@ -117,7 +117,7 @@ $getAdmin = $this->Common->getAdmin();
                                                 } else {
                                                    ?>
 
-                                                    <?= $this->Form->button('Active',['class' => 'btn btn-primary waves-effect']) ?>
+                                                    <?= $this->Form->button('Active',['class' => 'btn btn-success waves-effect']) ?>
                                                     
                                                         <?php 
                                                     
