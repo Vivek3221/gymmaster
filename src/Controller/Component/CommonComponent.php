@@ -33,24 +33,12 @@ class CommonComponent  extends Component {
      */
     function createToken($data) {
         $this->Tokens    = TableRegistry::get('Tokens');
-        $query    = "INSERT INTO " . $DBPrefix . "requests 
-                    (sender,  merchant, nimbuzz_id, nimbucks, status, type, seller, created, modified) VALUES
-                    (:sender, :merchant, :nimbuzz_id, :nimbucks, :status, :type, :seller, :created,:modified)";
-        $params   = [];
-        $params[] = [':sender', $_SESSION['NIMBUZZ_ID'], 'str'];
-        $params[] = [':merchant', $data['merchant'], 'str'];
-        $params[] = [':nimbuzz_id', $data['nimbuzzid'], 'str'];
-        $params[] = [':nimbucks', $data['price'], 'int'];
-        $params[] = [':status', $data['status'], 'str'];
-        $params[] = [':type', $data['type'], 'str'];
-        $params[] = [':seller', $data['seller'], 'str'];
-        $params[] = [':created', $now, 'int'];
-        $params[] = [':modified', $now, 'int'];
-        $db->query($query, $params);
-        if($db->lastInsertId()){
-            return ['created'=>$now, 'requestid'=>$db->lastInsertId()];
+        $token = $this->Tokens->newEntity();
+        $token = $this->Tokens->patchEntity($token, $data);
+        if ($this->Tokens->save($token)) {
+            return true;
         } else {
-            return [];
+            return false;
         }
     }
     

@@ -448,16 +448,46 @@ class UsersController extends AppController
      */
     public function forgetPassword() {
         $this->autoRender = false;
-        // token and url generate
-        $postData = $_POST;
-        $postData['type'] = 'merchant';
-        $postData['seller'] = '';
-        $postData['status'] = 3;
-        $insertRequest = $this->Common->createToken($postData);
-        $tokenString = json_encode($insertRequest);
-        $token = $this->Common->base64url_encode($tokenString);
-        $verifylink = $this->Common->SETTINGS['siteurl'].'verify_request.php?token='.$token;
-        $result = ['msg_type' => 'success', 'msg' => 'Reset password link sent on your registered email.'];
+        // check email is registered with us
+        $userData = $this->Users->find()->select(['id','name'])->where(['email' => $this->request->data['email']]);
+        if($userData->count()) {
+            // token and url generate
+            $userData = $userData->first();
+            $userid = $userData->id;
+            $useremail = $this->request->data['email'];
+            $tokenString = json_encode(['id'=>$userid, 'email'=>$useremail]);
+            $token = $this->Common->base64url_encode($tokenString);
+            $postData = $this->request->data;
+            $postData['user_id'] = $userid;
+            $postData['token'] = $token;
+            $postData['status'] = 1;
+            $insertRequest = $this->Common->createToken($postData);
+            if(!empty($insertRequest)) {
+                $subject = 'Reset password link';
+                $verifylink = SITE_URL.'reset-password/'.$token;
+                $userDataArr['name']  = $userData->name;
+                $userDataArr['link']  = $verifylink;
+                $email      = new Email();
+                $email->transport('default');
+                try {
+                    $email->emailFormat('html');
+                    $email->template('forgetPassword')
+                            ->from(['support@datamonitering.com' => 'Datamonitoring'])
+                            ->to($useremail)
+                            ->subject($subject)
+                            ->viewVars($userDataArr)
+                            ->send();
+                } catch (Exception $e) {
+                    
+                }
+                $result = ['msg_type' => 'success', 'msg' => 'Reset password link sent on your registered email.'];
+            } else {
+                $result = ['msg_type' => 'fail', 'msg' => 'Some error, please try again.'];
+            }
+        } else {
+            $result = ['msg_type' => 'fail', 'msg' => 'Enter valid email id.'];
+        }
+        
         echo json_encode($result);
         exit();
     }

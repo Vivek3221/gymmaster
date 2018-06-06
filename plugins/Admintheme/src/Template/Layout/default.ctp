@@ -157,14 +157,13 @@
                     success: function (data) {
                         var myjson = JSON.parse(data);
                         if (myjson.msg_type === 'fail') {
-                            errorDiv.html(myjson.msg);
-                            errorDiv.css("display", "block");
-                            btn.removeAttr("disabled");
+                            errorDiv.html('<span style="color:red">'+myjson.msg+'</span>');
                         } else if (myjson.msg_type === 'success') {
-                            errorDiv.html(myjson.msg);
-                            errorDiv.css("display", "block");
-                            btn.removeAttr("disabled");
+                            errorDiv.html('<span style="color:green">'+myjson.msg+'</span>');
+                            $('#forget-email').val('');
                         }
+                        errorDiv.css("display", "block");
+                        btn.removeAttr("disabled");
                     },
                     error: function () {
 

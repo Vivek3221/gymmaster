@@ -41,15 +41,15 @@
             <div class="body" id="forgetPasswordDiv">
                 <?= $this->Form->create(null, ['url' => ['controller' => 'Users', 'action' => 'login'], 'id' => 'forgetPasswordForm', 'novalidate' => 'novalidate']) ?>
                 <div class="msg">Enter your registered email</div>
-                <div class="customerror"></div>
                 <div class="input-group">
                     <span class="input-group-addon">
                         <i class="material-icons">person</i>
                     </span>
                     <div class="form-line">
-                        <?= $this->Form->control('email', ['class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter email id', 'label' => false]) ?> 
+                        <?= $this->Form->control('email', ['id'=>'forget-email','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter email id', 'label' => false]) ?> 
                     </div>
                 </div>
+                <div class="customerror"></div>
                 <div class="row">
                     <div class="col-xs-4">
                         <button class="btn btn-block bg-pink waves-effect" id="forgetPasswordBtn" type="button"><?= __('Send Email') ?></button>
