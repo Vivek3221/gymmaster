@@ -198,8 +198,18 @@ class CommonHelper extends Helper {
         return $session;
         
     }
+    public function getpartner(){
+        $get_users = TableRegistry::get('Users');
+        $get_users_name = $get_users->find('list')
+                                    ->where(['active' => 1,'user_type' =>2])
+                                    ->toArray(); 
+        return $get_users_name;
+        
+    }
  
-
+    public function getAdmin() {
+        return['1' => 'Admin'];
+    }
 
     
     /*
