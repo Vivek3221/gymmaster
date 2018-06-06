@@ -114,13 +114,30 @@ $getAdmin = $this->Common->getAdmin();
                                                     <?= $this->Form->button('Active', ['class' => 'btn btn-success waves-effect', 'id' => $exrciseDirectory->id, 'value' => $exrciseDirectory->status, 'onclick' => 'updateStatus(this.id,' . $exrciseDirectory->status . ')']) ?>
                                                     
                                                         <?php
-                                                } } else {
+                                                } else {
+                                                   ?>
+
+                                                    <?= $this->Form->button('Active',['class' => 'btn btn-primary waves-effect']) ?>
+                                                    
+                                                        <?php 
+                                                    
+                                                }  } else {
                                                     if($exrciseDirectory['user_type'] == 2 )
                                                 {
                                                     ?>
                                                     <?= $this->Form->button('Inactive', ['class' => 'btn btn-primary waves-effect', 'id' => $exrciseDirectory->id, 'value' => $exrciseDirectory->status, 'onclick' => 'updateStatus(this.id,' . $exrciseDirectory->status . ')']) ?>
                                                     <?php
-                                                } }
+                                                }
+                                                else {
+                                                   ?>
+
+                                                    <?= $this->Form->button('Inactive',['class' => 'btn btn-primary waves-effect']) ?>
+                                                    
+                                                        <?php 
+                                                    
+                                                }
+                                                
+                                                }
                                                 }
                                                 ?>
                                             </td>
