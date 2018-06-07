@@ -7,14 +7,14 @@
         <div class="card">
             <!-- start reset password form -->
             <div class="body" id="resetDiv">
-                <?= $this->Form->create('Reset Password Form', ['url' => ['controller' => 'Users', 'action' => 'resetPassword'], 'id' => 'resetPasswordForm', 'novalidate' => 'novalidate']) ?>
+                <?= $this->Form->create('Reset Password Form', ['url' => ['controller' => 'Users', 'action' => 'resetPassword', $token], 'id' => 'resetPasswordForm', 'novalidate' => 'novalidate']) ?>
                 <div class="msg">Reset your password</div>
                 <div class="input-group">
                     <span class="input-group-addon">
-                        <i class="material-icons">person</i>
+                        <i class="material-icons">lock</i>
                     </span>
                     <div class="form-line">
-                        <?= $this->Form->control('email', ['class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter new password', 'label' => false]) ?> 
+                        <?= $this->Form->control('newpassword', ['class' => 'form-control', 'type' => 'password', 'placeholder' => 'Enter new password', 'label' => false]) ?> 
                     </div>
                 </div>
                 <div class="input-group">
@@ -22,7 +22,7 @@
                         <i class="material-icons">lock</i>
                     </span>
                     <div class="form-line">
-                        <?= $this->Form->control('password', ['class' => 'form-control', 'type' => 'password', 'placeholder' => 'Confirm password', 'label' => false]) ?> 
+                        <?= $this->Form->control('confirmpassword', ['class' => 'form-control', 'type' => 'password', 'placeholder' => 'Confirm password', 'label' => false]) ?> 
                     </div>
                 </div>
                 <div class="row">
