@@ -23,15 +23,15 @@ class UsersController extends AppController
     
     public function initialize()
     {
-
         parent::initialize();
         $this->loadComponent('Flash'); 
+        $this->loadComponent('Common');
     }
     
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
        // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment']);
+        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment','forgetPassword','resetPassword']);
         
     }
 
@@ -381,10 +381,12 @@ class UsersController extends AppController
         }
     }
     
-     public function adminLogin()
-      {
+    /*
+    *Login UI function
+    */
+    public function adminLogin() {
      
-       }
+    }
       public function dashboard(){
              if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
@@ -441,12 +443,67 @@ class UsersController extends AppController
              return $this->redirect(['controller' => '/']);
  }
        
+    /*
+     * forget password
+     */
+    public function forgetPassword() {
+        $this->autoRender = false;
+        // check email is registered with us
+        $userData = $this->Users->find()->select(['id','name'])->where(['email' => $this->request->data['email']]);
+        if($userData->count()) {
+            // token and url generate
+            $userData = $userData->first();
+            $userid = $userData->id;
+            $useremail = $this->request->data['email'];
+            $tokenString = json_encode(['id'=>$userid, 'email'=>$useremail]);
+            $token = $this->Common->base64url_encode($tokenString);
+            $postData = $this->request->data;
+            $postData['user_id'] = $userid;
+            $postData['token'] = $token;
+            $postData['status'] = 1;
+            $insertRequest = $this->Common->createToken($postData);
+            if(!empty($insertRequest)) {
+                $subject = 'Reset password link';
+                $verifylink = SITE_URL.'reset-password/'.$token;
+                $userDataArr['name']  = $userData->name;
+                $userDataArr['link']  = $verifylink;
+                $email      = new Email();
+                $email->transport('default');
+                try {
+                    $email->emailFormat('html');
+                    $email->template('forgetPassword')
+                            ->from(['support@datamonitering.com' => 'Datamonitoring'])
+                            ->to($useremail)
+                            ->subject($subject)
+                            ->viewVars($userDataArr)
+                            ->send();
+                } catch (Exception $e) {
+                    
+                }
+                $result = ['msg_type' => 'success', 'msg' => 'Reset password link sent on your registered email.'];
+            } else {
+                $result = ['msg_type' => 'fail', 'msg' => 'Some error, please try again.'];
+            }
+        } else {
+            $result = ['msg_type' => 'fail', 'msg' => 'Enter valid email id.'];
+        }
+        
+        echo json_encode($result);
+        exit();
+    }
     
-    
+    /*
+     * forget password
+     */
+    public function resetPassword($token) {
+        //step-1 check token is valid and not expired
+        //if post 
+        // check password and confirm password are same
+        // update password in users table
+        // redirect to login page
+    }
 
-    
-    
-     public function beforeRender(\Cake\Event\Event $event) {
+    public function beforeRender(\Cake\Event\Event $event) {
         parent::beforeRender($event);
         $this->viewBuilder()->theme('Admintheme');
     }
