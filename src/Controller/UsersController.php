@@ -485,7 +485,7 @@ class UsersController extends AppController
                 $result = ['msg_type' => 'fail', 'msg' => 'Some error, please try again.'];
             }
         } else {
-            $result = ['msg_type' => 'fail', 'msg' => 'Enter valid email id.'];
+            $result = ['msg_type' => 'fail', 'msg' => 'This email is not registered with us.'];
         }
         
         echo json_encode($result);
@@ -509,7 +509,7 @@ class UsersController extends AppController
                 if ($this->request->is('post')) {
                     $postData = $this->request->data;
                     // check password and confirm password are same
-                    if($postData['newpassword'] == $postData['confirmpassword']) {
+                    if($postData['newpassword'] == $postData['confirmpassword'] && !empty($postData['newpassword'])) {
                         // update password in users table
                         $user = $this->Users->get($tokenArray['id']);
                         $data['password'] = md5($postData['newpassword']);
