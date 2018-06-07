@@ -85,6 +85,10 @@ define('CORE_PATH', CAKE_CORE_INCLUDE_PATH . DS);
 define('CAKE', CORE_PATH . 'src' . DS);
 
 /**
- * site url
+ * site url  127.0.0.1
  */
-define('SITE_URL', 'http://datamonitering.com/');
+if($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1') {
+    define('SITE_URL', 'http://127.0.0.1/gymmaster/');
+} else {
+    define('SITE_URL', 'http://datamonitering.com/');
+}
