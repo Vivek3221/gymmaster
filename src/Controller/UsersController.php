@@ -455,7 +455,7 @@ class UsersController extends AppController
             $userData = $userData->first();
             $userid = $userData->id;
             $useremail = $this->request->data['email'];
-            $tokenString = json_encode(['id'=>$userid, 'email'=>$useremail]);
+            $tokenString = json_encode(['id'=>$userid, 'email'=>$useremail, 'uid'=>time()]);
             $token = $this->Common->base64url_encode($tokenString);
             $postData = $this->request->data;
             $postData['user_id'] = $userid;
@@ -496,11 +496,45 @@ class UsersController extends AppController
      * forget password
      */
     public function resetPassword($token) {
-        //step-1 check token is valid and not expired
-        //if post 
-        // check password and confirm password are same
-        // update password in users table
-        // redirect to login page
+        $this->Tokens    = TableRegistry::get('Tokens');
+        if(!empty($token)) {
+            $tokenString = $this->Common->base64url_decode($token);
+            $tokenArray  = json_decode($tokenString, true);
+            //step-1 check token is valid and not expired
+            $tokenData    = $this->Tokens->find()->select(['token'])
+                                ->where(['token' => $token,'user_id'=>$tokenArray['id'], 'email'=>$tokenArray['email'], 'created >=' => date('Y-m-d H:i:s', strtotime('-1 Hour'))])
+                                ->order(['id DESC'])->first();
+            if(!empty($tokenData)) {
+                //if post 
+                if ($this->request->is('post')) {
+                    $postData = $this->request->data;
+                    // check password and confirm password are same
+                    if($postData['newpassword'] == $postData['confirmpassword']) {
+                        // update password in users table
+                        $user = $this->Users->get($tokenArray['id']);
+                        $data['password'] = md5($postData['newpassword']);
+                        $user    = $this->Users->patchEntity($user, $data);
+                        $useradd = $this->Users->save($user);
+                        if ($useradd) {
+                            // redirect to login page
+                            $this->Flash->error(__('Password is updated successfully.'));
+                            return $this->redirect(['controller' => 'Users', 'action' => 'adminLogin']);
+                        } else {
+                            $this->Flash->error(__('Some error in updating password.'));
+                        }
+                    } else {
+                        $this->Flash->error(__('New password and comfirm password are not same.'));
+                    }
+                }
+            } else {
+                $this->Flash->error(__('Invalid/expired Url.'));
+            }
+        } else {
+            $this->Flash->error(__('Invalid Url.'));
+            return $this->redirect(['controller' => 'Users', 'action' => 'adminLogin']);
+        }
+        
+        $this->set(compact('token'));
     }
 
     public function beforeRender(\Cake\Event\Event $event) {
