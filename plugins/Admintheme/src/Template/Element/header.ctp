@@ -30,7 +30,7 @@ $session = $this->Common->getSession();
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
                  <a href="" class="navbar-brand">
-                <?= __('Welcome To Data Moniter Admin') ?></a>
+                <?= __('Welcome To Data Monitor Admin') ?></a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
