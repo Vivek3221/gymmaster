@@ -36,7 +36,7 @@
                             <td style="font-size:12px; text-align:justify; padding: 0px 15px;">
                                 <p style="line-height:25px; font-weight: bold; color: #6f6e6e;">
                                     All the Best<br>Thanks & Regards<br>
-                                    Datamonitering 
+                                    Datamonitoring 
                                 </p>
                             </td>
                         </tr>

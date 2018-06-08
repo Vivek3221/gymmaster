@@ -36,7 +36,7 @@
                                 <p style="line-height:25px; font-weight: bold; color: #6f6e6e;">
                                     <?= __('Regards,') ?><br>
                                     <?= __('Support Team,') ?><br>
-                                    <?= __('Datamonitering') ?>
+                                    <?= __('Datamonitoring') ?>
                                 </p>
                             </td>
                         </tr>
