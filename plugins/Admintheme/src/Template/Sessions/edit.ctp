@@ -80,19 +80,21 @@ $user_name = $this->Common->getUsers();
                                             </thead>
                                             <tbody id="addmore<?= $key ?>" >
                                                 <?php $count = count($value);
-                                                 
-                                                $brek = $count/4 ;
-                                                pr($brek);
+                                                $i=0;
                                                 ?>
-                                              <?php $i = 10;  foreach ($value as $val => $vale) {
+                                              <?php foreach ($value as $val => $vale) {
+                                                  if($i%4==0)
+                                                  echo '<tr>';
+                                                    echo '<td>';
+                                                      foreach($vale as $orgVal){
+                                                        echo $orgVal;
+                                                      }
+                                                    echo '</td>'; 
+                                                    $i++;
+                                                  if($i%4==0)
+                                                  echo '</tr>';
                                                   
-                                                  pr($vale);
-                                                    for( $j =1 ; $j<=$brek ; $j++  )
-                                                    {
-                                                        foreach ($vale as $valn => $valen) {
-                                                  ?>
-                                                     <tr> <td> <?= $valen ?>  </td> <td> <?= $valen ?>   </td> <td> <?= $valen ?>   </td> <td> <?= $valen ?>   </td><td> <?= $valen ?>   </td>   </tr>
-                                                    <?php    $i++; } }     $j++; }?>
+                                                       }?>
                                             </tbody>
                                         </table>
                                     </div> 
