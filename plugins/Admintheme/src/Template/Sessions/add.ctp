@@ -69,16 +69,21 @@ $user_name = $this->Common->getUsers();
         <th>Billing Type</th>
         <th>Remove</th>
       </thead>
-      <tbody>
-        <div id="addmore<?= $key ?>">
-       </div>
+      <tbody id="addmore<?= $key ?>" >
+<!--        <div id="addmore<?= $key ?>" >
+       </div>-->
       </tbody>
     </table>
-  </div>  </div>
-<span class="pull-right" id="getexercisemore" hidden >
-     <button type="button" class="btn btn-default btn-sm" id="" onclick="getExcercise()">
+  </div> 
+<span class="pull-left" id="getexercisemore">
+     <button type="button" class="btn btn-default btn-sm" id="<?= $key ?>" onclick="getExcercisemore(this.id)">
         <i class="material-icons">add</i> 
          </button></span>
+</div>
+<!--<span class="pull-right" id="getexercisemore" hidden >
+     <button type="button" class="btn btn-default btn-sm" id="" onclick="getExcercise()">
+        <i class="material-icons">add</i> 
+         </button></span>-->
 <br>  <?php } ?> 
                         <div class="form-group form-float">
                             <div class="form-line">
@@ -120,7 +125,7 @@ $user_name = $this->Common->getUsers();
           // alert(start);
 
             var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
-          alert(exrcisedirectorie_id);
+          //alert(exrcisedirectorie_id);
             var next_id = $('#exrcisedirectorie_id').val();
              // alert(exrcisedirectorie_id);
               
@@ -143,7 +148,7 @@ $user_name = $this->Common->getUsers();
                       
 //                          alert(html);
                         $('#addmore' +exrcisedirectorie_id).append(html);
-                       // $('#getexercisemore').show();
+                      $('#getexercisemore').show();
                     }
                 });
                 
@@ -153,23 +158,22 @@ $user_name = $this->Common->getUsers();
             return false;
         }
   function getExcercisemore(clickid) {
-           alert(clickid);
-
-            var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
-         alert(exrcisedirectorie_id);
+         //  alert(clickid);
+          var exrcisedirectorie_id = clickid;
+          //alert(exrcisedirectorie_id);
             var next_id = $('#exrcisedirectorie_id').val();
              // alert(exrcisedirectorie_id);
               
-              
+              $('#getexercise'+ exrcisedirectorie_id).show();
               
             //  
             if (exrcisedirectorie_id)
             {
-                var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExriceMore']) ?>';
-                 alert(urls)
+                var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
+                // alert(urls)
                 //urllink = urls + '/' + bank_name ;
                 var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start);
-                alert(data);
+                //alert(data);
                     $.ajax({
                     type: "POST",
                     cache: false,
@@ -177,8 +181,9 @@ $user_name = $this->Common->getUsers();
                     url: urls,
                     success: function (html) {
                       
-                         alert(html);
-                        $('#more'+clickid).append(html);
+                          //alert(html);
+                        $('#addmore' +exrcisedirectorie_id).append(html);
+                      $('#getexercisemore').show();
                     }
                 });
                 

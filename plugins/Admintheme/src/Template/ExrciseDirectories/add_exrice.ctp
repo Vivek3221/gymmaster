@@ -1,5 +1,5 @@
  <tr id="remove<?= $get_exrcisedirectories->id.$start_id ?>">
-        <td>
+        <td hidden> 
             <input type="text" id="<?= $exrcisedirectorie_id ?>" value="<?= $exrcisedirectorie_id ?>" hidden>
             </td>
        <td>
