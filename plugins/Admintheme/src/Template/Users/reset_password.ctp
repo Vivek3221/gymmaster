@@ -1,7 +1,7 @@
 <div class="login-page">
     <div class="login-box">
         <div class="logo">
-            <a href="javascript:void(0);">Data Moniter</a>
+            <a href="javascript:void(0);">Data Monitor</a>
             <?= $this->Flash->render() ?>
         </div>
         <div class="card">

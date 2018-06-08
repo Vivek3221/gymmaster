@@ -1,7 +1,7 @@
 <div class="login-page">
     <div class="login-box">
         <div class="logo">
-            <a href="javascript:void(0);">Data Moniter</a>
+            <a href="javascript:void(0);">Data Monitor</a>
             <?= $this->Flash->render() ?>
         </div>
         <div class="card">
@@ -40,7 +40,7 @@
             <!-- start forgot password form -->
             <div class="body" id="forgetPasswordDiv">
                 <?= $this->Form->create(null, ['url' => ['controller' => 'Users', 'action' => 'login'], 'id' => 'forgetPasswordForm', 'novalidate' => 'novalidate']) ?>
-                <div class="msg">Enter your registered email</div>
+                <div class="msg">Enter your registered email Id.</div>
                 <div class="input-group">
                     <span class="input-group-addon">
                         <i class="material-icons">person</i>

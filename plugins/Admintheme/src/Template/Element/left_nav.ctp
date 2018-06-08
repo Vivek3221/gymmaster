@@ -93,7 +93,7 @@ $action = $this->request['action'];
         <!-- Footer -->
         <div class="legal">
             <div class="copyright">
-                &copy; 2018 <a href="javascript:void(0);"><?= __('Data moniter admin') ?></a>.
+                &copy; 2018 <a href="javascript:void(0);"><?= __('Data monitor admin') ?></a>.
             </div>
             <div class="version">
                 <b><?= __('Version') ?>: </b> 1.0.4
