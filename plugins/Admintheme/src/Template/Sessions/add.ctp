@@ -56,17 +56,18 @@ $user_name = $this->Common->getUsers();
    </span>
 </div>
    <?php   foreach ($get_exrcisedirectorie_lists as $key=>$get_exrcisedirectorie_list){ ?>                     
-<div class="row" id="getexercise<?= $key ?>" hidden>
+<div class="row" id="getexercise<?= $key ?>" hidden >
     
     <span class=""> <?= ucfirst($get_exrcisedirectorie_list) ?></span>
     
   <div class="table-responsive">
     <table class="table table-bordered table-striped table-highlight">
       <thead>
-        <th>Name</th>
-        <th>Date</th>
-        <th>Cost</th>
-        <th>Billing Type</th>
+          <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
+        <th><?= $ex_name->tecnical1 ?></th>
+        <th><?= $ex_name->tecnical2 ?></th>
+        <th><?= $ex_name->tecnical3 ?></th>
+        <th><?= $ex_name->tecnical4 ?></th>
         <th>Remove</th>
       </thead>
       <tbody id="addmore<?= $key ?>" >

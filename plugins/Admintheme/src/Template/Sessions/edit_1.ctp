@@ -30,7 +30,7 @@ $user_name = $this->Common->getUsers();
                             <div class="form-group form-float">
                                 <label class="form-label">Select Users</label>
                                 <div class="form-line">
-                                    <?= $this->Form->control('user_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select User'), 'options' => $user_name, 'label' => false]) ?> 
+                                    <?= $this->Form->control('user_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select User'), 'options' => $user_name,'label'=>false]) ?> 
                                 </div>
                             </div>
                         <?php } ?>
@@ -62,52 +62,64 @@ $user_name = $this->Common->getUsers();
                             </span>
                         </div>
 
+                        <div class="row" id="getexercise">
+
                             <?php foreach ($session_values as $key => $value) {
                                 ?>
-                                <div class="row" id="getexercise<?= $key ?>" >
-                   <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
-                                    <span class=""> <?= ucfirst($ex_name->name) ?></span>
+                                <div class="body">
+                                    <div class="form-group row" id="remove<?= $key ?>">
+                                        <div>
+                                            <div class="col-xs-6">
+                                                <span class="pull-left"> <?= ucfirst($this->Common->getExrciseDirectoriesname($key)->name) ?></span>
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <span class="pull-right">
+                                                    <button type="button" class="btn btn-default btn-sm" id="<?= $key ?>" onclick="removeExcercise(this.id,<?= $key ?>)">
+                                                        <i class="material-icons">clear</i> 
+                                                    </button></span>
+                                            </div>
+                                        </div> 
 
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-highlight">
-                                            <thead>
-                                                <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
-                                            <th><?= $ex_name->tecnical1 ?></th>
-                                            <th><?= $ex_name->tecnical2 ?></th>
-                                            <th><?= $ex_name->tecnical3 ?></th>
-                                            <th><?= $ex_name->tecnical4 ?></th>
-                                            <th>Remove</th>
-                                            </thead>
-                                            <tbody id="addmore<?= $key ?>" >
-                                                <?php $count = count($value);
-                                                 
-                                                $brek = $count/4 ;
-                                                pr($brek);
-                                                ?>
-                                              <?php $i = 10;  foreach ($value as $val => $vale) {
-                                                  
-                                                  pr($vale);
-                                                    for( $j =1 ; $j<=$brek ; $j++  )
-                                                    {
-                                                        foreach ($vale as $valn => $valen) {
-                                                  ?>
-                                                     <tr> <td> <?= $valen ?>  </td> <td> <?= $valen ?>   </td> <td> <?= $valen ?>   </td> <td> <?= $valen ?>   </td><td> <?= $valen ?>   </td>   </tr>
-                                                    <?php    $i++; } }     $j++; }?>
-                                            </tbody>
-                                        </table>
-                                    </div> 
-                                    <span class="pull-left" id="getexercisemore">
-                                        <button type="button" class="btn btn-default btn-sm" id="<?= $key ?>" onclick="getExcercisemore(this.id)">
-                                            <i class="material-icons">add</i> 
-                                        </button></span>
+                                           
+                                        <?php $i = 10;  foreach ($value as $val => $vale) {
+                                          //  pr($vale);
+                                             foreach ($vale as $valn => $valen) {
+                                            ?>
+                                            <div class="col-md-3"> 
+                                                <div class="form-group form-float">
+                                                    <label class="form-label"><?= ucfirst($valn) ?></label>
+                                                    <div class="form-line">
+                                                        <?php
+                                                       
+                                                        
+                                                        
+                                                         if($i == 10)
+                                                         {
+                                                       echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'a'.$key.$i, 'label' => false, 'required']) ;
+                                                         } elseif ($i == 11 OR $i == 15 OR $i == 19 OR $i == 23 OR $i == 27 OR $i == 31) {
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'a'.$key.$i,'onkeyup'=>'getSum(this.id)', 'label' => false, 'required']); 
+                                                         } elseif ($i == 13 OR $i == 17 OR $i == 21 OR $i == 25 OR $i == 29 OR $i == 33) {
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'a'.$key.$i, 'label' => false, 'required', 'readonly']) ;
+                                                        } else {
+                                                      echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'a'.$key.$i, 'label' => false, 'required']) ;
+                                                       }
+                                                        ?> 
+                                                         
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        <?php }  $i++; } ?>
+
+                                    </div>
                                 </div><?php } ?>
-
-                        
+                    
+                        </div>
                         <span class="pull-right" id="getexercisemore" hidden >
-                            <button type="button" class="btn btn-default btn-sm" id="" onclick="getExcercise()">
-                                <i class="material-icons">add</i> 
-                            </button></span>
-                        <br>
+     <button type="button" class="btn btn-default btn-sm" id="" onclick="getExcercise()">
+        <i class="material-icons">add</i> 
+         </button></span>
+                            <br>
 
                         <div class="form-group form-float">
                             <div class="form-line">
@@ -149,7 +161,7 @@ $user_name = $this->Common->getUsers();
     }
 
     //$(function () {
-    var start = 100;
+   var start = 100; 
     function getExcercise() {
 
         var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
@@ -160,8 +172,8 @@ $user_name = $this->Common->getUsers();
             var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
             // alert(urls)
             //urllink = urls + '/' + bank_name ;
-            var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id) + '&start=' + escape(start);
-            $.ajax({
+           var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start);
+                $.ajax({
                 type: "POST",
                 cache: false,
                 data: data,
@@ -169,56 +181,56 @@ $user_name = $this->Common->getUsers();
                 success: function (html) {
 //                          alert(html);
                     $('#getexercise').append(html);
-                    $('#getexercisemore').show();
+                     $('#getexercisemore').show();
                 }
             });
         }
         start = start + 1;
-        return false;
+            return false;
     }
-
-    function getSum2(clicked_id)
+    
+        function getSum2(clicked_id)
     {
-        //alert(clicked_id);
-        //var curr = $(this);
-        // var gg =   curr.parents('#'+remove2).find('#'+clicked_id).val();
-        //alert(gg);
-        var res = clicked_id.slice(1, 9);
-        var val1 = $('#a' + res).val();
-        var val2 = $('#' + clicked_id).val();
+          //alert(clicked_id);
+          //var curr = $(this);
+          // var gg =   curr.parents('#'+remove2).find('#'+clicked_id).val();
+          //alert(gg);
+        var res = clicked_id.slice(1,9); 
+        var val1 = $('#a'+res).val();
+        var val2 = $('#'+clicked_id).val();
         //alert(val1);
-        // alert(val2);
-        document.getElementById('c' + res).value = val1 * val2;
-
-
-        //  $('#get_sub_category').html(html);
-
+       // alert(val2);
+     document.getElementById('c'+res).value = val1 * val2;
+        
+       
+              //  $('#get_sub_category').html(html);
+          
         return false;
     }
-
+    
     function getSum(clicked_id)
     {
-        // alert(clicked_id);
-        var res = clicked_id.slice(1, 9);
+         // alert(clicked_id);
+        var res = clicked_id.slice(1,9); 
         // alert(res);
-        var sum2 = 3;
-        var firstv = res - 1;
-        var lastv = firstv + sum2;
+         var sum2 = 3;
+        var firstv = res - 1 ;
+        var lastv = firstv + sum2 ;
         //alert(firstv);
-        // alert(lastv);
-
-        var val1 = $('#a' + firstv).val();
-        var val2 = $('#' + clicked_id).val();
-        // alert(val1);
-        // alert(val2);
-        document.getElementById('a' + lastv).value = val1 * val2;
-
-
-        //  $('#get_sub_category').html(html);
-
+       // alert(lastv);
+       
+        var val1 = $('#a'+firstv).val();
+        var val2 = $('#'+clicked_id).val();
+       // alert(val1);
+       // alert(val2);
+     document.getElementById('a'+lastv).value = val1 * val2;
+        
+       
+              //  $('#get_sub_category').html(html);
+          
         return false;
     }
-
+    
 //        function getSum(clicked_id)
 //    {
 //          //alert(clicked_id);
