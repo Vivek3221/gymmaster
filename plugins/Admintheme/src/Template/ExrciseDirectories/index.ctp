@@ -89,7 +89,7 @@ $getAdmin = $this->Common->getAdmin();
                                         <tr>
 
                                             <td><?= $exrciseDirectory['name'] ?></td>
-                                            <td> <?php
+                                            <td id='status<?= $exrciseDirectory->id ?>'> <?php
                                             if($user_type == 1 )
                                                 {
                                                 if (isset($exrciseDirectory->status) && $exrciseDirectory->status == '1') {
@@ -193,7 +193,7 @@ $getAdmin = $this->Common->getAdmin();
         var id = Id;
         var status = Status;
         urllink = urllink + '/' + id + '/' + status;
-        //alert(urllink);
+      //  alert(urllink);
         // alert(urllink);
         if (confirm("<?= __('Are you sure! you want to change exercise status?') ?>")) {
             $.ajax({
