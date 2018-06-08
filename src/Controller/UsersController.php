@@ -169,7 +169,7 @@ class UsersController extends AppController
                 $userDataArr['name']  = $data['name'];
                 $userDataArr['email'] = $data['email'];
                 $toEmail              = $data['email'];
-                $subject              = 'Inquery Successful | Datamonitoring';
+                $subject              = 'Inquery Successfully | Datamonitoring';
                 $email                = new Email();
                 $email->transport('default');
                 try {
@@ -224,7 +224,7 @@ class UsersController extends AppController
                 $userDataArr['email']     = $data['email'];
                 $userDataArr['login_url'] = Router::url('/', ['controller' => 'Users', 'action' => 'login']);
                 $toEmail                  = $data['email'];
-                $subject                  = 'Inquery Successful | Gym-Admin';
+                $subject                  = 'Inquery Successfully | Datamonitoring';
                 $email                    = new Email();
                 $email->transport('default');
                 try {
@@ -238,8 +238,12 @@ class UsersController extends AppController
                 } catch (Exception $e) {
                     
                 }$this->Flash->success(__('The user has been saved.'));
-
-                return $this->redirect(['controller' => 'FitnessMeserments', 'action' => 'add']);
+                    if($useradd->user_type == 2){
+                        return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+                    }else {
+                       return $this->redirect(['controller' => 'FitnessMeserments', 'action' => 'add']);
+                    }
+                
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
