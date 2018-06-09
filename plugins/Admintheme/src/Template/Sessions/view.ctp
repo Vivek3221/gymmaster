@@ -107,6 +107,7 @@ $user_name = $this->Common->getUsers();
                                 <div>
                                     <span class=""> <h3 class="text-center">Report</h3> </span> 
                                 </div>
+                                <?php if(isset($user_values) && $user_values != '') {?>
                                 <?php foreach ($user_values as $key => $value) {
                                     ?>
                                 <div>
@@ -134,7 +135,7 @@ $user_name = $this->Common->getUsers();
                                         <?php } } ?>
 
                                 </div><?php } ?>
-
+                            <?php } ?>
                             </div>
                         </div>
 
