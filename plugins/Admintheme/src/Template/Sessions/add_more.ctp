@@ -72,10 +72,10 @@ $user_name = $this->Common->getUsers();
                                     <table class="table table-bordered table-striped table-highlight">
                                         <thead>
                                             <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
-                                        <th><?= $ex_name->tecnical1 ?></th>
-                                        <th><?= $ex_name->tecnical2 ?></th>
-                                        <th><?= $ex_name->tecnical3 ?></th>
-                                        <th><?= $ex_name->tecnical4 ?></th>
+                                        <th><?= ucfirst($ex_name->tecnical1) ?></th>
+                                        <th><?= ucfirst($ex_name->tecnical2) ?></th>
+                                        <th><?= ucfirst($ex_name->tecnical3) ?></th>
+                                        <th><?= ucfirst($ex_name->tecnical4) ?></th>
                                         <th>Remove</th>
                                         </thead>
                                         <tbody id="addmore<?= $key ?>" >
