@@ -86,8 +86,10 @@ $user_name = $this->Common->getUsers();
                                             ?>
                                             <?php
                                             foreach ($value as $val => $vale) {
-                                                if ($j % 4 == 0)
+                                                if ($j % 4 == 0){
+                                                    $k = $j;
                                                     echo '<tr id=remove'.$key.$j.'>';
+                                                }
                                                 echo '<td>';
                                                 foreach ($vale as $valn => $valen) {
                                                     if ($i == 10) {
@@ -99,20 +101,19 @@ $user_name = $this->Common->getUsers();
                                                     } else {
                                                         echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => 'a' . $key . $i, 'label' => false, 'required']);
                                                     }
-                                                    //echo $orgVal. '-'. $i;
                                                 }
                                                 echo '</td>';
-
+                                                
                                                 $i++;
                                                 $j++;
-                                                //if ($j % 4 == 0)
-                                                 
-                                                if ($j % 4 == 0)
-//                                                       echo '<td>';
-//                                                echo '<button type="button" class="btn btn-default btn-sm" id="'. $key.$j .'" onclick="removeExcercise(this.id, '. $key.$j .')">
-//        <i class="material-icons">clear</i> 
-//    </button>';   echo '<td>';
+                                                if ($j % 4 == 0) {
+                                                  echo '<td>'
+                                                    . '<button type="button" class="btn btn-default btn-sm" id="'.$key.$k.'" onclick="removeExcercise(this.id,'.$key.$k.')">
+                                                        <i class="material-icons">clear</i>
+                                                        </button>
+                                                      </td>';     
                                                     echo '</tr>';
+                                                }
                                             }
                                             ?>
                                         </tbody>
@@ -166,7 +167,7 @@ $user_name = $this->Common->getUsers();
 
         var id = 'remove' + clicked_id;
         $('#' + id).remove();
-        alert(id);
+//        alert(id);
 
     }
 
