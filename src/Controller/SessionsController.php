@@ -75,7 +75,7 @@ class SessionsController extends AppController
             $count = $this->Sessions->find('all');
         }
         if (isset($user_type) && ($user_type == 3)) {
-        $count = $count->where(['Sessions.status ' => '1']);
+        $count = $count->where(['Sessions.status ' => '1' ,'Sessions.date'=> date('Y-m-d')]);
         } else {
              $count = $count->where(['Sessions.status !=' => '2']);
         }
