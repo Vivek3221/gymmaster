@@ -6,7 +6,7 @@ $get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories($users_id);
 //$get_exrcisedirectorie_name = $this->Common->getExrciseDirectoriesname(1);
 
 $user_name = $this->Common->getUsers();
-//pr($bodies_lists); die;
+//pr($session_values); die;
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -73,12 +73,12 @@ $user_name = $this->Common->getUsers();
                                 </div>
                                 <?php foreach ($session_values as $key => $value) {
                                     ?>
-                                <div>
-                                    <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
-                            <span class=""> <?=  ucfirst($ex_name->name)  ?></span> 
-                                </div>
+                                
                                     <div class="body">
-            
+            <div>
+                            <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
+                            <span class=""> <p class="text-primary"><?=  ucfirst($ex_name->name)  ?></p></span>
+                                </div>
                                         <?php foreach ($value as $val => $vale) {
                                             foreach ($vale as $valn => $valen) {
                                             ?>
@@ -102,10 +102,9 @@ $user_name = $this->Common->getUsers();
                                 </div>
                                 <?php foreach ($session_values as $key => $value) {
                                     ?>
-                                <div>
-                            <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
-                            <span class=""> <?=  ucfirst($ex_name->name)  ?></span>  </div>  <div class="body">
- 
+                                 <div class="body">
+ <div><?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
+                            <span class=""> <p class="text-primary"><?=  ucfirst($ex_name->name)  ?></p></span> </div> 
                                         <?php $i =10; foreach ($value as $val => $vale) {
                                             
                                             foreach ($vale as $valn => $valen) {

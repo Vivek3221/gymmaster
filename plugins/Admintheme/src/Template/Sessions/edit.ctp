@@ -66,7 +66,7 @@ $user_name = $this->Common->getUsers();
                             ?>
                             <div class="row" id="getexercise<?= $key ?>" >
                                 <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
-                                <span class=""> <?= ucfirst($ex_name->name) ?></span>
+                                <span class=""> <p class="text-primary"><?= ucfirst($ex_name->name) ?></p></span>
 
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped table-highlight">

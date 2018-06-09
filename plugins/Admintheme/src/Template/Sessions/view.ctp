@@ -81,7 +81,7 @@ $user_name = $this->Common->getUsers();
                                     ?>
                                 <div>
                                 <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
-                            <span class=""> <?=  ucfirst($ex_name->name)  ?></span>  </div>
+                            <span class=""><p class="text-primary"> <?=  ucfirst($ex_name->name)  ?></p></span>  </div>
                                 <div class="body">
 
                                         <?php foreach ($value as $val => $vale) {
@@ -111,7 +111,7 @@ $user_name = $this->Common->getUsers();
                                     ?>
                                 <div>
                                 <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
-                            <span class=""> <?=  ucfirst($ex_name->name)  ?></span> </div>  <div class="body">
+                            <span class=""> <p class="text-primary"><?=  ucfirst($ex_name->name)  ?></p></span> </div>  <div class="body">
 
                                         <?php foreach ($value as $val => $vale) {
                                             
