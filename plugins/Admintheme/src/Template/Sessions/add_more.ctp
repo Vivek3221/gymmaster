@@ -63,10 +63,11 @@ $user_name = $this->Common->getUsers();
                         </div>
 
                           <?php foreach ($session_values as $key => $value) {
+                            $excid = $key;
                             ?>
                             <div class="row" id="getexercise<?= $key ?>" >
                                 <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
-                                <span class=""><p class="text-primary"> <?= ucfirst($ex_name->name) ?></p></span>
+                                <span class=""> <p class="text-primary"><?= ucfirst($ex_name->name) ?></p></span>
 
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped table-highlight">
@@ -83,36 +84,52 @@ $user_name = $this->Common->getUsers();
                                             $count = count($value);
                                             $i = 10;
                                             $j = 0;
+                                             $inClass= 0;
+
                                             ?>
                                             <?php
                                             foreach ($value as $val => $vale) {
-                                                if ($j % 4 == 0)
-                                                    echo '<tr id=remove'.$key.$j.'>';
+                                               
+                                                if ($j % 4 == 0){
+                                                    $inClass= 0;
+                                                    $k = $j;
+                                                    echo '<tr id=remove'.$key.$j.' class="'.$key.$j.'">';
+                                                }
                                                 echo '<td>';
                                                 foreach ($vale as $valn => $valen) {
-                                                    if ($i == 10) {
-                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => 'a' . $key . $i, 'label' => false, 'required']);
-                                                    } elseif ($i == 11 OR $i == 15 OR $i == 19 OR $i == 23 OR $i == 27 OR $i == 31) {
-                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => 'a' . $key . $i, 'onkeyup' => 'getSum(this.id)', 'label' => false, 'required']);
-                                                    } elseif ($i == 13 OR $i == 17 OR $i == 21 OR $i == 25 OR $i == 29 OR $i == 33) {
-                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => 'a' . $key . $i, 'label' => false, 'required', 'readonly']);
-                                                    } else {
-                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => 'a' . $key . $i, 'label' => false, 'required']);
+                                                   
+                                                    if($inClass==0){
+                                                     $class='a' ;
+                                                    }else if($inClass==1){
+                                                        $class='b' ;
+                                                     }else if($inClass==2){
+                                                        $class='d' ;
+                                                    }else if($inClass==3){
+                                                        $class='c' ;
                                                     }
-                                                    //echo $orgVal. '-'. $i;
+                                                    $inClass++;
+                                                    if ($i == 10) {
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => $class .$excid. $key . $k, 'label' => false, 'required']);
+                                                    } elseif ($i == 11 OR $i == 15 OR $i == 19 OR $i == 23 OR $i == 27 OR $i == 31) {
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => $class .$excid. $key .  $k, 'onkeyup' => 'getSum(this.id)', 'label' => false, 'required']);
+                                                    } elseif ($i == 13 OR $i == 17 OR $i == 21 OR $i == 25 OR $i == 29 OR $i == 33) {
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => $class .$excid. $key . $k, 'label' => false, 'required', 'readonly']);
+                                                    } else {
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => $class .$excid. $key .  $k, 'label' => false, 'required']);
+                                                    }
                                                 }
                                                 echo '</td>';
-
+                                                
                                                 $i++;
                                                 $j++;
-                                                //if ($j % 4 == 0)
-                                                 
-                                                if ($j % 4 == 0)
-//                                                       echo '<td>';
-//                                                echo '<button type="button" class="btn btn-default btn-sm" id="'. $key.$j .'" onclick="removeExcercise(this.id, '. $key.$j .')">
-//        <i class="material-icons">clear</i> 
-//    </button>';   echo '<td>';
+                                                if ($j % 4 == 0) {
+                                                  echo '<td>'
+                                                    . '<button type="button" class="btn btn-default btn-sm" id="'.$key.$k.'" onclick="removeExcercise(this.id,'.$key.$k.')">
+                                                        <i class="material-icons">clear</i>
+                                                        </button>
+                                                      </td>';     
                                                     echo '</tr>';
+                                                }
                                             }
                                             ?>
                                         </tbody>
@@ -160,17 +177,17 @@ $user_name = $this->Common->getUsers();
 
         var id = 'remove' + clicked_id;
         $('#' + id).remove();
-        //alert(id);
+//        alert(id);
 
     }
 
     //$(function () {
-        var start = 100; 
+    var start = 100;
     function getExcercise() {
           // alert(start);
 
             var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
-          //alert(exrcisedirectorie_id);
+          alert(exrcisedirectorie_id);
             var next_id = $('#exrcisedirectorie_id').val();
              // alert(exrcisedirectorie_id);
               
@@ -183,7 +200,7 @@ $user_name = $this->Common->getUsers();
                 // alert(urls)
                 //urllink = urls + '/' + bank_name ;
                 var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start);
-                //alert(data);
+                alert(data);
                     $.ajax({
                     type: "POST",
                     cache: false,
@@ -191,7 +208,7 @@ $user_name = $this->Common->getUsers();
                     url: urls,
                     success: function (html) {
                       
-//                          alert(html);
+                         alert(html);
                         $('#addmore' +exrcisedirectorie_id).append(html);
                       $('#getexercisemore').show();
                     }
@@ -210,6 +227,9 @@ $user_name = $this->Common->getUsers();
              // alert(exrcisedirectorie_id);
               
               $('#getexercise'+ exrcisedirectorie_id).show();
+               var last     = $('#getexercise'+ exrcisedirectorie_id+' tr').last().attr('class');
+              var lasttr   =exrcisedirectorie_id+last;
+              var starttr  = exrcisedirectorie_id+start;
               
             //  
             if (exrcisedirectorie_id)
@@ -228,6 +248,10 @@ $user_name = $this->Common->getUsers();
                       
                           //alert(html);
                         $('#addmore' +exrcisedirectorie_id).append(html);
+                         $('#a'+starttr).val($('#a'+lasttr).val());
+                        $('#b'+starttr).val($('#b'+lasttr).val());
+                        $('#c'+starttr).val($('#c'+lasttr).val());
+                        $('#d'+starttr).val($('#d'+lasttr).val());
                       $('#getexercisemore').show();
                     }
                 });
@@ -238,50 +262,48 @@ $user_name = $this->Common->getUsers();
             return false;
         }
 
-    
-    
-        function getSum2(clicked_id)
+    function getSum2(clicked_id)
     {
-          //alert(clicked_id);
-          //var curr = $(this);
-          // var gg =   curr.parents('#'+remove2).find('#'+clicked_id).val();
-          //alert(gg);
-        var res = clicked_id.slice(1,9); 
-        var val1 = $('#a'+res).val();
-        var val2 = $('#'+clicked_id).val();
+        //alert(clicked_id);
+        //var curr = $(this);
+        // var gg =   curr.parents('#'+remove2).find('#'+clicked_id).val();
+        //alert(gg);
+        var res = clicked_id.slice(1, 9);
+        var val1 = $('#a' + res).val();
+        var val2 = $('#' + clicked_id).val();
         //alert(val1);
-       // alert(val2);
-     document.getElementById('c'+res).value = val1 * val2;
-        
-       
-              //  $('#get_sub_category').html(html);
-          
+        // alert(val2);
+        document.getElementById('c' + res).value = val1 * val2;
+
+
+        //  $('#get_sub_category').html(html);
+
         return false;
     }
-    
-      function getSum(clicked_id)
+
+    function getSum(clicked_id)
     {
-         // alert(clicked_id);
-        var res = clicked_id.slice(1,9); 
-         //alert(res);
-         var sum2 = 3;
-        var firstv = res - 1 ;
-        var lastv = firstv + sum2 ;
+        // alert(clicked_id);
+        var res = clicked_id.slice(1, 9);
+        // alert(res);
+        var sum2 = 3;
+        var firstv = res - 1;
+        var lastv = firstv + sum2;
         //alert(firstv);
-       // alert(lastv);
-       
-        var val1 = $('#a'+firstv).val();
-        var val2 = $('#'+clicked_id).val();
-        //alert(val1);
-       // alert(val2);
-     document.getElementById('a'+lastv).value = val1 * val2;
-        
-       
-              //  $('#get_sub_category').html(html);
-          
+        // alert(lastv);
+
+        var val1 = $('#a' + firstv).val();
+        var val2 = $('#' + clicked_id).val();
+        // alert(val1);
+        // alert(val2);
+        document.getElementById('a' + lastv).value = val1 * val2;
+
+
+        //  $('#get_sub_category').html(html);
+
         return false;
     }
-    
+
 //        function getSum(clicked_id)
 //    {
 //          //alert(clicked_id);
