@@ -63,6 +63,7 @@ $user_name = $this->Common->getUsers();
                         </div>
 
                         <?php foreach ($session_values as $key => $value) {
+                            $excid = $key;
                             ?>
                             <div class="row" id="getexercise<?= $key ?>" >
                                 <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
@@ -83,23 +84,38 @@ $user_name = $this->Common->getUsers();
                                             $count = count($value);
                                             $i = 10;
                                             $j = 0;
+                                             $inClass= 0;
+
                                             ?>
                                             <?php
                                             foreach ($value as $val => $vale) {
+                                               
                                                 if ($j % 4 == 0){
+                                                    $inClass= 0;
                                                     $k = $j;
-                                                    echo '<tr id=remove'.$key.$j.'>';
+                                                    echo '<tr id=remove'.$key.$j.' class="'.$key.$j.'">';
                                                 }
                                                 echo '<td>';
                                                 foreach ($vale as $valn => $valen) {
+                                                   
+                                                    if($inClass==0){
+                                                     $class='a' ;
+                                                    }else if($inClass==1){
+                                                        $class='b' ;
+                                                     }else if($inClass==2){
+                                                        $class='d' ;
+                                                    }else if($inClass==3){
+                                                        $class='c' ;
+                                                    }
+                                                    $inClass++;
                                                     if ($i == 10) {
-                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => 'a' . $key . $i, 'label' => false, 'required']);
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => $class .$excid. $key . $k, 'label' => false, 'required']);
                                                     } elseif ($i == 11 OR $i == 15 OR $i == 19 OR $i == 23 OR $i == 27 OR $i == 31) {
-                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => 'a' . $key . $i, 'onkeyup' => 'getSum(this.id)', 'label' => false, 'required']);
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => $class .$excid. $key .  $k, 'onkeyup' => 'getSum(this.id)', 'label' => false, 'required']);
                                                     } elseif ($i == 13 OR $i == 17 OR $i == 21 OR $i == 25 OR $i == 29 OR $i == 33) {
-                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => 'a' . $key . $i, 'label' => false, 'required', 'readonly']);
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => $class .$excid. $key . $k, 'label' => false, 'required', 'readonly']);
                                                     } else {
-                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => 'a' . $key . $i, 'label' => false, 'required']);
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => $class .$excid. $key .  $k, 'label' => false, 'required']);
                                                     }
                                                 }
                                                 echo '</td>';
@@ -217,6 +233,9 @@ $user_name = $this->Common->getUsers();
              // alert(exrcisedirectorie_id);
               
               $('#getexercise'+ exrcisedirectorie_id).show();
+               var last     = $('#getexercise'+ exrcisedirectorie_id+' tr').last().attr('class');
+              var lasttr   =exrcisedirectorie_id+last;
+              var starttr  = exrcisedirectorie_id+start;
               
             //  
             if (exrcisedirectorie_id)
@@ -235,6 +254,10 @@ $user_name = $this->Common->getUsers();
                       
                           //alert(html);
                         $('#addmore' +exrcisedirectorie_id).append(html);
+                         $('#a'+starttr).val($('#a'+lasttr).val());
+                        $('#b'+starttr).val($('#b'+lasttr).val());
+                        $('#c'+starttr).val($('#c'+lasttr).val());
+                        $('#d'+starttr).val($('#d'+lasttr).val());
                       $('#getexercisemore').show();
                     }
                 });

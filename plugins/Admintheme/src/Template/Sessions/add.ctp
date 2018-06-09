@@ -168,13 +168,16 @@ $user_name = $this->Common->getUsers();
              // alert(exrcisedirectorie_id);
               
               $('#getexercise'+ exrcisedirectorie_id).show();
-              
+              var last     = $('#getexercise'+ exrcisedirectorie_id+' tr').last().attr('class');
+              var lasttr   =exrcisedirectorie_id+last;
+              var starttr  = exrcisedirectorie_id+start;
+
+             
             //  
             if (exrcisedirectorie_id)
             {
                 var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
-                // alert(urls)
-                //urllink = urls + '/' + bank_name ;
+
                 var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start);
                 //alert(data);
                     $.ajax({
@@ -186,7 +189,11 @@ $user_name = $this->Common->getUsers();
                       
                           //alert(html);
                         $('#addmore' +exrcisedirectorie_id).append(html);
-                      $('#getexercisemore').show();
+                        $('#a'+starttr).val($('#a'+lasttr).val());
+                        $('#b'+starttr).val($('#b'+lasttr).val());
+                        $('#c'+starttr).val($('#c'+lasttr).val());
+                        $('#d'+starttr).val($('#d'+lasttr).val());
+                        $('#getexercisemore').show();
                     }
                 });
                 
