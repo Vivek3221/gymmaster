@@ -80,8 +80,8 @@ $user_name = $this->Common->getUsers();
                                 <?php foreach ($session_values as $key => $value) {
                                     ?>
                                 <div>
-                                    <span class=""> <?= ucfirst($this->Common->getExrciseDirectoriesname($key)) ?></span> 
-                                </div>
+                                <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
+                            <span class=""> <?=  ucfirst($ex_name->name)  ?></span>  </div>
                                 <div class="body">
 
                                         <?php foreach ($value as $val => $vale) {
@@ -110,8 +110,8 @@ $user_name = $this->Common->getUsers();
                                 <?php foreach ($user_values as $key => $value) {
                                     ?>
                                 <div>
-                                    <span class=""> <?= ucfirst($this->Common->getExrciseDirectoriesname($key)) ?></span> 
-                                </div>  <div class="body">
+                                <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
+                            <span class=""> <?=  ucfirst($ex_name->name)  ?></span> </div>  <div class="body">
 
                                         <?php foreach ($value as $val => $vale) {
                                             

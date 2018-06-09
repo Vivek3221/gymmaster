@@ -62,62 +62,82 @@ $user_name = $this->Common->getUsers();
                             </span>
                         </div>
 
-                            <?php foreach ($session_values as $key => $value) {
-                                ?>
-                                <div class="row" id="getexercise<?= $key ?>" >
-                   <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
-                                    <span class=""> <?= ucfirst($ex_name->name) ?></span>
+                        <?php foreach ($session_values as $key => $value) {
+                            ?>
+                            <div class="row" id="getexercise<?= $key ?>" >
+                                <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
+                                <span class=""> <?= ucfirst($ex_name->name) ?></span>
 
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-highlight">
-                                            <thead>
-                                                <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
-                                            <th><?= $ex_name->tecnical1 ?></th>
-                                            <th><?= $ex_name->tecnical2 ?></th>
-                                            <th><?= $ex_name->tecnical3 ?></th>
-                                            <th><?= $ex_name->tecnical4 ?></th>
-                                            <th>Remove</th>
-                                            </thead>
-                                            <tbody id="addmore<?= $key ?>" >
-                                                <?php $count = count($value);
-                                                $i=0;
-                                                ?>
-                                              <?php foreach ($value as $val => $vale) {
-                                                  if($i%4==0)
-                                                  echo '<tr>';
-                                                    echo '<td>';
-                                                      foreach($vale as $orgVal){
-                                                        echo $orgVal;
-                                                      }
-                                                    echo '</td>'; 
-                                                    $i++;
-                                                  if($i%4==0)
-                                                  echo '</tr>';
-                                                  
-                                                       }?>
-                                            </tbody>
-                                        </table>
-                                    </div> 
-                                    <span class="pull-left" id="getexercisemore">
-                                        <button type="button" class="btn btn-default btn-sm" id="<?= $key ?>" onclick="getExcercisemore(this.id)">
-                                            <i class="material-icons">add</i> 
-                                        </button></span>
-                                </div><?php } ?>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-highlight">
+                                        <thead>
+                                            <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
+                                        <th><?= $ex_name->tecnical1 ?></th>
+                                        <th><?= $ex_name->tecnical2 ?></th>
+                                        <th><?= $ex_name->tecnical3 ?></th>
+                                        <th><?= $ex_name->tecnical4 ?></th>
+                                        <th>Remove</th>
+                                        </thead>
+                                        <tbody id="addmore<?= $key ?>" >
+                                            <?php
+                                            $count = count($value);
+                                            $i = 10;
+                                            $j = 0;
+                                            ?>
+                                            <?php
+                                            foreach ($value as $val => $vale) {
+                                                if ($j % 4 == 0)
+                                                    echo '<tr id=remove'.$key.$j.'>';
+                                                echo '<td>';
+                                                foreach ($vale as $valn => $valen) {
+                                                    if ($i == 10) {
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => 'a' . $key . $i, 'label' => false, 'required']);
+                                                    } elseif ($i == 11 OR $i == 15 OR $i == 19 OR $i == 23 OR $i == 27 OR $i == 31) {
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => 'a' . $key . $i, 'onkeyup' => 'getSum(this.id)', 'label' => false, 'required']);
+                                                    } elseif ($i == 13 OR $i == 17 OR $i == 21 OR $i == 25 OR $i == 29 OR $i == 33) {
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => 'a' . $key . $i, 'label' => false, 'required', 'readonly']);
+                                                    } else {
+                                                        echo $this->Form->control('excrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id' => 'a' . $key . $i, 'label' => false, 'required']);
+                                                    }
+                                                    //echo $orgVal. '-'. $i;
+                                                }
+                                                echo '</td>';
 
-                        
-                        <span class="pull-right" id="getexercisemore" hidden >
+                                                $i++;
+                                                $j++;
+                                                //if ($j % 4 == 0)
+                                                 
+                                                if ($j % 4 == 0)
+//                                                       echo '<td>';
+//                                                echo '<button type="button" class="btn btn-default btn-sm" id="'. $key.$j .'" onclick="removeExcercise(this.id, '. $key.$j .')">
+//        <i class="material-icons">clear</i> 
+//    </button>';   echo '<td>';
+                                                    echo '</tr>';
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div> 
+                                <span class="pull-left" id="getexercisemore">
+                                    <button type="button" class="btn btn-default btn-sm" id="<?= $key ?>" onclick="getExcercisemore(this.id)">
+                                        <i class="material-icons">add</i> 
+                                    </button></span>
+                            </div><?php } ?>
+
+
+<!--                        <span class="pull-right" id="getexercisemore" hidden >
                             <button type="button" class="btn btn-default btn-sm" id="" onclick="getExcercise()">
                                 <i class="material-icons">add</i> 
-                            </button></span>
+                            </button></span>-->
                         <br>
 
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->input('status', ['empty' => __('Select status'), 'options' => $status, 'class' => 'form-control']); ?>
+<?= $this->Form->input('status', ['empty' => __('Select status'), 'options' => $status, 'class' => 'form-control']); ?>
                             </div>
                         </div>
                         <?= $this->Form->button('Submit', ['class' => 'btn btn-primary waves-effect']) ?>
-                        <?= $this->Form->end() ?>  
+<?= $this->Form->end() ?>  
 
                     </div>
 
@@ -146,38 +166,83 @@ $user_name = $this->Common->getUsers();
 
         var id = 'remove' + clicked_id;
         $('#' + id).remove();
-        //alert(id);
+        alert(id);
 
     }
 
     //$(function () {
     var start = 100;
     function getExcercise() {
+          // alert(start);
 
-        var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
-        //alert(exrcisedirectorie_id);
-        //  
-        if (exrcisedirectorie_id)
-        {
-            var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
-            // alert(urls)
-            //urllink = urls + '/' + bank_name ;
-            var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id) + '&start=' + escape(start);
-            $.ajax({
-                type: "POST",
-                cache: false,
-                data: data,
-                url: urls,
-                success: function (html) {
+            var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
+          //alert(exrcisedirectorie_id);
+            var next_id = $('#exrcisedirectorie_id').val();
+             // alert(exrcisedirectorie_id);
+              
+              $('#getexercise'+ exrcisedirectorie_id).show();
+              
+            //  
+            if (exrcisedirectorie_id)
+            {
+                var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
+                // alert(urls)
+                //urllink = urls + '/' + bank_name ;
+                var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start);
+                //alert(data);
+                    $.ajax({
+                    type: "POST",
+                    cache: false,
+                    data: data,
+                    url: urls,
+                    success: function (html) {
+                      
 //                          alert(html);
-                    $('#getexercise').append(html);
-                    $('#getexercisemore').show();
-                }
-            });
+                        $('#addmore' +exrcisedirectorie_id).append(html);
+                      $('#getexercisemore').show();
+                    }
+                });
+                
+                
+            }
+            start = start + 1;
+            return false;
         }
-        start = start + 1;
-        return false;
-    }
+  function getExcercisemore(clickid) {
+         //  alert(clickid);
+          var exrcisedirectorie_id = clickid;
+          //alert(exrcisedirectorie_id);
+            var next_id = $('#exrcisedirectorie_id').val();
+             // alert(exrcisedirectorie_id);
+              
+              $('#getexercise'+ exrcisedirectorie_id).show();
+              
+            //  
+            if (exrcisedirectorie_id)
+            {
+                var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
+                // alert(urls)
+                //urllink = urls + '/' + bank_name ;
+                var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start);
+                //alert(data);
+                    $.ajax({
+                    type: "POST",
+                    cache: false,
+                    data: data,
+                    url: urls,
+                    success: function (html) {
+                      
+                          //alert(html);
+                        $('#addmore' +exrcisedirectorie_id).append(html);
+                      $('#getexercisemore').show();
+                    }
+                });
+                
+                
+            }
+            start = start + 1;
+            return false;
+        }
 
     function getSum2(clicked_id)
     {
