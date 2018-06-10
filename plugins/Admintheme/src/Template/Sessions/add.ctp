@@ -50,7 +50,7 @@ $user_name = $this->Common->getUsers();
                         </div>-->
                        
    <?php   foreach ($get_exrcisedirectorie_lists as $key=>$get_exrcisedirectorie_list){ ?>                     
-<div class="row" id="getexercise<?= $key ?>" hidden >
+<div class="row" id="getexercise<?= $key ?>" hidden style="margin-bottom: 10px" >
     
     <span class=""> <p class="text-primary"><?=  ucfirst($get_exrcisedirectorie_list) ?></p></span>
     
