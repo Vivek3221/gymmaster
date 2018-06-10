@@ -66,7 +66,7 @@ $user_name = $this->Common->getUsers();
                             $excid = $key;
                             $addexc[] = $key;
                             ?>
-                            <div class="row" id="getexercise<?= $key ?>" >
+                            <div class="row" id="getexercise<?= $key ?>" style="margin-bottom: 10px" >
                                 <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
                                 <span class=""> <p class="text-primary"><?= ucfirst($ex_name->name) ?></p></span>
 
@@ -145,7 +145,7 @@ $user_name = $this->Common->getUsers();
                            <?php $get_exrcisedirectorie_listsedits = $this->Common->getExrciseDirectoriesedit($users_id,$addexc);
                            
                          foreach ($get_exrcisedirectorie_listsedits as $key=>$get_exrcisedirectorie_listsedit){ ?>                     
-<div class="row" id="getexercise<?= $key ?>" hidden >
+<div class="row" id="getexercise<?= $key ?>" hidden style="margin-bottom: 10px" >
     
     <span class=""> <p class="text-primary"><?=  ucfirst($get_exrcisedirectorie_listsedit) ?></p></span>
     
