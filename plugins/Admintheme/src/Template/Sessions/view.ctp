@@ -109,7 +109,7 @@ $user_name = $this->Common->getUsers();
                <div class=""> 
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <label class="form-label" style="margin-right : 20px;"><p class="text-primary"><?= ucfirst("Total Count") ?></p></label>
+                                                <label class="form-label" style="margin-right : 20px;"><p class="text-primary"><?= ucfirst("Total Tempo") ?></p></label>
                                             </div>
                                             <div class="col-sm-4">
                                                 <span id="" value=""><?= $sum ?> </span>
@@ -154,7 +154,7 @@ $user_name = $this->Common->getUsers();
                                 <div class=""> 
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <label class="form-label" style="margin-right : 20px;"><p class="text-primary"><?= ucfirst("Total Count") ?></p></label>
+                                                <label class="form-label" style="margin-right : 20px;"><p class="text-primary"><?= ucfirst("Total Tempo") ?></p></label>
                                             </div>
                                             <div class="col-sm-4">
                                                 <span id="" value=""><?= $sumuser ?> </span>

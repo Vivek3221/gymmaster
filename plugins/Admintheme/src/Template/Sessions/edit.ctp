@@ -54,13 +54,7 @@ $user_name = $this->Common->getUsers();
                                                         </div>
                                                     </div>
                                                 </div>-->
-                        <div class="input-group">
-                            <label class="form-label">Exercise</label>
-                            <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists, 'label' => FALSE]) ?>
-                            <span class="input-group-btn" style="padding-top: 23px;">
-                                <span id="exrcisedirectorie" onclick="getExcercise()" class="btn btn-success"><?= __('+ Add Excercise') ?></span>
-                            </span>
-                        </div>
+                        
                              
                         <?php foreach ($session_values as $key => $value) {
                             $excid = $key;
@@ -182,7 +176,13 @@ $user_name = $this->Common->getUsers();
                                 <i class="material-icons">add</i> 
                             </button></span>-->
                         <br>
-
+<div class="input-group">
+                            <label class="form-label">Exercise</label>
+                            <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists, 'label' => FALSE]) ?>
+                            <span class="input-group-btn" style="padding-top: 23px;">
+                                <span id="exrcisedirectorie" onclick="getExcercise()" class="btn btn-success"><?= __('+ Add Excercise') ?></span>
+                            </span>
+                        </div>
                         <div class="form-group form-float">
                             <div class="form-line">
 <?= $this->Form->input('status', ['empty' => __('Select status'), 'options' => $status, 'class' => 'form-control']); ?>
