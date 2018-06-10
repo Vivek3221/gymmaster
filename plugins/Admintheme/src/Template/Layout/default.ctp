@@ -74,12 +74,15 @@
     </style>
   <?= $this->Html->script('jquery.min.js') ?>
 </head>
-<body  style="background-image: url(<?= $this->Url->image('runners-635906_1920.jpg') ?>)">
+
     <?php if ($this->request->action != 'adminLogin' && $this->request->action != 'resetPassword') { ?>
+        <body>
     <?php
      echo $this->element('header');
      echo $this->element('left_nav');
     ?>
+    <?php } else { ?>
+        <body  style="background-image: url(<?= $this->Url->image('runners-635906_1920.jpg') ?>)">
     <?php } ?>
     <?= $this->fetch('content') ?>
     <!-- Bootstrap Core Js -->
