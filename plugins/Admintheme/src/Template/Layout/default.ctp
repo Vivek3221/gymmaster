@@ -74,7 +74,7 @@
     </style>
   <?= $this->Html->script('jquery.min.js') ?>
 </head>
-<body>
+<body  style="background-image: url(<?= $this->Url->image('runners-635906_1920.jpg') ?>)">
     <?php if ($this->request->action != 'adminLogin' && $this->request->action != 'resetPassword') { ?>
     <?php
      echo $this->element('header');

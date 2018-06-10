@@ -7712,7 +7712,7 @@ fieldset[disabled] .form-control {
   background-color: #00BCD4;
   padding-left: 0;
   max-width: 360px;
-  margin: 5% auto;
+  margin: 10% auto 10% 10%;
   overflow-x: hidden; }
   .login-page .login-box .msg {
     color: #555;
