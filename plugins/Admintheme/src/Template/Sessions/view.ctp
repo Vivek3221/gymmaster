@@ -11,16 +11,20 @@ $user_name = $this->Common->getUsers();
 //pr($user_values);
 //foreach ($session_values as $key => $val)
 //{
-//   // pr($user_values->$key);
+//   pr($key);
+//   $sum = 0;
 //    foreach ($val as $key1 => $vals)
 //    {
-//         
+//      //   pr($vals);
 //       foreach ($vals as $key2 => $las)
 //       {
-//           pr($las);
-//           pr($user_values->$key[$key1]->$key2);
-//       }
+//          pr($las);
+//          $sum = $las + $sum ;
+//          // pr($user_values->$key[$key1]->$key2);
+//       } 
 //    }
+//    echo $sum;
+//    echo 'fff<br>';
 //}
 //pr($user_values);
 //
@@ -78,6 +82,7 @@ $user_name = $this->Common->getUsers();
                                     <span class="">  <h3 class="text-center">Planned</h3></span> 
                                 </div>
                                 <?php foreach ($session_values as $key => $value) {
+                                    $sum = 0;
                                     ?>
                                 <div>
                                 <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
@@ -87,6 +92,8 @@ $user_name = $this->Common->getUsers();
                                         <?php foreach ($value as $val => $vale) {
                                             
                                             foreach ($vale as $valn => $valen) {
+                                                
+                                              $sum = $valen + $sum ;   
                                             ?>
                                     <div class=""> 
                                         <div class="row">
@@ -99,7 +106,16 @@ $user_name = $this->Common->getUsers();
                                         </div>
                                     </div>
                                         <?php } } ?>
-
+               <div class=""> 
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label class="form-label" style="margin-right : 20px;"><?= ucfirst("Total Count") ?></label>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <span id="" value=""><?= $sum ?> </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div><?php } ?>
 
                             </div>
@@ -109,6 +125,7 @@ $user_name = $this->Common->getUsers();
                                 </div>
                                 <?php if(isset($user_values) && $user_values != '') {?>
                                 <?php foreach ($user_values as $key => $value) {
+                                     $sumuser = 0;
                                     ?>
                                 <div>
                                 <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
@@ -117,6 +134,7 @@ $user_name = $this->Common->getUsers();
                                         <?php foreach ($value as $val => $vale) {
                                             
                                             foreach ($vale as $valn => $valen) {
+                                                $sumuser = $valen + $sumuser ;
                                             ?>
                                     <div class="ddd"> 
                                         <div class="row">
@@ -133,6 +151,16 @@ $user_name = $this->Common->getUsers();
                                         </div>
                                     </div>
                                         <?php } } ?>
+                                <div class=""> 
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label class="form-label" style="margin-right : 20px;"><?= ucfirst("Total Count") ?></label>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <span id="" value=""><?= $sumuser ?> </span>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div><?php } ?>
                             <?php } ?>
