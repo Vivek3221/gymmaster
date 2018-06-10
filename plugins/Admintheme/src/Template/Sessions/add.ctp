@@ -80,7 +80,7 @@ $user_name = $this->Common->getUsers();
      <button type="button" class="btn btn-default btn-sm" id="" onclick="getExcercise()">
         <i class="material-icons">add</i> 
          </button></span>-->
-<br>  <?php } ?> 
+ <?php } ?> 
                        <div class="input-group">
                                                   <label class="form-label">Exercise</label>
                           <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists , 'label'=>FALSE]) ?>
