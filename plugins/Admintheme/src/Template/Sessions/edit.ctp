@@ -3,9 +3,9 @@ $status = $this->Common->getstatus();
 //$exercises = $this->Common->getExercises();
 $get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories($users_id);
 //$get_exrcisedirectorie_name = $this->Common->getExrciseDirectoriesname(1);
-
+ //$addexc [] ='';
 $user_name = $this->Common->getUsers();
-//pr($bodies_lists); die;
+//pr($get_exrcisedirectorie_lists); die;
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -61,9 +61,10 @@ $user_name = $this->Common->getUsers();
                                 <span id="exrcisedirectorie" onclick="getExcercise()" class="btn btn-success"><?= __('+ Add Excercise') ?></span>
                             </span>
                         </div>
-
+                             
                         <?php foreach ($session_values as $key => $value) {
                             $excid = $key;
+                            $addexc[] = $key;
                             ?>
                             <div class="row" id="getexercise<?= $key ?>" >
                                 <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
@@ -141,7 +142,41 @@ $user_name = $this->Common->getUsers();
                                     </button></span>
                             </div><?php } ?>
 
+                           <?php $get_exrcisedirectorie_listsedits = $this->Common->getExrciseDirectoriesedit($users_id,$addexc);
+                           
+                         foreach ($get_exrcisedirectorie_listsedits as $key=>$get_exrcisedirectorie_listsedit){ ?>                     
+<div class="row" id="getexercise<?= $key ?>" hidden >
+    
+    <span class=""> <p class="text-primary"><?=  ucfirst($get_exrcisedirectorie_listsedit) ?></p></span>
+    
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped table-highlight">
+      <thead>
+          <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
+        <th><?= ucfirst($ex_name->tecnical1) ?></th>
+        <th><?= ucfirst($ex_name->tecnical2) ?></th>
+        <th><?= ucfirst($ex_name->tecnical3) ?></th>
+        <th><?= ucfirst($ex_name->tecnical4) ?></th>
+        <th>Remove</th>
+      </thead>
+      <tbody id="addmore<?= $key ?>" >
+<!--        <div id="addmore<?= $key ?>" >
+       </div>-->
+      </tbody>
+    </table>
+  </div> 
+<span class="pull-left" id="getexercisemore">
+     <button type="button" class="btn btn-default btn-sm" id="<?= $key ?>" onclick="getExcercisemore(this.id)">
+        <i class="material-icons">add</i> 
+         </button></span>
+</div>
 
+<!--<span class="pull-right" id="getexercisemore" hidden >
+     <button type="button" class="btn btn-default btn-sm" id="" onclick="getExcercise()">
+        <i class="material-icons">add</i> 
+         </button></span>-->
+<br>  <?php }
+                           ?>
 <!--                        <span class="pull-right" id="getexercisemore" hidden >
                             <button type="button" class="btn btn-default btn-sm" id="" onclick="getExcercise()">
                                 <i class="material-icons">add</i> 

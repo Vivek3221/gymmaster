@@ -64,6 +64,7 @@ $user_name = $this->Common->getUsers();
 
                           <?php foreach ($session_values as $key => $value) {
                             $excid = $key;
+                            $addexc[] = $key;
                             ?>
                             <div class="row" id="getexercise<?= $key ?>" >
                                 <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
@@ -140,7 +141,41 @@ $user_name = $this->Common->getUsers();
                                         <i class="material-icons">add</i> 
                                     </button></span>
                             </div><?php } ?>
-                            <br>
+                              <?php $get_exrcisedirectorie_listsedits = $this->Common->getExrciseDirectoriesedit($users_id,$addexc);
+                           
+                         foreach ($get_exrcisedirectorie_listsedits as $key=>$get_exrcisedirectorie_listsedit){ ?>                     
+<div class="row" id="getexercise<?= $key ?>" hidden >
+    
+    <span class=""> <p class="text-primary"><?=  ucfirst($get_exrcisedirectorie_listsedit) ?></p></span>
+    
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped table-highlight">
+      <thead>
+          <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
+        <th><?= ucfirst($ex_name->tecnical1) ?></th>
+        <th><?= ucfirst($ex_name->tecnical2) ?></th>
+        <th><?= ucfirst($ex_name->tecnical3) ?></th>
+        <th><?= ucfirst($ex_name->tecnical4) ?></th>
+        <th>Remove</th>
+      </thead>
+      <tbody id="addmore<?= $key ?>" >
+<!--        <div id="addmore<?= $key ?>" >
+       </div>-->
+      </tbody>
+    </table>
+  </div> 
+<span class="pull-left" id="getexercisemore">
+     <button type="button" class="btn btn-default btn-sm" id="<?= $key ?>" onclick="getExcercisemore(this.id)">
+        <i class="material-icons">add</i> 
+         </button></span>
+</div>
+
+<!--<span class="pull-right" id="getexercisemore" hidden >
+     <button type="button" class="btn btn-default btn-sm" id="" onclick="getExcercise()">
+        <i class="material-icons">add</i> 
+         </button></span>-->
+<br>  <?php }
+                           ?>
 
                         <div class="form-group form-float">
                             <div class="form-line">
@@ -187,7 +222,7 @@ $user_name = $this->Common->getUsers();
           // alert(start);
 
             var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
-          alert(exrcisedirectorie_id);
+         // alert(exrcisedirectorie_id);
             var next_id = $('#exrcisedirectorie_id').val();
              // alert(exrcisedirectorie_id);
               
@@ -200,7 +235,7 @@ $user_name = $this->Common->getUsers();
                 // alert(urls)
                 //urllink = urls + '/' + bank_name ;
                 var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start);
-                alert(data);
+              //  alert(data);
                     $.ajax({
                     type: "POST",
                     cache: false,
@@ -208,7 +243,7 @@ $user_name = $this->Common->getUsers();
                     url: urls,
                     success: function (html) {
                       
-                         alert(html);
+                     //    alert(html);
                         $('#addmore' +exrcisedirectorie_id).append(html);
                       $('#getexercisemore').show();
                     }
