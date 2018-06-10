@@ -130,7 +130,7 @@ $user_name = $this->Common->getUsers();
                                         </tbody>
                                     </table>
                                 </div> 
-                                <span class="pull-left" id="getexercisemore">
+                                <span class="pull-left" id="getexercisemore" style="margin-bottom: -6px">
                                     <button type="button" class="btn btn-default btn-sm" id="<?= $key ?>" onclick="getExcercisemore(this.id)">
                                         <i class="material-icons">add</i> 
                                     </button></span>
@@ -159,7 +159,7 @@ $user_name = $this->Common->getUsers();
       </tbody>
     </table>
   </div> 
-<span class="pull-left" id="getexercisemore">
+<span class="pull-left" id="getexercisemore"  style="margin-bottom: -6px">
      <button type="button" class="btn btn-default btn-sm" id="<?= $key ?>" onclick="getExcercisemore(this.id)">
         <i class="material-icons">add</i> 
          </button></span>
@@ -176,7 +176,7 @@ $user_name = $this->Common->getUsers();
                                 <i class="material-icons">add</i> 
                             </button></span>-->
                         <br>
-<div class="input-group">
+<div class="input-group" style="margin-top: -18px">
                             <label class="form-label">Exercise</label>
                             <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists, 'label' => FALSE]) ?>
                             <span class="input-group-btn" style="padding-top: 23px;">
