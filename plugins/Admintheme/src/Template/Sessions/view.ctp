@@ -11,20 +11,26 @@ $user_name = $this->Common->getUsers();
 //pr($user_values);
 //foreach ($session_values as $key => $val)
 //{
-//   pr($key);
+//   //pr($key);
 //   $sum = 0;
+//    $i=1;
 //    foreach ($val as $key1 => $vals)
 //    {
 //      //   pr($vals);
+//       
 //       foreach ($vals as $key2 => $las)
 //       {
 //          pr($las);
+//          pr($i);
+//          if($i % 4 == 0)
+//          {
 //          $sum = $las + $sum ;
+//          }
 //          // pr($user_values->$key[$key1]->$key2);
-//       } 
+//      }  $i++;
 //    }
-//    echo $sum;
-//    echo 'fff<br>';
+//   echo $sum;
+//  echo 'fff<br>';
 //}
 //pr($user_values);
 //
@@ -83,6 +89,7 @@ $user_name = $this->Common->getUsers();
                                 </div>
                                 <?php foreach ($session_values as $key => $value) {
                                     $sum = 0;
+                                        $i=1;
                                     ?>
                                 <div>
                                 <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
@@ -92,8 +99,10 @@ $user_name = $this->Common->getUsers();
                                         <?php foreach ($value as $val => $vale) {
                                             
                                             foreach ($vale as $valn => $valen) {
-                                                
+                                              if($i % 4 == 0)
+                                              {  
                                               $sum = $valen + $sum ;   
+                                              }
                                             ?>
                                     <div class=""> 
                                         <div class="row">
@@ -105,7 +114,7 @@ $user_name = $this->Common->getUsers();
                                             </div>
                                         </div>
                                     </div>
-                                        <?php } } ?>
+                                        <?php } $i++; } ?>
                <div class=""> 
                                         <div class="row">
                                             <div class="col-sm-4">
@@ -126,6 +135,7 @@ $user_name = $this->Common->getUsers();
                                 <?php if(isset($user_values) && $user_values != '') {?>
                                 <?php foreach ($user_values as $key => $value) {
                                      $sumuser = 0;
+                                      $i=1;
                                     ?>
                                 <div>
                                 <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
@@ -134,7 +144,10 @@ $user_name = $this->Common->getUsers();
                                         <?php foreach ($value as $val => $vale) {
                                             
                                             foreach ($vale as $valn => $valen) {
+                                                 if($i % 4 == 0)
+                                              {
                                                 $sumuser = $valen + $sumuser ;
+                                              }
                                             ?>
                                     <div class="ddd"> 
                                         <div class="row">
@@ -150,7 +163,7 @@ $user_name = $this->Common->getUsers();
                                             </div>
                                         </div>
                                     </div>
-                                        <?php } } ?>
+                                        <?php } $i++; } ?>
                                 <div class=""> 
                                         <div class="row">
                                             <div class="col-sm-4">
