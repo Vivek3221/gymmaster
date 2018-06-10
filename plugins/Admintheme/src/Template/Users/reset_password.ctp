@@ -4,7 +4,7 @@
             <a href="javascript:void(0);">Data Monitor</a>
             <?= $this->Flash->render() ?>
         </div>
-        <div class="card">
+        <div class="card login-back">
             <!-- start reset password form -->
             <div class="body" id="resetDiv">
                 <?= $this->Form->create('Reset Password Form', ['url' => ['controller' => 'Users', 'action' => 'resetPassword', $token], 'id' => 'resetPasswordForm', 'novalidate' => 'novalidate']) ?>
