@@ -125,7 +125,7 @@ $user_name = $this->Common->getUsers();
                     url: urls,
                     success: function (html) {
                       
-                          alert(first);
+                        //  alert(first);
                     if(first === 'no') {
                         $('#addmore' +exrcisedirectorie_id).append(html);
                         $('#getexercisemore').show();
