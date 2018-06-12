@@ -226,9 +226,13 @@ class ExrciseDirectoriesController extends AppController
              $this->viewBuilder()->layout("ajax");
              $exrcisedirectorie_id ='';
              $start_id ='';
+             $first = 'no';
              $exrcisedirectorie_id = $this->request->data['exrcisedirectorie_id'];
              $start_id = $this->request->data['start'];
-             
+             if(!empty($this->request->data['first'])) {
+                $first = $this->request->data['first'];
+             }
+             $users_id = $this->usersdetail['users_id'];
              $new_id = '';
 //             if(isset($new_id) && !empty($new_id))
 //             {
@@ -243,7 +247,7 @@ class ExrciseDirectoriesController extends AppController
              
               $get_exrcisedirectories = $this->ExrciseDirectories->find()->select(['name', 'tecnical1','id','tecnical2','tecnical3','tecnical4'])->where(['status' => 1,'id'=>$exrcisedirectorie_id])->first();
   //pr($get_exrcisedirectories); die;
-       $this->set(compact('get_exrcisedirectories','new_id','exrcisedirectorie_id','start_id'));
+       $this->set(compact('get_exrcisedirectories','new_id','exrcisedirectorie_id','start_id','users_id','first'));
     }
     
      public function beforeRender(\Cake\Event\Event $event) {

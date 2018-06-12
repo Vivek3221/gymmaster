@@ -48,39 +48,9 @@ $user_name = $this->Common->getUsers();
                                 </div>
                             </div>
                         </div>-->
-                       
-   <?php   foreach ($get_exrcisedirectorie_lists as $key=>$get_exrcisedirectorie_list){ ?>                     
-<div class="row" id="getexercise<?= $key ?>" hidden style="margin-bottom: 10px" >
-    
-    <span class=""> <p class="text-primary"><?=  ucfirst($get_exrcisedirectorie_list) ?></p></span>
-    
-  <div class="table-responsive">
-    <table class="table table-bordered table-striped table-highlight">
-      <thead>
-          <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
-        <th><?= ucfirst($ex_name->tecnical1) ?></th>
-        <th><?= ucfirst($ex_name->tecnical2) ?></th>
-        <th><?= ucfirst($ex_name->tecnical3) ?></th>
-        <th><?= ucfirst($ex_name->tecnical4) ?></th>
-        <th>Remove</th>
-      </thead>
-      <tbody id="addmore<?= $key ?>" >
-<!--        <div id="addmore<?= $key ?>" >
-       </div>-->
-      </tbody>
-    </table>
-  </div> 
-<span class="pull-left" id="getexercisemore">
-     <button type="button" class="btn btn-default btn-sm" id="<?= $key ?>" onclick="getExcercisemore(this.id)">
-        <i class="material-icons">add</i> 
-         </button></span>
-</div>
-
-<!--<span class="pull-right" id="getexercisemore" hidden >
-     <button type="button" class="btn btn-default btn-sm" id="" onclick="getExcercise()">
-        <i class="material-icons">add</i> 
-         </button></span>-->
- <?php } ?> 
+                        <div id="exerDataDiv" class="col-sm-12">                       
+                            <?php // data from ajax comes here ?>
+                        </div>    
                        <div class="input-group">
                                                   <label class="form-label">Exercise</label>
                           <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists , 'label'=>FALSE]) ?>
@@ -130,9 +100,15 @@ $user_name = $this->Common->getUsers();
             var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
           //alert(exrcisedirectorie_id);
             var next_id = $('#exrcisedirectorie_id').val();
-             // alert(exrcisedirectorie_id);
+            var first =  $('#getexercise'+ exrcisedirectorie_id).html();
               
-              $('#getexercise'+ exrcisedirectorie_id).show();
+            if(typeof first === "undefined") {
+                first = 'yes';
+            } else{
+                first = 'no';
+            }
+              
+//              $('#getexercise'+ exrcisedirectorie_id).show();
               
             //  
             if (exrcisedirectorie_id)
@@ -140,7 +116,7 @@ $user_name = $this->Common->getUsers();
                 var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
                 // alert(urls)
                 //urllink = urls + '/' + bank_name ;
-                var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start);
+                var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start)+'&first='+first;
                 //alert(data);
                     $.ajax({
                     type: "POST",
@@ -149,10 +125,14 @@ $user_name = $this->Common->getUsers();
                     url: urls,
                     success: function (html) {
                       
-//                          alert(html);
+                          alert(first);
+                    if(first === 'no') {
                         $('#addmore' +exrcisedirectorie_id).append(html);
-                      $('#getexercisemore').show();
+                        $('#getexercisemore').show();
+                    } else {
+                        $('#exerDataDiv').append(html);
                     }
+                 }
                 });
                 
                 
