@@ -1,11 +1,7 @@
 <?php
-$status = $this->Common->getstatus();
-
-//$exercises = $this->Common->getExercises();
-$get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories($users_id);
-//pr($get_exrcisedirectorie_lists); die;
-$user_name = $this->Common->getUsers();
-//pr($user_name); die;
+    $status = $this->Common->getstatus();
+    $get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories($users_id);
+    $user_name = $this->Common->getUsers();
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -22,8 +18,6 @@ $user_name = $this->Common->getUsers();
                         </h2>
                     </div>
                     <div class="body">
-                        <!--                            <form id="form_validation" method="POST">-->
-                        <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']);  ?>
                         <?= $this->Form->create($session, ['id' => 'addbodys', 'templates' => ['inputContainer' => '{{content}}']]) ?>
                         <?php if ($user_type != 3) {
                             ?>
@@ -39,25 +33,17 @@ $user_name = $this->Common->getUsers();
                                 <?= $this->Form->control('date', ['class' => 'form-control datetimepicker', 'type' => 'text', 'placeholder' => 'Select Date', 'label' => FALSE, 'required', 'format' => 'YYYY-MM-DD']) ?>          
                             </div>
                         </div> 
-<!--                        <div class="input-group mb-3" >
-                            <label class="form-label">Exercise</label>
-                            <div class="">
-                                <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists , 'label'=>FALSE]) ?> 
-                                <div class="input-group-append">
-                                    <button id="exrcisedirectorie"  class="btn btn-success"><?= __('+ Add Excercise') ?></button>
-                                </div>
-                            </div>
-                        </div>-->
+
                         <div id="exerDataDiv" class="col-sm-12">                       
                             <?php // data from ajax comes here ?>
                         </div>    
-                       <div class="input-group">
-                                                  <label class="form-label">Exercise</label>
-                          <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists , 'label'=>FALSE]) ?>
-                                                  <span class="input-group-btn" style="padding-top: 23px;">
-                              <span id="exrcisedirectorie" onclick="getExcercise()" class="btn btn-success"><?= __('+ Add Excercise') ?></span>
-                         </span>
-                      </div>
+                        <div class="input-group">
+                            <label class="form-label">Exercise</label>
+                            <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists , 'label'=>FALSE]) ?>
+                            <span class="input-group-btn" style="padding-top: 23px;">
+                               <span id="exrcisedirectorie" onclick="getExcercise()" class="btn btn-success"><?= __('+ Add Excercise') ?></span>
+                            </span>
+                        </div>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->input('status', ['empty' => __('Select status'), 'options' => $status, 'class' => 'form-control']); ?>
@@ -72,9 +58,6 @@ $user_name = $this->Common->getUsers();
 
     </div>
 </section>
-<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
-<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -82,124 +65,77 @@ $user_name = $this->Common->getUsers();
         $('').bootstrapMaterialDatePicker({format: 'DD/MM/YYYY HH:mm', minDate: new Date()});
     });
 
-</script>
-<script>
-
-    function removeExcercise(clicked_id)
-    {
-
+    function removeExcercise(clicked_id) {
         var id = 'remove' + clicked_id;
         $('#' + id).remove();
-        //alert(id);
-
     }
+    
     var start = 100;
-  function getExcercise() {
-          // alert(start);
-
-            var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
-          //alert(exrcisedirectorie_id);
-            var next_id = $('#exrcisedirectorie_id').val();
-            var first =  $('#getexercise'+ exrcisedirectorie_id).html();
-              
-            if(typeof first === "undefined") {
-                first = 'yes';
-            } else{
-                first = 'no';
-            }
-              
-//              $('#getexercise'+ exrcisedirectorie_id).show();
-              
-            //  
-            if (exrcisedirectorie_id)
-            {
-                var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
-                // alert(urls)
-                //urllink = urls + '/' + bank_name ;
-                var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start)+'&first='+first;
-                //alert(data);
-                    $.ajax({
-                    type: "POST",
-                    cache: false,
-                    data: data,
-                    url: urls,
-                    success: function (html) {
-                      
-                        //  alert(first);
+    function getExcercise() {
+        var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
+        var next_id = $('#exrcisedirectorie_id').val();
+        var first =  $('#getexercise'+ exrcisedirectorie_id).html();
+        if(typeof first === "undefined") {
+            first = 'yes';
+        } else{
+            first = 'no';
+        }
+        if (exrcisedirectorie_id) {
+            var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
+            var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start)+'&first='+first;
+            $.ajax({
+                type: "POST",
+                cache: false,
+                data: data,
+                url: urls,
+                success: function (html) {
                     if(first === 'no') {
                         $('#addmore' +exrcisedirectorie_id).append(html);
                         $('#getexercisemore').show();
                     } else {
                         $('#exerDataDiv').append(html);
                     }
-                 }
-                });
-                
-                
-            }
-            start = start + 1;
-            return false;
+                }
+            });
         }
-  function getExcercisemore(clickid) {
-         //  alert(clickid);
-          var exrcisedirectorie_id = clickid;
-          //alert(exrcisedirectorie_id);
-            var next_id = $('#exrcisedirectorie_id').val();
-             // alert(exrcisedirectorie_id);
-              
-              $('#getexercise'+ exrcisedirectorie_id).show();
-              var last     = $('#getexercise'+ exrcisedirectorie_id+' tr').last().attr('class');
-              var lasttr   =exrcisedirectorie_id+last;
-              var starttr  = exrcisedirectorie_id+start;
-
-             
-            //  
-            if (exrcisedirectorie_id)
-            {
-                var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
-
-                var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start);
-                //alert(data);
-                    $.ajax({
-                    type: "POST",
-                    cache: false,
-                    data: data,
-                    url: urls,
-                    success: function (html) {
-                      
-                          //alert(html);
-                        $('#addmore' +exrcisedirectorie_id).append(html);
-                        $('#a'+starttr).val($('#a'+lasttr).val());
-                        $('#b'+starttr).val($('#b'+lasttr).val());
-                        $('#c'+starttr).val($('#c'+lasttr).val());
-                        $('#d'+starttr).val($('#d'+lasttr).val());
-                        $('#getexercisemore').show();
-                    }
-                });
-                
-                
-            }
-            start = start + 1;
-            return false;
-        }
+        start = start + 1;
+        return false;
+    }
         
-         function getSum2(clicked_id)
-    {
-          //alert(clicked_id);
-          //var curr = $(this);
-          // var gg =   curr.parents('#'+remove2).find('#'+clicked_id).val();
-          //alert(gg);
+    function getExcercisemore(clickid) {
+        var exrcisedirectorie_id = clickid;
+        var next_id = $('#exrcisedirectorie_id').val();
+        $('#getexercise'+ exrcisedirectorie_id).show();
+        var last     = $('#getexercise'+ exrcisedirectorie_id+' tr').last().attr('class');
+        var lasttr   =exrcisedirectorie_id+last;
+        var starttr  = exrcisedirectorie_id+start;
+        if (exrcisedirectorie_id) {
+            var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
+            var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start);
+                $.ajax({
+                type: "POST",
+                cache: false,
+                data: data,
+                url: urls,
+                success: function (html) {
+                    $('#addmore' +exrcisedirectorie_id).append(html);
+                    $('#a'+starttr).val($('#a'+lasttr).val());
+                    $('#b'+starttr).val($('#b'+lasttr).val());
+                    $('#c'+starttr).val($('#c'+lasttr).val());
+                    $('#d'+starttr).val($('#d'+lasttr).val());
+                    $('#getexercisemore').show();
+                }
+            });
+        }
+        start = start + 1;
+        return false;
+    }
+        
+    function getSum2(clicked_id){
         var res = clicked_id.slice(1,9); 
         var val1 = $('#a'+res).val();
         var val2 = $('#'+clicked_id).val();
-        //alert(val1);
-       // alert(val2);
-     document.getElementById('c'+res).value = val1 * val2;
-        
-       
-              //  $('#get_sub_category').html(html);
-          
+        document.getElementById('c'+res).value = val1 * val2;
         return false;
     }
-
 </script>
