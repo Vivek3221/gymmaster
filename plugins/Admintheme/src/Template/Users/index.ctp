@@ -123,7 +123,7 @@ $user_type = $this->Common->getType();
                                     <?php // if (empty($user->payment)){?>
                                         <i class="material-icons" title="Add Plan"><?= $this->Html->link(__('shopping_cart'), ['action' => 'payment', $user['id']]) ?></i>
                                     <?php // } ?>
-                                        <i class="material-icons" title="Add Payment"><?= $this->Html->link(__('work'), ['action' => 'payment', $user['id']]) ?></i>
+                                        <i class="material-icons" title="Add Payment"><?= $this->Html->link(__('work'), ['action' => 'addPayment', $user['id']]) ?></i>
                                     </td>
                                 </tr>
                                     <?php } ?> 

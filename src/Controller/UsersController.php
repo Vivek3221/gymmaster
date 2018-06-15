@@ -565,7 +565,15 @@ class UsersController extends AppController
         
         $this->set(compact('token'));
     }
+    
+    /*
+     * Add payments for user's plan
+     */
+    public function addPayment($userid){
+        
+    }
 
+    
     public function beforeRender(\Cake\Event\Event $event) {
         parent::beforeRender($event);
         $this->viewBuilder()->theme('Admintheme');
