@@ -114,7 +114,7 @@ $getPayDuration = $this->Common->getPayDuration();
                                         <?php
                                         $dob1 = $user->dob;
                                         //pr($dob1);
-                                    $dob  =   date_format($dob1,"y-m-d");
+                                    $dob  =   date_format($dob1,"Y-m-d");
                                     //pr($dob); 
                                         ?>
 
