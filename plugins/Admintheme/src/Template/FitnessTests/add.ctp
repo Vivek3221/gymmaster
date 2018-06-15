@@ -47,7 +47,7 @@ $user_name = $this->Common->getUsers();
                          <div class="col-md-6"> 
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control($bodies_list->id.'['.$exercise->id.']', ['class' => 'form-control', 'type' => 'number', 'label' => false ,'required']) ?> 
+                                <?= $this->Form->control($bodies_list->id.'['.$exercise->id.']', ['class' => 'form-control', 'type' => 'number', 'step' =>'.01','label' => false ,'required']) ?> 
                                 <label class="form-label"><?= $exercise->name ?></label>
                             </div>
                             <small class="text-muted"> * <?= $exercise->description ?></small>
