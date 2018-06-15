@@ -145,7 +145,7 @@
                 data: data,
                 url: urls,
                 success: function (html) {
-                    alert(html);
+                  //  alert(html);
                     if(first === 'no') {
                         $('#addmore' +exrcisedirectorie_id).append(html);
                         $('#getexercisemore').show();

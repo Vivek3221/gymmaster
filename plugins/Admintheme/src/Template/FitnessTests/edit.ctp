@@ -40,7 +40,7 @@ $bodies_lists = $this->Common->getBodies();
                          <div class="col-md-6"> 
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control($bodies_list->id.'['.$exercise->id.']', ['class' => 'form-control', 'type' => 'text', 'value'=> $exercise_value->$body_id->$exercise_id, 'label' => false]) ?> 
+                                <?= $this->Form->control($bodies_list->id.'['.$exercise->id.']', ['class' => 'form-control', 'type' => 'number','step' => '.01', 'value'=> $exercise_value->$body_id->$exercise_id, 'label' => false]) ?> 
                                 <label class="form-label"><?= $exercise->name ?></label>
                             </div>
                         </div>
