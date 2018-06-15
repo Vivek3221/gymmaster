@@ -193,6 +193,11 @@ class UsersController extends AppController
     }
 
     public function payment($id = '') {
+        $this->PlanSubscribers = TableRegistry::get('PlanSubscribers');
+        $this->Payments        = TableRegistry::get('Payments');
+        $planSubscribers       = $this->PlanSubscribers->newEntity();
+        $payments       = $this->Payments->newEntity();
+        $plandata   =   $paymentdata = [];
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
@@ -218,7 +223,27 @@ class UsersController extends AppController
             $user    = $this->Users->patchEntity($user, $data);
             $useradd = $this->Users->save($user);
             if ($useradd) {
-
+                
+                // insert into plan_subscribers
+                $plandata['user_id']         = $user->id;
+                $plandata['partner_id']      = $this->usersdetail['users_id'];
+                $plandata['plan_name']       = $data['plan_name'];
+                $plandata['fee']             = $data['fee'];
+                $plandata['currency']        = 'INR';
+                $plandata['plan_expire_date']= date('Y-m-d H:i:s',strtotime($data['plan_expire_date']));
+                $plandata['payment_due_date']= date('Y-m-d H:i:s',strtotime($data['payment_due_date']));
+                $planSubscribers             = $this->PlanSubscribers->patchEntity($planSubscribers, $plandata);
+                $planSubscribersAdd = $this->PlanSubscribers->save($planSubscribers);
+                
+                // insert into payments
+                $paymentdata['user_id']             = $user->id;
+                $paymentdata['partner_id']          = $this->usersdetail['users_id'];
+                $paymentdata['plan_subscriber_id']  = $planSubscribers->id;
+                $paymentdata['amount']              = $data['amount'];
+                $paymentdata['currency']            = 'INR';
+                $paymentdata['mode_ofpay']          = $data['mode_ofpay'];
+                $payments    = $this->Payments->patchEntity($payments, $paymentdata);
+                $paymentssAdd = $this->Payments->save($payments);
                 $userDataArr['name']      = $data['name'];
                 $userDataArr['password']  = $data['cpassword'];
                 $userDataArr['email']     = $data['email'];

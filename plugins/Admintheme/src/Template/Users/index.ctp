@@ -116,13 +116,14 @@ $user_type = $this->Common->getType();
                                     </td><?php } else { ?>
                                     <td><?= $this->Form->button('Enquiry',['class'=>'btn btn-primary waves-effect non-click','id'=>$user->id,'value'=>$user->active ]) ?>
                                     </td>  <?php } ?>
-                                    <td><i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $user['id']]) ?></i>
+                                    <td><i class="material-icons" title="View"><?= $this->Html->link(__('visibility'), ['action' => 'view', $user['id']]) ?></i>
                                         <?php if($usersdetail['users_type'] == 1){; ?>
-                                        <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $user['id']]) ?></i>
+                                        <i class="material-icons" title="Edit"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $user['id']]) ?></i>
                                         <?php }?>
-                                    <?php if (empty($user->payment)){?>
-                                        <i class="material-icons"><?= $this->Html->link(__('find_in_page'), ['action' => 'payment', $user['id']]) ?></i>
-                                    <?php } ?>
+                                    <?php // if (empty($user->payment)){?>
+                                        <i class="material-icons" title="Add Plan"><?= $this->Html->link(__('shopping_cart'), ['action' => 'payment', $user['id']]) ?></i>
+                                    <?php // } ?>
+                                        <i class="material-icons" title="Add Payment"><?= $this->Html->link(__('work'), ['action' => 'payment', $user['id']]) ?></i>
                                     </td>
                                 </tr>
                                     <?php } ?> 
