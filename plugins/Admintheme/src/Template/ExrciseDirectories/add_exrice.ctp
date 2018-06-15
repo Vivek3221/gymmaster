@@ -1,6 +1,6 @@
 <?php
     if($first == 'yes') {
-        $get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories($users_id);
+        $get_exrcisedirectorie_lists = $this->Common->getExrciseDirectoriesm();
         foreach ($get_exrcisedirectorie_lists as $key=>$get_exrcisedirectorie_list){
             if($key == $exrcisedirectorie_id) {
 ?>

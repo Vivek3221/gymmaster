@@ -20,7 +20,7 @@ class ExrciseDirectoriesController extends AppController
        public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
        // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index','add','view','delete','edit','status','addExrice']);
+        $this->Auth->allow(['index','add','view','delete','edit','status','addExrice','partnerExcr']);
         
     }
     /**
@@ -248,6 +248,25 @@ class ExrciseDirectoriesController extends AppController
               $get_exrcisedirectories = $this->ExrciseDirectories->find()->select(['name', 'tecnical1','id','tecnical2','tecnical3','tecnical4'])->where(['status' => 1,'id'=>$exrcisedirectorie_id])->first();
   //pr($get_exrcisedirectories); die;
        $this->set(compact('get_exrcisedirectories','new_id','exrcisedirectorie_id','start_id','users_id','first'));
+    }
+    
+    
+      public function partnerExcr() {
+         $this->viewBuilder()->layout("ajax");
+       $users_id = $this->request->data['partner_id'];
+      // pr($users_id); die;
+      // $get_exrcisedirectories = TableRegistry::get('ExrciseDirectories');
+       if(isset($users_id) && !empty($users_id))
+       {
+       $get_exrcisedirectorie_lists = $this->ExrciseDirectories->find('list')->where(['status' => 1,'user_id'=>$users_id])->toArray();
+       } else {
+           $users_id = $this->usersdetail['users_id'];
+      $get_exrcisedirectorie_lists = $this->ExrciseDirectories->find('list')->where(['status' => 1,'user_id'=>$users_id])->toArray();
+       
+       }
+        $this->set(compact('get_exrcisedirectorie_lists'));
+       // $this->set('_serialize', ['cities']); 
+       
     }
     
      public function beforeRender(\Cake\Event\Event $event) {

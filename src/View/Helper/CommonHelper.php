@@ -144,6 +144,13 @@ class CommonHelper extends Helper {
         $get_exrcisedirectorie_lists = $get_exrcisedirectories->find('list')->where(['status' => 1,'user_id'=>$users_id])->toArray();
         return $get_exrcisedirectorie_lists;
     }
+     public function getExrciseDirectoriesm()
+    {
+         
+        $get_exrcisedirectories = TableRegistry::get('ExrciseDirectories');
+        $get_exrcisedirectorie_lists = $get_exrcisedirectories->find('list')->where(['status' => 1])->toArray();
+        return $get_exrcisedirectorie_lists;
+    }
      public function getExrciseDirectoriesedit($users_id,$addexc)
     {
          

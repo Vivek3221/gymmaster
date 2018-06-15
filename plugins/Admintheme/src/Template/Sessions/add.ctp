@@ -2,6 +2,7 @@
     $status = $this->Common->getstatus();
     $get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories($users_id);
     $user_name = $this->Common->getUsers();
+    $partner = $this->Common->getpartner();
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -36,10 +37,22 @@
 
                         <div id="exerDataDiv" class="col-sm-12">                       
                             <?php // data from ajax comes here ?>
-                        </div>    
+                        </div>  
+                         <?php if ($user_type == 1) {  ?>
+                        <div class="input-group">
+                            <div id="exerDataDiv" class="col-sm-4"> 
+                           <?= $this->Form->control('partner_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Partner'), 'options' => $partner , 'onchange' => 'getpartnerexcr(this.id)', 'label'=>FALSE]) ?>
+                        </div>
+                            <div id="exerDataDiv" class="col-sm-4"> 
+                            <span id="exrcisedirectorie" onclick="getOwnexer()" class="btn btn-success"><?= __('Own Excercise') ?></span>
+                             </div>
+                        </div>
+                          <?php } ?>
                         <div class="input-group">
                             <label class="form-label">Exercise</label>
+                            <div id="changeexcr">
                             <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists , 'label'=>FALSE]) ?>
+                            </div>
                             <span class="input-group-btn" style="padding-top: 23px;">
                                <span id="exrcisedirectorie" onclick="getExcercise()" class="btn btn-success"><?= __('+ Add Excercise') ?></span>
                             </span>
@@ -71,6 +84,48 @@
     }
     
     var start = 100;
+    function getOwnexer() {
+       var partner_id = '';
+       //alert(partner_id);
+       // if (partner_id) {
+            var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'partnerExcr']) ?>';
+            var data = '&partner_id=' + escape(partner_id);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                data: data,
+                url: urls,
+                success: function (html) {
+                    //alert(html);
+                   
+                        $('#changeexcr').html(html);
+                    
+                }
+            });
+        //}
+        return false;
+    }
+    function getpartnerexcr() {
+        var partner_id = $('#partner-id').val();
+      // alert(partner_id);
+        if (partner_id) {
+            var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'partnerExcr']) ?>';
+            var data = '&partner_id=' + escape(partner_id);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                data: data,
+                url: urls,
+                success: function (html) {
+                  //  alert(html);
+                   
+                        $('#changeexcr').html(html);
+                    
+                }
+            });
+        }
+        return false;
+    }
     function getExcercise() {
         var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();
         var next_id = $('#exrcisedirectorie_id').val();
@@ -80,6 +135,7 @@
         } else{
             first = 'no';
         }
+       // alert(exrcisedirectorie_id);
         if (exrcisedirectorie_id) {
             var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'addExrice']) ?>';
             var data = '&exrcisedirectorie_id=' + escape(exrcisedirectorie_id)+'&start='+escape(start)+'&first='+first;
@@ -89,6 +145,7 @@
                 data: data,
                 url: urls,
                 success: function (html) {
+                    alert(html);
                     if(first === 'no') {
                         $('#addmore' +exrcisedirectorie_id).append(html);
                         $('#getexercisemore').show();

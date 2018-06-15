@@ -133,6 +133,7 @@ class SessionsController extends AppController
           if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
+      //  pr($this->usersdetail); die;
         $user_type = $this->usersdetail['users_type'];
         $users_id = $this->usersdetail['users_id'];
         $session = $this->Sessions->newEntity();
