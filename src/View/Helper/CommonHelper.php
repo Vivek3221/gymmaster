@@ -205,9 +205,11 @@ class CommonHelper extends Helper {
     }
   
     public function getSession(){
+         $users_type = $this->request->session()->read('users');
+         $users_id = $users_type['users_id'];
         $get_sessions = TableRegistry::get('Sessions');
         $session  = $get_sessions->find()
-                                 ->where(['date <' => date('Y-m-d') ,'user_detail Is Null'])
+                                 ->where(['date <' => date('Y-m-d') ,'user_detail Is Null','partner_id'=>$users_id])
                                  ->count();
         return $session;
         
