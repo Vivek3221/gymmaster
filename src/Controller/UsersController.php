@@ -206,13 +206,13 @@ class UsersController extends AppController
         ]);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-
             $data = $this->request->data;
-            if ($data['password'] != $data['cpassword']) {
-                return $this->redirect(['action' => 'payment', $id]);
-            }
-            $data['password'] = md5($data['password']);
-
+            if(!empty($data['password'])) {    
+                if ($data['password'] != $data['cpassword']) {
+                    return $this->redirect(['action' => 'payment', $id]);
+                }
+                $data['password'] = md5($data['password']);
+            }    
             if (isset($this->request->data['images']['name']) && $data['images']['name'] != "") {
                 $flname = time() . str_replace(" ", "", $data['images']['name']);
                 $flpath = WWW_ROOT . "img/" . $flname;
@@ -241,33 +241,40 @@ class UsersController extends AppController
                 $paymentdata['plan_subscriber_id']  = $planSubscribers->id;
                 $paymentdata['amount']              = $data['amount'];
                 $paymentdata['currency']            = 'INR';
-                $paymentdata['mode_ofpay']          = $data['mode_ofpay'];
                 $payments    = $this->Payments->patchEntity($payments, $paymentdata);
+                $payments->mode_ofpay = $data['mode_ofpay'];
                 $paymentssAdd = $this->Payments->save($payments);
-                $userDataArr['name']      = $data['name'];
-                $userDataArr['password']  = $data['cpassword'];
-                $userDataArr['email']     = $data['email'];
-                $userDataArr['login_url'] = Router::url('/', ['controller' => 'Users', 'action' => 'login']);
-                $toEmail                  = $data['email'];
-                $subject                  = 'Inquery Successfully | Datamonitoring';
-                $email                    = new Email();
-                $email->transport('default');
-                try {
-                    $email->emailFormat('html');
-                    $email->template('userpass')
-                            ->from(['support@datamonitering.com' => 'Datamonitoring'])
-                            ->to($toEmail)
-                            ->subject($subject)
-                            ->viewVars($userDataArr)
-                            ->send();
-                } catch (Exception $e) {
-                    
-                }$this->Flash->success(__('The user has been saved.'));
-                    if($useradd->user_type == 2){
-                        return $this->redirect(['controller' => 'Users', 'action' => 'index']);
-                    }else {
-                       return $this->redirect(['controller' => 'FitnessMeserments', 'action' => 'add']);
+                if(!empty($data['password'])) {
+                    $userDataArr['name']      = $data['name'];
+                    $userDataArr['password']  = $data['cpassword'];
+                    $userDataArr['email']     = $data['email'];
+                    $userDataArr['login_url'] = Router::url('/', ['controller' => 'Users', 'action' => 'login']);
+                    $toEmail                  = $data['email'];
+                    $subject                  = 'Inquery Successfully | Datamonitoring';
+                    $email                    = new Email();
+                    $email->transport('default');
+                    try {
+                        $email->emailFormat('html');
+                        $email->template('userpass')
+                                ->from(['support@datamonitering.com' => 'Datamonitoring'])
+                                ->to($toEmail)
+                                ->subject($subject)
+                                ->viewVars($userDataArr)
+                                ->send();
+                    } catch (Exception $e) {
+
                     }
+                }    
+                if(empty($data['password'])) {
+                    $this->Flash->success(__('The plan has been saved.'));
+                    return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+                }elseif($useradd->user_type == 2){
+                    $this->Flash->success(__('The user has been saved.'));
+                    return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+                }else {
+                    $this->Flash->success(__('The user has been saved.'));
+                   return $this->redirect(['controller' => 'FitnessMeserments', 'action' => 'add']);
+                }
                 
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
@@ -570,7 +577,28 @@ class UsersController extends AppController
      * Add payments for user's plan
      */
     public function addPayment($userid){
-        
+        $this->Payments    = TableRegistry::get('Payments');
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        $payment = $this->Payments->newEntity();
+        if ($this->request->is('post')) {
+            $data = $this->request->getData();
+            $data['partner_id'] = $this->usersdetail['users_id'];
+            $data['currency'] = 'INR';
+            $payment = $this->Payments->patchEntity($payment, $data);
+            $payment->mode_ofpay = $data['mode_ofpay'];
+            if ($this->Payments->save($payment)) {
+                $this->Flash->success(__('The payment has been saved.'));
+
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(__('The payment could not be saved. Please, try again.'));
+        }
+        $users = $this->Payments->Users->find('list', ['limit' => 200]);
+        $partners = $this->Payments->Partners->find('list', ['limit' => 200]);
+        $planSubscribers = $this->Payments->PlanSubscribers->find('list', ['limit' => 200]);
+        $this->set(compact('payment', 'users', 'partners', 'planSubscribers','userid'));
     }
 
     

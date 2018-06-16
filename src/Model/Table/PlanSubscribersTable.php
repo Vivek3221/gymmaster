@@ -37,7 +37,7 @@ class PlanSubscribersTable extends Table
         parent::initialize($config);
 
         $this->setTable('plan_subscribers');
-        $this->setDisplayField('id');
+        $this->setDisplayField('plan_name');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
@@ -106,7 +106,7 @@ class PlanSubscribersTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
-        $rules->add($rules->existsIn(['partner_id'], 'Partners'));
+        $rules->add($rules->existsIn(['partner_id'], 'Users'));
 
         return $rules;
     }

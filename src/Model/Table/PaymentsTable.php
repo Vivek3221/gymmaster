@@ -91,7 +91,7 @@ class PaymentsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
-        $rules->add($rules->existsIn(['partner_id'], 'Partners'));
+        $rules->add($rules->existsIn(['partner_id'], 'Users'));
         $rules->add($rules->existsIn(['plan_subscriber_id'], 'PlanSubscribers'));
 
         return $rules;

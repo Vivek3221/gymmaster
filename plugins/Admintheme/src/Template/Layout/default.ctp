@@ -134,8 +134,8 @@
     <!-- Demo Js -->
 <!--    <script src="js/demo.js"></script>-->
     <script>
-        $('#payment-due-date').bootstrapMaterialDatePicker({ format : 'DD/MM/YYYY HH:mm', minDate : new Date() });
-        $('#plan-expire-date').bootstrapMaterialDatePicker({ format : 'DD/MM/YYYY HH:mm', minDate : new Date() });
+        $('#payment-due-date').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD HH:mm', minDate : new Date() });
+        $('#plan-expire-date').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD HH:mm', minDate : new Date() });
         $('.select2').select2();
         $('#forgetPasswordDiv').hide();    
         $("#showForgetForm").click(function(){
