@@ -60,7 +60,7 @@
                           <?php } ?>
                         <div class="input-group">
                             <label class="form-label">Exercise</label>
-                            <div id="changeexcr">
+                            <div class="select-m" id="changeexcr">
                             <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists , 'label'=>FALSE]) ?>
                             </div>
                             <span class="input-group-btn" style="padding-top: 23px;">
