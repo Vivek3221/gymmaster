@@ -36,7 +36,7 @@ $action = $this->request['action'];
                         </a>
                     </li>
                  <?php if($usersdetail['users_type'] != 3){; ?>
-                 <li class="<?php if (($controller == 'Users' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'logoutqq' || $action == 'payment'))){echo "active";}?>">
+                 <li class="<?php if (($controller == 'Users' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'addPayment' || $action == 'payment'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>">
                         <i class="material-icons">list</i>
                         <span><?= __('Users') ?></span>
