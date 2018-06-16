@@ -32,11 +32,11 @@ $getPayDuration = $this->Common->getPayDuration();
                         <?= $this->Form->create($payment, ['enctype' => 'multipart/form-data','id' => 'payment','templates' => ['inputContainer' => '{{content}}']]) ?>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('user_id', ['class' => 'form-control', 'type' => 'select','options' => $users, 'empty'=>'Select User', 'required', 'label'=>'Select User','default'=>$userid]) ?>
+                                <?= $this->Form->control('user_id', ['class' => 'form-control', 'type' => 'select','options' => $users, 'empty'=>'Select User', 'required', 'label'=>'Select User','default'=>$userid, 'onchange'=>'showPlanList(this.value)']) ?>
                             </div>
                         </div>
                         <div class="form-group form-float">
-                            <div class="form-line">
+                            <div class="form-line" id="planDiv">
                                 <?= $this->Form->control('plan_subscriber_id', ['class' => 'form-control', 'type' => 'select','options' => $planSubscribers, 'empty'=>'Select Plan', 'required', 'label'=>'Select Plan']) ?>
                             </div>
                         </div>
@@ -72,7 +72,23 @@ $getPayDuration = $this->Common->getPayDuration();
         $('#makepayment').show();
         $('#hidePayment').hide();
     }
-
+    
+    function showPlanList(userid) {
+        if (userid !== '') {
+            var urls = '<?= $this->Url->build(['controller' => 'Users', 'action' => 'showPlanList']) ?>';
+            var urls = urls+'/' + escape(userid);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: urls,
+                success: function (html) {
+                   $('#planDiv').html(html);
+                }
+            });
+        }
+        return false;
+    }
+    
     $(document).ready(function () {
         $('.datetimepicker').bootstrapMaterialDatePicker({format: 'YYYY-MM-DD HH:mm', lang: 'fr', weekStart: 1, cancelText: 'Cancel', maxDate: new Date()});
         $('').bootstrapMaterialDatePicker({format: 'DD/MM/YYYY HH:mm', minDate: new Date()});

@@ -597,11 +597,26 @@ class UsersController extends AppController
         }
         $users = $this->Payments->Users->find('list', ['limit' => 200]);
         $partners = $this->Payments->Partners->find('list', ['limit' => 200]);
-        $planSubscribers = $this->Payments->PlanSubscribers->find('list', ['limit' => 200]);
+        $planSubscribers = $this->Payments->PlanSubscribers->find('list', ['limit' => 200])
+                ->where(['user_id'=>$userid,'partner_id'=>$this->usersdetail['users_id']]);
         $this->set(compact('payment', 'users', 'partners', 'planSubscribers','userid'));
     }
 
-    
+    /*
+     * show plan list select inout using ajax
+     */
+    public function showPlanList($userid) {
+        $this->viewBuilder()->layout("ajax");
+        $this->Payments    = TableRegistry::get('Payments');
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        $planSubscribers = $this->Payments->PlanSubscribers->find('list', ['limit' => 200])
+                ->where(['user_id'=>$userid,'partner_id'=>$this->usersdetail['users_id']]);
+        $this->set(compact('planSubscribers','userid'));
+    }
+
+
     public function beforeRender(\Cake\Event\Event $event) {
         parent::beforeRender($event);
         $this->viewBuilder()->theme('Admintheme');
