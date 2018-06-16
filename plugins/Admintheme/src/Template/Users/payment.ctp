@@ -29,36 +29,34 @@ $getPayDuration = $this->Common->getPayDuration();
                             <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']) ?>" class="">Add Later</a>
                         </div>
                         <div class="" id="makepayment" hidden="">
-                        <!--                            <form id="form_validation" method="POST">-->
-                        <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']); ?>
                         <?= $this->Form->create($user, ['enctype' => 'multipart/form-data','id' => 'payment','templates' => ['inputContainer' => '{{content}}']]) ?>
+                            <?php if(empty($user['password'])) { ?>
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <?= $this->Form->control('user_type', ['class' => 'form-control', 'type' => 'select','options'=>$user_type, 'empty'=>__('Select Type')]) ?>
 
-                        <div class="form-group form-float">
-                            <div class="form-line">
-<!--                                        <input type="text" class="form-control" name="name" required>-->
-                                <?= $this->Form->control('user_type', ['class' => 'form-control', 'type' => 'select','options'=>$user_type, 'empty'=>__('Select Type')]) ?>
+                                </div>
+                            </div>
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <?= $this->Form->control('name', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?>
+                                    <label class="form-label">Name</label>
+                                </div>
+                            </div>
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <?= $this->Form->control('email', ['class' => 'form-control', 'label' => false]) ?>
+                                    <label class="form-label">Email</label>
+                                </div>
+                            </div>
 
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <?= $this->Form->control('mobile_no', ['class' => 'form-control','type'=>'text', 'label' => false]) ?>
+                                    <label class="form-label">Mobile No.</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('name', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?>
-                                <label class="form-label">Name</label>
-                            </div>
-                        </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('email', ['class' => 'form-control', 'label' => false]) ?>
-                                <label class="form-label">Email</label>
-                            </div>
-                        </div>
-
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('mobile_no', ['class' => 'form-control','type'=>'text', 'label' => false]) ?>
-                                <label class="form-label">Mobile No.</label>
-                            </div>
-                        </div>
+                            <?php } ?>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('plan_name', ['class' => 'form-control', 'type' => 'text','required', 'label' => false]) ?>
@@ -89,22 +87,11 @@ $getPayDuration = $this->Common->getPayDuration();
                                 <label class="form-label">Remaining Payment Due Date</label>
                             </div>
                         </div> 
-<!--                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?php // echo $this->Form->control('b_payment', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?>
-                                <label class="form-label">Payment Due.</label>
-                            </div>
-                        </div>-->
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('mode_ofpay', ['class' => 'form-control', 'type' => 'select','empty'=>'Select Mode Of Payment','label' => 'Mode Of Payment','options'=>$getModPayment]) ?>
                             </div>
                         </div>
-<!--                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('course_duration', ['class' => 'form-control', 'type' => 'select','empty'=>'Select Course Of Duration','options'=>$getPayDuration]) ?>
-                            </div>
-                        </div>-->
                         <?php if(empty($user['password'])) { ?>
                             <div class="form-group form-float">
                                <div class="form-line">
@@ -119,7 +106,7 @@ $getPayDuration = $this->Common->getPayDuration();
                                    <label class="form-label">Confirm Password</label>
                                </div>
                            </div>
-                        <?php } ?>   
+                           
                          <div class="form-group form-floa">
                                                 <div class="form-line image">
                                                     <?= $this->Form->control('images', ['label' => 'Cover Image', 'class' => 'form-control', 'type' => 'file', 'onchange' => "ImageFilesize();"]) ?>
@@ -130,7 +117,7 @@ $getPayDuration = $this->Common->getPayDuration();
                                 <?= $this->Form->input('active', ['options' => $status, 'class' => 'form-control', 'empty' => __('Select Status')]); ?>
                             </div>
                         </div>
-
+                        <?php } ?>    
                        <div class="form-btn text-center">
 
                             <?= $this->Form->button('Add Plan', ['class' => 'btn btn-primary waves-effect']) ?>

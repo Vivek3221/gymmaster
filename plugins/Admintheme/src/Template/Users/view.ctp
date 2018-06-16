@@ -110,6 +110,17 @@ $user_type = $this->Common->getType();
                             </div>
                             
                         </div>
+                        
+                        <div class="body">
+                            <?php if(!empty($planSubscribers)) { ?>
+                                <table class="vertical-table">
+                            <?php foreach ($planSubscribers as $planData) { ?>
+                                
+                            <?php } ?>
+                                </table>
+                            <?php } ?>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
