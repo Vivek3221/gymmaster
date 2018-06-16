@@ -616,6 +616,37 @@ class UsersController extends AppController
         $this->set(compact('planSubscribers','userid'));
     }
 
+    /*
+     * show plan list select inout using ajax
+     */
+    public function showPlanDetails($planid) {
+        $this->viewBuilder()->layout("ajax");
+        $this->Payments    = TableRegistry::get('Payments');
+        $this->PlanSubscribers    = TableRegistry::get('PlanSubscribers');
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        $planSubscribers = $this->PlanSubscribers->find('all')
+                ->select(['id','fee','payment_due_date','plan_expire_date'])
+                ->where(['id'=>$planid])->first();
+        $paidAmount = $this->Payments->find('all');
+        $paidAmount =        $paidAmount->select(['sum' => $paidAmount->func()->sum('amount')])
+                ->where(['plan_subscriber_id'=>$planSubscribers->id])->first();
+        $paid = 0;
+        if(!empty($paidAmount->sum)) {
+            $paid = $paidAmount->sum;
+        }
+        $remaining = $planSubscribers->fee - $paid;
+        echo '<div class="col-sm-12"><strong>Selected Plan Details:</strong></div>';
+        echo '<div class="col-sm-4"><strong>Total Fee:</strong> INR '.$planSubscribers->fee.'</div>';
+        echo '<div class="col-sm-4"><strong>Paid Amount:</strong> INR '.$paid.'</div>';
+        echo '<div class="col-sm-4"><strong>Remaining Amount:</strong> INR '.$remaining.'</div>';
+        echo '<div class="col-sm-4"><strong>Payment Due Date:</strong> '.date('d-m-Y',strtotime($planSubscribers->payment_due_date)).'</div>';
+        echo '<div class="col-sm-4"><strong>Plan Expire Date:</strong> '.date('d-m-Y',strtotime($planSubscribers->plan_expire_date)).'</div>';
+//        pr($planSubscribers);
+        exit;
+    }
+
 
     public function beforeRender(\Cake\Event\Event $event) {
         parent::beforeRender($event);

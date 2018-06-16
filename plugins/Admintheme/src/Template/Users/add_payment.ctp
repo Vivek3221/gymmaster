@@ -37,9 +37,12 @@ $getPayDuration = $this->Common->getPayDuration();
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line" id="planDiv">
-                                <?= $this->Form->control('plan_subscriber_id', ['class' => 'form-control', 'type' => 'select','options' => $planSubscribers, 'empty'=>'Select Plan', 'required', 'label'=>'Select Plan']) ?>
+                                <?= $this->Form->control('plan_subscriber_id', ['class' => 'form-control', 'type' => 'select','options' => $planSubscribers, 'empty'=>'Select Plan', 'required', 'label'=>'Select Plan', 'onchange'=>'showPlanDetails(this.value)']) ?>
                             </div>
                         </div>
+                            <div class="row" id="planDetailDiv">
+
+                        </div>    
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('amount', ['class' => 'form-control', 'type' => 'number', 'min'=>0, 'label' => 'Amount']) ?>
@@ -73,6 +76,9 @@ $getPayDuration = $this->Common->getPayDuration();
         $('#hidePayment').hide();
     }
     
+    /*
+     * get users plan list
+     */
     function showPlanList(userid) {
         if (userid !== '') {
             var urls = '<?= $this->Url->build(['controller' => 'Users', 'action' => 'showPlanList']) ?>';
@@ -85,6 +91,27 @@ $getPayDuration = $this->Common->getPayDuration();
                    $('#planDiv').html(html);
                 }
             });
+        }
+        return false;
+    }
+    
+    /*
+     * get selected plan details
+     */
+    function showPlanDetails(planid) {
+        if (planid !== '') {
+            var urls = '<?= $this->Url->build(['controller' => 'Users', 'action' => 'showPlanDetails']) ?>';
+            var urls = urls+'/' + escape(planid);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: urls,
+                success: function (html) {
+                   $('#planDetailDiv').html(html);
+                }
+            });
+        } else {
+            $('#planDetailDiv').html('');
         }
         return false;
     }
