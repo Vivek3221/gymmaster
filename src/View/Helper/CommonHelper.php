@@ -228,9 +228,6 @@ class CommonHelper extends Helper {
     }
 
     
-    /*
-     * Get breaking news
-     */
 
 
     

@@ -93,8 +93,9 @@ $user_type = $this->Common->getType();
                             </table>
                             
                         </div>
+                            <?php if(!empty($user->photo)) { ?>
                                <div class="news-img">
-                                 <?php if(!empty($user->photo)) {    
+                            <?php         
                                                 $cover = '/img/' .$user->photo;
                         if (strpos($user->photo, 'http') !== false) {
                         $cover = $user->photo;
@@ -102,20 +103,33 @@ $user_type = $this->Common->getType();
                                                 ?>
                                 <?= $this->Html->image($cover, ['alt' => 'related-news', 'accept' => 'image/*']); ?>
                           
-                                 <?php }?>
+                                 
                                 
                              
                                 
                                 
                             </div>
-                            
-                        </div>
+                            <?php }?>
                         
-                        <div class="body">
-                            <?php if(!empty($planSubscribers)) { ?>
-                                <table class="vertical-table">
-                            <?php foreach ($planSubscribers as $planData) { ?>
-                                
+                            <?php if(!empty($planData)) { ?>
+                                <table class="vertical-table" border="1">
+                                    <tr>
+                                        <th>Plan Name</th>
+                                        <th>Plan Fee</th>
+                                        <th>Paid Amount</th>
+                                        <th>Remaining Amount</th>
+                                        <th>Payment Due Date</th>
+                                        <th>Plan Expire Date</th>
+                                    </tr>
+                            <?php foreach ($planData as $planDatas) { ?>
+                                    <tr>
+                                        <td><?= $planDatas['name'] ?></td>
+                                        <td><?= $planDatas['fee'] ?></td>
+                                        <td><?= $planDatas['paid'] ?></td>
+                                        <td><?= $planDatas['remaining'] ?></td>
+                                        <td><?= date('d-m-Y',strtotime($planDatas['plan_expire_date'])) ?></td>
+                                        <td><?= date('d-m-Y',strtotime($planDatas['payment_due_date'])) ?></td>
+                                    </tr>
                             <?php } ?>
                                 </table>
                             <?php } ?>
