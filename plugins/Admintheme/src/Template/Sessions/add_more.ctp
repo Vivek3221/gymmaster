@@ -3,6 +3,7 @@
     $get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories($users_id);
     $new_id= '';
     $user_name = $this->Common->getUsers();
+    $partner = $this->Common->getpartner();
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -39,7 +40,7 @@
                             </div>
                         </div> 
                         
-                        <div id="exerDataDiv" class="col-sm-12">
+                        <div id="exerDataDiv" class="col-sm-12" style="margin-bottom: -2px;">
                             <?php foreach ($session_values as $key => $value) {
                                 $excid = $key;
                                 $addexc[] = $key;
@@ -123,11 +124,32 @@
                             <?php } ?>
                             <?php // data from ajax comes here ?>
                         </div>
-                        
+                        <?php if ($user_type == 1) {  ?>
+                        <div class="input-group" style="margin-bottom: -12px;">
+                            <div id="exerDataDiva" class="col-sm-4"> 
+                           <?= $this->Form->control('partner_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Partner'), 'options' => $partner , 'onchange' => 'getpartnerexcr(this.id)', 'label'=>FALSE]) ?>
+                        </div>
+                            <div id="exerDataDiva" class="col-sm-4"> 
+                            <span id="exrcisedirectorie" onclick="getOwnexer()" class="btn btn-success"><?= __('Own Excercise') ?></span>
+                             </div>
+                        </div>
+                          <?php } ?>
+                         <?php if ($user_type == 2) {  ?>
+                        <div class="input-group" style="margin-bottom: -12px;">
+                            <div id="exerDataDivp" class="col-sm-4"> 
+                       <span id="<?= $partner_id ?>" onclick="getPartnere(this.id)" value="<?= $partner_id ?>" class="btn btn-success"><?= __('Admin Excercise') ?></span>
+                            </div>
+                            <div id="exerDataDivp" class="col-sm-4"> 
+                            <span id="<?= $users_id ?>" onclick="getPartnere(this.id)" value="<?= $users_id ?>" class="btn btn-success"><?= __('Own Excercise') ?></span>
+                             </div>
+                        </div>
+                          <?php } ?>
                         <div class="input-group" style="margintop: -6px">
                             <label class="form-label">Exercise</label>
+                            <div id="changeexcr">
                             <?= $this->Form->control('exrcisedirectorie_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Excercise'), 'options' => $get_exrcisedirectorie_lists, 'label' => FALSE]) ?>
-                            <span class="input-group-btn" style="padding-top: 23px;">
+                            </div>
+                                <span class="input-group-btn" style="padding-top: 23px;">
                                 <span id="exrcisedirectorie" onclick="getExcercise()" class="btn btn-success"><?= __('+ Add Excercise') ?></span>
                             </span>
                         </div>
@@ -158,7 +180,72 @@
         var id = 'remove' + clicked_id;
         $('#' + id).remove();
     }
-
+    function getPartnere(admin_id) {
+       // alert(id);
+        //var admin_id = $('#admin_id').val();
+       // alert(admin_id);
+       var partner_id = admin_id;
+       //alert(partner_id);
+       // if (partner_id) {
+            var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'partnerExcr']) ?>';
+            var data = '&partner_id=' + escape(partner_id);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                data: data,
+                url: urls,
+                success: function (html) {
+                  //  alert(html);
+                   
+                        $('#changeexcr').html(html);
+                    
+                }
+            });
+        //}
+        return false;
+    }
+    function getOwnexer() {
+       var partner_id = '';
+       //alert(partner_id);
+       // if (partner_id) {
+            var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'partnerExcr']) ?>';
+            var data = '&partner_id=' + escape(partner_id);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                data: data,
+                url: urls,
+                success: function (html) {
+                    //alert(html);
+                   
+                        $('#changeexcr').html(html);
+                    
+                }
+            });
+        //}
+        return false;
+    }
+    function getpartnerexcr() {
+        var partner_id = $('#partner-id').val();
+      // alert(partner_id);
+        if (partner_id) {
+            var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'partnerExcr']) ?>';
+            var data = '&partner_id=' + escape(partner_id);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                data: data,
+                url: urls,
+                success: function (html) {
+                  //  alert(html);
+                   
+                        $('#changeexcr').html(html);
+                    
+                }
+            });
+        }
+        return false;
+    }
     var start = 100;
     function getExcercise() {
         var exrcisedirectorie_id = $('#exrcisedirectorie-id').val();

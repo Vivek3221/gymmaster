@@ -133,8 +133,9 @@ class SessionsController extends AppController
           if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-      //  pr($this->usersdetail); die;
+       //pr($this->usersdetail); die;
         $user_type = $this->usersdetail['users_type'];
+        $partner_id = $this->usersdetail['partner_id'];
         $users_id = $this->usersdetail['users_id'];
         $session = $this->Sessions->newEntity();
         if ($this->request->is('post')) {
@@ -171,7 +172,7 @@ class SessionsController extends AppController
         }
 //        $users = $this->Sessions->Users->find('list', ['limit' => 200]);
 //        $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
-        $this->set(compact('session', 'users', 'partners','user_type','users_id'));
+        $this->set(compact('session', 'users', 'partners','user_type','users_id','partner_id'));
         $this->set('_serialize', ['session']);
     }
 
@@ -193,6 +194,7 @@ class SessionsController extends AppController
         $new_id = '';
         $users_id = $this->usersdetail['users_id'];
         $user_type = $this->usersdetail['users_type'];
+        $partner_id = $this->usersdetail['partner_id'];
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data1 =[];
             $data = $this->request->data;
@@ -219,7 +221,7 @@ class SessionsController extends AppController
       // pr($session_values); die;
         //$users = $this->Sessions->Users->find('list', ['limit' => 200]);
        // $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
-        $this->set(compact('session', 'users', 'partners','user_type','session_values','new_id','users_id'));
+        $this->set(compact('session', 'users', 'partners','user_type','session_values','new_id','users_id','partner_id'));
         $this->set('_serialize', ['session']);
     }
     
@@ -230,6 +232,7 @@ class SessionsController extends AppController
         $session = $this->Sessions->get($id, [
             'contain' => []
         ]);
+        $partner_id = $this->usersdetail['partner_id'];
           $users_id = $this->usersdetail['users_id'];
         $user_type = $this->usersdetail['users_type'];
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -268,7 +271,7 @@ class SessionsController extends AppController
       // pr($session_values); die;
         //$users = $this->Sessions->Users->find('list', ['limit' => 200]);
        // $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
-        $this->set(compact('session', 'users', 'partners','user_type','session_values','users_id'));
+        $this->set(compact('session', 'users', 'partners','user_type','session_values','users_id','partner_id'));
         $this->set('_serialize', ['session']);
     }
     

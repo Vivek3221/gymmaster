@@ -35,16 +35,26 @@
                             </div>
                         </div> 
 
-                        <div id="exerDataDiv" class="col-sm-12">                       
+                        <div id="exerDataDiv" class="col-sm-12" style="margin-bottom: -2px;">                       
                             <?php // data from ajax comes here ?>
                         </div>  
                          <?php if ($user_type == 1) {  ?>
-                        <div class="input-group">
-                            <div id="exerDataDiv" class="col-sm-4"> 
+                        <div class="input-group" style="margin-bottom: -12px;">
+                            <div id="exerDataDiva" class="col-sm-4"> 
                            <?= $this->Form->control('partner_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Partner'), 'options' => $partner , 'onchange' => 'getpartnerexcr(this.id)', 'label'=>FALSE]) ?>
                         </div>
-                            <div id="exerDataDiv" class="col-sm-4"> 
+                            <div id="exerDataDiva" class="col-sm-4" > 
                             <span id="exrcisedirectorie" onclick="getOwnexer()" class="btn btn-success"><?= __('Own Excercise') ?></span>
+                             </div>
+                        </div>
+                          <?php } ?>
+                         <?php if ($user_type == 2) {  ?>
+                        <div class="input-group" style="margin-bottom: -12px;">
+                            <div id="exerDataDivp" class="col-sm-4"> 
+                       <span id="<?= $partner_id ?>" onclick="getPartnere(this.id)" value="<?= $partner_id ?>" class="btn btn-success"><?= __('Admin Excercise') ?></span>
+                            </div>
+                            <div id="exerDataDivp" class="col-sm-4"> 
+                            <span id="<?= $users_id ?>" onclick="getPartnere(this.id)" value="<?= $users_id ?>" class="btn btn-success"><?= __('Own Excercise') ?></span>
                              </div>
                         </div>
                           <?php } ?>
@@ -84,6 +94,30 @@
     }
     
     var start = 100;
+    function getPartnere(admin_id) {
+       // alert(id);
+        //var admin_id = $('#admin_id').val();
+       // alert(admin_id);
+       var partner_id = admin_id;
+       //alert(partner_id);
+       // if (partner_id) {
+            var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'partnerExcr']) ?>';
+            var data = '&partner_id=' + escape(partner_id);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                data: data,
+                url: urls,
+                success: function (html) {
+                  //  alert(html);
+                   
+                        $('#changeexcr').html(html);
+                    
+                }
+            });
+        //}
+        return false;
+    }
     function getOwnexer() {
        var partner_id = '';
        //alert(partner_id);
