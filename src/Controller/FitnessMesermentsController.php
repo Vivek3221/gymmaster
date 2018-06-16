@@ -124,7 +124,7 @@ class FitnessMesermentsController extends AppController
                 $fitnessMeserments = $this->FitnessMeserments->find()
                                    ->select(['id',$moredata,'created'])
                                    ->contain(['Users'])
-                                   ->where(['FitnessMeserments.user_id'=>$user_id])
+                                   ->where(['FitnessMeserments.user_id'=>$user_id,'FitnessMeserments.id <=' =>$id])
                                    ->order(['FitnessMeserments.id DESC'])->limit(10)->toArray();
                 
                 
