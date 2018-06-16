@@ -165,7 +165,7 @@ class FitnessTestsController extends AppController
             $data1['user_id'] = $this->request->data['user_id'];     
         }
                 $data1['exercise_type'] = json_encode($data);
-                $data1['status'] = $data['status'];
+                $data1['status'] = 1;
                 $data1['exercise_id'] = $data['exercise_id'];
                //pr($data1); die;
                
@@ -205,7 +205,7 @@ class FitnessTestsController extends AppController
                $data1 =[];
             $data = $this->request->data;
             $data1['exercise_type'] = json_encode($data);
-                $data1['status'] = $data['status'];
+                $data1['status'] = 1;
                 $data1['exercise_id'] = $data['exercise_id'];
                //pr($data1); die;
                

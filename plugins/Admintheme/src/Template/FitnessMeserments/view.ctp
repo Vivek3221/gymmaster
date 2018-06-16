@@ -27,6 +27,19 @@ $getPayDuration = $this->Common->getPayDuration();
                                     <th scope="row"><?= __('Previous') ?></th>
                                 </tr>
                                 <tr>
+
+                                    <th scope="row"><?= __('Date') ?></th>
+                                    <?php if (isset($fitnessMeserment[0]['date'])) {
+                                        ?>
+                                        <td><?= date("d-m-Y", strtotime($fitnessMeserment[0]['date'])); ?></td>
+                                    <?php } ?>
+
+                                    <?php if (isset($fitnessMeserment[1]['date'])) {
+                                        ?>
+                                        <td><?= date("d-m-Y", strtotime($fitnessMeserment[1]['date'])); ?></td>
+                                    <?php } ?>
+                                </tr>
+                                <tr>
                                     <th scope="row"><a href="?moredata=weight" class="waves-effect "><?= __('weight') ?></a></th>
                                     <?php if (isset($fitnessMeserment[0]['weight'])) {
                                         ?>
@@ -134,19 +147,7 @@ $getPayDuration = $this->Common->getPayDuration();
                                         <td><?= ucfirst(h($fitnessMeserment[1]['thigh'])); ?></td>
                                     <?php } ?>
                                 </tr>
-                                <tr>
-
-                                    <th scope="row"><?= __('Date') ?></th>
-                                    <?php if (isset($fitnessMeserment[0]['date'])) {
-                                        ?>
-                                        <td><?= date("d-m-Y", strtotime($fitnessMeserment[0]['date'])); ?></td>
-                                    <?php } ?>
-
-                                    <?php if (isset($fitnessMeserment[1]['date'])) {
-                                        ?>
-                                        <td><?= date("d-m-Y", strtotime($fitnessMeserment[1]['date'])); ?></td>
-                                    <?php } ?>
-                                </tr>
+                                
 
 
 

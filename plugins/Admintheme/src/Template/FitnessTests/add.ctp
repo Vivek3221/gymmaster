@@ -56,18 +56,18 @@ $user_name = $this->Common->getUsers();
                             <?php endforeach;   ?>
                         </div>
                          <?php endforeach;  } ?>
-                        <div class="form-group form-float">
+                        
                              <div class="form-line">
                                 <?= $this->Form->control('exercise_id', ['class' => 'form-control', 'type' => 'hidden', 'value'=>5 , 'label' => false, 'hidden']) ?> 
                                 
                             </div>
-                            <div class="form-line">
+                            <!-- <div class="form-line">
                                 <?= $this->Form->input('status', ['empty' => __('Select status'), 'options' => $status, 'class' => 'form-control']); ?>
                             </div>
-                        </div>
+                        </div> -->
                         <?= $this->Form->button('Submit', ['class' => 'btn btn-primary waves-effect']) ?>
                         <?= $this->Form->end() ?>
-                    </div>
+                    
                 </div>
             </div>
         </div>
