@@ -116,13 +116,13 @@ $user_name = $this->Common->getUsers();
                                                     <?php
                                                          if($i == 10)
                                                          {
-                                                       echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$key.$i, 'label' => false, 'required']) ;
+                                                       echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$key.$i, 'value' => $valen, 'label' => false, 'required']) ;
                                                          } elseif ($i == 11 OR $i == 15 OR $i == 19 OR $i == 23 OR $i == 27 OR $i == 31) {
-                                                        echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$key.$i,'onkeyup'=>'getSum(this.id)', 'label' => false, 'required']); 
+                                                        echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$key.$i,'onkeyup'=>'getSum(this.id)','value' => $valen, 'label' => false, 'required']); 
                                                          } elseif ($i == 13 OR $i == 17 OR $i == 21 OR $i == 25 OR $i == 29 OR $i == 33) {
-                                                        echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => '', 'id'=>'a'.$key.$i, 'label' => false, 'required', 'readonly']) ;
+                                                        echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'a'.$key.$i, 'label' => false, 'required', 'readonly']) ;
                                                         } else {
-                                                      echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$key.$i, 'label' => false, 'required']) ;
+                                                      echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$key.$i,'value' => $valen, 'label' => false, 'required']) ;
                                                        }
                                                           ?> 
                                                     </div>
