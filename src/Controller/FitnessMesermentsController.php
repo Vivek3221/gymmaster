@@ -122,7 +122,7 @@ class FitnessMesermentsController extends AppController
       //pr($fitnessMeserment); die;
        if  (isset($moredata) && !empty($moredata)) {
                 $fitnessMeserments = $this->FitnessMeserments->find()
-                                   ->select(['id',$moredata,'created'])
+                                   ->select(['id',$moredata,'date'])
                                    ->contain(['Users'])
                                    ->where(['FitnessMeserments.user_id'=>$user_id,'FitnessMeserments.id <=' =>$id])
                                    ->order(['FitnessMeserments.id DESC'])->limit(10)->toArray();
@@ -130,7 +130,7 @@ class FitnessMesermentsController extends AppController
                 
              $chartshow = [];
         foreach ($fitnessMeserments as $key => $value) {
-            $date = date("Y-m-d",strtotime($value->created));
+            $date = date("Y-m-d",strtotime($value->date));
             
                 $chartshow[$key] =  ['y' => $date,'Dates' =>$value->$moredata]; 
                // $chartshow[$key] =  ['y' => $value->weight,'x' =>$value->height]; 
