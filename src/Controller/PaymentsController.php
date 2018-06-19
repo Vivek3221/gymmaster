@@ -21,7 +21,8 @@ class PaymentsController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Users', 'Partners', 'PlanSubscribers']
+            'contain' => ['Users', 'Partners', 'PlanSubscribers'],
+            'order' => ['id' => 'DESC']
         ];
         $payments = $this->paginate($this->Payments);
 
@@ -103,7 +104,7 @@ class PaymentsController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
+        //$this->request->allowMethod(['post', 'delete']);
         $payment = $this->Payments->get($id);
         if ($this->Payments->delete($payment)) {
             $this->Flash->success(__('The payment has been deleted.'));
@@ -112,5 +113,10 @@ class PaymentsController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+     public function beforeRender(\Cake\Event\Event $event) {
+        parent::beforeRender($event);
+        $this->viewBuilder()->theme('Admintheme');
     }
 }

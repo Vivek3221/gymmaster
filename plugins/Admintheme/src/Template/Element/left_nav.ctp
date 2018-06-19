@@ -42,6 +42,18 @@ $action = $this->request['action'];
                         <span><?= __('Users') ?></span>
                     </a>
                 </li>
+                <li class="<?php if (($controller == 'Payments' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'))){echo "active";}?>">
+                    <a href="<?= $this->Url->build(['controller' => 'Payments', 'action' => 'index']); ?>">
+                        <i class="material-icons">payment</i>
+                        <span><?= __('Payments') ?></span>
+                    </a>
+                </li>
+                <li class="<?php if (($controller == 'PlanSubscribers' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'))){echo "active";}?>">
+                    <a href="<?= $this->Url->build(['controller' => 'PlanSubscribers', 'action' => 'index']); ?>">
+                        <i class="material-icons">pageview</i>
+                        <span><?= __('Plan Subscribe') ?></span>
+                    </a>
+                </li>
                  <?php } ?>
                 <?php if($usersdetail['users_type'] != 3){; ?>
                 <li class="<?php if (($controller == 'ExrciseDirectories' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'logoutqq' || $action == 'payment'))){echo "active";}?>">

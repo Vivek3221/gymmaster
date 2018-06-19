@@ -21,7 +21,8 @@ class PlanSubscribersController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Users', 'Partners']
+            'contain' => ['Users', 'Partners'],
+            'order' => ['id' => 'DESC']
         ];
         $planSubscribers = $this->paginate($this->PlanSubscribers);
 
@@ -101,7 +102,7 @@ class PlanSubscribersController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
+       // $this->request->allowMethod(['post', 'delete']);
         $planSubscriber = $this->PlanSubscribers->get($id);
         if ($this->PlanSubscribers->delete($planSubscriber)) {
             $this->Flash->success(__('The plan subscriber has been deleted.'));
@@ -110,5 +111,10 @@ class PlanSubscribersController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function beforeRender(\Cake\Event\Event $event) {
+        parent::beforeRender($event);
+        $this->viewBuilder()->theme('Admintheme');
     }
 }
