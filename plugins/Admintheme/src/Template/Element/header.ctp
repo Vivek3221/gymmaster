@@ -34,7 +34,7 @@ $session = $this->Common->getSession();
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                        <li><a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']); ?>"><?= __('Sign Out') ?></a></li>
+                        <li><a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']); ?>"><i class="material-icons">power_settings_new</i></a></li>
                    
 </ul>
 <!--            </div>
