@@ -24,17 +24,23 @@ $session = $this->Common->getSession();
     <div class="overlay"></div>
     <!-- #END# Overlay For Sidebars -->
     <!-- Top Bar -->
-    <nav class="navbar">
+    <nav class="navbar change-color">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
                  <a href="" class="navbar-brand">
-                <?= __('Welcome To Data Monitor Admin') ?></a>
+                <?= __('Data Monitor') ?></a>
+                <a class="hidden-md hidden-lg logout-icon" href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']); ?>"><i class="material-icons" style="vertical-align: middle;">power_settings_new</i></a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                        <li><a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']); ?>"><i class="material-icons">power_settings_new <title>Add Duplicate</title></i></a></li>
+                     <li>
+                        <a class="hidden-xs" href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']); ?>"><i class="material-icons">power_settings_new</i>
+
+                        </a>
+                    </li>
+
                    
 </ul>
 <!--            </div>
