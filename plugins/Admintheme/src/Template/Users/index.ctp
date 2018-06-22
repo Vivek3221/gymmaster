@@ -51,7 +51,7 @@ $user_type = $this->Common->getType();
                                 <?= $this->Form->end() ?>
                         </div> 
                             <?php if ($this->Paginator->counter(['format' => __('{{count}}')]) != 0) { ?>
-                                <div class="table-responsive col-sm-12">
+                                
                         <!-- <table class="table table-bordered table-striped table-hover dataTable responsive" id="userstable"> -->
                             <table class="table table-bordered table-striped" id="userstable">
 
@@ -132,7 +132,7 @@ $user_type = $this->Common->getType();
                                     <?php } ?> 
                             </tbody>
                         </table>
-                    </div>
+                  
                         <div class="paginator">
                             <ul class="pagination">
                                     <?= $this->Paginator->first('<< ' . __('first')) ?>

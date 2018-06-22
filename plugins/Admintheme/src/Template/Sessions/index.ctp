@@ -78,7 +78,7 @@ $nofrec = $this->Common->getNoOfRec();
 
                                             <td><?= ucfirst($session->user->name) ?></td>
                                             <td><?= ucfirst($session->body_weight) ?></td>
-                                            <td> <?= date('d-m-Y', strtotime($session->date))?>
+                                            <td> <?= date('d-m-Y', strtotime($session->date))?></td>
                                         <?php if($user_type != 3) {?>
                                             <td id='status<?= $session->id ?>'> <?php
                                                 if (isset($session->status) && $session->status == '1') {
