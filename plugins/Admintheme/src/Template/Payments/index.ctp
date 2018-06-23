@@ -1,6 +1,7 @@
 <?php
    $statu = $this->Common->getstatus();
    $nofrec = $this->Common->getNoOfRec();
+   $getModPayment = $this->Common->getModPayment();
    ?>
 <section class="content">
    <div class="container-fluid">
@@ -16,6 +17,28 @@
                   </h2>
                </div>
                <div class="body">
+                   <!--
+                    <div class="box-body">
+                        <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'Payments', 'action' => 'index']]) ?>
+                            <div class="col-md-3">
+                                <?php echo $this->Form->input('name', ['label' => __('Search by user,plan or amount'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('-- User Name --'), 'value' => $name]); ?>
+                            </div>
+                            <div class="col-md-2">
+                                <?= $this->Form->control('mode_ofpay', ['class' => 'form-control', 'type' => 'select','empty'=>'Select Mode Of Payment','label' => 'Mode Of Payment','options'=>$getModPayment]) ?>
+                            </div>            
+                            <div class="col-md-2">
+                                <?php echo $this->Form->input('date', ['label' => __('Email'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Email'), 'value' => $email]); ?>
+                            </div>            
+                            <div class="col-md-2">
+                                <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'), 'options' => $nofrec, 'value' => $norec]); ?>
+                            </div>
+                            <div class="col-md-3 marginTop25">
+                                <?= $this->Form->button(__('Search'), ['class' => 'btn btn-primary']) ?>
+                                <?= $this->Html->link(__('Clear'), ['controller' => 'Payments'], ['class' => 'btn btn-danger']) ?>
+                            </div>
+                        <?= $this->Form->end() ?>
+                    </div> 
+                   -->
                   <?php if ($this->Paginator->counter(['format' => __('{{count}}')]) != 0) { ?>
                   <table class="table table-bordered table-striped table-hover dataTable responsive" id="userstable">
                      <thead>
@@ -23,6 +46,7 @@
                            <th><?=__('User Name')?></th>
                            <th><?= __('Plan Name') ?></th>
                            <th><?= __('Amount') ?></th>
+                           <th><?= __('Payment Mode') ?></th>
                            <th><?= __('Date') ?></th>
                            <th><?= __('Action') ?></th>
                         </tr>
@@ -32,6 +56,7 @@
                            <th><?=__('User Name')?></th>
                            <th><?= __('Plan Name') ?></th>
                            <th><?= __('Amount') ?></th>
+                           <th><?= __('Payment Mode') ?></th>
                            <th><?= __('Date') ?></th>
                            <th><?= __('Action') ?></th>
                         </tr>
@@ -42,9 +67,9 @@
                            <td><?= ($payment->user->name)?></td>
                            <td><?= ucfirst($payment->plan_subscriber->plan_name)  ?></td>
                            <td><?= $this->Number->format($payment->amount) ?></td>
+                           <td><?= $getModPayment[$payment->mode_ofpay] ?></td>
                            <td> <?= (date("d-m-Y", strtotime($payment->created))) ?></td>
-                           <td><i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $payment['id']]) ?></i>
-                              <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $payment['id']]) ?></i>
+                           <td><i class="material-icons" title="Edit"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $payment['id']]) ?></i>
                            </td>
                         </tr>
                         <?php endforeach; ?>

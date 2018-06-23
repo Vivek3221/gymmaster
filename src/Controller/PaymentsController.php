@@ -77,11 +77,16 @@ class PaymentsController extends AppController
      */
     public function edit($id = null)
     {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $payment = $this->Payments->get($id, [
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $payment = $this->Payments->patchEntity($payment, $this->request->getData());
+            $data = $this->request->getData();
+            $payment = $this->Payments->patchEntity($payment, $data);
+            $payment->mode_ofpay = $data['mode_ofpay'];
             if ($this->Payments->save($payment)) {
                 $this->Flash->success(__('The payment has been saved.'));
 
@@ -91,7 +96,8 @@ class PaymentsController extends AppController
         }
         $users = $this->Payments->Users->find('list', ['limit' => 200]);
         $partners = $this->Payments->Partners->find('list', ['limit' => 200]);
-        $planSubscribers = $this->Payments->PlanSubscribers->find('list', ['limit' => 200]);
+        $planSubscribers = $this->Payments->PlanSubscribers->find('list', ['limit' => 200])
+                ->where(['user_id'=>$payment['user_id'],'partner_id'=>$this->usersdetail['users_id']]);
         $this->set(compact('payment', 'users', 'partners', 'planSubscribers'));
     }
 
