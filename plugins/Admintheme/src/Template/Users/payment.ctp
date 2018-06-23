@@ -65,7 +65,7 @@ $getPayDuration = $this->Common->getPayDuration();
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('fee', ['class' => 'form-control', 'type' => 'number','required', 'label' => false]) ?>
+                                <?= $this->Form->control('fee', ['class' => 'form-control', 'type' => 'number', 'label' => false]) ?>
                                 <label class="form-label">Plan Total Fee</label>
                             </div>
                         </div>
