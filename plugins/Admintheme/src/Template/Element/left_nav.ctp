@@ -42,16 +42,16 @@ $action = $this->request['action'];
                         <span><?= __('Users') ?></span>
                     </a>
                 </li>
-                <li class="<?php if (($controller == 'Payments' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'))){echo "active";}?>">
-                    <a href="<?= $this->Url->build(['controller' => 'Payments', 'action' => 'index']); ?>">
-                        <i class="material-icons">payment</i>
-                        <span><?= __('Payments') ?></span>
-                    </a>
-                </li>
                 <li class="<?php if (($controller == 'PlanSubscribers' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'PlanSubscribers', 'action' => 'index']); ?>">
                         <i class="material-icons">pageview</i>
                         <span><?= __('Plan Subscribe') ?></span>
+                    </a>
+                </li>
+                <li class="<?php if (($controller == 'Payments' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'))){echo "active";}?>">
+                    <a href="<?= $this->Url->build(['controller' => 'Payments', 'action' => 'index']); ?>">
+                        <i class="material-icons">payment</i>
+                        <span><?= __('Payments') ?></span>
                     </a>
                 </li>
                  <?php } ?>
