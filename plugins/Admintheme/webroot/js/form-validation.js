@@ -174,7 +174,7 @@ $(document).ready(function () {
                 required: true,
                 regex: /[0-9]$/,
                 equalTo: "#fee",
-                ge: "#fee"
+                le: "#fee"
             },
             b_payment: {
                 regex: /^$|^[0-9]{1,50}$/
@@ -239,7 +239,7 @@ $(document).ready(function () {
                 required: 'Enter Amount',
                 regex: 'Enter valid Amount',
                 equalTo: 'amount not greater then fee',
-                ge: 'amount not greater then fee'
+                le: 'amount not greater then fee'
             },
             b_payment: {
                 regex: 'Enter valid due payment'
