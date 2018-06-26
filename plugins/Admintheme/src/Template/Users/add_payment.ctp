@@ -79,13 +79,13 @@ $getPayDuration = $this->Common->getPayDuration();
     function getCheck(clicked_id){
         var res = clicked_id; 
         var val1 = $('#'+res).val();
-        alert(val1);
+       // alert(val1);
         var val2 = $('#fee').val();
-        alert(val2);
+       // alert(val2);
         
         if(val1 > val2)
         {
-            alert(val1);
+           // alert(val1);
          alert("Payment paid is Not More then total fee");
          document.getElementById(res).value = 0;   
         }
