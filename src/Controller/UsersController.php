@@ -670,6 +670,7 @@ class UsersController extends AppController
         echo '<div class="col-sm-4"><strong>Total Fee:</strong> INR '.$planSubscribers->fee.'</div>';
         echo '<div class="col-sm-4"><strong>Paid Amount:</strong> INR '.$paid.'</div>';
         echo '<div class="col-sm-4"><strong>Remaining Amount:</strong> INR '.$remaining.'</div>';
+        echo ' <input type="hidden" id="fee" name="fee" value="'.$remaining.'">';
         echo '<div class="col-sm-4"><strong>Payment Due Date:</strong> '.date('d-m-Y',strtotime($planSubscribers->payment_due_date)).'</div>';
         echo '<div class="col-sm-4"><strong>Plan Expire Date:</strong> '.date('d-m-Y',strtotime($planSubscribers->plan_expire_date)).'</div>';
         exit;

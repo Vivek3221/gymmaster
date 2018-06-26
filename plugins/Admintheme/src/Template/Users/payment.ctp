@@ -77,7 +77,7 @@ $getPayDuration = $this->Common->getPayDuration();
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('amount', ['class' => 'form-control', 'type' => 'number', 'min'=>0, 'label' => false]) ?>
+                                <?= $this->Form->control('amount', ['class' => 'form-control', 'type' => 'number', 'min'=>0, 'label' => false,'onkeyup'=>'getCheck(this.id)']) ?>
                                 <label class="form-label">Payment Paid.</label>
                             </div>
                         </div>
@@ -138,6 +138,26 @@ $getPayDuration = $this->Common->getPayDuration();
 </section>
 
 <script type="text/javascript">
+    
+    
+     function getCheck(clicked_id){
+        var res = clicked_id; 
+        var val1 = $('#'+res).val();
+        alert(val1);
+        var val2 = $('#fee').val();
+        alert(val2);
+        
+        if(val1 > val2)
+        {
+            alert(val1);
+         alert("Payment paid is Not More then total fee");
+         document.getElementById(res).value = 0;   
+        }
+        
+        
+        //document.getElementById('c'+res).value = val1 * val2;
+        return false;
+    }
 
     function ImageFilesize() {
 
