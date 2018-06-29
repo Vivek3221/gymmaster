@@ -277,6 +277,10 @@ class UsersController extends AppController
                     $userDataArr['name']      = $data['name'];
                     $userDataArr['password']  = $data['cpassword'];
                     $userDataArr['email']     = $data['email'];
+                    $userDataArr['planName']  = $data['plan_name'];
+                    $userDataArr['expireDate']= date('d M Y',strtotime($data['plan_expire_date']));
+                    $userDataArr['totalFee']  = $data['fee'];
+                    $userDataArr['paidAmount']= $data['amount'];
                     $userDataArr['login_url'] = Router::url('/', ['controller' => 'Users', 'action' => 'login']);
                     $toEmail                  = $data['email'];
                     $subject                  = 'Inquery Successfully | Datamonitoring';

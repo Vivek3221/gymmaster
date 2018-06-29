@@ -21,13 +21,25 @@
                         <tr>
                             <td align="center" style="text-align: justify; padding: 0px 15px;">
                                 <p>
-                                    Dear :- <strong><?= $name ?>,</strong>
+                                    Dear :- <strong><?= $name ?></strong>
                                 </p>
                                 <p>
-                                    Your Email :- <strong><?= $email ?>,</strong>
+                                    Your Email :- <strong><?= $email ?></strong>
                                 </p>
                                 <p>
-                                    Your Password :- <strong><?= $password ?>,</strong>
+                                    Your Password :- <strong><?= $password ?></strong>
+                                </p>
+                                <p>
+                                    Plan Name :- <strong><?= $planName ?></strong>
+                                </p>
+                                <p>
+                                    Plan Fee :- <strong>INR <?= $totalFee ?></strong>
+                                </p>
+                                <p>
+                                    Amount Paid :- <strong>INR <?= $paidAmount ?></strong>
+                                </p>
+                                <p>
+                                    Plan Expire Date  :- <strong><?= $expireDate ?></strong>
                                 </p>
                                 <p style="line-height:10px;"> Congratulations! You have successfully registered as User </p>
                                 <p align="center" style="margin-top:20px;">
