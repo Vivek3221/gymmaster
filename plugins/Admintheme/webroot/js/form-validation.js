@@ -12,6 +12,12 @@ $(function () {
     jQuery.validator.addMethod("isValidPhoneNo", function (value, element) {
         return $("#phoneno").intlTelInput("isValidNumber"); // return true if field is ok or should be ignored
     });
+jQuery.validator.addMethod("lessThanEqual", function(value, element, params) {    
+    if (!/Invalid|NaN/.test(new Date(value))) {
+        return new Date(value) <= new Date($(params[0]).val());
+    }    
+    return isNaN(value) && isNaN($(params[0]).val()) || (Number(value) <= Number($(params[0]).val())); 
+},'Payment must be less than or equal to {1}.');
 });
 
 $(document).ready(function () {
@@ -172,7 +178,8 @@ $(document).ready(function () {
             },
             amount: {
                 required: true,
-                regex: /[0-9]$/
+                regex: /[0-9]$/,
+                lessThanEqual: ["#fee","plan fee"]
             },
             b_payment: {
                 regex: /^$|^[0-9]{1,50}$/

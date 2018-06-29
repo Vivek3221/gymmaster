@@ -101,7 +101,7 @@ $getPayDuration = $this->Common->getPayDuration();
     function showPlanDetails(planid) {
         if (planid !== '') {
             var urls = '<?= $this->Url->build(['controller' => 'Users', 'action' => 'showPlanDetails']) ?>';
-            var urls = urls+'/' + escape(planid);
+            var urls = urls+'/' + escape(planid)+'?amount=<?= $payment->amount ?>';
             $.ajax({
                 type: "POST",
                 cache: false,
