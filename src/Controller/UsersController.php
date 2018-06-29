@@ -670,15 +670,16 @@ class UsersController extends AppController
             $paid = $paidAmount->sum;
         }
         $remaining = $planSubscribers->fee - $paid;
-        $updateLimit = $remaining;
         if(!empty($this->request->query('amount'))){
             $updateLimit = $remaining + $this->request->query('amount');
+            $paid = $paid - $this->request->query('amount');
+            $remaining = $remaining + $this->request->query('amount');
         }
         echo '<div class="col-sm-12"><strong>Selected Plan Details:</strong></div>';
         echo '<div class="col-sm-4"><strong>Total Fee:</strong> INR '.$planSubscribers->fee.'</div>';
         echo '<div class="col-sm-4"><strong>Paid Amount:</strong> INR '.$paid.'</div>';
         echo '<div class="col-sm-4"><strong>Remaining Amount:</strong> INR '.$remaining.'</div>';
-        echo ' <input type="hidden" id="fee" name="fee" value="'.$updateLimit.'">';
+        echo ' <input type="hidden" id="fee" name="fee" value="'.$remaining.'">';
         echo '<div class="col-sm-4"><strong>Payment Due Date:</strong> '.date('d-m-Y',strtotime($planSubscribers->payment_due_date)).'</div>';
         echo '<div class="col-sm-4"><strong>Plan Expire Date:</strong> '.date('d-m-Y',strtotime($planSubscribers->plan_expire_date)).'</div>';
         exit;
