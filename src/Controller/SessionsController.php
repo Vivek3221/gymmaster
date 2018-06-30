@@ -93,7 +93,9 @@ class SessionsController extends AppController
        
         $sessions = $this->paginate($count);
         $users = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.partner_id'=> $users_id,'user_type' =>3]);
-        $this->set(compact('sessions','name','status','norec','users','user_type','sdate','edate'));
+
+        $partners = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.partner_id'=> $users_id,'user_type' =>2]);
+        $this->set(compact('sessions','name','status','norec','users','user_type','sdate','edate','partners'));
         $this->set('_serialize', ['sessions']);
     }
 
