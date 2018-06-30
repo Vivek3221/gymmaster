@@ -88,7 +88,7 @@ $getAdmin = $this->Common->getAdmin();
                                     <?php foreach ($exrciseDirectories as $exrciseDirectory) { ?>
                                         <tr>
 
-                                            <td><?= $exrciseDirectory['name'] ?></td>
+                                            <td><?= ucwords($exrciseDirectory['name']) ?></td>
                                             <td id='status<?= $exrciseDirectory->id ?>'> <?php
                                             if($user_type == 1 )
                                                 {

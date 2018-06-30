@@ -40,8 +40,8 @@
                      <tbody>
                         <?php foreach ($planSubscribers as $planSubscriber): ?>
                         <tr>
-                           <td><?= h($planSubscriber->user->name)?></td>
-                           <td><?= h($planSubscriber->plan_name) ?></td>
+                           <td><?= ucwords($planSubscriber->user->name)?></td>
+                           <td><?= ucwords($planSubscriber->plan_name) ?></td>
                            <td><?= $this->Number->format($planSubscriber->fee) ?></td>
                            <td><?= (date("d-m-Y", strtotime($planSubscriber->plan_expire_date))) ?></td>
                            <td><?= (date("d-m-Y", strtotime($planSubscriber->payment_due_date))) ?></td>

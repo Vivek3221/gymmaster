@@ -63,7 +63,7 @@
                      <tbody>
                         <?php foreach ($payments as $payment): ?>
                         <tr>
-                           <td><?= ($payment->user->name)?></td>
+                           <td><?= ucwords($payment->user->name)?></td>
                            <td><?= ucfirst($payment->plan_subscriber->plan_name)  ?></td>
                            <td><?= $this->Number->format($payment->amount) ?></td>
                            <td><?= $getModPayment[$payment->mode_ofpay] ?></td>
