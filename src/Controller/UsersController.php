@@ -614,6 +614,9 @@ class UsersController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
+        $search = [];
+        $users_type = $this->usersdetail['users_type'];
+        $users_id = $this->usersdetail['users_id'];
         $payment = $this->Payments->newEntity();
         if ($this->request->is('post')) {
             $data = $this->request->getData();
@@ -628,9 +631,19 @@ class UsersController extends AppController
             }
             $this->Flash->error(__('The payment could not be saved. Please, try again.'));
         }
-        $users = $this->Payments->Users->find('list', ['limit' => 200]);
-        $partners = $this->Payments->Partners->find('list', ['limit' => 200]);
-        $planSubscribers = $this->Payments->PlanSubscribers->find('list', ['limit' => 200])
+        
+        if (isset($users_type) && ($users_type == 2)) {
+            $search['Users.partner_id'] = $users_id;
+        }
+        if (!empty($search)) {
+            $users = $this->Payments->Users->find(['list','contain' => ['Users', 'Partners']])
+                    ->where([$search]);
+        } else {
+            $users = $this->Payments->Users->find(['list','contain' => ['Users', 'Partners']]);
+        }
+        
+        $partners = $this->Payments->Partners->find('list');
+        $planSubscribers = $this->Payments->PlanSubscribers->find('list')
                 ->where(['user_id'=>$userid,'partner_id'=>$this->usersdetail['users_id']]);
         $this->set(compact('payment', 'users', 'partners', 'planSubscribers','userid'));
     }

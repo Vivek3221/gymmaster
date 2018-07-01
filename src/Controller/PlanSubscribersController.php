@@ -20,12 +20,32 @@ class PlanSubscribersController extends AppController
      */
     public function index()
     {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        $norec = 10;
+        $search = [];
+        $users_type = $this->usersdetail['users_type'];
+        $users_id = $this->usersdetail['users_id'];
+        
+        if (isset($users_type) && ($users_type == 2)) {
+            $search['Users.partner_id'] = $users_id;
+        }
+        if (!empty($search)) {
+            $this->PlanSubscribers = $this->PlanSubscribers->find('all')
+                    ->where([$search]);
+        } else {
+            $this->PlanSubscribers = $this->PlanSubscribers->find('all');
+        }
+
+        $this->PlanSubscribers = $this->PlanSubscribers->where(['Users.active !=' => '3','Users.user_type !='=>'1']);
+
         $this->paginate = [
+            'limit' => $norec,
             'contain' => ['Users', 'Partners'],
             'order' => ['id' => 'DESC']
         ];
         $planSubscribers = $this->paginate($this->PlanSubscribers);
-
         $this->set(compact('planSubscribers'));
     }
 
