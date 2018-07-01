@@ -31,6 +31,7 @@ class SessionsController extends AppController
         $edate ='';
         $norec = 10;
         $status = '';
+        $partner = '';
         $search = [];
          if (isset($this->request->query['name']) && trim($this->request->query['name']) != "") {
             $name = $this->request->query['name'];
@@ -40,6 +41,10 @@ class SessionsController extends AppController
          if (isset($this->request->query['sessions']) && trim($this->request->query['sessions']) != "") {
             $sessions_value = $this->request->query['sessions'];
             //$search['Sessions.user_id'] = $name;
+        }
+         if (isset($this->request->query['partners']) && trim($this->request->query['partners']) != "") {
+            $partner = $this->request->query['partners'];
+            $search['Sessions.partner_id'] = $partner;
         }
          if (isset($this->request->query['status']) && trim($this->request->query['status']) != "") {
             $status = $this->request->query['status'];
@@ -65,7 +70,7 @@ class SessionsController extends AppController
         if (isset($user_type) && ($user_type == 3)) {
           $search['Sessions.user_id'] = $users_id;
           }
-        if (isset($user_type) && ($user_type != 3)) {
+        if (isset($user_type) && ($user_type == 2)) {
           $search['Sessions.partner_id'] = $users_id;
           }
         if (isset($search)) {
@@ -94,8 +99,8 @@ class SessionsController extends AppController
         $sessions = $this->paginate($count);
         $users = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.partner_id'=> $users_id,'user_type' =>3]);
 
-        $partners = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.partner_id'=> $users_id,'user_type' =>2]);
-        $this->set(compact('sessions','name','status','norec','users','user_type','sdate','edate','partners'));
+       // $partners = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.partner_id'=> $users_id,'user_type' =>2]);
+        $this->set(compact('sessions','name','status','norec','users','user_type','sdate','edate','partner'));
         $this->set('_serialize', ['sessions']);
     }
 
