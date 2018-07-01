@@ -3,6 +3,7 @@
 <?php
 $statu = $this->Common->getstatus();
 $nofrec = $this->Common->getNoOfRec();
+$partners = $this->Common->getpartner();
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -27,6 +28,14 @@ $nofrec = $this->Common->getNoOfRec();
                                 <?php echo $this->Form->input('name', ['label' => __('User Name'), 'class' => 'form-control select2', 'type' => 'select', 'empty' => __('User Name'), 'value' => $name,'options'=> $users]); ?>
                             </div>
                             <?php } ?>
+                             <?php if (isset($user_type) && ($user_type == 1)) {
+                                    ?> 
+                            <div class="col-md-2">
+                                        <?= $this->Form->input('partners', ['label' => __('Partners'), 'type' => 'select', 'class' => 'form-control select2', 'empty' => __('Select Partners'), 'options' => $partners,'value'=>$partner]); ?>
+                            </div>
+
+                                 <?php } ?>
+                            
                             <div class="col-md-2">
                                 <?php echo $this->Form->input('from_date', ['label' => __('From Date'), 'class' => 'form-control', 'id' => 'date-start', 'type' => 'text', 'placeholder' => __('From Date'), 'value' => $sdate]); ?>
                             </div>
@@ -126,9 +135,12 @@ $nofrec = $this->Common->getNoOfRec();
                             </div>
                         <?php } else { ?>
                             <div>&nbsp;</div>
+                            <div class="clearfix"></div>
+                             <div class="row">
                             <div class="text-center">
                                 <div class="text-center noDataFound">
                                     <strong><?= __('Record') ?></strong> <?= __('not found') ?>
+                                </div>
                                 </div>
                             </div>
                         <?php } ?>
