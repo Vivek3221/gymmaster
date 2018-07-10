@@ -2,6 +2,7 @@
    $statu = $this->Common->getstatus();
    $nofrec = $this->Common->getNoOfRec();
    $getModPayment = $this->Common->getModPayment();
+   $user_type = $this->Common->getType();
    ?>
 <section class="content">
    <div class="container-fluid">
@@ -16,18 +17,17 @@
                   </h2>
                </div>
                <div class="body">
-                   <!--
-                    <div class="box-body">
+                   <div class="box-body">
                         <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'Payments', 'action' => 'index']]) ?>
-                            <div class="col-md-3">
-                                <?php echo $this->Form->input('name', ['label' => __('Search by user,plan or amount'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('-- User Name --'), 'value' => $name]); ?>
+                            <div class="col-md-4">
+                                <?php echo $this->Form->input('name', ['label' => __('Search by User, Plan or Amount'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Search by User, Plan or Amount'), 'value' => $name]); ?>
                             </div>
-                            <div class="col-md-2">
-                                <?= $this->Form->control('mode_ofpay', ['class' => 'form-control', 'type' => 'select','empty'=>'Select Mode Of Payment','label' => 'Mode Of Payment','options'=>$getModPayment]) ?>
+                            <div class="col-md-3">
+                                <?= $this->Form->control('mode_ofpay', ['class' => 'form-control', 'type' => 'select','empty'=>'Select Mode Of Payment','label' => 'Mode Of Payment','options'=>$getModPayment, 'default'=>$mode_ofpay]) ?>
                             </div>            
-                            <div class="col-md-2">
+<!--                            <div class="col-md-2">
                                 <?php echo $this->Form->input('date', ['label' => __('Email'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Email'), 'value' => $email]); ?>
-                            </div>            
+                            </div>            -->
                             <div class="col-md-2">
                                 <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'), 'options' => $nofrec, 'value' => $norec]); ?>
                             </div>
@@ -37,7 +37,6 @@
                             </div>
                         <?= $this->Form->end() ?>
                     </div> 
-                   -->
                   <?php if ($this->Paginator->counter(['format' => __('{{count}}')]) != 0) { ?>
                   <table class="table table-bordered table-striped table-hover dataTable responsive" id="userstable">
                      <thead>

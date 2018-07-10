@@ -23,13 +23,30 @@ class PaymentsController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
+        $name = '';
+        $mode_ofpay = '';
         $norec = 10;
+        $status = '';
+        $user_type = '';
+        $partner   ='';
         $search = [];
         $users_type = $this->usersdetail['users_type'];
         $users_id = $this->usersdetail['users_id'];
         
         if (isset($users_type) && ($users_type == 2)) {
             $search['Users.partner_id'] = $users_id;
+        }
+        if (isset($this->request->query['name']) && trim($this->request->query['name']) != "") {
+            $name = $this->request->query['name'];
+//            $search['Users.name REGEXP'] = $name;
+            $search['OR'] = ['Payments.amount'=>$name,'Users.name REGEXP'=>$name,'PlanSubscribers.plan_name REGEXP'=>$name];
+        }
+        if (isset($this->request->query['norec']) && trim($this->request->query['norec']) != "") {
+            $norec = $this->request->query['norec'];
+        }
+        if (isset($this->request->query['mode_ofpay']) && trim($this->request->query['mode_ofpay']) != "") {
+            $mode_ofpay = $this->request->query['mode_ofpay'];
+            $search['Payments.mode_ofpay'] = $mode_ofpay;
         }
         if (!empty($search)) {
             $this->Payments = $this->Payments->find('all')
@@ -47,7 +64,7 @@ class PaymentsController extends AppController
         ];
         $payments = $this->paginate($this->Payments);
 
-        $this->set(compact('payments'));
+        $this->set(compact('payments','users', 'name', 'status', 'norec','mode_ofpay','user_type','users_type','partners','partner'));
     }
 
     /**
