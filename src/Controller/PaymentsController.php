@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * Payments Controller
@@ -23,6 +24,7 @@ class PaymentsController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
+        $this->Users    = TableRegistry::get('Users');
         $name = '';
         $mode_ofpay = '';
         $norec = 10;
@@ -47,6 +49,10 @@ class PaymentsController extends AppController
             $mode_ofpay = $this->request->query['mode_ofpay'];
             $search['Payments.mode_ofpay'] = $mode_ofpay;
         }
+        if (isset($this->request->query['partners']) && trim($this->request->query['partners']) != "") {
+            $partner = $this->request->query['partners'];
+            $search['Payments.partner_id'] = $partner;
+        }
         if (!empty($search)) {
             $this->Payments = $this->Payments->find('all')
                     ->where([$search]);
@@ -55,7 +61,10 @@ class PaymentsController extends AppController
         }
 
         $this->Payments = $this->Payments->where(['Users.active !=' => '3','Users.user_type !='=>'1']);
-        
+        $partners =  $this->Users->find('list')
+                                 ->select(['id','name'])
+                                ->where(['user_type'=> 2])
+                                ->toArray();
         $this->paginate = [
             'limit' => $norec,
             'contain' => ['Users', 'Partners', 'PlanSubscribers'],
