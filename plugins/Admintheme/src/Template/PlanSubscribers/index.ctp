@@ -22,9 +22,11 @@
                             <div class="col-md-4">
                                 <?php echo $this->Form->input('name', ['label' => __('Search by User, Plan or Fee'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Search by User, Plan or Fee'), 'value' => $name]); ?>
                             </div>
-<!--                            <div class="col-md-3">
-                                <?= $this->Form->control('mode_ofpay', ['class' => 'form-control', 'type' => 'select','empty'=>'Select Mode Of Payment','label' => 'Mode Of Payment','options'=>$getModPayment, 'default'=>$mode_ofpay]) ?>
-                            </div>            -->
+                            <?php if (isset($users_type) && ($users_type == 1)) { ?>  
+                                <div class="col-md-2">
+                                    <?= $this->Form->input('partners', ['label' => __('Partners'), 'type' => 'select', 'class' => 'form-control select2', 'empty' => __('Select Partners'), 'options' => $partners,'value'=>$partner]); ?>
+                                </div>
+                            <?php } ?>
                             <div class="col-md-2">
                                 <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'), 'options' => $nofrec, 'value' => $norec]); ?>
                             </div>

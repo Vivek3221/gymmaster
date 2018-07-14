@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * PlanSubscribers Controller
@@ -23,6 +24,7 @@ class PlanSubscribersController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
+        $this->Users    = TableRegistry::get('Users');
         $name = '';
         $mode_ofpay = '';
         $norec = 10;
@@ -44,10 +46,10 @@ class PlanSubscribersController extends AppController
         if (isset($this->request->query['norec']) && trim($this->request->query['norec']) != "") {
             $norec = $this->request->query['norec'];
         }
-//        if (isset($this->request->query['mode_ofpay']) && trim($this->request->query['mode_ofpay']) != "") {
-//            $mode_ofpay = $this->request->query['mode_ofpay'];
-//            $search['Payments.mode_ofpay'] = $mode_ofpay;
-//        }
+        if (isset($this->request->query['partners']) && trim($this->request->query['partners']) != "") {
+            $partner = $this->request->query['partners'];
+            $search['PlanSubscribers.partner_id'] = $partner;
+        }
         
         if (!empty($search)) {
             $this->PlanSubscribers = $this->PlanSubscribers->find('all')
@@ -58,6 +60,10 @@ class PlanSubscribersController extends AppController
 
         $this->PlanSubscribers = $this->PlanSubscribers->where(['Users.active !=' => '3','Users.user_type !='=>'1']);
 
+        $partners =  $this->Users->find('list')
+                                 ->select(['id','name'])
+                                ->where(['user_type'=> 2])
+                                ->toArray();
         $this->paginate = [
             'limit' => $norec,
             'contain' => ['Users', 'Partners'],
