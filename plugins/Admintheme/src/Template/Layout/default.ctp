@@ -33,6 +33,7 @@
     <?= $this->Html->css('datetimepicker.css') ?>
     <?= $this->Html->css('waitMe.min.css') ?>
     <?= $this->Html->css('bootstrap-material-datetimepicker.css') ?>
+    <?= $this->Html->css('daterangepicker.css') ?>
     <!-- Waves Effect Css -->
     <!-- Animation Css -->
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css">
@@ -73,6 +74,7 @@
         }
     </style>
   <?= $this->Html->script('jquery.min.js') ?>
+  
 </head>
 
     <?php if ($this->request->action != 'adminLogin' && $this->request->action != 'resetPassword') { ?>
@@ -91,6 +93,7 @@
     <!-- Select Plugin Js -->
     <?= $this->Html->script('autosize.js') ?>
     <?= $this->Html->script('moment.js') ?>
+    <?= $this->Html->script('daterangepicker.js') ?>
     <?php // echo $this->Html->script('bootstrap-datetimepicker.js') ?>
     <?= $this->Html->script('bootstrap-material-datetimepicker.js') ?>
     

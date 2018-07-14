@@ -34,6 +34,8 @@ class PaymentsController extends AppController
         $search = [];
         $users_type = $this->usersdetail['users_type'];
         $users_id = $this->usersdetail['users_id'];
+        $startDate = '01-01-2017';
+        $endDate = date('d/m/Y');
         
         if (isset($users_type) && ($users_type == 2)) {
             $search['Users.partner_id'] = $users_id;
@@ -53,14 +55,26 @@ class PaymentsController extends AppController
             $partner = $this->request->query['partners'];
             $search['Payments.partner_id'] = $partner;
         }
+        if (isset($this->request->query['created']) && trim($this->request->query['created']) != "") {
+            $created = $this->request->query['created'];
+            $dateArray = explode(' - ',$created);
+            $startDate = $dateArray[0];
+            $endDate = $dateArray[1];
+            $startDateArray = explode('/',$startDate);
+            $startDate_u = $startDateArray[2].'-'.$startDateArray[1].'-'.$startDateArray[0];
+            $endDateArray = explode('/',$endDate);
+            $endDate_u = $endDateArray[2].'-'.$endDateArray[1].'-'.$endDateArray[0];
+            $search['date(Payments.created) >='] = $startDate_u;
+            $search['date(Payments.created) <='] = $endDate_u;
+        }
         if (!empty($search)) {
             $this->Amount = $this->Payments->find()
-                    ->contain(['Users'])
+                    ->contain(['Users','PlanSubscribers'])
                     ->select(['total_amount' => 'SUM(amount)'])->where([$search]);
             $this->Payments = $this->Payments->find('all')
                     ->where([$search]);
         } else {
-            $this->Amount = $this->Payments->find()->contain(['Users'])->select(['total_amount' => 'SUM(amount)']);
+            $this->Amount = $this->Payments->find()->contain(['Users','PlanSubscribers'])->select(['total_amount' => 'SUM(amount)']);
             $this->Payments = $this->Payments->find('all');
             
         }
@@ -78,7 +92,8 @@ class PaymentsController extends AppController
         ];
         $payments = $this->paginate($this->Payments);
 
-        $this->set(compact('payments','users', 'name', 'status', 'norec','mode_ofpay','user_type','users_type','partners','partner','amount'));
+        $this->set(compact('payments','users', 'name', 'status', 'norec','mode_ofpay','user_type',
+                'users_type','partners','partner','amount','startDate','endDate'));
     }
 
     /**

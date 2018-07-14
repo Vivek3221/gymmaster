@@ -37,6 +37,9 @@
                         </div>    
                         <div class="row">
                             <div class="col-md-3">
+                                <?= $this->Form->input('created', ['label' => __('Select Date'), 'type' => 'text', 'class' => 'form-control date-range-picker', 'placeholder' => __('Select Date'), 'label'=>false, 'readonly'=>'readonly']); ?>
+                            </div>
+                            <div class="col-md-3">
                                 <?= $this->Form->button(__('Search'), ['class' => 'btn btn-primary']) ?>
                                 <?= $this->Html->link(__('Clear'), ['controller' => 'Payments'], ['class' => 'btn btn-danger']) ?>
                             </div>
@@ -113,6 +116,56 @@
         $('#date-start').bootstrapMaterialDatePicker({format : 'YYYY/MM/DD HH:mm', weekStart : 0 , time: 'false'}).on('change', function(e, date)
         {
         $('#date-end').bootstrapMaterialDatePicker('setMinDate', date);
+        });
+        
+         $('.date-range-picker').daterangepicker({
+            "showDropdowns": true,
+            "ranges": {
+                      'Today': [moment(), moment()],
+                      'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                      'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                      'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                      'This Month': [moment().startOf('month'), moment().endOf('month')],
+                      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    },
+            "locale": {
+                "direction": "ltr",
+                "format": "DD/MM/YYYY",
+                "separator": " - ",
+                "applyLabel": "Apply",
+                "cancelLabel": "Cancel",
+                "fromLabel": "From",
+                "toLabel": "To",
+                "customRangeLabel": "Custom",
+                "daysOfWeek": [
+                    "Su",
+                    "Mo",
+                    "Tu",
+                    "We",
+                    "Th",
+                    "Fr",
+                    "Sa"
+                ],
+                "monthNames": [
+                    "January",
+                    "February",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July",
+                    "August",
+                    "September",
+                    "October",
+                    "November",
+                    "December"
+                ],
+                "firstDay": 1
+            },
+            "startDate": "<?= $startDate ?>",
+            "endDate": "<?= $endDate ?>"
+        }, function(start, end, label) {
+//          console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
         });
    });
    
