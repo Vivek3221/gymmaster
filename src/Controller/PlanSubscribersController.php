@@ -52,12 +52,17 @@ class PlanSubscribersController extends AppController
         }
         
         if (!empty($search)) {
+            $this->Amount = $this->PlanSubscribers->find()
+                    ->contain(['Users'])
+                    ->select(['total_amount' => 'SUM(fee)'])->where([$search]);
             $this->PlanSubscribers = $this->PlanSubscribers->find('all')
                     ->where([$search]);
         } else {
+            $this->Amount = $this->PlanSubscribers->find()->contain(['Users'])->select(['total_amount' => 'SUM(fee)']);
             $this->PlanSubscribers = $this->PlanSubscribers->find('all');
         }
-
+        $total_amount = $this->Amount->where(['Users.active !=' => '3','Users.user_type !='=>'1'])->first();
+        $amount = $total_amount->total_amount;
         $this->PlanSubscribers = $this->PlanSubscribers->where(['Users.active !=' => '3','Users.user_type !='=>'1']);
 
         $partners =  $this->Users->find('list')
@@ -70,7 +75,7 @@ class PlanSubscribersController extends AppController
             'order' => ['id' => 'DESC']
         ];
         $planSubscribers = $this->paginate($this->PlanSubscribers);
-        $this->set(compact('planSubscribers','users', 'name', 'status', 'norec','mode_ofpay','user_type','users_type','partners','partner'));
+        $this->set(compact('planSubscribers','users', 'name', 'status', 'norec','mode_ofpay','user_type','users_type','partners','partner','amount'));
     }
 
     /**

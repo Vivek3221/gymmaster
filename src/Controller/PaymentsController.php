@@ -54,12 +54,18 @@ class PaymentsController extends AppController
             $search['Payments.partner_id'] = $partner;
         }
         if (!empty($search)) {
+            $this->Amount = $this->Payments->find()
+                    ->contain(['Users'])
+                    ->select(['total_amount' => 'SUM(amount)'])->where([$search]);
             $this->Payments = $this->Payments->find('all')
                     ->where([$search]);
         } else {
+            $this->Amount = $this->Payments->find()->contain(['Users'])->select(['total_amount' => 'SUM(amount)']);
             $this->Payments = $this->Payments->find('all');
+            
         }
-
+        $total_amount = $this->Amount->where(['Users.active !=' => '3','Users.user_type !='=>'1'])->first();
+        $amount = $total_amount->total_amount;
         $this->Payments = $this->Payments->where(['Users.active !=' => '3','Users.user_type !='=>'1']);
         $partners =  $this->Users->find('list')
                                  ->select(['id','name'])
@@ -72,7 +78,7 @@ class PaymentsController extends AppController
         ];
         $payments = $this->paginate($this->Payments);
 
-        $this->set(compact('payments','users', 'name', 'status', 'norec','mode_ofpay','user_type','users_type','partners','partner'));
+        $this->set(compact('payments','users', 'name', 'status', 'norec','mode_ofpay','user_type','users_type','partners','partner','amount'));
     }
 
     /**

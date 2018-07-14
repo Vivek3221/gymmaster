@@ -19,6 +19,7 @@
                <div class="body">
                     <div class="box-body">
                         <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'PlanSubscribers', 'action' => 'index']]) ?>
+                        <div class="row">
                             <div class="col-md-4">
                                 <?php echo $this->Form->input('name', ['label' => __('Search by User, Plan or Fee'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Search by User, Plan or Fee'), 'value' => $name]); ?>
                             </div>
@@ -34,6 +35,12 @@
                                 <?= $this->Form->button(__('Search'), ['class' => 'btn btn-primary']) ?>
                                 <?= $this->Html->link(__('Clear'), ['controller' => 'PlanSubscribers'], ['class' => 'btn btn-danger']) ?>
                             </div>
+                        </div>    
+                        <div class="row">
+                            <div class="col-md-4">
+                                <?= $this->Form->button(__('Total Fee: '.$amount), ['class' => 'btn btn-Success','type'=>'button']) ?>
+                            </div>
+                        </div>    
                         <?= $this->Form->end() ?>
                     </div>
                   <?php if ($this->Paginator->counter(['format' => __('{{count}}')]) != 0) { ?>
