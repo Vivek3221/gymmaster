@@ -17,7 +17,7 @@
                   </h2>
                </div>
                <div class="body">
-                   <div class="box-body">
+                    <div class="box-body">
                         <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'Payments', 'action' => 'index']]) ?>
                             <div class="col-md-4">
                                 <?php echo $this->Form->input('name', ['label' => __('Search by User, Plan or Amount'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Search by User, Plan or Amount'), 'value' => $name]); ?>
@@ -25,9 +25,6 @@
                             <div class="col-md-3">
                                 <?= $this->Form->control('mode_ofpay', ['class' => 'form-control', 'type' => 'select','empty'=>'Select Mode Of Payment','label' => 'Mode Of Payment','options'=>$getModPayment, 'default'=>$mode_ofpay]) ?>
                             </div>            
-<!--                            <div class="col-md-2">
-                                <?php echo $this->Form->input('date', ['label' => __('Email'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Email'), 'value' => $email]); ?>
-                            </div>            -->
                             <div class="col-md-2">
                                 <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'), 'options' => $nofrec, 'value' => $norec]); ?>
                             </div>

@@ -37,8 +37,7 @@ class PaymentsController extends AppController
             $search['Users.partner_id'] = $users_id;
         }
         if (isset($this->request->query['name']) && trim($this->request->query['name']) != "") {
-            $name = $this->request->query['name'];
-//            $search['Users.name REGEXP'] = $name;
+            $name = str_replace(',','',$this->request->query['name']);
             $search['OR'] = ['Payments.amount'=>$name,'Users.name REGEXP'=>$name,'PlanSubscribers.plan_name REGEXP'=>$name];
         }
         if (isset($this->request->query['norec']) && trim($this->request->query['norec']) != "") {
