@@ -37,6 +37,7 @@ class FitnessTestsController extends AppController
         $users_id   = $this->usersdetail['users_id'];
         $sdate      ='';
         $edate      ='';
+        $user_id      ='';
         $search     = [];
          if (isset($this->request->query['from_date']) && trim($this->request->query['from_date']) != "" 
           && isset($this->request->query['to_date']) && trim($this->request->query['to_date']) != "" ) {
@@ -48,6 +49,10 @@ class FitnessTestsController extends AppController
             $search['FitnessTests.created <='] = $edate;  
             $sdate = $this->request->query['from_date']; 
             $edate = $this->request->query['to_date'] ;
+        }
+         if (isset($this->request->query['user_id']) && trim($this->request->query['user_id']) != "") {
+            $user_id = $this->request->query['user_id'];
+            $search['FitnessTests.user_id'] = $user_id;
         }
         if (isset($users_type) && ($users_type == 3)) {
             $search['FitnessTests.user_id'] = $users_id;
@@ -68,7 +73,7 @@ class FitnessTestsController extends AppController
         ];
         $fitnessTests = $this->paginate($count);
 //pr($fitnessTests); die;
-        $this->set(compact('fitnessTests','sdate','edate'));
+        $this->set(compact('fitnessTests','sdate','edate','user_id'));
         $this->set('_serialize', ['fitnessTests']);
     }
 
