@@ -79,7 +79,9 @@
                            <td><?= $this->Number->format($payment->amount) ?></td>
                            <td><?= $getModPayment[$payment->mode_ofpay] ?></td>
                            <td> <?= (date("d-m-Y", strtotime($payment->created))) ?></td>
-                           <td><i class="material-icons" title="Edit"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $payment['id']]) ?></i>
+                           <td>
+                               <i class="material-icons" title="View"><?= $this->Html->link(__('visibility'), ['action' => 'view', $payment['id']],['target'=>'_blank']) ?></i>
+                               <i class="material-icons" title="Edit"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $payment['id']]) ?></i>
                            </td>
                         </tr>
                         <?php endforeach; ?>

@@ -105,11 +105,13 @@ class PaymentsController extends AppController
      */
     public function view($id = null)
     {
+        $this->viewBuilder()->layout('ajax');
+        $this->Users    = TableRegistry::get('Users');
         $payment = $this->Payments->get($id, [
-            'contain' => ['Users', 'Partners', 'PlanSubscribers']
+            'contain' => ['Users','PlanSubscribers']
         ]);
-
-        $this->set('payment', $payment);
+        $partnerDetails = $this->Users->find('all')->where(['id'=>$payment->partner_id])->first();
+        $this->set(compact('payment','partnerDetails'));
     }
 
     /**
