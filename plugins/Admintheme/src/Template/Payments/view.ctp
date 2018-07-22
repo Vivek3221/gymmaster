@@ -28,7 +28,7 @@
                 <table style="width:893px;">
                     <tr>
                         <td colspan="2" style="width:296px; padding-left:8px; vertical-align: top;">
-                            <h1><?= $partnerDetails->name ?></h1>
+                            <h1><?= ucfirst($partnerDetails->name) ?></h1>
                         </td> 
                     </tr>
                 </table>
@@ -41,12 +41,12 @@
                 <table style=" width:893px;">
                     <tr style="border-top: 1px solid #d2d2d2;border-bottom: 1px solid #d2d2d2;">
                         <td colspan="2" style="width:250px;">
-                            <b><?= $payment->user->name ?></b><br>
+                            <b><?= ucfirst($payment->user->name) ?></b><br>
                             Ph- <?= $payment->user->mobile_no ?>, Email- <?= $payment->user->email ?>
                             <br>
                             <p style="border: 0px; background: #fff;">
                                 <b><u>Plan Details</u></b><br>
-                                Name:  <b><?= $payment->plan_subscriber->plan_name ?></b><br>
+                                Name:  <b><?= ucfirst($payment->plan_subscriber->plan_name) ?></b><br>
                                 Total Fee:  <b>INR <?= $payment->plan_subscriber->fee ?></b><br>
                                 Subscribed on:  <b><?= date('d M Y',strtotime($payment->plan_subscriber->created)) ?></b><br>
                                 Payment Due Date:  <b><?= date('d M Y',strtotime($payment->plan_subscriber->payment_due_date)) ?></b><br>
