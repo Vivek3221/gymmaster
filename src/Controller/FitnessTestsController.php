@@ -73,7 +73,7 @@ class FitnessTestsController extends AppController
         ];
         $fitnessTests = $this->paginate($count);
 //pr($fitnessTests); die;
-        $this->set(compact('fitnessTests','sdate','edate','user_id'));
+        $this->set(compact('fitnessTests','sdate','edate','user_id','users_type'));
         $this->set('_serialize', ['fitnessTests']);
     }
 

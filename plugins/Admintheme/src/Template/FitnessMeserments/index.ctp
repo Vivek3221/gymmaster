@@ -20,9 +20,12 @@ $user_name = $this->Common->getUsers();
                         <div class="body">
                               <div class="box-body">
                         <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'FitnessMeserments', 'action' => 'index']]) ?>
+                                   <?php if($users_type != 3){?>
                                   <div class="col-md-3">
                                 <?php echo $this->Form->input('user_id', ['label' => __('User Name'), 'class' => 'form-control select2', 'type' => 'select', 'empty' => __('User Name'), 'value' => $user_id,'options'=>$user_name]); ?>
                             </div>
+                        <?php }  ?>
+                        </div>
                                   <div class="col-md-3">
                                       <?php echo $this->Form->input('from_date', ['label' => __('From Date'), 'class' => 'form-control', 'id' => 'date-start', 'type' => 'text', 'placeholder' => __('From Date'), 'value' => $sdate]); ?>
                                   </div>  
