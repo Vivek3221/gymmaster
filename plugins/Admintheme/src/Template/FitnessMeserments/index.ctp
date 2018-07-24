@@ -25,7 +25,7 @@ $user_name = $this->Common->getUsers();
                                 <?php echo $this->Form->input('user_id', ['label' => __('User Name'), 'class' => 'form-control select2', 'type' => 'select', 'empty' => __('User Name'), 'value' => $user_id,'options'=>$user_name]); ?>
                             </div>
                         <?php }  ?>
-                        </div>
+                       
                                   <div class="col-md-3">
                                       <?php echo $this->Form->input('from_date', ['label' => __('From Date'), 'class' => 'form-control', 'id' => 'date-start', 'type' => 'text', 'placeholder' => __('From Date'), 'value' => $sdate]); ?>
                                   </div>  
