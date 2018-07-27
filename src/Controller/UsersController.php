@@ -173,8 +173,9 @@ class UsersController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-       // pr($this->usersdetail);die;
+        //pr($this->usersdetail);die;
         $users_type = $this->usersdetail['users_type'];
+        $users_email = $this->usersdetail['users_email'];
         $users_id   = $this->usersdetail['users_id'];
         $user       = $this->Users->newEntity();
         if ($this->request->is('post')) {
@@ -197,8 +198,16 @@ class UsersController extends AppController
 
                 $userDataArr['name']  = $data['name'];
                 $userDataArr['email'] = $data['email'];
+                $userDataArr['users_email'] = $users_email;
+                $userDataArr['users_type'] = $users_type;
                 $toEmail              = $data['email'];
+                if($users_type == 1)
+                {
                 $subject              = 'Inquery Successfully | Datamonitoring';
+              
+                } else {
+                 $subject              = 'Inquery Successfully |' .$users_email;  
+                }
                 $email                = new Email();
                 $email->transport('default');
                 try {

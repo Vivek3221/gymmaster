@@ -17,6 +17,8 @@
             </tr>
             <tr>
                 <td>
+                    <?php if($users_type ==1)
+                    {?>
                     <table cellpadding="0" cellspacing="0" align="center">
                         <tr>
                             <td align="center" style="text-align: justify; padding: 0px 15px;">
@@ -26,6 +28,7 @@
                                 <p>
                                     Email :- <strong><?= $email ?></strong>
                                 </p>
+                                
                                 <p style="line-height:10px;"> Greetings from datamonitering.com </p>
                                 <p style="line-height:20px;">Thanks for inquiry with datamonitering.com </p>
                                 <p style="line-height:25px; font-size: 13px;">It's was nice to inquiry with us.</p>                            
@@ -41,6 +44,33 @@
                             </td>
                         </tr>
                     </table>
+                    <?php } else {?>
+                      <table cellpadding="0" cellspacing="0" align="center">
+                        <tr>
+                            <td align="center" style="text-align: justify; padding: 0px 15px;">
+                                <p>
+                                    Dear :- <strong><?= ucfirst($name) ?></strong>
+                                </p>
+                                <p>
+                                    Email :- <strong><?= $email ?></strong>
+                                </p>
+                                
+                                <p style="line-height:10px;"> Greetings from <?= $users_email ?> </p>
+                                <p style="line-height:20px;">Thanks for inquiry with <?= $users_email ?> </p>
+                                <p style="line-height:25px; font-size: 13px;">It's was nice to inquiry with us.</p>                            
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:12px; text-align:justify; padding: 0px 15px;">
+                                <p style="line-height:25px; font-weight: bold; color: #6f6e6e;">
+                                    All the Best<br>Thanks & Regards<br>
+                                    <?= $users_email ?> 
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                    <?php } ?>
                 </td>
             </tr>
             <tr>
