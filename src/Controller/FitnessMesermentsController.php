@@ -52,6 +52,7 @@ class FitnessMesermentsController extends AppController
        //pr($this->usersdetail['users_id']);die;
         $sdate  ='';
         $edate  ='';
+        $norec  = 10;
         $user_id  ='';
         $search = [];
          if (isset($this->request->query['from_date']) && trim($this->request->query['from_date']) != "" 
@@ -85,7 +86,9 @@ class FitnessMesermentsController extends AppController
         }
         //$count = $count->where(['Users.active !=' => '3']);
 
-        $this->paginate = ['order' => ['FitnessMeserments.id' => 'DESC'],'contain' => ['Users']];
+        $this->paginate = ['order' => ['FitnessMeserments.id' => 'DESC'],
+                                      'limit' => $norec, 
+                                      'contain' => ['Users']];
         $fitnessMeserments = $this->paginate($count)->toArray();
         //pr($fitnessMeserments);
        // $users = $this->paginate($this->Users);

@@ -37,7 +37,8 @@ class FitnessTestsController extends AppController
         $users_id   = $this->usersdetail['users_id'];
         $sdate      ='';
         $edate      ='';
-        $user_id      ='';
+        $user_id    ='';
+        $norec      = 10;
         $search     = [];
          if (isset($this->request->query['from_date']) && trim($this->request->query['from_date']) != "" 
           && isset($this->request->query['to_date']) && trim($this->request->query['to_date']) != "" ) {
@@ -69,6 +70,7 @@ class FitnessTestsController extends AppController
         }
         $this->paginate = [
             'contain' => ['Exercises','Users'],
+            'limit' => $norec, 
             'order' =>  ['FitnessTests.id' => 'DESC'],
         ];
         $fitnessTests = $this->paginate($count);
