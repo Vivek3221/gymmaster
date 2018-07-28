@@ -173,9 +173,10 @@ class UsersController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-        //pr($this->usersdetail);die;
+      //pr($this->usersdetail);die;
         $users_type = $this->usersdetail['users_type'];
         $users_email = $this->usersdetail['users_email'];
+        $users_name = $this->usersdetail['users_name'];
         $users_id   = $this->usersdetail['users_id'];
         $user       = $this->Users->newEntity();
         if ($this->request->is('post')) {
@@ -198,7 +199,7 @@ class UsersController extends AppController
 
                 $userDataArr['name']  = $data['name'];
                 $userDataArr['email'] = $data['email'];
-                $userDataArr['users_email'] = $users_email;
+                $userDataArr['users_name'] = $users_name;
                 $userDataArr['users_type'] = $users_type;
                 $toEmail              = $data['email'];
                 if($users_type == 1)
@@ -206,7 +207,7 @@ class UsersController extends AppController
                 $subject              = 'Inquery Successfully | Datamonitoring';
               
                 } else {
-                 $subject              = 'Inquery Successfully |' .$users_email;  
+                 $subject              = 'Inquery Successfully | ' .$users_name;  
                 }
                 $email                = new Email();
                 $email->transport('default');
@@ -239,6 +240,8 @@ class UsersController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
+        $users_type = $this->usersdetail['users_type'];
+        $users_name = $this->usersdetail['users_name'];
         $user = $this->Users->get($id, [
             'contain' => []
         ]);
@@ -284,6 +287,8 @@ class UsersController extends AppController
                 $paymentssAdd = $this->Payments->save($payments);
                 if(!empty($data['password'])) {
                     $userDataArr['name']      = $data['name'];
+                    $userDataArr['users_type']= $users_type;
+                    $userDataArr['users_name']= $users_name;
                     $userDataArr['password']  = $data['cpassword'];
                     $userDataArr['email']     = $data['email'];
                     $userDataArr['planName']  = $data['plan_name'];
@@ -292,7 +297,13 @@ class UsersController extends AppController
                     $userDataArr['paidAmount']= $data['amount'];
                     $userDataArr['login_url'] = Router::url('/', ['controller' => 'Users', 'action' => 'login']);
                     $toEmail                  = $data['email'];
-                    $subject                  = 'Inquery Successfully | Datamonitoring';
+                     if($users_type == 1)
+                {
+                $subject              = 'Inquery Successfully | Datamonitoring';
+              
+                } else {
+                 $subject              = 'Inquery Successfully | ' .$users_name;  
+                }
                     $email                    = new Email();
                     $email->transport('default');
                     try {
@@ -527,7 +538,10 @@ class UsersController extends AppController
     public function forgetPassword() {
         $this->autoRender = false;
         // check email is registered with us
+        //$users_type = $this->usersdetail['users_type'];
+        //$users_name = $this->usersdetail['users_name'];
         $userData = $this->Users->find()->select(['id','name'])->where(['email' => $this->request->data['email']]);
+        pr($userData); die;
         if($userData->count()) {
             // token and url generate
             $userData = $userData->first();
@@ -545,6 +559,8 @@ class UsersController extends AppController
                 $verifylink = SITE_URL.'reset-password/'.$token;
                 $userDataArr['name']  = $userData->name;
                 $userDataArr['link']  = $verifylink;
+               // $userDataArr['users_type']= $users_type;
+                //$userDataArr['users_name']= $users_name;
                 $email      = new Email();
                 $email->transport('default');
                 try {

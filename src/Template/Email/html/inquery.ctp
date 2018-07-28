@@ -55,8 +55,8 @@
                                     Email :- <strong><?= $email ?></strong>
                                 </p>
                                 
-                                <p style="line-height:10px;"> Greetings from <?= $users_email ?> </p>
-                                <p style="line-height:20px;">Thanks for inquiry with <?= $users_email ?> </p>
+                                <p style="line-height:10px;"> Greetings from <?= $users_name ?> </p>
+                                <p style="line-height:20px;">Thanks for inquiry with <?= $users_name ?> </p>
                                 <p style="line-height:25px; font-size: 13px;">It's was nice to inquiry with us.</p>                            
 
                             </td>
@@ -65,7 +65,7 @@
                             <td style="font-size:12px; text-align:justify; padding: 0px 15px;">
                                 <p style="line-height:25px; font-weight: bold; color: #6f6e6e;">
                                     All the Best<br>Thanks & Regards<br>
-                                    <?= $users_email ?> 
+                                    <?= $users_name ?> 
                                 </p>
                             </td>
                         </tr>
