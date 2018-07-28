@@ -117,7 +117,7 @@ $user_type = $this->Common->getType();
    <?= $this->Form->button('Inactive',['class'=>'btn btn-primary waves-effect','id'=>$user->id,'value'=>$user->active,'onclick'=>'updateStatus(this.id,'.$user->active.')' ]) ?>
                                         <?php }?>
                                     </td><?php } else { ?>
-                                    <td><?= $this->Form->button('Enquiry',['class'=>'btn btn-primary waves-effect non-click','id'=>$user->id,'value'=>$user->active ]) ?>
+                                    <td><?= $this->Form->button('Enquiry',['class'=>'btn btn-danger waves-effect non-click','id'=>$user->id,'value'=>$user->active ]) ?>
                                     </td>  <?php } ?>
                                     <td><i class="material-icons" title="View"><?= $this->Html->link(__('visibility'), ['action' => 'view', $user['id']]) ?></i>
                                         <?php if($usersdetail['users_type'] == 1){; ?>

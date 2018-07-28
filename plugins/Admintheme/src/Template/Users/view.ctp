@@ -46,7 +46,15 @@ $user_type = $this->Common->getType();
 
                                 <tr>
                                     <th scope="row"><?= __('Status') ?></th>
-                                    <td><?php echo ($user['active']) ? __('Active') : __('Inactive');?></td>
+                                    <?php
+                                    if($user['active'] != 2) {
+                                     ?>
+                                    }
+                                <td><?php echo ($user['active']) ? __('Active') : __('Inactive');?></td>
+                            <?php } else {?>
+                                <td>
+                                    <?php echo "Enquiry";  }?>
+                                </td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><?= __('Gender') ?></th>
@@ -71,7 +79,7 @@ $user_type = $this->Common->getType();
                                     <td><?= $user->payment ?></td>
                                 </tr>
                                  <?php } ?>
-                                  <?php if(isset($user->b_payment)) {    ?>
+                                  <?php if(!empty($user->b_payment)) {    ?>
                                 <tr>
                                     <th scope="row"><?= __('Due Payment') ?></th>
                                     <td><?= $user->b_payment ?></td>
