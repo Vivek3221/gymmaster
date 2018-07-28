@@ -204,10 +204,10 @@ class UsersController extends AppController
                 $toEmail              = $data['email'];
                 if($users_type == 1)
                 {
-                $subject              = 'Inquery Successfully | Datamonitoring';
+                $subject              = 'Successfully Inquery | Datamonitoring';
               
                 } else {
-                 $subject              = 'Inquery Successfully | ' .$users_name;  
+                 $subject              = 'Successfully Inquery | ' .$users_name;  
                 }
                 $email                = new Email();
                 $email->transport('default');
@@ -299,10 +299,10 @@ class UsersController extends AppController
                     $toEmail                  = $data['email'];
                      if($users_type == 1)
                 {
-                $subject              = 'Inquery Successfully | Datamonitoring';
+                $subject              = 'Successfully Payment | Datamonitoring';
               
                 } else {
-                 $subject              = 'Inquery Successfully | ' .$users_name;  
+                 $subject              = 'Successfully Payment | ' .$users_name;  
                 }
                     $email                    = new Email();
                     $email->transport('default');

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Mailer</title>
+        <title></title>
         <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
     <body style="margin:0 auto; font-size: 14px; font-family: arial;">
@@ -21,7 +21,7 @@
                         <tr>
                             <td align="center" style="text-align: justify; padding: 0px 15px;">
                                 <p>
-                                    Dear :- <strong><?= $name ?></strong>
+                                    Dear  <strong><?= $name ?></strong>
                                 </p>
                                 <p>
                                     Your Email :- <strong><?= $email ?></strong>
@@ -69,7 +69,7 @@
                     <table style="background-color: #333;" align="center" hight="45">
                         <tr>
                             <td align="center" style="width: 600px">
-                                <p style="font-size:11px; padding-left:15px; color: #fff;">You have recived this message from <a href="#!" style="color:#f3f3f3; text-decoration:none;">datamonitering.com</a></p>
+                                <p style="font-size:11px; padding-left:15px; color: #fff;">You have recived this message from <a href="http://datamonitering.com/" style="color:#f3f3f3; text-decoration:none;">datamonitering.com</a></p>
                             </td>
                         </tr>
                     </table>
