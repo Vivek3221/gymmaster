@@ -57,7 +57,6 @@ $partners = $this->Common->getpartner();
                             <?= $this->Form->end() ?>
                         </div>
                         <?php if ($this->Paginator->counter(['format' => __('{{count}}')]) != 0) { ?>
-                            <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover dataTable responsive" id="userstable">
                                 <thead>
                                     <tr>
@@ -108,6 +107,7 @@ $partners = $this->Common->getpartner();
                                                 <?php if(($user_type == 3) && (empty($session->user_detail))) { ?>
                                                      <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'userEdit', $session['id']]) ?></i>
                                              <?php   } ?>
+                                                     
                                                 <i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $session['id']]) ?></i>
                                                <?php if($user_type != 3){?>
                                                 <?php if(empty($session->user_detail)){?>
@@ -118,12 +118,14 @@ $partners = $this->Common->getpartner();
                                                <?php if($user_type != 3){?>
                                                 <i class="material-icons"><?= $this->Html->link(__('content_copy'), ['action' => 'addMore', $session['id']],['title'=> 'Add Duplicate'] ) ?></i>
                                                <?php } ?>
+                                               <?php if(($user_type == 1) && (!empty($session->user_detail))) {?>
+                                               <i class="material-icons"><?= $this->Html->link(__('border_color'), ['action' => 'userEdit', $session['id']]) ?></i>
+                                             <?php } ?>
                                             </td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
                             </table>
-                        </div>
                             <div class="paginator">
                                 <ul class="pagination">
                                     <?= $this->Paginator->first('<< ' . __('first')) ?>
