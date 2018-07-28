@@ -50,6 +50,7 @@
                         <?= $this->Form->end() ?>
                     </div> 
                   <?php if ($this->Paginator->counter(['format' => __('{{count}}')]) != 0) { ?>
+                    <div class="table-responsive">
                   <table class="table table-bordered table-striped table-hover dataTable responsive" id="userstable">
                      <thead>
                         <tr>
@@ -87,6 +88,7 @@
                         <?php endforeach; ?>
                      </tbody>
                   </table>
+                </div>
                   <div class="paginator">
                      <ul class="pagination">
                         <?= $this->Paginator->first('<< ' . __('first')) ?>
