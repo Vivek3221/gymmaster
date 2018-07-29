@@ -92,6 +92,10 @@
         var id = 'remove' + clicked_id;
         $('#' + id).remove();
     }
+    function removeExcerciseall(clicked_id) {
+        var id = 'getexercise' + clicked_id;
+        $('#' + id).remove();
+    }
     
     var start = 100;
     function getPartnere(admin_id) {

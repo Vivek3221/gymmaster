@@ -7,7 +7,9 @@
 <div class="row" id="getexercise<?= $key ?>" style="margin-bottom: 10px" >
     
     <span class=""> <p class="text-primary"><?=  ucfirst($get_exrcisedirectorie_list) ?></p></span>
-    
+     <button type="button" class="btn btn-default btn-sm pull-right " id="<?= $key ?>" onclick="removeExcerciseall(this.id)">
+            <i class="material-icons">clear</i> 
+        </button>
   <div class="table-responsive">
     <table class="table table-bordered table-striped table-highlight">
       <thead>

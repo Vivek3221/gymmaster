@@ -44,8 +44,11 @@
                                 $excid = $key;
                                 $addexc[] = $key;
                             ?>
-                                <div class="row" id="getexercise<?= $key ?>" style="margin-bottom: 10px" >
+                                <div class="row" id="getexercise<?= $key ?>" style="margin-bottom: 10px">
                                     <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
+                                    <button type="button" class="btn btn-default btn-sm pull-right " id="<?= $key ?>" onclick="removeExcerciseall(this.id)">
+            <i class="material-icons">clear</i> 
+        </button>
                                     <span class=""> <p class="text-primary"><?= ucfirst($ex_name->name) ?></p></span>
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-striped table-highlight">
@@ -176,6 +179,10 @@
 
     function removeExcercise(clicked_id) {
         var id = 'remove' + clicked_id;
+        $('#' + id).remove();
+    }
+     function removeExcerciseall(clicked_id) {
+        var id = 'getexercise' + clicked_id;
         $('#' + id).remove();
     }
 function getPartnere(admin_id) {
