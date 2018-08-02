@@ -132,27 +132,27 @@
     <!-- Wrapper for slides -->
     <div class="carousel-inner">
       <div class="item active">
-        <?= $this->Html->image('11.jpg',['alt'=>'Los Angeles','class'=>'img-responsive']) ?>
+        <?= $this->Html->image('3.jpg',['alt'=>'Los Angeles','class'=>'img-responsive']) ?>
       </div>
 
       <div class="item">
-        <?= $this->Html->image('9.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>  
+        <?= $this->Html->image('4.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>  
       </div>
     
-      <div class="item">
+     <!--  <div class="item">
           <?= $this->Html->image('10.jpg',['alt'=>'New york','class'=>'img-responsive']) ?>
-      </div>
+      </div> -->
 
-      <div class="item">
+     <!--  <div class="item">
           <?= $this->Html->image('8.jpg',['alt'=>'Los Angeles','class'=>'img-responsive']) ?>
-      </div>
+      </div> -->
 
       <div class="item">
         <?= $this->Html->image('6.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
       </div>
-      <div class="item">
+     <!--  <div class="item">
         <?= $this->Html->image('12.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
-      </div>
+      </div> -->
       <div class="item">
         <?= $this->Html->image('5.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
       </div>
