@@ -474,7 +474,7 @@ class UsersController extends AppController
     *Login UI function
     */
     public function adminLogin() {
-     
+        $this->viewBuilder()->layout("ajax");
     }
       public function dashboard(){
              if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
