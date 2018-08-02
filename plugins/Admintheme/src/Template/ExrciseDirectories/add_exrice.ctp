@@ -7,6 +7,11 @@
 <div class="row" id="getexercise<?= $key ?>" style="margin-bottom: 10px" >
     
     <span class=""> <p class="text-primary"><?=  ucfirst($get_exrcisedirectorie_list) ?></p></span>
+    <span class="pull-right" id="getexercisemore">
+        <button type="button" class="btn btn-default btn-sm" id="<?= $key ?>" onclick="getExcercisemore(this.id)">
+            <i class="material-icons">add</i> 
+        </button>
+    </span>
      <button type="button" class="btn btn-default btn-sm pull-right " id="<?= $key ?>" onclick="removeExcerciseall(this.id)">
             <i class="material-icons">clear</i> 
         </button>
@@ -47,11 +52,7 @@
       </tbody>
     </table>
   </div> 
-    <span class="pull-left" id="getexercisemore">
-        <button type="button" class="btn btn-default btn-sm" id="<?= $key ?>" onclick="getExcercisemore(this.id)">
-            <i class="material-icons">add</i> 
-        </button>
-    </span>
+    
 </div>
 <?php
     }  }

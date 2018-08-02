@@ -48,6 +48,11 @@
                                 <div class="row" id="getexercise<?= $key ?>" style="margin-bottom: 10px">
                                     <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
                                     <span class=""> <p class="text-primary"><?= ucfirst($ex_name->name) ?></p></span>
+                   <span class="pull-right" id="getexercisemore" style="margin-bottom: -6px">
+                                        <button type="button" class="btn btn-default btn-sm" id="<?= $key ?>" onclick="getExcercisemore(this.id)">
+                                            <i class="material-icons">add</i> 
+                                        </button>
+                                    </span>                   
                 <button type="button" class="btn btn-default btn-sm pull-right " id="<?= $key ?>" onclick="removeExcerciseall(this.id)">
             <i class="material-icons">clear</i> 
         </button>
@@ -117,11 +122,6 @@
                                             </tbody>
                                         </table>
                                     </div> 
-                                    <span class="pull-left" id="getexercisemore"  style="margin-bottom: -6px">
-                                        <button type="button" class="btn btn-default btn-sm" id="<?= $key ?>" onclick="getExcercisemore(this.id)">
-                                            <i class="material-icons">add</i> 
-                                        </button>
-                                    </span>
                                 </div>
                             <?php } ?>
                             <?php // data from ajax comes here ?>
