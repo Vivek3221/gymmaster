@@ -86,7 +86,7 @@
           <div class="form-group home-password">
             <?= $this->Form->control('password', ['class' => 'form-control','id'=>'pwd', 'type' => 'password', 'placeholder' => 'Enter Password', 'label' => false, 'required'=>'required']) ?> 
           </div>          
-          <button class="btn btn-default" type="submit"><?= __('Submit') ?></button>
+          <button class="btn btn-default" type="submit"><?= __('Sign In') ?></button>
           <div class="" style="display: inherit;margin-right: 3px;">
             <a href="#" style=" color: #fff;">Forget Password</a>
           </div>
