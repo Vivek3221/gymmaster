@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Data Monitor</title>
+  <title>Athlete Monitoring Software,Fitness Testing,Athlete Management System</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">  
@@ -86,7 +86,7 @@
           <div class="form-group home-password">
             <?= $this->Form->control('password', ['class' => 'form-control','id'=>'pwd', 'type' => 'password', 'placeholder' => 'Enter Password', 'label' => false, 'required'=>'required']) ?> 
           </div>          
-          <button class="btn btn-default" type="submit"><?= __('Submit') ?></button>
+          <button class="btn btn-default" type="submit"><?= __('Sign In') ?></button>
           <div class="" style="display: inherit;margin-right: 3px;">
             <a href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>" style=" color: #fff;">Forget Password</a>
           </div>
@@ -132,27 +132,27 @@
     <!-- Wrapper for slides -->
     <div class="carousel-inner">
       <div class="item active">
-        <?= $this->Html->image('11.jpg',['alt'=>'Los Angeles','class'=>'img-responsive']) ?>
+        <?= $this->Html->image('3.jpg',['alt'=>'Los Angeles','class'=>'img-responsive']) ?>
       </div>
 
       <div class="item">
-        <?= $this->Html->image('9.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>  
+        <?= $this->Html->image('4.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>  
       </div>
     
-      <div class="item">
+     <!--  <div class="item">
           <?= $this->Html->image('10.jpg',['alt'=>'New york','class'=>'img-responsive']) ?>
-      </div>
+      </div> -->
 
-      <div class="item">
+     <!--  <div class="item">
           <?= $this->Html->image('8.jpg',['alt'=>'Los Angeles','class'=>'img-responsive']) ?>
-      </div>
+      </div> -->
 
       <div class="item">
         <?= $this->Html->image('6.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
       </div>
-      <div class="item">
+     <!--  <div class="item">
         <?= $this->Html->image('12.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
-      </div>
+      </div> -->
       <div class="item">
         <?= $this->Html->image('5.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
       </div>
@@ -167,7 +167,7 @@
       <span class="glyphicon glyphicon-chevron-right"></span>
       <span class="sr-only">Next</span>
     </a>
-  </div>
+  </div>  
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
