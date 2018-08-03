@@ -31,7 +31,7 @@ class UsersController extends AppController
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
        // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment','forgetPassword','resetPassword']);
+        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment','forgetPassword','forgotPassword','resetPassword']);
         
     }
 
@@ -531,7 +531,13 @@ class UsersController extends AppController
               $this->Auth->logout();
              return $this->redirect(['controller' => '/']);
  }
-       
+    
+    /*
+    *forgot password page
+    */
+    public function forgotPassword() {
+        $this->viewBuilder()->layout("ajax");
+    }   
     /*
      * forget password
      */

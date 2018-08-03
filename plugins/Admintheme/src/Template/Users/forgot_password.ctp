@@ -79,7 +79,7 @@
       </div>
       <!-- start:login page for desktop -->
       <div class="col-sm-8 text-right home-email hidden-xs">
-        <?= $this->Form->create('Login Form', ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'form-inline manage-form','id' => 'adminloginform', 'novalidate' => 'novalidate']) ?>    
+        <?= $this->Form->create(null, ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'form-inline manage-form','id' => 'forgetPasswordForm', 'novalidate' => 'novalidate']) ?>  
           <div class="form-group">
             <?= $this->Form->control('email', ['class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter Email', 'label' => false, 'required'=>'required']) ?> 
           </div>
@@ -88,7 +88,7 @@
           </div>          
           <button class="btn btn-default" type="submit"><?= __('Submit') ?></button>
           <div class="" style="display: inherit;margin-right: 3px;">
-            <a href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>" style=" color: #fff;">Forget Password</a>
+            <a href="#" style=" color: #fff;">Forget Password</a>
           </div>
         <?= $this->Form->end() ?>
       </div>
@@ -106,15 +106,13 @@
           <div class="container-content">
               <?= $this->Form->create('Login Form', ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'margin-t','id' => 'adminloginformmobile', 'novalidate' => 'novalidate']) ?>    
                   <div class="form-group">
-                      <?= $this->Form->control('email', ['id'=>'email-mobile','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter Email', 'label' => false, 'required'=>'required']) ?> 
+                      <?= $this->Form->control('email', ['id'=>'forget-email','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter email id', 'label' => false]) ?> 
                   </div>
-                  <div class="form-group">
-                      <?= $this->Form->control('password', ['id'=>'password-mobile','class' => 'form-control','id'=>'pwd', 'type' => 'password', 'placeholder' => 'Enter Password', 'label' => false, 'required'=>'required']) ?> 
-                  </div>
+                  <div class="customerror"></div>
                   <div class="text-center">
-                    <button class="btn btn-primary button-l margin-b" type="submit"><?= __('Sign In') ?></button>
+                    <button class="btn btn-primary button-l margin-b" id="forgetPasswordBtn" type="button"><?= __('Send Email') ?></button>  
                   </div>
-                  <div class="text-center"><a class="text-darkyellow" href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>"><small>Forgot your password?</small></a></div>
+                  <div class="text-center"><a class="text-darkyellow" href="<?= $this->Url->build(['action'=>'adminLogin']) ?>"><small>Sign In</small></a></div>
               <?= $this->Form->end() ?>
           </div>
       </div>
@@ -177,3 +175,26 @@
      <?= $this->Html->script('form-validation.js') ?>
 </body>
 </html>
+
+<!--<div class="card login-back">
+            <div class="body" id="forgetPasswordDiv">
+                <?= $this->Form->create(null, ['url' => ['controller' => 'Users', 'action' => 'login'], 'id' => 'forgetPasswordForm', 'novalidate' => 'novalidate']) ?>
+                <div class="msg">Enter your registered email Id.</div>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="material-icons">person</i>
+                    </span>
+                    <div class="form-line">
+                        <?= $this->Form->control('email', ['id'=>'forget-email','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter email id', 'label' => false]) ?> 
+                    </div>
+                </div>
+                <div class="customerror"></div>
+                <div class="row">
+                    <div class="col-xs-4">
+                        <button class="btn btn-block bg-pink waves-effect" id="forgetPasswordBtn" type="button"><?= __('Send Email') ?></button>
+                    </div>
+                </div>
+                <?= $this->Form->end() ?>
+                <div>Go back to <a href="javascript:void()" id="showLoginForm">Sign in</a></div>
+            </div>
+        </div>-->
