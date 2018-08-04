@@ -709,7 +709,30 @@ $(document).ready(function () {
         }
     });
 
-
+    //forget password
+    $("#forgetPasswordMobileForm").validate({
+        ignore: ":hidden",
+        errorElement: 'span',
+        errorClass: 'help-inline',
+        highlight: function (element) {
+            $(element).parent().addClass("error");
+        },
+        unhighlight: function (element) {
+            $(element).parent().removeClass("error");
+        },
+        rules: {
+            email: {
+                required: true,
+               regex: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$|^[0-9]{5,15}$/
+            }
+        },
+        messages: {
+            email: {
+                required: 'Enter Email Id',
+                regex: 'Enter valid Email Id'
+            }
+        }
+    });
 });
 
 

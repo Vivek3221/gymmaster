@@ -547,7 +547,7 @@ class UsersController extends AppController
         //$users_type = $this->usersdetail['users_type'];
         //$users_name = $this->usersdetail['users_name'];
         $userData = $this->Users->find()->select(['id','name'])->where(['email' => $this->request->data['email']]);
-        pr($userData); die;
+//        pr($userData); die;
         if($userData->count()) {
             // token and url generate
             $userData = $userData->first();

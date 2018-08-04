@@ -50,7 +50,7 @@
     .home-email .help-inline {
         position: absolute;
         top: 51px;
-        left: 277px;  
+        left: 450px;  
         font-size: 11px;
     }
     .home-password .help-inline {
@@ -81,14 +81,12 @@
       <div class="col-sm-8 text-right home-email hidden-xs">
         <?= $this->Form->create(null, ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'form-inline manage-form','id' => 'forgetPasswordForm', 'novalidate' => 'novalidate']) ?>  
           <div class="form-group">
-            <?= $this->Form->control('email', ['class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter Email', 'label' => false, 'required'=>'required']) ?> 
+            <?= $this->Form->control('email', ['id'=>'forget-email','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter email id', 'label' => false]) ?>   
           </div>
-          <div class="form-group home-password">
-            <?= $this->Form->control('password', ['class' => 'form-control','id'=>'pwd', 'type' => 'password', 'placeholder' => 'Enter Password', 'label' => false, 'required'=>'required']) ?> 
-          </div>          
-          <button class="btn btn-default" type="submit"><?= __('Submit') ?></button>
+          <button class="btn btn-default" id="forgetPasswordBtn" type="button"><?= __('Send Email') ?></button>
+          <div class="customerror"></div>
           <div class="" style="display: inherit;margin-right: 3px;">
-            <a href="#" style=" color: #fff;">Forget Password</a>
+            <a href="<?= $this->Url->build(['action'=>'adminLogin']) ?>" style=" color: #fff;">Sign In</a>
           </div>
         <?= $this->Form->end() ?>
       </div>
@@ -104,13 +102,13 @@
           </div>
           <h3 class="text-whitesmoke">Sign In</h3>
           <div class="container-content">
-              <?= $this->Form->create('Login Form', ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'margin-t','id' => 'adminloginformmobile', 'novalidate' => 'novalidate']) ?>    
+              <?= $this->Form->create('Login Form', ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'margin-t','id' => 'forgetPasswordMobileForm', 'novalidate' => 'novalidate']) ?>    
                   <div class="form-group">
                       <?= $this->Form->control('email', ['id'=>'forget-email','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter email id', 'label' => false]) ?> 
                   </div>
                   <div class="customerror"></div>
                   <div class="text-center">
-                    <button class="btn btn-primary button-l margin-b" id="forgetPasswordBtn" type="button"><?= __('Send Email') ?></button>  
+                    <button class="btn btn-primary button-l margin-b" id="forgetPasswordMobileBtn" type="button"><?= __('Send Email') ?></button>  
                   </div>
                   <div class="text-center"><a class="text-darkyellow" href="<?= $this->Url->build(['action'=>'adminLogin']) ?>"><small>Sign In</small></a></div>
               <?= $this->Form->end() ?>
@@ -173,28 +171,69 @@
     <!-- Sparkline Chart Plugin Js -->
      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.js"></script>
      <?= $this->Html->script('form-validation.js') ?>
+     <script>
+    $("#forgetPasswordBtn").click(function(){
+            var formId = '#forgetPasswordForm';
+            var errorDiv = $(".customerror");
+            var btn = $("#forgetPasswordBtn");
+            if ($(formId).valid()) {
+                var urllink = '<?= $this->Url->build(['controller' => 'Users', 'action' => 'forgetPassword']) ?>';
+                btn.attr("disabled", "disabled");
+                var postdata = $(formId).serialize();
+                errorDiv.css("display", "none");
+                $.ajax({
+                    url: urllink,
+                    type: 'POST',
+                    data: postdata,
+                    success: function (data) {
+//                        alert(data);
+                        var myjson = JSON.parse(data);
+                        if (myjson.msg_type === 'fail') {
+                            errorDiv.html('<span style="color:red">'+myjson.msg+'</span>');
+                        } else if (myjson.msg_type === 'success') {
+                            errorDiv.html('<span style="color:green">'+myjson.msg+'</span>');
+                            $('#forget-email').val('');
+                        }
+                        errorDiv.css("display", "block");
+                        btn.removeAttr("disabled");
+                    },
+                    error: function () {
+//                        alert('data');
+                    }
+                });
+            }
+            return false;
+        });
+    $("#forgetPasswordMobileBtn").click(function(){
+            var formId = '#forgetPasswordMobileForm';
+            var errorDiv = $(".customerror");
+            var btn = $("#forgetPasswordMobileBtn");
+            if ($(formId).valid()) {
+                var urllink = '<?= $this->Url->build(['controller' => 'Users', 'action' => 'forgetPassword']) ?>';
+                btn.attr("disabled", "disabled");
+                var postdata = $(formId).serialize();
+                errorDiv.css("display", "none");
+                $.ajax({
+                    url: urllink,
+                    type: 'POST',
+                    data: postdata,
+                    success: function (data) {
+                        var myjson = JSON.parse(data);
+                        if (myjson.msg_type === 'fail') {
+                            errorDiv.html('<span style="color:red">'+myjson.msg+'</span>');
+                        } else if (myjson.msg_type === 'success') {
+                            errorDiv.html('<span style="color:green">'+myjson.msg+'</span>');
+                            $('#forget-email').val('');
+                        }
+                        errorDiv.css("display", "block");
+                        btn.removeAttr("disabled");
+                    },
+                    error: function () {
+                    }
+                });
+            }
+            return false;
+        });    
+</script>
 </body>
 </html>
-
-<!--<div class="card login-back">
-            <div class="body" id="forgetPasswordDiv">
-                <?= $this->Form->create(null, ['url' => ['controller' => 'Users', 'action' => 'login'], 'id' => 'forgetPasswordForm', 'novalidate' => 'novalidate']) ?>
-                <div class="msg">Enter your registered email Id.</div>
-                <div class="input-group">
-                    <span class="input-group-addon">
-                        <i class="material-icons">person</i>
-                    </span>
-                    <div class="form-line">
-                        <?= $this->Form->control('email', ['id'=>'forget-email','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter email id', 'label' => false]) ?> 
-                    </div>
-                </div>
-                <div class="customerror"></div>
-                <div class="row">
-                    <div class="col-xs-4">
-                        <button class="btn btn-block bg-pink waves-effect" id="forgetPasswordBtn" type="button"><?= __('Send Email') ?></button>
-                    </div>
-                </div>
-                <?= $this->Form->end() ?>
-                <div>Go back to <a href="javascript:void()" id="showLoginForm">Sign in</a></div>
-            </div>
-        </div>-->
