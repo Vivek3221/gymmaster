@@ -66,7 +66,8 @@
      @media (max-width: 312px) {     
       .login-container{left: 20px; top: -30px;}
     }
-
+ .mt-15{margin-top: 15px}
+ .f-15{font-size: 20px}
   </style>
 </head>
 <body style="height: 100%;">
@@ -116,7 +117,8 @@
                   <div class="text-center">
                     <button class="btn btn-primary button-l margin-b" type="submit"><?= __('SUBMIT') ?></button>  
                   </div>
-                  <div class="text-center"><a class="text-darkyellow" href="<?= $this->Url->build(['action'=>'adminLogin']) ?>"><small>Sign In</small></a></div>
+                  <div class="text-center mt-15">
+                    <a class="text-darkyellow f-15" href="<?= $this->Url->build(['action'=>'adminLogin']) ?>"><small>Sign In</small></a></div>
               <?= $this->Form->end() ?>
           </div>
       </div>

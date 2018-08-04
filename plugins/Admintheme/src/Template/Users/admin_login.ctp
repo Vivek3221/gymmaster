@@ -66,7 +66,8 @@
      @media (max-width: 345px) {     
       .login-container{left: 30px; top: -30px;}
     }
-
+    .mt-15{margin-top: 15px}
+    .f-15{font-size: 20px}
   </style>
 </head>
 <body style="height: 100%;">
@@ -89,7 +90,7 @@
           </div>          
           <button class="btn btn-default" type="submit"><?= __('Sign In') ?></button>
           <div class="" style="display: inherit;margin-right: 3px;">
-            <a href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>" style=" color: #fff;">Forget Password</a>
+            <a href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>" style=" color: #fff;">Forgot Password</a>
           </div>
         <?= $this->Form->end() ?>
       </div>
@@ -115,7 +116,8 @@
                   <div class="text-center">
                     <button class="btn btn-primary button-l margin-b" type="submit"><?= __('Sign In') ?></button>
                   </div>
-                  <div class="text-center"><a class="text-darkyellow" href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>"><small>Forgot your password?</small></a></div>
+                  <div class="text-center mt-15">
+                  <a class="text-darkyellow f-15" href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>"><small>Forgot your password?</small></a></div>
               <?= $this->Form->end() ?>
           </div>
       </div>
