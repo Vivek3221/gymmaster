@@ -38,7 +38,7 @@
     /*for Mobile*/
     .mobile-bg { 
       display: table;
-    background-image: url("<?= $this->Url->image('9.jpg') ?>");
+    background-image: url("<?= $this->Url->image('24-min.jpg') ?>");
     height: 728px; 
     background-position: center;
     background-repeat: no-repeat;
@@ -148,11 +148,11 @@
     <!-- Wrapper for slides -->
     <div class="carousel-inner">
       <div class="item active">
-        <?= $this->Html->image('3-min.jpg',['alt'=>'Los Angeles','class'=>'img-responsive']) ?>
+        <?= $this->Html->image('21-min.jpg',['alt'=>'Los Angeles','class'=>'img-responsive']) ?>
       </div>
 
       <div class="item">
-        <?= $this->Html->image('4-min.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>  
+        <?= $this->Html->image('22-min.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>  
       </div>
     
      <!--  <div class="item">
@@ -164,13 +164,13 @@
       </div> -->
 
       <div class="item">
-        <?= $this->Html->image('6-min.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
+        <?= $this->Html->image('23-min.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
       </div>
      <!--  <div class="item">
         <?= $this->Html->image('12.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
       </div> -->
       <div class="item">
-        <?= $this->Html->image('5-min.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
+        <?= $this->Html->image('24-min.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
       </div>
     </div>
 
