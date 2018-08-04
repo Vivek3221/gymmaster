@@ -39,6 +39,7 @@ $user_name = $this->Common->getUsers();
                             <?= $this->Form->end() ?>
                         </div> 
                         <?php if ($this->Paginator->counter(['format' => __('{{count}}')]) != 0) { ?>
+                             <div class="table-responsive list-page">
                             <table class="table table-bordered table-striped table-hover dataTable responsive" id="userstable">
                                 <thead>
                                     <tr>
@@ -75,6 +76,7 @@ $user_name = $this->Common->getUsers();
                                     <?php } ?> 
                                 </tbody>
                             </table>
+                        </div>
                             <div class="paginator">
                                 <ul class="pagination">
                                     <?= $this->Paginator->first('<< ' . __('first')) ?>

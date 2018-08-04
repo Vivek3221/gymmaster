@@ -20,15 +20,15 @@
       /* Login & Register Pages*/
 
     .login-container {
-      display: table-cell;
+     /* display: table-cell;
       vertical-align: middle;
         position: absolute;
-        vertical-align: middle;
+       */ vertical-align: middle;
         z-index: 10000;
         margin: 0 auto;
         margin-top: 160px;
         text-align: center;
-        left: 66px;
+        /*left: 66px;*/
         background-color: #100f11;
         padding: 25px 40px;
         opacity: 0.9;
