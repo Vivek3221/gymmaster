@@ -101,7 +101,7 @@
           <div>
               <h1 class="logo-badge text-whitesmoke"><span class="fa fa-user-circle"></span></h1>
           </div>
-          <h3 class="text-whitesmoke">Sign In</h3>
+          <h3 class="text-whitesmoke">Forgot Password</h3>
           <div class="container-content">
               <?= $this->Form->create('Login Form', ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'margin-t','id' => 'forgetPasswordMobileForm', 'novalidate' => 'novalidate']) ?>    
                   <div class="form-group">
