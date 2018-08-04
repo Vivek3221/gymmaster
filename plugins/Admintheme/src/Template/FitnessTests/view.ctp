@@ -19,7 +19,7 @@ $fitness2  = json_decode($fitnessTest[1]->exercise_type);
                     <div class="card">
                         <div class="header">
                             <h2 class="pull-left">
-                               <?= __('FitnessTests Type') ?>
+                               <?= __('View Fitness Tests') ?>
                             </h2>
                            
                         </div>
