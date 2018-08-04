@@ -131,6 +131,8 @@ class SessionsController extends AppController
     }
 
     public function newview(){
+        
+         
 
     }
 
