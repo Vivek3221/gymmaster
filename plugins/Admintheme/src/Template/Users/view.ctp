@@ -46,10 +46,8 @@ $user_type = $this->Common->getType();
 
                                 <tr>
                                     <th scope="row"><?= __('Status') ?></th>
-                                    <?php
-                                    if($user['active'] != 2) {
-                                     ?>
-                                    }
+                                    <?php if($user['active'] != 2) {?>
+                                    
                                 <td><?php echo ($user['active']) ? __('Active') : __('Inactive');?></td>
                             <?php } else {?>
                                 <td>
