@@ -63,8 +63,8 @@
     @media (max-width: 466px) {     
       .heading-txt{text-align: center;}
     }
-     @media (max-width: 312px) {     
-      .login-container{left: 20px; top: -30px;}
+     @media (max-width: 345px) {     
+      .login-container{left: 30px; top: -30px;}
     }
 
   </style>
