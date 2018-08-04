@@ -74,6 +74,7 @@
 <div class="asdsadf"> 
   <div class="top-panel">
     <div class="container">
+        <?= $this->Flash->render() ?> 
       <div class="col-sm-4">
         <h1 class="heading-txt">Data Monitor</h1>
       </div>

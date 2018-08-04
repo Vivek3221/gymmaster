@@ -596,6 +596,7 @@ class UsersController extends AppController
      * forget password
      */
     public function resetPassword($token) {
+        $this->viewBuilder()->layout("ajax");
         $this->Tokens    = TableRegistry::get('Tokens');
         if(!empty($token)) {
             $tokenString = $this->Common->base64url_decode($token);
