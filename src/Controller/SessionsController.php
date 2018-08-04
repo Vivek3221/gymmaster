@@ -130,6 +130,10 @@ class SessionsController extends AppController
         $this->set('_serialize', ['session']);
     }
 
+    public function newview(){
+
+    }
+
     /**
      * Add method
      *
