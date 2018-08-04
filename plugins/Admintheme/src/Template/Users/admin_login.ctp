@@ -66,6 +66,20 @@
      @media (max-width: 345px) {     
       .login-container{left: 30px; top: -30px;}
     }
+    .mt-15{margin-top: 15px}
+    .f-15{font-size: 20px}
+    .btn-custom {
+ /*display: inline-block; */
+    padding: 12px 44px;
+    background-color: #ffffff;
+    border: none;
+    font-weight: bold;
+    color: #212121;
+    /* min-width: 125px; */
+    font-size: 18px;
+    border-radius: 100px;
+    transition: box-shadow .2s, border .2s;
+}
 
   </style>
 </head>
@@ -89,7 +103,7 @@
           </div>          
           <button class="btn btn-default" type="submit"><?= __('Sign In') ?></button>
           <div class="" style="display: inherit;margin-right: 3px;">
-            <a href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>" style=" color: #fff;">Forget Password</a>
+            <a href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>" style=" color: #fff;">Forgot Password</a>
           </div>
         <?= $this->Form->end() ?>
       </div>
@@ -113,9 +127,10 @@
                       <?= $this->Form->control('password', ['id'=>'password-mobile','class' => 'form-control','id'=>'pwd', 'type' => 'password', 'placeholder' => 'Enter Password', 'label' => false, 'required'=>'required']) ?> 
                   </div>
                   <div class="text-center">
-                    <button class="btn btn-primary button-l margin-b" type="submit"><?= __('Sign In') ?></button>
+                    <button class="btn-custom button-l margin-b" type="submit"><?= __('Sign In') ?></button>
                   </div>
-                  <div class="text-center"><a class="text-darkyellow" href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>"><small>Forgot your password?</small></a></div>
+                  <div class="text-center mt-15">
+                  <a class="text-darkyellow f-15" href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>"><small>Forgot your password?</small></a></div>
               <?= $this->Form->end() ?>
           </div>
       </div>
