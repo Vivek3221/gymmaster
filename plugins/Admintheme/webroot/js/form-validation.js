@@ -679,7 +679,44 @@ $(document).ready(function () {
             },
             confirmpassword: {
                 required: 'Enter confirm password',
-                equalTo: 'password and confirm password do not match.'
+                equalTo: 'password and confirm password do not match.',
+                regex: 'Enter password 6-16 alphanumeric & one special character.'
+            }
+        }
+    });
+    
+    //reset password
+    $("#resetPasswordMobileForm").validate({
+        ignore: ":hidden",
+        errorElement: 'span',
+        errorClass: 'help-inline',
+        highlight: function (element) {
+            $(element).parent().addClass("error");
+        },
+        unhighlight: function (element) {
+            $(element).parent().removeClass("error");
+        },
+        rules: {
+            newpassword: {
+                required: true,
+                regex: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/
+
+            },
+            confirmpassword: {
+                required: true,
+                equalTo: "#newpasswordmobile",
+                regex: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/
+            }
+        },
+        messages: {
+            newpassword: {
+                required: 'Enter new password',
+                regex: 'Enter password 6-16 alphanumeric & one special character.'
+            },
+            confirmpassword: {
+                required: 'Enter confirm password',
+                equalTo: 'password and confirm password do not match.',
+                regex: 'Enter password 6-16 alphanumeric & one special character.'
             }
         }
     });
@@ -709,7 +746,30 @@ $(document).ready(function () {
         }
     });
 
-
+    //forget password
+    $("#forgetPasswordMobileForm").validate({
+        ignore: ":hidden",
+        errorElement: 'span',
+        errorClass: 'help-inline',
+        highlight: function (element) {
+            $(element).parent().addClass("error");
+        },
+        unhighlight: function (element) {
+            $(element).parent().removeClass("error");
+        },
+        rules: {
+            email: {
+                required: true,
+               regex: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$|^[0-9]{5,15}$/
+            }
+        },
+        messages: {
+            email: {
+                required: 'Enter Email Id',
+                regex: 'Enter valid Email Id'
+            }
+        }
+    });
 });
 
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Athlete Monitoring Software,Fitness Testing,Athlete Management System</title>
+  <title>Data Monitor</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">  
@@ -50,7 +50,7 @@
     .home-email .help-inline {
         position: absolute;
         top: 51px;
-        left: 277px;  
+        left: 450px;  
         font-size: 11px;
     }
     .home-password .help-inline {
@@ -71,24 +71,21 @@
 </head>
 <body style="height: 100%;">
 
-<div class="asdsadf">
+<div class="asdsadf"> 
   <div class="top-panel">
     <div class="container">
         <?= $this->Flash->render() ?> 
       <div class="col-sm-4">
         <h1 class="heading-txt">Data Monitor</h1>
       </div>
-        
       <!-- start:login page for desktop -->
       <div class="col-sm-8 text-right home-email hidden-xs">
-        <?= $this->Form->create('Reset Password Form', ['url' => ['controller' => 'Users', 'action' => 'resetPassword', $token],'class'=>'form-inline manage-form', 'id' => 'resetPasswordForm', 'novalidate' => 'novalidate']) ?>  
+        <?= $this->Form->create(null, ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'form-inline manage-form','id' => 'forgetPasswordForm', 'novalidate' => 'novalidate']) ?>  
           <div class="form-group">
-            <?= $this->Form->control('newpassword', ['class' => 'form-control', 'type' => 'password', 'placeholder' => 'Enter new password', 'label' => false]) ?> 
+            <?= $this->Form->control('email', ['id'=>'forget-email','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter email id', 'label' => false]) ?>   
           </div>
-          <div class="form-group home-password">
-            <?= $this->Form->control('confirmpassword', ['class' => 'form-control', 'type' => 'password', 'placeholder' => 'Confirm password', 'label' => false]) ?> 
-          </div>          
-          <button class="btn btn-default" type="submit"><?= __('SUBMIT') ?></button>
+          <button class="btn btn-default" id="forgetPasswordBtn" type="button"><?= __('Send Email') ?></button>
+          <div class="customerror"></div>
           <div class="" style="display: inherit;margin-right: 3px;">
             <a href="<?= $this->Url->build(['action'=>'adminLogin']) ?>" style=" color: #fff;">Sign In</a>
           </div>
@@ -104,17 +101,15 @@
           <div>
               <h1 class="logo-badge text-whitesmoke"><span class="fa fa-user-circle"></span></h1>
           </div>
-          <h3 class="text-whitesmoke">Reset Password</h3>
+          <h3 class="text-whitesmoke">Sign In</h3>
           <div class="container-content">
-              <?= $this->Form->create('Reset Password Form', ['url' => ['controller' => 'Users', 'action' => 'resetPassword', $token],'class'=>'margin-t', 'id' => 'resetPasswordMobileForm', 'novalidate' => 'novalidate']) ?>
+              <?= $this->Form->create('Login Form', ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'margin-t','id' => 'forgetPasswordMobileForm', 'novalidate' => 'novalidate']) ?>    
                   <div class="form-group">
-                      <?= $this->Form->control('newpassword', ['class' => 'form-control', 'type' => 'password', 'placeholder' => 'Enter new password', 'label' => false]) ?> 
+                      <?= $this->Form->control('email', ['id'=>'forget-email','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter email id', 'label' => false]) ?> 
                   </div>
-                  <div class="form-group">
-                      <?= $this->Form->control('confirmpassword', ['id'=>'newpasswordmobile','class' => 'form-control', 'type' => 'password', 'placeholder' => 'Confirm password', 'label' => false]) ?> 
-                  </div>
+                  <div class="customerror"></div>
                   <div class="text-center">
-                    <button class="btn btn-primary button-l margin-b" type="submit"><?= __('SUBMIT') ?></button>  
+                    <button class="btn btn-primary button-l margin-b" id="forgetPasswordMobileBtn" type="button"><?= __('Send Email') ?></button>  
                   </div>
                   <div class="text-center"><a class="text-darkyellow" href="<?= $this->Url->build(['action'=>'adminLogin']) ?>"><small>Sign In</small></a></div>
               <?= $this->Form->end() ?>
@@ -134,27 +129,27 @@
     <!-- Wrapper for slides -->
     <div class="carousel-inner">
       <div class="item active">
-        <?= $this->Html->image('3.jpg',['alt'=>'Los Angeles','class'=>'img-responsive']) ?>
+        <?= $this->Html->image('11.jpg',['alt'=>'Los Angeles','class'=>'img-responsive']) ?>
       </div>
 
       <div class="item">
-        <?= $this->Html->image('4.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>  
+        <?= $this->Html->image('9.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>  
       </div>
     
-     <!--  <div class="item">
+      <div class="item">
           <?= $this->Html->image('10.jpg',['alt'=>'New york','class'=>'img-responsive']) ?>
-      </div> -->
+      </div>
 
-     <!--  <div class="item">
+      <div class="item">
           <?= $this->Html->image('8.jpg',['alt'=>'Los Angeles','class'=>'img-responsive']) ?>
-      </div> -->
+      </div>
 
       <div class="item">
         <?= $this->Html->image('6.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
       </div>
-     <!--  <div class="item">
+      <div class="item">
         <?= $this->Html->image('12.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
-      </div> -->
+      </div>
       <div class="item">
         <?= $this->Html->image('5.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
       </div>
@@ -169,7 +164,7 @@
       <span class="glyphicon glyphicon-chevron-right"></span>
       <span class="sr-only">Next</span>
     </a>
-  </div>  
+  </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -177,5 +172,69 @@
     <!-- Sparkline Chart Plugin Js -->
      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.js"></script>
      <?= $this->Html->script('form-validation.js') ?>
+     <script>
+    $("#forgetPasswordBtn").click(function(){
+            var formId = '#forgetPasswordForm';
+            var errorDiv = $(".customerror");
+            var btn = $("#forgetPasswordBtn");
+            if ($(formId).valid()) {
+                var urllink = '<?= $this->Url->build(['controller' => 'Users', 'action' => 'forgetPassword']) ?>';
+                btn.attr("disabled", "disabled");
+                var postdata = $(formId).serialize();
+                errorDiv.css("display", "none");
+                $.ajax({
+                    url: urllink,
+                    type: 'POST',
+                    data: postdata,
+                    success: function (data) {
+//                        alert(data);
+                        var myjson = JSON.parse(data);
+                        if (myjson.msg_type === 'fail') {
+                            errorDiv.html('<span style="color:red">'+myjson.msg+'</span>');
+                        } else if (myjson.msg_type === 'success') {
+                            errorDiv.html('<span style="color:green">'+myjson.msg+'</span>');
+                            $('#forget-email').val('');
+                        }
+                        errorDiv.css("display", "block");
+                        btn.removeAttr("disabled");
+                    },
+                    error: function () {
+//                        alert('data');
+                    }
+                });
+            }
+            return false;
+        });
+    $("#forgetPasswordMobileBtn").click(function(){
+            var formId = '#forgetPasswordMobileForm';
+            var errorDiv = $(".customerror");
+            var btn = $("#forgetPasswordMobileBtn");
+            if ($(formId).valid()) {
+                var urllink = '<?= $this->Url->build(['controller' => 'Users', 'action' => 'forgetPassword']) ?>';
+                btn.attr("disabled", "disabled");
+                var postdata = $(formId).serialize();
+                errorDiv.css("display", "none");
+                $.ajax({
+                    url: urllink,
+                    type: 'POST',
+                    data: postdata,
+                    success: function (data) {
+                        var myjson = JSON.parse(data);
+                        if (myjson.msg_type === 'fail') {
+                            errorDiv.html('<span style="color:red">'+myjson.msg+'</span>');
+                        } else if (myjson.msg_type === 'success') {
+                            errorDiv.html('<span style="color:green">'+myjson.msg+'</span>');
+                            $('#forget-email').val('');
+                        }
+                        errorDiv.css("display", "block");
+                        btn.removeAttr("disabled");
+                    },
+                    error: function () {
+                    }
+                });
+            }
+            return false;
+        });    
+</script>
 </body>
 </html>

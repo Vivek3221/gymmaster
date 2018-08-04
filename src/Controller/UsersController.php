@@ -31,7 +31,7 @@ class UsersController extends AppController
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
        // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment','forgetPassword','resetPassword']);
+        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment','forgetPassword','forgotPassword','resetPassword']);
         
     }
 
@@ -531,7 +531,13 @@ class UsersController extends AppController
               $this->Auth->logout();
              return $this->redirect(['controller' => '/']);
  }
-       
+    
+    /*
+    *forgot password page
+    */
+    public function forgotPassword() {
+        $this->viewBuilder()->layout("ajax");
+    }   
     /*
      * forget password
      */
@@ -541,7 +547,7 @@ class UsersController extends AppController
         //$users_type = $this->usersdetail['users_type'];
         //$users_name = $this->usersdetail['users_name'];
         $userData = $this->Users->find()->select(['id','name'])->where(['email' => $this->request->data['email']]);
-        pr($userData); die;
+//        pr($userData); die;
         if($userData->count()) {
             // token and url generate
             $userData = $userData->first();
@@ -590,6 +596,7 @@ class UsersController extends AppController
      * forget password
      */
     public function resetPassword($token) {
+        $this->viewBuilder()->layout("ajax");
         $this->Tokens    = TableRegistry::get('Tokens');
         if(!empty($token)) {
             $tokenString = $this->Common->base64url_decode($token);
