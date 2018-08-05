@@ -547,8 +547,8 @@ class UsersController extends AppController
         //$users_type = $this->usersdetail['users_type'];
         //$users_name = $this->usersdetail['users_name'];
         $userData = $this->Users->find()->select(['id','name','partner_id'])->where(['email' => $this->request->data['email']]);
-        $partner = $this->Users->find()->select(['id','name','user_type'])->where(['id' => $userData->partner_id])->first();
-//        pr($userData); die;
+        $userDatas = $userData->first();
+        $partner = $this->Users->find()->select(['id','name','user_type'])->where(['id' => $userDatas->partner_id])->first();
         if($userData->count()) {
             // token and url generate
             $userData = $userData->first();

@@ -203,7 +203,7 @@
                     type: 'POST',
                     data: postdata,
                     success: function (data) {
-//                        alert(data);
+                        alert(data);
                         var myjson = JSON.parse(data);
                         if (myjson.msg_type === 'fail') {
                             errorDiv.html('<span style="color:red">'+myjson.msg+'</span>');
