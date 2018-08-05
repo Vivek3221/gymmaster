@@ -103,7 +103,7 @@
           </div>          
           <button class="btn btn-default" type="submit"><?= __('Sign In') ?></button>
           <div class="" style="display: inherit;margin-right: 3px;">
-            <a href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>" style=" color: #fff;">Forgot Password</a>
+            <a href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>" style=" color: #fff;">Forgot Password?</a>
           </div>
         <?= $this->Form->end() ?>
       </div>
@@ -143,6 +143,7 @@
       <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
       <li data-target="#myCarousel" data-slide-to="1"></li>
       <li data-target="#myCarousel" data-slide-to="2"></li>
+      <li data-target="#myCarousel" data-slide-to="3"></li>
     </ol>
 
     <!-- Wrapper for slides -->
