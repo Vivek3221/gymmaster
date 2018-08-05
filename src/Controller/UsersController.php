@@ -546,7 +546,8 @@ class UsersController extends AppController
         // check email is registered with us
         //$users_type = $this->usersdetail['users_type'];
         //$users_name = $this->usersdetail['users_name'];
-        $userData = $this->Users->find()->select(['id','name'])->where(['email' => $this->request->data['email']]);
+        $userData = $this->Users->find()->select(['id','name','partner_id'])->where(['email' => $this->request->data['email']]);
+        $partner = $this->Users->find()->select(['id','name','user_type'])->where(['id' => $userData->partner_id]);
 //        pr($userData); die;
         if($userData->count()) {
             // token and url generate
@@ -565,6 +566,8 @@ class UsersController extends AppController
                 $verifylink = SITE_URL.'reset-password/'.$token;
                 $userDataArr['name']  = $userData->name;
                 $userDataArr['link']  = $verifylink;
+                $userDataArr['users_type']= $partner->user_type;
+                $userDataArr['users_name']= $partner->name;
                // $userDataArr['users_type']= $users_type;
                 //$userDataArr['users_name']= $users_name;
                 $email      = new Email();

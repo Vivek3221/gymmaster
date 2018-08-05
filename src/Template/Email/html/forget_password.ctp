@@ -36,7 +36,12 @@
                                 <p style="line-height:25px; font-weight: bold; color: #6f6e6e;">
                                     <?= __('Regards,') ?><br>
                                     <?= __('Support Team,') ?><br>
-                                    <?= __('Datamonitoring') ?>
+                                     <?php if($users_type ==1)
+                                    {
+                                    echo 'Datamonitoring';
+                                    } else {
+                                       echo $users_name; 
+                                    } ?>
                                 </p>
                             </td>
                         </tr>
