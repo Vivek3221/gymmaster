@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">  
-  <style type="text/css">
+ <style type="text/css">
     .top-panel{
           position: absolute;
           top: 0;
@@ -20,15 +20,9 @@
       /* Login & Register Pages*/
 
     .login-container {
-     /* display: table-cell;
-      vertical-align: middle;
-        position: absolute;
-     */   vertical-align: middle;
-        z-index: 10000;
         margin: 0 auto;
         margin-top: 160px;
         text-align: center;
-        /*left: 66px;*/
         background-color: #100f11;
         padding: 25px 40px;
         opacity: 0.9;
@@ -37,39 +31,144 @@
     }
     /*for Mobile*/
     .mobile-bg { 
-      display: table;
     background-image: url("<?= $this->Url->image('24-min.jpg') ?>");
-    height: 728px; 
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    }
-    .help-inline {
-        font-size: 11px;
-    }
-    .home-email .help-inline {
-        position: absolute;
-        top: 51px;
-        left: 277px;  
-        font-size: 11px;
-    }
-    .home-password .help-inline {
-        position: absolute;
-        top: 51px;
-        left: 479px;  
-        font-size: 11px;
+    height: 700px;
     }
     /*End*/
     @media (max-width: 466px) {     
       .heading-txt{text-align: center;}
     }
-     @media (max-width: 345px) {     
-      .login-container{left: 30px; top: -30px;}
+     @media (max-width: 312px) {     
+      .login-container{left: 20px; top: -30px;}
     }
-    .mt-15{margin-top: 15px}
-    .f-15{font-size: 20px}
+    /********************************/
+    .mt-15{margin-top: 15px;}
+        /*.payment-view-bg{margin-top: 160px}*/
+        .payment-card-content{padding:25px 15px;}
+        .no-padding{padding: 0;}
+        .payment-card-content .btn-card{
+            color: #000!important;
+            background-color: #fff;
+            padding: 8px 12px;
+            border: 0 solid;
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0);
+            outline: 1px solid;
+            outline-color: rgba(255, 255, 255, 0.5);
+            outline-offset: 0px;
+            text-shadow: none;
+            transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .help-inline {
+        font-size: 11px;
+    }
+        .payment-card-content .btn-card:hover{
+            border: 1px solid;
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.2);
+            outline-color: rgba(255, 255, 255, 0);
+            outline-offset: 15px;
+            text-shadow: 1px 1px 2px #427388;
+        }
+        /* form starting stylings ------------------------------- */
+        .payment-card-content .group  { 
+          position:relative; 
+          margin-bottom:25px; 
+        }
+        .payment-card-content input{
+          background-color: transparent;
+          font-size:22px;
+          padding:10px 10px 0px 5px;
+          display:block;
+          width:100%;
+          color: #fff;
+          border:none;
+          border-bottom:1px solid #fff;
+          outline: none;
+        }
+        .payment-card-content input:focus { outline:none; }
+
+        /* LABEL ======================================= */
+        .payment-card-content label  {
+          color:#ddd; 
+          font-size:22px;
+          font-weight:normal;
+          position:absolute;
+          pointer-events:none;
+          left:5px;
+          top:0px;
+          transition:0.2s ease all; 
+          -moz-transition:0.2s ease all; 
+          -webkit-transition:0.2s ease all;
+        }
+
+        /* active state */
+        .payment-card-content input:focus ~ label, input:valid ~ label      {
+          top:-12px;
+          font-size:16px;
+          color:#fff;
+        }
+
+        /* BOTTOM BARS ================================= */
+        .payment-card-content .bar  { position:relative; display:block; width:100%; }
+        .payment-card-content .bar:before, .bar:after   {
+          content:'';
+          height:1px; 
+          width:0;
+          bottom:1px; 
+          position:absolute;
+          background:#ddd; 
+          transition:0.2s ease all; 
+          -moz-transition:0.2s ease all; 
+          -webkit-transition:0.2s ease all;
+        }
+        .payment-card-content .bar:before {
+          left:50%;
+        }
+        .payment-card-content .bar:after {
+          right:50%; 
+        }
+
+        /* active state */
+        .payment-card-content input:focus ~ .bar:before, input:focus ~ .bar:after {
+          width:50%;
+        }
+
+        /* HIGHLIGHTER ================================== */
+        .payment-card-content .highlight {
+          position:absolute;
+          height:60%; 
+          width:100px; 
+          top:25%; 
+          left:0;
+          pointer-events:none;
+          opacity:0.5;
+        }
+
+        /* active state */
+        .payment-card-content input:focus ~ .highlight {
+          -webkit-animation:inputHighlighter 0.3s ease;
+          -moz-animation:inputHighlighter 0.3s ease;
+          animation:inputHighlighter 0.3s ease;
+        }
+
+        /* ANIMATIONS ================ */
+        @-webkit-keyframes inputHighlighter {
+            from { background:#5264AE; }
+          to    { width:0; background:transparent; }
+        }
+        @-moz-keyframes inputHighlighter {
+            from { background:#5264AE; }
+          to    { width:0; background:transparent; }
+        }
+        @keyframes inputHighlighter {
+            from { background:#5264AE; }
+          to    { width:0; background:transparent; }
+        }
+    /*******************************/
     .btn-custom {
- /*display: inline-block; */
+    /* display: inline-block; */
     padding: 12px 44px;
     background-color: #ffffff;
     border: none;
@@ -80,7 +179,6 @@
     border-radius: 100px;
     transition: box-shadow .2s, border .2s;
 }
-
   </style>
 </head>
 <body style="height: 100%;">
@@ -112,30 +210,36 @@
   </div>
   <!-- Start login page for mobile -->
   <div class="col-xs-12 mobile-bg hidden-sm hidden-lg hidden-md">
-    <div class="text-center">
-       <div class="login-container">
-          <div>
-              <h1 class="logo-badge text-whitesmoke"><span class="fa fa-user-circle"></span></h1>
-          </div>
-          <h3 class="text-whitesmoke">Sign In</h3>
-          <div class="container-content">
-              <?= $this->Form->create('Login Form', ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'margin-t','id' => 'adminloginformmobile', 'novalidate' => 'novalidate']) ?>    
-                  <div class="form-group">
-                      <?= $this->Form->control('email', ['id'=>'email-mobile','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter Email', 'label' => false, 'required'=>'required']) ?> 
+    <div class="text-center" style="margin-top: 100px;">
+       <div class="top-form">
+          <div style="margin-bottom: 60px;"> <img src="img/logo.png" alt="" title=""></div>          
+          <div class="container-content payment-view-bg">
+            <h3 style="font-size: 40px; color: #fff;">Sign In</h3>
+              <?= $this->Form->create('Login Form', ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'margin-t payment-card-content','id' => 'adminloginformmobile', 'novalidate' => 'novalidate']) ?>    
+                  <div class="group">
+                      <?= $this->Form->input('email', ['id'=>'email-mobile','class' => 'form-control', 'type' => 'text', 'placeholder' => '', 'label' => false, 'required'=>'required']) ?>
+                      <span class="highlight"></span>
+                      <span class="bar"></span>
+                      <label>Email Id</label> 
                   </div>
-                  <div class="form-group">
-                      <?= $this->Form->control('password', ['id'=>'password-mobile','class' => 'form-control','id'=>'pwd', 'type' => 'password', 'placeholder' => 'Enter Password', 'label' => false, 'required'=>'required']) ?> 
+                  <div class="group">
+                      <?= $this->Form->input('password', ['id'=>'password-mobile','class' => 'form-control','id'=>'pwd', 'type' => 'password', 'placeholder' => '', 'label' => false, 'required'=>'required']) ?> 
+                     <span class="highlight"></span>
+                     <span class="bar"></span>
+                    <label>Password</label>
                   </div>
-                  <div class="text-center">
-                    <button class="btn-custom button-l margin-b" type="submit"><?= __('Sign In') ?></button>
-                  </div>
-                  <div class="text-center mt-15">
-                  <a class="text-darkyellow f-15" href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>"><small>Forgot your password?</small></a></div>
-              <?= $this->Form->end() ?>
+                  <div class="text-right" style="margin-bottom: 20px;">
+                  <a href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>" style="font-size: 18px; color: #fff;">Forgot your password?</a>
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn-custom">Sign In</button>
+                </div>
+               <?= $this->Form->end() ?>
           </div>
       </div>
     </div>
   </div>
+</div>
   <!-- End login page for mobile -->
   <div id="myCarousel" class="carousel slide hidden-xs" data-ride="carousel">
     <!-- Indicators -->
