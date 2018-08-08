@@ -20,31 +20,46 @@
       /* Login & Register Pages*/
 
     .login-container {
-      /*display: table-cell;
+     /* display: table-cell;
       vertical-align: middle;
         position: absolute;
-      */  vertical-align: middle;
-        z-index: 10000;
+     */   
+        
         margin: 0 auto;
-        margin-top: 160px;
+        margin-top: 140px;
         text-align: center;
         /*left: 66px;*/
-        background-color: #100f11;
+       
         padding: 25px 40px;
         opacity: 0.9;
         color: #fff;
-        border-top: 2px solid #f3c624;
+       
     }
     /*for Mobile*/
     .mobile-bg { 
       display: table;
-    background-image: url("<?= $this->Url->image('24-min.jpg') ?>");
+    background-image: url("<?= $this->Url->image('23-min.jpg') ?>");
     height: 728px; 
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     }
-    .help-inline {
+    .mobile-bg input { 
+        border: none;
+        background-color: transparent;
+        outline: none;
+        border-bottom: 2px solid #fff;
+        font-size: 16px;
+        color: #fff;
+        border-radious:0;
+    }
+    .mobile-bg input:focus {outline:none;}
+    .mobile-bg .help-inline {
+        font-size: 11px;
+        position: absolute;
+        left: 56px;
+    }
+    .help-inline{
         font-size: 11px;
     }
     .home-email .help-inline {
@@ -66,9 +81,9 @@
      @media (max-width: 345px) {     
       .login-container{left: 30px; top: -30px;}
     }
- .mt-15{margin-top: 15px}
- .f-15{font-size: 20px}
- .btn-custom {
+    .mt-15{margin-top: 15px}
+    .f-15{font-size: 20px}
+    .btn-custom {
  /*display: inline-block; */
     padding: 12px 44px;
     background-color: #ffffff;
@@ -80,20 +95,29 @@
     border-radius: 100px;
     transition: box-shadow .2s, border .2s;
 }
+.alert.bg-pink.alert-dismissible{    
+position: absolute;
+    top: 67px;
+    right: 284px;
+}
+.text-darkyellow{font-size:18px; color:#fff;}
+.mb-25{margin-bottom:25px;}
+.mt-25{margin-top:25px;}
+
   </style>
 
 </head>
 <body style="height: 100%;">
 
 <div class="asdsadf"> 
-  <div class="top-panel">
+  <div class="top-panel hidden-xs">
     <div class="container">
         <?= $this->Flash->render() ?> 
       <div class="col-sm-4">
         <h1 class="heading-txt">Data Monitor</h1>
       </div>
       <!-- start:login page for desktop -->
-      <div class="col-sm-8 text-right home-email hidden-xs">
+      <div class="col-sm-8 text-right home-email">
         <?= $this->Form->create(null, ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'form-inline manage-form','id' => 'forgetPasswordForm', 'novalidate' => 'novalidate']) ?>  
           <div class="form-group">
             <?= $this->Form->control('email', ['id'=>'forget-email','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter email id', 'label' => false]) ?>   
@@ -113,7 +137,7 @@
     <div class="text-center">
        <div class="login-container">
           <div>
-              <h1 class="logo-badge text-whitesmoke"><span class="fa fa-user-circle"></span></h1>
+              <h1 class="text-center text-whitesmoke mb-25">Data Monitor</h1>
           </div>
           <h3 class="text-whitesmoke">Forgot Password</h3>
           <div class="container-content">
@@ -122,8 +146,8 @@
                       <?= $this->Form->control('email', ['id'=>'forget-email','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter email id', 'label' => false]) ?> 
                   </div>
                   <div class="customerror"></div>
-                  <div class="text-center">
-                    <button class="btn-custom margin-b" id="forgetPasswordMobileBtn" type="button"><?= __('Send Email') ?></button>  
+                  <div class="text-center  mt-25">
+                    <button class="btn-custom button-l margin-b" id="forgetPasswordMobileBtn" type="button"><?= __('Send Email') ?></button>  
                   </div>
                   <div class="text-center mt-15">
                   <a class="text-darkyellow f-15" href="<?= $this->Url->build(['action'=>'adminLogin']) ?>"><small>Sign In</small></a></div>
@@ -151,21 +175,11 @@
       <div class="item">
         <?= $this->Html->image('22-min.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>  
       </div>
-    
-     <!--  <div class="item">
-          <?= $this->Html->image('10.jpg',['alt'=>'New york','class'=>'img-responsive']) ?>
-      </div>
-
-      <div class="item">
-          <?= $this->Html->image('8.jpg',['alt'=>'Los Angeles','class'=>'img-responsive']) ?>
-      </div> -->
 
       <div class="item">
         <?= $this->Html->image('23-min.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
       </div>
-     <!--  <div class="item">
-        <?= $this->Html->image('12.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
-      </div> -->
+     
       <div class="item">
         <?= $this->Html->image('24-min.jpg',['alt'=>'Chicago','class'=>'img-responsive']) ?>
       </div>
