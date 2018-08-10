@@ -117,7 +117,10 @@ position: absolute;
     <div class="container">
         <?= $flashmsg = $this->Flash->render() ?>
       <div class="col-sm-4">
-        <h1 class="heading-txt">Data Monitor</h1>
+        <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'adminLogin']); ?>">
+              <img src="<?php echo $this->Url->image('dm5.png'); ?>" alt="DM" style="width: 208px;">
+            </a>
+        <!-- <h1 class="heading-txt">Data Monitor</h1> -->
       </div>
         
       <!-- start:login page for desktop -->
@@ -143,7 +146,10 @@ position: absolute;
     <div class="text-center">
        <div class="login-container">
           <div>
-              <h1 class="text-center text-whitesmoke mb-25">Data Monitor</h1>
+            <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'adminLogin']); ?>">
+              <img src="<?php echo $this->Url->image('dm5.png'); ?>" alt="DM" style="width: 208px;">
+            </a>
+              <!-- <h1 class="text-center text-whitesmoke mb-25">Data Monitor</h1> -->
           </div>
           <h3 class="text-whitesmoke">Reset Password</h3>
           <?= $flashmsg ?>
