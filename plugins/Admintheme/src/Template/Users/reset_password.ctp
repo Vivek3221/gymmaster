@@ -39,7 +39,7 @@
     .mobile-bg { 
       display: table;
     background-image: url("<?= $this->Url->image('23-min.jpg') ?>");
-    height: 728px; 
+    height: 640px; 
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
