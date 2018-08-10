@@ -409,8 +409,8 @@ $(document).ready(function () {
         },
         messages: {
             email: {
-                required: 'Enter Email Id',
-                regex: 'Enter valid Email Id'
+                required: 'Enter Email',
+                regex: 'Enter valid Email'
             },
 
             password: {
@@ -442,8 +442,8 @@ $(document).ready(function () {
         },
         messages: {
             email: {
-                required: 'Enter Email Id',
-                regex: 'Enter valid Email Id'
+                required: 'Enter Email',
+                regex: 'Enter valid Email'
             },
 
             password: {
@@ -740,8 +740,8 @@ $(document).ready(function () {
         },
         messages: {
             email: {
-                required: 'Enter Email Id',
-                regex: 'Enter valid Email Id'
+                required: 'Enter Email',
+                regex: 'Enter valid email'
             }
         }
     });
@@ -765,8 +765,8 @@ $(document).ready(function () {
         },
         messages: {
             email: {
-                required: 'Enter Email Id',
-                regex: 'Enter valid Email Id'
+                required: 'Enter Email',
+                regex: 'Enter valid email'
             }
         }
     });
