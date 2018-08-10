@@ -52,6 +52,8 @@
         font-size: 16px;
         color: #fff;
         border-radious:0;
+        border-bottom-right-radius: 0px;
+        border-bottom-left-radius: 0px;
     }
     .mobile-bg input:focus {outline:none;}
     .mobile-bg .help-inline {
