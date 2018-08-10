@@ -127,7 +127,7 @@ position: absolute;
       <div class="col-sm-8 text-right home-email">
         <?= $this->Form->create('Login Form', ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'form-inline manage-form','id' => 'adminloginform', 'novalidate' => 'novalidate']) ?>    
           <div class="form-group">
-            <?= $this->Form->control('email', ['class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter Email', 'label' => false, 'required'=>'required']) ?> 
+            <?= $this->Form->control('email', ['class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter Email ID.', 'label' => false, 'required'=>'required']) ?> 
           </div>
           <div class="form-group home-password">
             <?= $this->Form->control('password', ['class' => 'form-control','id'=>'pwd', 'type' => 'password', 'placeholder' => 'Enter Password', 'label' => false, 'required'=>'required']) ?> 
@@ -156,7 +156,7 @@ position: absolute;
           <div class="container-content">
               <?= $this->Form->create('Login Form', ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'margin-t','id' => 'adminloginformmobile', 'novalidate' => 'novalidate']) ?>    
                   <div class="form-group">
-                      <?= $this->Form->control('email', ['id'=>'email-mobile','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter Email', 'label' => false, 'required'=>'required']) ?> 
+                      <?= $this->Form->control('email', ['id'=>'email-mobile','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter Email ID.', 'label' => false, 'required'=>'required']) ?> 
                   </div>
                   <div class="form-group">
                       <?= $this->Form->control('password', ['id'=>'password-mobile','class' => 'form-control','id'=>'pwd', 'type' => 'password', 'placeholder' => 'Enter Password', 'label' => false, 'required'=>'required']) ?> 

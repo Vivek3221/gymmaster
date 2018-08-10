@@ -127,7 +127,7 @@ position: absolute;
       <div class="col-sm-8 text-right home-email">
         <?= $this->Form->create(null, ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'form-inline manage-form','id' => 'forgetPasswordForm', 'novalidate' => 'novalidate']) ?>  
           <div class="form-group">
-            <?= $this->Form->control('email', ['id'=>'forget-email','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter email id', 'label' => false]) ?>   
+            <?= $this->Form->control('email', ['id'=>'forget-email','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter email ID.', 'label' => false]) ?>   
           </div>
           <button class="btn btn-default" id="forgetPasswordBtn" type="button"><?= __('Send Email') ?></button>
           <div class="customerror"></div>
@@ -154,7 +154,7 @@ position: absolute;
           <div class="container-content">
               <?= $this->Form->create('Login Form', ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'margin-t','id' => 'forgetPasswordMobileForm', 'novalidate' => 'novalidate']) ?>    
                   <div class="form-group">
-                      <?= $this->Form->control('email', ['id'=>'forget-email','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter email id', 'label' => false]) ?> 
+                      <?= $this->Form->control('email', ['id'=>'forget-email','class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter email ID.', 'label' => false]) ?> 
                   </div>
                   <div class="customerror"></div>
                   <div class="text-center  mt-25">
