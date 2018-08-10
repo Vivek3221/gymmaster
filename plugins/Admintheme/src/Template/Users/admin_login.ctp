@@ -26,7 +26,7 @@
      */   
         
         margin: 0 auto;
-        margin-top: 140px;
+        margin-top: 75px;
         text-align: center;
         /*left: 66px;*/
        
