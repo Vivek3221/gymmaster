@@ -104,6 +104,11 @@ position: absolute;
 .mb-25{margin-bottom:25px;}
 .mt-25{margin-top:25px;}
 
+.mobile-bg .alert.bg-pink.alert-dismissible {
+    position: absolute;
+    top: 115px;
+    right: 28px;
+}
   </style>
 </head>
 <body style="height: 100%;">
@@ -111,7 +116,7 @@ position: absolute;
 <div class="asdsadf"> 
   <div class="top-panel hidden-xs">
     <div class="container">
-        <?= $this->Flash->render() ?>
+        <?= $flashmsg = $this->Flash->render() ?>
       <div class="col-sm-4">
         <h1 class="heading-txt">Data Monitor</h1>
       </div>
@@ -141,6 +146,7 @@ position: absolute;
               <h1 class="text-center text-whitesmoke mb-25">Data Monitor</h1>
           </div>
           <h3 class="text-whitesmoke">Sign In</h3>
+          <?= $flashmsg ?>
           <div class="container-content">
               <?= $this->Form->create('Login Form', ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'margin-t','id' => 'adminloginformmobile', 'novalidate' => 'novalidate']) ?>    
                   <div class="form-group">
