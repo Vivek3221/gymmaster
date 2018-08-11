@@ -355,6 +355,7 @@ class UsersController extends AppController
       return $this->redirect('/');
         }
         $users_type = $this->usersdetail['users_type'];
+        $users_id = $this->usersdetail['users_id'];
         $user = $this->Users->get($id, [
             'contain' => []
         ]);
@@ -370,6 +371,7 @@ class UsersController extends AppController
                 }
             }
           //  pr($data); die;
+            $user->trainer_userid = $data['trainer_userid'];
             $user = $this->Users->patchEntity($user, $data);
         //   pr($user); die;
             if ($this->Users->save($user)) {
@@ -379,8 +381,9 @@ class UsersController extends AppController
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
-        //pr($user); die;
-        $this->set(compact('user','users_type'));
+        $trainers = $this->Users->find('list')
+                    ->where(['Users.user_type'=>4,'Users.partner_id'=>$users_id]);
+        $this->set(compact('user','users_type','trainers','users_type'));
         $this->set('_serialize', ['user']);
     }
 

@@ -121,7 +121,7 @@ $user_type = $this->Common->getType();
                                     <td><?= $this->Form->button('Enquiry',['class'=>'btn btn-danger waves-effect non-click','id'=>$user->id,'value'=>$user->active ]) ?>
                                     </td>  <?php } ?>
                                     <td><i class="material-icons" title="View"><?= $this->Html->link(__('visibility'), ['action' => 'view', $user['id']]) ?></i>
-                                        <?php if($usersdetail['users_type'] == 1){; ?>
+                                        <?php if($usersdetail['users_type'] == 1 || $usersdetail['users_type'] == 2){; ?>
                                         <i class="material-icons" title="Edit"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $user['id']]) ?></i>
                                         <?php }?>
                                     <?php // if (empty($user->payment)){?>
