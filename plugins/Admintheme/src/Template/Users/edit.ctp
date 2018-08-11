@@ -129,7 +129,7 @@ $getPayDuration = $this->Common->getPayDuration();
                          
                     </div>
                         </div>
-                        <?= $this->Form->button('Add User', ['class' => 'btn btn-primary waves-effect']) ?>
+                        <?= $this->Form->button('Edit User', ['class' => 'btn btn-primary waves-effect']) ?>
 
                         <?= $this->Form->end() ?>
                     </div>

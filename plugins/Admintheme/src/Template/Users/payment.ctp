@@ -56,7 +56,14 @@ $getPayDuration = $this->Common->getPayDuration();
                                     <label class="form-label">Mobile No.</label>
                                 </div>
                             </div>
-                            <?php } ?>
+                            <?php if($users_type == 2) { ?>
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <label>Select Trainer</label>
+                                        <?= $this->Form->control('trainer_userid', ['class' => 'form-control', 'type' => 'select','options' => $trainers, 'empty'=>'Select Trainer', 'label' => false]) ?>
+                                    </div>
+                                </div>
+                            <?php }} ?>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('plan_name', ['class' => 'form-control', 'type' => 'text','required', 'label' => false]) ?>

@@ -125,6 +125,9 @@ class PlanSubscribersController extends AppController
      */
     public function edit($id = null)
     {
+        $search = [];
+        $users_type = $this->usersdetail['users_type'];
+        $users_id = $this->usersdetail['users_id'];
         $planSubscriber = $this->PlanSubscribers->get($id, [
             'contain' => []
         ]);
@@ -137,7 +140,17 @@ class PlanSubscribersController extends AppController
             }
             $this->Flash->error(__('The plan subscriber could not be saved. Please, try again.'));
         }
-        $users = $this->PlanSubscribers->Users->find('list', ['limit' => 200]);
+        if (isset($users_type) && ($users_type == 2)) {
+            $search['Users.partner_id'] = $users_id;
+        }
+        $search['Users.user_type'] = 3;
+        if (!empty($search)) {
+            $users = $this->PlanSubscribers->Users->find('list')
+                    ->where([$search]);
+        } else {
+            $users = $this->PlanSubscribers->Users->find('list');
+        }
+        
         $partners = $this->PlanSubscribers->Partners->find('list', ['limit' => 200]);
         $this->set(compact('planSubscriber', 'users', 'partners'));
     }

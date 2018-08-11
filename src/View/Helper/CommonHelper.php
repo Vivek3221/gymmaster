@@ -227,7 +227,14 @@ class CommonHelper extends Helper {
         return['1' => 'Admin'];
     }
 
-    
+    public function getSimpleName($id){
+        $get_users = TableRegistry::get('Users');
+        $get_users_name = $get_users->find()->select(['name'])
+                                    ->where(['id' => $id])
+                                    ->first(); 
+        return $get_users_name['name'];
+        
+    }
 
 
     

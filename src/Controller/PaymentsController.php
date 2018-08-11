@@ -170,6 +170,7 @@ class PaymentsController extends AppController
         if (isset($users_type) && ($users_type == 2)) {
             $search['Users.partner_id'] = $users_id;
         }
+        $search['Users.user_type'] = 3;
         if (!empty($search)) {
             $users = $this->Payments->Users->find(['list','contain' => ['Users', 'Partners']])
                     ->where([$search]);

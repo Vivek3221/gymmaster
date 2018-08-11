@@ -31,6 +31,10 @@ $user_type = $this->Common->getType();
                                     <td><?=  h($user['username']);?></td>
                                 </tr>
                                 <tr>
+                                    <th scope="row"><?= __('Trainer') ?></th>
+                                    <td><?=  h($this->Common->getSimpleName($user['trainer_userid']));?></td>
+                                </tr>
+                                <tr>
                                     <th scope="row"><?= __('Email') ?></th>
                                     <td><?= h($user['email']);?></td>
                                 </tr>
