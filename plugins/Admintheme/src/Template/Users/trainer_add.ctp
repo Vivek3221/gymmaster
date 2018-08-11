@@ -16,24 +16,12 @@ $user_type = $this->Common->getType();
                 <div class="card">
                    <div class="header">
                             <h2>
-                               <?= __('Enquery Form') ?>
+                               <?= __('Add Trainer') ?>
                             </h2>
                             
                         </div>
                     <div class="body">
-                        <!--                            <form id="form_validation" method="POST">-->
-                        <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']); ?>
-                        <?= $this->Form->create($user, ['id' => 'addusers','templates' => ['inputContainer' => '{{content}}']]) ?>
-                    <?php  if(isset($users_type) && ($users_type == 1))
-                    {?>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-<!--                                        <input type="text" class="form-control" name="name" required>-->
-                                <?= $this->Form->control('user_type', ['class' => 'form-control', 'type' => 'select', 'empty'=>__('Select Type'),'options'=>$user_type]) ?>          
-                                
-                            </div>
-                        </div>
-                    <?php } ?>
+                        <?= $this->Form->create($user, ['id' => 'payment','templates' => ['inputContainer' => '{{content}}']]) ?>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('name', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
@@ -79,9 +67,26 @@ $user_type = $this->Common->getType();
 
                                     </div>
                                 </div> 
-                        
-                        
-                        <?= $this->Form->button('Add User', ['class' => 'btn btn-primary waves-effect']) ?>
+                            <div class="form-group form-float">
+                               <div class="form-line">
+                                   <?= $this->Form->control('password', ['class' => 'form-control', 'type' => 'password', 'label' => false,'id'=>'npassword']) ?>
+                                   <label class="form-label">Password</label>
+                               </div>
+                               <small class="text-muted"> *Enter password 6-16 alphanumeric & one special character.</small>
+                            </div>
+                            <div class="form-group form-float">
+                               <div class="form-line">
+                                   <?= $this->Form->control('cpassword', ['class' => 'form-control', 'type' => 'password', 'label' => false]) ?>
+                                   <label class="form-label">Confirm Password</label>
+                               </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <label>Status</label>
+                                    <?= $this->Form->input('active', ['options' => $status, 'class' => 'form-control', 'empty' => __('Select Status'), 'label' => false]); ?>
+                                </div>
+                            </div>
+                        <?= $this->Form->button('Add Trainer', ['class' => 'btn btn-primary waves-effect']) ?>
 
                         <?= $this->Form->end() ?>
                     </div>

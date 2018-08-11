@@ -174,7 +174,7 @@ $user_type = $this->Common->getType();
         urllink = urllink + '/' + id + '/' + status;
         //alert(urllink);
         // alert(urllink);
-        if (confirm("<?= __('Are you sure! you want to change user status?') ?>")) {
+        if (confirm("<?= __('Are you sure! you want to change trainer status?') ?>")) {
             $.ajax({
                 url: urllink,
                 type: 'GET',

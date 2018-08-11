@@ -795,11 +795,9 @@ class UsersController extends AppController
                                 ->where(['user_type'=> 2])
                                 ->toArray();
 
-//        pr($partners);exit;
         $this->paginate = ['limit' => $norec, 'order' => ['Users.id' => 'DESC']];
 
         $users = $this->paginate($count)->toArray();
-       // $users = $this->paginate($this->Users);
 
         $this->set(compact('users', 'name', 'status', 'norec','email','user_type','users_type','partners','partner'));
         $this->set('_serialize', ['users']);
@@ -814,7 +812,6 @@ class UsersController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-      //pr($this->usersdetail);die;
         $users_type = $this->usersdetail['users_type'];
         $users_email = $this->usersdetail['users_email'];
         $users_name = $this->usersdetail['users_name'];
@@ -824,47 +821,22 @@ class UsersController extends AppController
             $data = $this->request->data;
             $t    = time();
             $name = $data['name'] . $t;
-            if (isset($users_type) && ($users_type == 2)) {
-                $data['user_type'] = '3';
-            }
             $data['partner_id'] = $users_id;
             $data['username']   = $this->slugify($name);
             $data['guestid']    = $this->Cookie->read('guest_id');
+            $data['user_type']   = '4';
             $data['verified']   = '1';
-            $data['active']     = '2';
-            // pr($data);exit;
-
             $user = $this->Users->patchEntity($user, $data);
             $useradd = $this->Users->save($user);
             if ($useradd) {
-
                 $userDataArr['name']  = $data['name'];
                 $userDataArr['email'] = $data['email'];
                 $userDataArr['users_name'] = $users_name;
                 $userDataArr['users_type'] = $users_type;
                 $toEmail              = $data['email'];
-                if($users_type == 1)
-                {
-                $subject              = 'Successfully Inquery | Datamonitoring';
-              
-                } else {
-                 $subject              = 'Successfully Inquery | ' .$users_name;  
-                }
-                $email                = new Email();
-                $email->transport('default');
-                try {
-                    $email->emailFormat('html');
-                    $email->template('inquery')
-                            ->from(['support@datamonitering.com' => 'Datamonitoring'])
-                            ->to($toEmail)
-                            ->subject($subject)
-                            ->viewVars($userDataArr)
-                            ->send();
-                } catch (Exception $e) {
-                    
-                }$this->Flash->success(__('The user has been saved.'));
+                $this->Flash->success(__('The trainer is added successfully.'));
 
-                return $this->redirect(['action' => 'payment', $useradd->id]);
+                return $this->redirect(['action' => 'trainerList']);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
