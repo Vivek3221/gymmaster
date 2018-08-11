@@ -894,35 +894,7 @@ class UsersController extends AppController
             'contain' => []
         ]);
 
-        // plans list
-        $planData = [];
-        $planSubscribers = $this->PlanSubscribers->find('all')
-                ->where(['user_id'=>$id,'partner_id'=>$this->usersdetail['users_id']])
-                ->order(['id DESC'])
-                ->toArray();
-        if(!empty($planSubscribers)) {
-            $i=0;
-            foreach ($planSubscribers as $plan) {
-                $paidAmount = $this->Payments->find('all');
-                $paidAmount =        $paidAmount->select(['sum' => $paidAmount->func()->sum('amount')])
-                        ->where(['plan_subscriber_id'=>$plan->id])->first();
-                $paid = 0;
-                if(!empty($paidAmount->sum)) {
-                    $paid = $paidAmount->sum;
-                }
-                $remaining = $plan->fee - $paid;
-                $planData[$i]['name'] = $plan->plan_name;
-                $planData[$i]['fee'] = $plan->fee;
-                $planData[$i]['paid'] = $paid;
-                $planData[$i]['remaining'] = $remaining;
-                $planData[$i]['plan_expire_date'] = $plan->plan_expire_date;
-                $planData[$i]['payment_due_date'] = $plan->payment_due_date;
-                $i++;
-            }
-        }
-            
-        
-        $this->set(compact('planData','user'));
+        $this->set(compact('user'));
     }
     
     public function beforeRender(\Cake\Event\Event $event) {
