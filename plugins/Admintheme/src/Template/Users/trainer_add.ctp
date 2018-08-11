@@ -56,17 +56,13 @@ $user_type = $this->Common->getType();
                             <div class="form-line">
                                <input type="radio" name="gender" id="a"  value="1"class="indual with-gap" > <label for="a"><?= __('Male') ?></label>
                                <input type="radio" name="gender" id="b" value="2" class="company with-gap"> <label for="b"><?= __('Female') ?></label>
-                                    
-                                
                             </div>
                         </div>
-                       <div class="form-group form-float">
-                                    <div class="form-line">
-
-                                        <?= $this->Form->control('dob', ['class' => 'form-control datetimepicker', 'type' => 'text', 'placeholder' => 'DOB', 'label' => FALSE ,'required', 'format'=>'YYYY-MM-DD']) ?>          
-
-                                    </div>
-                                </div> 
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?= $this->Form->control('dob', ['class' => 'form-control datetimepicker', 'type' => 'text', 'placeholder' => 'DOB', 'label' => FALSE ,'required', 'format'=>'YYYY-MM-DD']) ?>          
+                            </div>
+                        </div> 
                             <div class="form-group form-float">
                                <div class="form-line">
                                    <?= $this->Form->control('password', ['class' => 'form-control', 'type' => 'password', 'label' => false,'id'=>'npassword']) ?>

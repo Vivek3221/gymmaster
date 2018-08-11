@@ -90,6 +90,7 @@ class UsersController extends AppController
           $search['Users.partner_id'] = $users_id;
           }
      //   pr($search);exit;
+          $search['Users.user_type !='] = 4;
          if (isset($search)) {
 
             $count = $this->Users->find('all')
@@ -862,26 +863,15 @@ class UsersController extends AppController
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->data;
-           // $data['guestid'] = '11';
-            
-           if (isset($this->request->data['images']['name']) && $data['images']['name'] != "") {
-                $flname = time() . str_replace(" ", "", $data['images']['name']);
-                $flpath = WWW_ROOT . "img/" . $flname;
-                if (move_uploaded_file($data['images']['tmp_name'], $flpath)) {
-                    $data['photo'] = $flname;
-                }
-            }
-          //  pr($data); die;
+           
             $user = $this->Users->patchEntity($user, $data);
-        //   pr($user); die;
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
+                $this->Flash->success(__('The trainer is updated successfully.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'trainerList']);
             }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+            $this->Flash->error(__('The trainer could not be saved. Please, try again.'));
         }
-        //pr($user); die;
         $this->set(compact('user','users_type'));
         $this->set('_serialize', ['user']);
     }

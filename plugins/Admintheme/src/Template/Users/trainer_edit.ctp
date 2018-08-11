@@ -19,118 +19,64 @@ $getPayDuration = $this->Common->getPayDuration();
                 <div class="card">
                    <div class="header">
                             <h2>
-                               <?= __('Edit User') ?>
+                               <?= __('Edit Trainer') ?>
                             </h2>
                             
                         </div>
                     <div class="body">
-                        <!--                            <form id="form_validation" method="POST">-->
-                        <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']); ?>
                         <?= $this->Form->create($user, ['enctype' => 'multipart/form-data','id' => 'editusers','templates' => ['inputContainer' => '{{content}}']]) ?>
-      <?php  if(isset($users_type) && ($users_type == 1))
-                    {?>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-<!--                                        <input type="text" class="form-control" name="name" required>-->
-                                <?= $this->Form->control('user_type', ['class' => 'form-control', 'type' => 'select', 'empty'=>__('Select Type'),'options'=>$user_type]) ?>          
-                                
-                            </div>
-                        </div>
-                    <?php } ?>
-                        
                             <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('name', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Name</label>
-                            </div>
-                        </div>
-                        
-                        
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('email', ['class' => 'form-control', 'label' => false ,'readonly']) ?> 
-                                <label class="form-label">Email</label>
-                            </div>
-                        </div>
-
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('mobile_no', ['class' => 'form-control','type'=>'number', 'label' => false]) ?> 
-                                <label class="form-label">Mobile No.</label>
-                            </div>
-                        </div>
-                        
-                        <?php
-                        if(!empty($user->payment))
-                        {?>
-                        
-                          <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('payment', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Payment Rs.</label>
-                            </div>
-                        </div>
-                          <div class="form-group form-float">
-                            <div class="form-line">
-                                <?= $this->Form->control('b_payment', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
-                                <label class="form-label">Payment Due.</label>
-                            </div>
-                        </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-<!--                                        <input type="text" class="form-control" name="name" required>-->
-                                <?= $this->Form->control('mode_ofpay', ['class' => 'form-control', 'type' => 'select','empty'=>'Select Mode Of Payment','options'=>$getModPayment]) ?>          
-                                
-                            </div>
-                        </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-<!--                                        <input type="text" class="form-control" name="name" required>-->
-                                <?= $this->Form->control('course_duration', ['class' => 'form-control', 'type' => 'select','empty'=>'Select Course Of Duration','options'=>$getPayDuration]) ?>          
-                                
-                            </div>
-                        </div>
-                        <?php } ?>
-                        
-                        <div class="form-group form-floa">
-                                                <div class="form-line image">
-                                                    <?= $this->Form->control('images', ['label' => 'Cover Image', 'class' => 'form-control', 'type' => 'file', 'onchange' => "ImageFilesize();"]) ?>            
-                                                </div>
-                                            </div>
-                        <?php
-                        if(!empty($user->photo))
-                        {?>
-                          <div class="add-pic">
-                                   <?php $cover = '/img/' .$user->photo;
-                        if (strpos($user->photo, 'http') !== false) {
-                        $cover = $user->photo;
-                    }?>
-                                    <?= $this->Html->image($cover, ['class' => 'add-img', 'alt' => 'related-news', 'accept' => 'image/*','width' => 300, 'height' => 150]); ?>
+                                <div class="form-line">
+                                    <?= $this->Form->control('name', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?> 
+                                    <label class="form-label">Name</label>
                                 </div>
-                        <?php } ?>
+                            </div>
                         
                             <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <?php
+                                <div class="form-line">
+                                    <?= $this->Form->control('email', ['class' => 'form-control', 'label' => false ,'readonly']) ?> 
+                                    <label class="form-label">Email</label>
+                                </div>
+                            </div>
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <?= $this->Form->control('location', ['class' => 'form-control', 'label' => false]) ?> 
+                                    <label class="form-label">Address</label>
+                                </div>
+                            </div>
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <?= $this->Form->control('mobile_no', ['class' => 'form-control','type'=>'number', 'label' => false]) ?> 
+                                    <label class="form-label">Mobile No.</label>
+                                </div>
+                            </div>
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <?= $this->Form->control('emerg_no', ['class' => 'form-control','type'=>'text', 'label' => false]) ?> 
+                                    <label class="form-label">Emergency No.</label>
+                                </div>
+                            </div>
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                   <input type="radio" name="gender" id="a"  value="1"class="indual with-gap" <?= $user->gender==1?'checked':'' ?>> <label for="a"><?= __('Male') ?></label>
+                                   <input type="radio" name="gender" id="b" value="2" class="company with-gap" <?= $user->gender==2?'checked':'' ?>> <label for="b"><?= __('Female') ?></label>
+                                </div>
+                            </div>
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <?php
                                         $dob1 = $user->dob;
-                                        //pr($dob1);
-                                    $dob  =   date_format($dob1,"Y-m-d");
-                                    //pr($dob); 
-                                        ?>
-
-                                        <?= $this->Form->control('dob', ['class' => 'form-control datetimepicker', 'type' => 'text', 'placeholder' => 'DOB','value' => $dob, 'label' => FALSE ,'required']) ?>          
-
-                                    </div>
-                                </div> 
-
-                         <div class="form-group form-float">
-                            <div class="form-line">
-                        <?= $this->Form->input('active', ['empty' => __('Select status'), 'options' => $status, 'class' => 'form-control']); ?>
-                         
-                    </div>
-                        </div>
-                        <?= $this->Form->button('Add User', ['class' => 'btn btn-primary waves-effect']) ?>
-
+                                        $dob  =   date_format($dob1,"Y-m-d");
+                                        echo $this->Form->control('dob', ['class' => 'form-control datetimepicker', 'type' => 'text', 'placeholder' => 'DOB','value' => $dob, 'label' => FALSE ,'required']) ?>          
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <label>Status</label>
+                                    <?= $this->Form->input('active', ['options' => $status, 'class' => 'form-control', 'empty' => __('Select Status'), 'label' => false]); ?>
+                                </div>
+                            </div>
+                            <?= $this->Form->button('Edit Trainer', ['class' => 'btn btn-primary waves-effect']) ?>
                         <?= $this->Form->end() ?>
                     </div>
                 </div>
