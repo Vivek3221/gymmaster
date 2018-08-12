@@ -60,7 +60,7 @@ $getPayDuration = $this->Common->getPayDuration();
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                         <label>Select Trainer</label>
-                                        <?= $this->Form->control('trainer_userid', ['class' => 'form-control', 'type' => 'select','options' => $trainers, 'empty'=>'Select Trainer', 'label' => false]) ?>
+                                        <?= $this->Form->control('trainer_userid', ['class' => 'form-control select2', 'type' => 'select','options' => $trainers, 'empty'=>'Select Trainer', 'label' => false]) ?>
                                     </div>
                                 </div>
                             <?php }} ?>
