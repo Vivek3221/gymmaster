@@ -108,7 +108,7 @@ position: absolute;
 
 .mobile-bg .alert.bg-pink.alert-dismissible {
     position: absolute;
-    top: 115px;
+    top: 50px;
     right: 28px;
 }
   </style>
