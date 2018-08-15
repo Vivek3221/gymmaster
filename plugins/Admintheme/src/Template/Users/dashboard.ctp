@@ -12,12 +12,11 @@
            
 
             <div class="row clearfix">
-               <?php if($usersdetail['users_type'] != 3){; ?>
+               <?php if(($usersdetail['users_type'] != 3) && ($usersdetail['users_type'] != 4)){; ?>
                  <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>">
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-cyan hover-expand-effect">
-                        
-                            <div class="icon">
+                         <div class="icon">
                             <i class="material-icons">person</i>
                         </div>
                         <div class="content">
@@ -27,7 +26,7 @@
                     </div>
                 </div></a>
                <?php } ?>
-                <?php if($usersdetail['users_type'] == 1){; ?>
+                <?php if(($usersdetail['users_type'] != 3) && ($usersdetail['users_type'] != 4)){; ?>
                 <a href="<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'index']); ?>">
                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-pink hover-expand-effect">
@@ -76,22 +75,23 @@
             </div>
             <div class="row clearfix">
                 <?php if($usersdetail['users_type'] != 3){; ?>
-                 <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index']); ?>">
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index']); ?>">
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-pink hover-expand-effect">
-                       
-                        <div class="icon">
-                            <i class="material-icons">work_outline</i>
-                        </div>
-                     
-                        <div class="content">
-                            <div class="text"><?=__('Create Session')?></div>
-                            <div class="number count-to" data-from="0" data-to="<?php// echo $users_count ?>" data-speed="1000" data-fresh-interval="20"></div>
-                        </div>
+
+                    <div class="icon">
+                        <i class="material-icons">work_outline</i>
                     </div>
-                </div>
-                        </a>
-                <?php } else {?>
+
+                    <div class="content">
+                        <div class="text"><?=__('Create Session')?></div>
+                        <div class="number count-to" data-from="0" data-to="<?php// echo $users_count ?>" data-speed="1000" data-fresh-interval="20"></div>
+                    </div>
+                    </div>
+                    </div>
+                    </a>
+                    <?php }?>
+                <?php if(($usersdetail['users_type'] == 3) || ($usersdetail['users_type'] == 4)) {?>
                  <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index']); ?>">
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-pink hover-expand-effect">
@@ -108,6 +108,24 @@
                 </div>
                       </a>
                 <?php } ?>
+                <?php if($usersdetail['users_type'] == 2){;?>
+                <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'trainerList']); ?>">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box bg-cyan hover-expand-effect">
+                   
+                        <div class="icon">
+                            <i class="material-icons">person</i>
+                        </div>
+                       
+                        <div class="content">
+                            <div class="text"><?=__('Trainers')?></div>
+                            <div class="number count-to" data-from="0" data-to="<?php// echo $users_count ?>" data-speed="1000" data-fresh-interval="20"></div>
+                        </div>
+                    </div>
+                </div>
+                      </a>
+                  <?php } ?>
+
             </div>
    
 

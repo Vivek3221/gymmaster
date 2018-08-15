@@ -91,14 +91,15 @@ $action = $this->request['action'];
                    </li>
                     </ul>
                 </li>
-                <?php if($usersdetail['users_type'] == 1 || $usersdetail['users_type'] == 2){;?>
+                <?php if($usersdetail['users_type'] != 3){ ;?>
                <li class="<?php if (($controller == 'Sessions' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'userEdit' || $action == 'addMore'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index']); ?>">
                         <i class="material-icons">perm_media</i>
                         <span><?= __('Create Session') ?></span>
                     </a>
                 </li>
-                <?php }else {?>
+            <?php } ?>
+                <?php if(($usersdetail['users_type'] == 3) || ($usersdetail['users_type'] == 4)) {;?>
               <li class="<?php if (($controller == 'Sessions' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'userEdit' || $action == 'addMore'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index']); ?>">
                         <i class="material-icons">perm_media</i>
