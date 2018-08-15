@@ -31,12 +31,15 @@ $getPayDuration = $this->Common->getPayDuration();
                         <div class="" id="makepayment" hidden="">
                         <?= $this->Form->create($user, ['enctype' => 'multipart/form-data','id' => 'payment','templates' => ['inputContainer' => '{{content}}']]) ?>
                             <?php if(empty($user['password'])) { ?>
-                            <div class="form-group form-float">
-                                <div class="form-line">
-                                    <?= $this->Form->control('user_type', ['class' => 'form-control', 'type' => 'select','options'=>$user_type, 'empty'=>__('Select Type')]) ?>
-
+                            <?php if($users_type == 1) { ?>
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <?= $this->Form->control('user_type', ['class' => 'form-control', 'type' => 'select','options'=>$user_type, 'empty'=>__('Select Type')]) ?>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php } else { ?>
+                                <?= $this->Form->control('user_type', ['value' => 3, 'type' => 'hidden','options'=>$user_type, 'empty'=>__('Select Type')]) ?>
+                            <?php } ?>
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <?= $this->Form->control('name', ['class' => 'form-control', 'type' => 'text', 'label' => false]) ?>
