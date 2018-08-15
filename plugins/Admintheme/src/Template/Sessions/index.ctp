@@ -108,7 +108,9 @@ $partners = $this->Common->getpartner();
                                                 <?php if(($user_type == 3) && (empty($session->user_detail))) { ?>
                                                      <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'userEdit', $session['id']]) ?></i>
                                              <?php   } ?>
-                                                     
+                                             
+                                                   
+
                                                 <i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $session['id']]) ?></i>
                                                <?php if($user_type != 3){?>
                                                 <?php if(empty($session->user_detail)){?>
@@ -122,6 +124,9 @@ $partners = $this->Common->getpartner();
                                                <?php if(($user_type == 1) && (!empty($session->user_detail))) {?>
                                                <i class="material-icons"><?= $this->Html->link(__('border_color'), ['action' => 'userEdit', $session['id']]) ?></i>
                                              <?php } ?>
+                                             <?php if($user_type == 4){?>  
+                                                   <i class="material-icons"><?= $this->Html->link(__('build'), ['action' => 'userEdit', $session['id']]) ?></i> 
+                                                 <?php } ?>
                                             </td>
                                         </tr>
                                     <?php } ?>

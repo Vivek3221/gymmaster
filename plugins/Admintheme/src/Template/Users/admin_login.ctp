@@ -108,7 +108,7 @@ position: absolute;
 
 .mobile-bg .alert.bg-pink.alert-dismissible {
     position: absolute;
-    top: 50px;
+    top: 115px;
     right: 28px;
 }
   </style>
@@ -154,7 +154,7 @@ position: absolute;
               <!-- <h1 class="text-center text-whitesmoke mb-25">Data Monitor</h1> -->
           </div>
           <h3 class="text-whitesmoke">Sign In</h3>
-          <?= $flashmsg ?>
+          <?= $flashmsg ?>  
           <div class="container-content">
               <?= $this->Form->create('Login Form', ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'margin-t','id' => 'adminloginformmobile', 'novalidate' => 'novalidate']) ?>    
                   <div class="form-group">

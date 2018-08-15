@@ -91,7 +91,7 @@
                     </div>
                     </a>
                     <?php }?>
-                <?php if(($usersdetail['users_type'] == 3) || ($usersdetail['users_type'] == 4)) {?>
+                <?php if(($usersdetail['users_type'] == 3)) {?>
                  <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index']); ?>">
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-pink hover-expand-effect">

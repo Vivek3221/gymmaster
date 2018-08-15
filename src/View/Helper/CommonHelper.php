@@ -186,18 +186,18 @@ class CommonHelper extends Helper {
      public function getUsers()
     {
         $users_type = $this->request->session()->read('users'); 
-        //pr($users_type);
-        if($users_type['users_type'] == 2)
+        // pr($users_type);die();
+        if($users_type['users_type'] == 4)
         {
         $partner_id = $users_type['users_id'];
         $get_users = TableRegistry::get('Users');
         $get_users_name = $get_users->find('list')
-                                    ->where(['active' => 1,'user_type' =>3,'Users.partner_id'=>$partner_id])
+                                    ->where(['active' => 1,'user_type' =>3,'Users.trainer_userid'=>$partner_id])
                                     ->toArray(); 
         }else{
             $partner_id = $users_type['users_id'];
             $get_users = TableRegistry::get('Users');
-        $get_users_name = $get_users->find('list')
+            $get_users_name = $get_users->find('list')
                                     ->where(['active' => 1,'user_type' =>3,'Users.partner_id'=>$partner_id])
                                     ->toArray(); 
         }

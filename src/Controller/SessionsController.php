@@ -97,7 +97,12 @@ class SessionsController extends AppController
         
        
         $sessions = $this->paginate($count);
-        $users = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.partner_id'=> $users_id,'user_type' =>3]);
+        if($user_type == 4){
+         $users = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.trainer_userid'=> $users_id,'user_type' =>3]);
+            }else{
+           $users = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.partner_id'=> $users_id,'user_type' =>3]);
+        }
+       
 
        // $partners = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.partner_id'=> $users_id,'user_type' =>2]);
         $this->set(compact('sessions','name','status','norec','users','user_type','sdate','edate','partner'));
