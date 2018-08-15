@@ -37,7 +37,11 @@ $user_type = $this->Common->getType();
                                         <?= $this->Form->input('partners', ['label' => __('Partners'), 'type' => 'select', 'class' => 'form-control select2', 'empty' => __('Select Partners'), 'options' => $partners,'value'=>$partner]); ?>
                             </div>
 
-                                 <?php } ?>
+                            <?php } elseif (isset($users_type) && ($users_type == 2)) { ?>
+                                <div class="col-md-3">
+                                    <?= $this->Form->input('trainers', ['label' => __('Trainers'), 'type' => 'select', 'class' => 'form-control select2', 'empty' => __('Select Trainers'), 'options' => $trainers,'value'=>$trainer]); ?>
+                                </div>
+                            <?php } ?>
                             <div class="col-md-2">
                                     <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'), 'options' => $nofrec, 'value' => $norec]); ?>
                             </div>
@@ -60,7 +64,11 @@ $user_type = $this->Common->getType();
                                 <tr>
                                     <th><?= __('Name') ?></th>
                                     <th><?= __('Email') ?></th>
+                                    <?php if (isset($users_type) && ($users_type == 2)) { ?>
+                                    <th><?= __('Trainer') ?></th>
+                                    <?php } else { ?>
                                     <th><?= __('User Type') ?></th>
+                                    <?php } ?>
                                     <th><?= __('Gender') ?></th>
                                     <th><?= __('Status') ?></th>
                                     <th><?= __('Action') ?></th>
@@ -70,7 +78,11 @@ $user_type = $this->Common->getType();
                                 <tr>
                                     <th><?= __('Name') ?></th>
                                     <th><?= __('Email') ?></th>
+                                    <?php if (isset($users_type) && ($users_type == 2)) { ?>
+                                    <th><?= __('Trainer') ?></th>
+                                    <?php } else { ?>
                                     <th><?= __('User Type') ?></th>
+                                    <?php } ?>
                                     <th><?= __('Gender') ?></th>
                                     <th><?= __('Status') ?></th>
                                     <th><?= __('Action') ?></th>
@@ -82,7 +94,11 @@ $user_type = $this->Common->getType();
                                 <tr>
                                     <td><?= ucfirst($user['name']) ?></td>
                                     <td><?= ($user['email'])?></td>
+                                    <?php if (isset($users_type) && ($users_type == 2)) { ?>
+                                    <td><?= $this->Common->getSimpleName($user['trainer_userid']) ?></td>
+                                    <?php } else { ?>
                                     <td><?= $user_type[($user['user_type'])]?></td>
+                                    <?php } ?>
                                     <td><?php if($user['gender'] == 1){
                                             echo 'Male';
                                         } else {

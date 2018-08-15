@@ -86,6 +86,11 @@ class UsersController extends AppController
             $search['Users.partner_id'] = $partner;
         }
         
+        if (isset($this->request->query['trainers']) && trim($this->request->query['trainers']) != "") {
+            $trainer = $this->request->query['trainers'];
+            $search['Users.trainer_userid'] = $trainer;
+        }
+        
          if (isset($users_type) && ($users_type == 2)) {
           $search['Users.partner_id'] = $users_id;
           }
@@ -110,9 +115,10 @@ class UsersController extends AppController
         $this->paginate = ['limit' => $norec, 'order' => ['Users.id' => 'DESC']];
 
         $users = $this->paginate($count)->toArray();
-       // $users = $this->paginate($this->Users);
+       $trainers = $this->Users->find('list')
+                    ->where(['Users.user_type'=>4,'Users.partner_id'=>$users_id]);
 
-        $this->set(compact('users', 'name', 'status', 'norec','email','user_type','users_type','partners','partner'));
+        $this->set(compact('users', 'name', 'status', 'norec','email','user_type','users_type','partners','partner','trainers','trainer'));
         $this->set('_serialize', ['users']);
     }
 
