@@ -54,6 +54,7 @@ class UsersController extends AppController
         $status = '';
         $user_type = '';
         $partner   ='';
+        $trainer   = '';
         $search = [];
         $users_type = $this->usersdetail['users_type'];
         $users_id = $this->usersdetail['users_id'];
