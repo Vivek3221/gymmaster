@@ -490,6 +490,9 @@ class UsersController extends AppController
     */
     public function adminLogin() {
         $this->viewBuilder()->layout("ajax");
+        if (!empty($this->Cookie->read('user_email'))) {
+            return $this->redirect(['controller'=>'Users','action'=>'dashboard']);
+        }
     }
       public function dashboard(){
              if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
@@ -542,6 +545,7 @@ class UsersController extends AppController
          public function logout()
     {
              $this->autoRender = false;
+             $this->Cookie->delete('user_email');
              $this->Cookie->delete('users');
               $this->Auth->logout();
              return $this->redirect(['controller' => '/']);

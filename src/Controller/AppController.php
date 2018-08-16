@@ -87,6 +87,12 @@ class AppController extends Controller
             $this->Cookie->write('guest_id', $guest_id);
         }
 
+        if($this->Cookie->read('user_email')){
+            $this->request->session()->write('Auth.User.email', $this->Cookie->read('user_email'));
+        }          
+        if($this->Cookie->read('users')){
+            $this->request->session()->write('users',$this->Cookie->read('users'));
+        }
         $this->set(compact('usersdetail','username'));
         $this->set('_serialize', ['cookie_value']);
     }
