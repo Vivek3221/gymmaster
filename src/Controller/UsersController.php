@@ -838,6 +838,7 @@ class UsersController extends AppController
             $name = $data['name'] . $t;
             $data['partner_id'] = $users_id;
             $data['username']   = $this->slugify($name);
+            $data['password']   = md5($this->request->data['password']);
             $data['guestid']    = $this->Cookie->read('guest_id');
             $data['user_type']   = '4';
             $data['verified']   = '1';

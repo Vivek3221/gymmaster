@@ -61,7 +61,9 @@ class FitnessTestsController extends AppController
         if (isset($users_type) && ($users_type == 2)) {
             $search['FitnessTests.partner_id'] = $users_id;
         }
-
+        if (isset($users_type) && ($users_type == 4)) {
+          $search['Users.trainer_userid'] = $users_id;
+          } 
         if (isset($search)) {
             $count = $this->FitnessTests->find('all')
                     ->where([$search]);
