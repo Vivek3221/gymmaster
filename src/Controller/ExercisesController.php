@@ -22,7 +22,7 @@ class ExercisesController extends AppController
      public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
        // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index','add','view','delete','edit','status']);
+        $this->Auth->allow(['index','add','view','delete','edit','status','privacyPolicy']);
         
     }
     /**
@@ -204,7 +204,7 @@ class ExercisesController extends AppController
     }
     
     public function privacyPolicy(){
-        
+
     }
 
      public function beforeRender(\Cake\Event\Event $event) {
