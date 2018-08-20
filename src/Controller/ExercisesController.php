@@ -203,6 +203,10 @@ class ExercisesController extends AppController
         }
     }
     
+    public function privacyPolicy(){
+        
+    }
+
      public function beforeRender(\Cake\Event\Event $event) {
         parent::beforeRender($event);
         $this->viewBuilder()->theme('Admintheme');
