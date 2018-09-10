@@ -163,32 +163,32 @@ class SessionsController extends AppController
              $data1 =[];
             $data = $this->request->data;
             $users = $this->request->data['user_id'];
-    // pr($data); die;
-          foreach($users as $value)
-          {
-              
-             if($user_type != 3)
-        {
-            $data1['partner_id'] = $this->usersdetail['users_id'];     
-            $data1['user_id'] = $value;     
-        }   
-        
-            //pr($data); die;
-                $data1['ex_detail'] = json_encode($data['excrcise']);
-                $data1['status'] = $data['status'];
-                $data1['date'] = $data['date'];
-                
-             //  pr($data1); die;
-                $sessione = $this->Sessions->newEntity();
-            $session = $this->Sessions->patchEntity($sessione, $data1);
-           // pr($session); die;
-            if ($this->Sessions->save($session)) {
-                //$this->Flash->success(__('The session has been saved.'));
+    // if($data); die;
+            $dates = explode(',',substr($data['date'],0,-1));
+            foreach($dates as $date) {
+                foreach($users as $value)
+                {
+                   if($user_type != 3)
+              {
+                  $data1['partner_id'] = $this->usersdetail['users_id'];     
+                  $data1['user_id'] = $value;     
+              }   
+                      $data1['ex_detail'] = json_encode($data['excrcise']);
+                      $data1['status'] = $data['status'];
+                      $data1['date'] = $date;
 
-               // return $this->redirect(['action' => 'index']);
+                   //  pr($data1); die;
+                      $sessione = $this->Sessions->newEntity();
+                  $session = $this->Sessions->patchEntity($sessione, $data1);
+                 // pr($session); die;
+                  if ($this->Sessions->save($session)) {
+                      //$this->Flash->success(__('The session has been saved.'));
+
+                     // return $this->redirect(['action' => 'index']);
+                  }
+                 // $this->Flash->error(__('The session could not be saved. Please, try again.'));
+              }
             }
-           // $this->Flash->error(__('The session could not be saved. Please, try again.'));
-        }
          return $this->redirect(['action' => 'index']);
         }
 //        $users = $this->Sessions->Users->find('list', ['limit' => 200]);

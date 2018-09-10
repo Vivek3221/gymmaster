@@ -45,6 +45,7 @@
  <?= $this->Html->css('dataTables.bootstrap.css') ?>
     <!-- Albuzzer Themes. You can choose a theme from css/themes instead of get all themes -->
      <?= $this->Html->css('themes/all-themes.css') ?>
+     <?php echo $this->Html->css('datePicker.css') ?>
     <style>
         .addLangDv{ cursor: pointer; text-align: right;    margin-right: 23px;}
         .addLangDv span{ float: right; margin-top: 2px; margin-bottom: 2px; }
@@ -132,6 +133,8 @@
     <?= $this->Html->script('admin.js') ?>
      <?= $this->Html->script('basic-form-elements.js') ?>
     <?= $this->Html->script('demo.js') ?>
+    <?php echo $this->Html->script('date.js') ?>
+    <?php echo $this->Html->script('jquery_002.js') ?>
     <?php //echo $this->Html->script('pages/index.js') ?>
     <!-- Demo Js -->
 <!--    <script src="js/demo.js"></script>-->
