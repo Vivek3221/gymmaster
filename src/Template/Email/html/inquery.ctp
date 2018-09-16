@@ -77,7 +77,7 @@
                 <td>
                     <table style="background-color: #333;" align="center" hight="45">
             <tr>
-                  <td align="center" style="width: 600px">
+                  <td align="center" style="width: 290px">
                                 <p style="font-size:11px; padding-left:15px; color: #fff;">You have recived this message from <a href="http://datamonitering.com/" style="color:#f3f3f3; text-decoration:none;">datamonitering.com</a></p>
                         <td align="center" style="width: 300px">
                             <a href="https://play.google.com/store/apps/details?id=com.datamonitor.com">
