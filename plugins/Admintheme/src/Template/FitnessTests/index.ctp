@@ -63,12 +63,12 @@ $user_name = $this->Common->getUsers();
                                         <tr>
                                             <td><?= $fitnessTest->user->name ?></td>
                                             <td><?= (date("d-m-Y", strtotime($fitnessTest['created']))) ?></td>
-                                            <td><i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $fitnessTest['id']]) ?></i>
+                                            <td><i class="material-icons" title="View"><?= $this->Html->link(__('visibility'), ['action' => 'view', $fitnessTest['id']]) ?></i>
                                                 <?php
                                                 if ($usersdetail['users_type'] == 1) {
                                                     ;
                                                     ?>
-                                                    <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $fitnessTest['id']]) ?></i>
+                                                    <i class="material-icons" title="Edit"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $fitnessTest['id']]) ?></i>
                                                 <?php } ?>
                                             </td>
 

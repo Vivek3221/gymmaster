@@ -74,8 +74,8 @@
                            <td><?= $this->Number->format($planSubscriber->fee) ?></td>
                            <td><?= (date("d-m-Y", strtotime($planSubscriber->plan_expire_date))) ?></td>
                            <td><?= (date("d-m-Y", strtotime($planSubscriber->payment_due_date))) ?></td>
-                           <td><i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $planSubscriber['id']]) ?></i>
-                              <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $planSubscriber['id']]) ?></i>
+                           <td><i class="material-icons" title="View"><?= $this->Html->link(__('visibility'), ['action' => 'view', $planSubscriber['id']]) ?></i>
+                              <i class="material-icons" title="Edit"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $planSubscriber['id']]) ?></i>
                            </td>
                         </tr>
                         <?php endforeach; ?>

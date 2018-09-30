@@ -11,7 +11,7 @@ $partners = $this->Common->getpartner();
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <?php if($user_type != 3) {?>
-                <div class="fixed-action-btn"><a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'add']); ?>" class="btn btn-primary waves-effect btn-floating waves-light btn-large red"><i class="material-icons">add</i></a></div>
+                <div class="fixed-action-btn" title="Add Session"><a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'add']); ?>" class="btn btn-primary waves-effect btn-floating waves-light btn-large red"><i class="material-icons">add</i></a></div>
                 <?php } ?>
                <?= $this->Flash->render() ?>
                 <div class="card">
@@ -106,15 +106,15 @@ $partners = $this->Common->getpartner();
                                         <?php } ?>
                                             <td>
                                                 <?php if(($user_type == 3) && (empty($session->user_detail))) { ?>
-                                                     <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'userEdit', $session['id']]) ?></i>
+                                                     <i class="material-icons" title="Report Session"><?= $this->Html->link(__('mode_edit'), ['action' => 'userEdit', $session['id']]) ?></i>
                                              <?php   } ?>
                                              
                                                    
 
-                                                <i class="material-icons"><?= $this->Html->link(__('visibility'), ['action' => 'view', $session['id']]) ?></i>
+                                                <i class="material-icons" title="View"><?= $this->Html->link(__('visibility'), ['action' => 'view', $session['id']]) ?></i>
                                                <?php if($user_type != 3){?>
                                                 <?php if(empty($session->user_detail)){?>
-                                                <i class="material-icons"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $session['id']]) ?></i>
+                                                <i class="material-icons" title="View"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $session['id']]) ?></i>
                                             <?php } ?>
                                                <i class="material-icons" title="<?= __('Delete') ?>"><?= $this->Form->postLink(__('delete'), ['action' => 'delete', $session['id']], ['confirm' => __('Are you sure you want to delete Session ?', $session['id'])]) ?></i>
                                                 <?php } ?>
@@ -122,10 +122,10 @@ $partners = $this->Common->getpartner();
                                                 <i class="material-icons"><?= $this->Html->link(__('content_copy'), ['action' => 'addMore', $session['id']],['title'=> 'Add Duplicate'] ) ?></i>
                                                <?php } ?>
                                                <?php if(($user_type == 1) && (!empty($session->user_detail))) {?>
-                                               <i class="material-icons"><?= $this->Html->link(__('border_color'), ['action' => 'userEdit', $session['id']]) ?></i>
+                                               <i class="material-icons" title="Reported session edit"><?= $this->Html->link(__('border_color'), ['action' => 'userEdit', $session['id']]) ?></i>
                                              <?php } ?>
                                              <?php if($user_type == 4){?>  
-                                                   <i class="material-icons"><?= $this->Html->link(__('build'), ['action' => 'userEdit', $session['id']]) ?></i> 
+                                                   <i class="material-icons" title="Report session"><?= $this->Html->link(__('build'), ['action' => 'userEdit', $session['id']]) ?></i> 
                                                  <?php } ?>
                                             </td>
                                         </tr>

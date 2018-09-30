@@ -10,7 +10,7 @@ $user_type = $this->Common->getType();
         <!-- Basic Examples -->
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="fixed-action-btn"><a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'add']); ?>" class="btn btn-primary waves-effect btn-floating waves-light btn-large red"><i class="material-icons">add</i></a></div>
+                <div class="fixed-action-btn" title="Add User"><a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'add']); ?>" class="btn btn-primary waves-effect btn-floating waves-light btn-large red"><i class="material-icons">add</i></a></div>
                         <?= $this->Flash->render() ?>
                 <div class="card">
                     <div class="header">
