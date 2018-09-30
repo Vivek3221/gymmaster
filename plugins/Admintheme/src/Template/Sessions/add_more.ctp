@@ -36,7 +36,8 @@
                                 $dob = date_format($dob1, "y-m-d");
                             ?>
                             <div class="form-line">
-                                <?= $this->Form->control('date', ['class' => 'form-control datetimepicker', 'type' => 'text', 'placeholder' => 'Select Date', 'label' => FALSE, 'required', 'value' => $dob, 'format' => 'YYYY-MM-DD']) ?>          
+                                <?php // echo $this->Form->control('date', ['class' => 'form-control datetimepicker', 'type' => 'text', 'placeholder' => 'Select Date', 'label' => FALSE, 'required', 'value' => $dob, 'format' => 'YYYY-MM-DD']) ?>          
+                                <?= $this->Form->control('date', ['id'=>'test-div','class' => 'form-control date-pick dp-applied', 'rows'=>1,'type' => 'textarea', 'placeholder' => 'Select Date', 'label' => FALSE, 'required', 'format' => 'YYYY-MM-DD']) ?>          
                             </div>
                         </div> 
                         
@@ -173,6 +174,59 @@
 </section>
 
 <script type="text/javascript">
+    $(function()
+            {
+				$('.date-pick')
+					.datePicker(
+						{
+							createButton:false,
+							displayClose:true,
+							closeOnSelect:false,
+							selectMultiple:true,
+							numSelectable:7
+						}
+					)
+					.bind(
+						'click',
+						function()
+						{
+							$(this).dpDisplay();
+							this.blur();
+                                                        $('#test-div').html('');
+							return false;
+						}
+					)
+					.bind(
+						'dateSelected',
+						function(e, selectedDate, $td, state)
+						{
+//							console.log('You ' + (state ? '' : 'un') // wrap
+//								+ 'selected ' + selectedDate);
+						}
+					)
+					.bind(
+						'dpClosed',
+						function(e, selectedDates)
+						{
+                                                    $.each( selectedDates, function( key, selectedDate ) {
+                                                        var dd = selectedDate.getDate();
+                                                    var mm = selectedDate.getMonth()+1; //January is 0!
+                                                    var yyyy = selectedDate.getFullYear();
+
+                                                    if(dd<10) {
+                                                        dd = '0'+dd
+                                                    } 
+
+                                                    if(mm<10) {
+                                                        mm = '0'+mm
+                                                    } 
+                                                    selectedDate = yyyy + '-' + mm + '-' + dd+',';
+                                                        $('#test-div').append(selectedDate);
+                                                        
+                                                      });
+						}
+					);
+            });
     $(document).ready(function () {
         $('.datetimepicker').bootstrapMaterialDatePicker({format: 'YYYY-MM-DD', lang: 'fr', weekStart: 1, cancelText: 'Cancel', minDate: new Date(), time: 'false'});
         $('').bootstrapMaterialDatePicker({format: 'DD/MM/YYYY HH:mm', minDate: new Date()});
