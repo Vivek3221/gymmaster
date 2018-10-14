@@ -77,11 +77,16 @@
                 <td>
                     <table style="background-color: #333;" align="center" hight="45">
             <tr>
-                  <td align="center" style="width: 290px">
+                  <td align="center" style="width: 600px">
                                 <p style="font-size:11px; padding-left:15px; color: #fff;">You have recived this message from <a href="http://datamonitering.com/" style="color:#f3f3f3; text-decoration:none;">datamonitering.com</a></p>
                         <td align="center" style="width: 300px">
                             <a href="https://play.google.com/store/apps/details?id=com.datamonitor.com">
                                 <img src="http://datamonitering.com/Admintheme/img/play-store.png" alt="Google App">
+                            </a>
+                        </td>
+                        <td align="center" style="width: 300px">
+                            <a href="https://itunes.apple.com/us/app/datamonitering/id1438079358?ls=1&mt=8">
+                                <img src="http://datamonitering.com/Admintheme/img/app-store.png" alt="Apple App">
                             </a>
                         </td>
                   </td>

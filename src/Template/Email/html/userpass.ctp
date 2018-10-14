@@ -75,6 +75,11 @@
                                 <img src="http://datamonitering.com/Admintheme/img/play-store.png" alt="Google App">
                             </a>
                         </td>
+                         <td align="center" style="width: 300px">
+                            <a href="https://itunes.apple.com/us/app/datamonitering/id1438079358?ls=1&mt=8">
+                                <img src="http://datamonitering.com/Admintheme/img/app-store.png" alt="Apple App">
+                            </a>
+                        </td>
                             </td>
                         </tr>
                     </table>
