@@ -57,7 +57,11 @@
                             <span id="<?= $users_id ?>" onclick="getPartnere(this.id)" value="<?= $users_id ?>" class="btn btn-success"><?= __('Own Excercise') ?></span>
                              </div>
                         </div>
-                          <?php } ?>
+                          <?php } if ($user_type == 4) { ?>
+                          <div id="exerDataDivp" class="col-sm-4"> 
+                       <span id="<?= $partner_id ?>" onclick="getPartnere(this.id)" value="<?= $partner_id ?>" class="btn btn-success"><?= __('Own Excercise') ?></span>
+                            </div>
+                          <?php  } ?>
                         <div class="input-group">
                             <label class="form-label">Exercise</label>
                             <div class="select-m" id="changeexcr">
@@ -121,7 +125,7 @@
                                                     var mm = selectedDate.getMonth()+1; //January is 0!
                                                     var yyyy = selectedDate.getFullYear();
 
-                                                    if(dd<10) {
+                                                    if(dd<20) {
                                                         dd = '0'+dd
                                                     } 
 

@@ -146,7 +146,11 @@
                             <span id="<?= $users_id ?>" onclick="getPartnere(this.id)" value="<?= $users_id ?>" class="btn btn-success"><?= __('Own Excercise') ?></span>
                              </div>
                         </div>
-                          <?php } ?>
+                          <?php } if ($user_type == 4) { ?>
+                          <div id="exerDataDivp" class="col-sm-4"> 
+                       <span id="<?= $partner_id ?>" onclick="getPartnere(this.id)" value="<?= $partner_id ?>" class="btn btn-success"><?= __('Own Excercise') ?></span>
+                            </div>
+                          <?php  } ?>
                         <div class="input-group" style="margin-top: -18px">
                             <label class="form-label">Exercise</label>
                             <div id="changeexcr">
