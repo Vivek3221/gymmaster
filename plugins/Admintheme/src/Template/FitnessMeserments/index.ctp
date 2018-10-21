@@ -81,8 +81,9 @@ $user_name = $this->Common->getUsers();
                                         <td><?= (date("d-m-Y", strtotime($fitnessMeserment['date']))) ?></td>
                                         <td><i class="material-icons" title="View"><?= $this->Html->link(__('visibility'), ['action' => 'view', $fitnessMeserment['id']]) ?></i>
 
-                                     <?php if($usersdetail['users_type'] != 3 && $usersdetail['users_type'] != 4){; ?>
-                                      <i class="material-icons" title="Edit"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $fitnessMeserment['id']]) ?></i>
+        <?php if($usersdetail['users_type'] != 3 && $usersdetail['users_type'] != 4){; ?>
+        <i class="material-icons" title="Edit"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $fitnessMeserment['id']]) ?></i>
+        <i class="material-icons" title="<?= __('Delete') ?>"><?= $this->Form->postLink(__('delete'), ['action' => 'delete', $fitnessMeserment['id']], ['confirm' => __('Are you sure you want to delete fitness meserment ?', $fitnessMeserment['id'])]) ?></i>
                                       <?php } ?>
                                         </td>
                                      

@@ -316,39 +316,36 @@ class FitnessMesermentsController extends AppController
      */
     public function delete($id = null)
     {
-                     if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+    if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email']))
+        {
             return $this->redirect('/');
         }
         
         $this->request->allowMethod(['post', 'delete']);
         $fitnessMeserment = $this->FitnessMeserments->get($id);
         if ($this->FitnessMeserments->delete($fitnessMeserment)) {
-            $this->Flash->success(__('The body meserment has been deleted.'));
+            $this->Flash->success(__('The fitness meserment has been deleted.'));
         } else {
-            $this->Flash->error(__('The body meserment could not be deleted. Please, try again.'));
+            $this->Flash->error(__('The fitness meserment could not be deleted. Please, try again.'));
         }
 
         return $this->redirect(['action' => 'index']);
     }
     
      public function getLastValue()
-                      {
+        {
             $this->autoRender=false;
             $get_name = $this->request->data['fitnessfield'];
             $position = $this->request->data['position'];
-            $user_id = $this->usersdetail['users_id'];
-           
-          
-           
-           
-             $getfield = $this->FitnessMeserments->find()
+            $user_id  = $this->usersdetail['users_id'];
+            $getfield = $this->FitnessMeserments->find()
                                    ->select([$get_name])
                                    ->where(['user_id'=>$user_id])
                                    ->order(['id Asc'])->first();
           echo $getfield->$get_name;
           exit();
           
-                      }
+     }
      
     
     

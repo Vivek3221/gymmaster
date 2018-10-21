@@ -245,16 +245,17 @@ class FitnessTestsController extends AppController
      */
     public function delete($id = null)
     {
-                      if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
-            return $this->redirect('/');
+      if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) 
+      {
+      return $this->redirect('/');
         }
         
         $this->request->allowMethod(['post', 'delete']);
         $fitnessTest = $this->FitnessTests->get($id);
         if ($this->FitnessTests->delete($fitnessTest)) {
-            $this->Flash->success(__('The fitness type has been deleted.'));
+            $this->Flash->success(__('The fitness test has been deleted.'));
         } else {
-            $this->Flash->error(__('The fitness type could not be deleted. Please, try again.'));
+            $this->Flash->error(__('The fitness test could not be deleted. Please, try again.'));
         }
 
         return $this->redirect(['action' => 'index']);

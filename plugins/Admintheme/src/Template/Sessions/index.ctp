@@ -114,7 +114,7 @@ $partners = $this->Common->getpartner();
                                                 <i class="material-icons" title="View"><?= $this->Html->link(__('visibility'), ['action' => 'view', $session['id']]) ?></i>
                                                <?php if($user_type != 3){?>
                                                 <?php if(empty($session->user_detail)){?>
-                                                <i class="material-icons" title="View"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $session['id']]) ?></i>
+                                                <i class="material-icons" title="Session Edit"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $session['id']]) ?></i>
                                             <?php } } ?>
                                             <?php if(($user_type != 3) && ($user_type != 4)){?>
                                                <i class="material-icons" title="<?= __('Delete') ?>"><?= $this->Form->postLink(__('delete'), ['action' => 'delete', $session['id']], ['confirm' => __('Are you sure you want to delete Session ?', $session['id'])]) ?></i>
