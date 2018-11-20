@@ -58,6 +58,9 @@
                              </div>
                         </div>
                           <?php } if ($user_type == 4) { ?>
+                        <div id="exerDataDivp" class="col-sm-4"> 
+                       <span id="<?= $AdminofTrainner->partner_id ?>" onclick="getPartnere(this.id)" value="<?= $AdminofTrainner->partner_id ?>" class="btn btn-success"><?= __('Admin Excercise') ?></span>
+                            </div>
                           <div id="exerDataDivp" class="col-sm-4"> 
                        <span id="<?= $partner_id ?>" onclick="getPartnere(this.id)" value="<?= $partner_id ?>" class="btn btn-success"><?= __('Own Excercise') ?></span>
                             </div>

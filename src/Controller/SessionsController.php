@@ -154,11 +154,11 @@ class SessionsController extends AppController
           if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-       //pr($this->usersdetail); die;
-        $user_type = $this->usersdetail['users_type'];
+       // pr($this->usersdetail); die;
+        $user_type  = $this->usersdetail['users_type'];
         $partner_id = $this->usersdetail['partner_id'];
-        $users_id = $this->usersdetail['users_id'];
-        $session = $this->Sessions->newEntity();
+        $users_id   = $this->usersdetail['users_id'];
+        $session    = $this->Sessions->newEntity();
         if ($this->request->is('post')) {
              $data1 =[];
             $data = $this->request->data;
@@ -191,9 +191,12 @@ class SessionsController extends AppController
             }
          return $this->redirect(['action' => 'index']);
         }
+        $AdminofTrainner = $this->Sessions->Users->find()
+                                       ->select(['partner_id'])
+                                       ->where(['id =' => $partner_id])->first();
 //        $users = $this->Sessions->Users->find('list', ['limit' => 200]);
 //        $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
-        $this->set(compact('session', 'users', 'partners','user_type','users_id','partner_id'));
+        $this->set(compact('session', 'users', 'partners','user_type','users_id','partner_id','AdminofTrainner'));
         $this->set('_serialize', ['session']);
     }
 
@@ -240,9 +243,10 @@ class SessionsController extends AppController
         }
          $session_values = json_decode($session->ex_detail);
       // pr($session_values); die;
-        //$users = $this->Sessions->Users->find('list', ['limit' => 200]);
-       // $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
-        $this->set(compact('session', 'users', 'partners','user_type','session_values','new_id','users_id','partner_id'));
+        $AdminofTrainner = $this->Sessions->Users->find()
+                                       ->select(['partner_id'])
+                                       ->where(['id =' => $partner_id])->first();
+    $this->set(compact('session', 'users', 'partners','user_type','session_values','new_id','users_id','partner_id','AdminofTrainner'));
         $this->set('_serialize', ['session']);
     }
     
@@ -292,10 +296,10 @@ class SessionsController extends AppController
          return $this->redirect(['action' => 'index']);
         }
          $session_values = json_decode($session->ex_detail);
-      // pr($session_values); die;
-        //$users = $this->Sessions->Users->find('list', ['limit' => 200]);
-       // $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
-        $this->set(compact('session', 'users', 'partners','user_type','session_values','users_id','partner_id'));
+      $AdminofTrainner = $this->Sessions->Users->find()
+                                       ->select(['partner_id'])
+                                       ->where(['id =' => $partner_id])->first();
+        $this->set(compact('session', 'users', 'partners','user_type','session_values','users_id','partner_id','AdminofTrainner'));
         $this->set('_serialize', ['session']);
     }
     
