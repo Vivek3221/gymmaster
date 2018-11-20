@@ -21,6 +21,7 @@ $user_name = $this->Common->getUsers();
             <div class="block-header">
                 <h2>Session View</h2>
             </div>
+                
                 <div class="row">
                 <?php if(!empty($session->body_weight)) {    ?>
                 <div class="col-sm-3">
