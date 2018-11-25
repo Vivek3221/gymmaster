@@ -71,7 +71,7 @@ class SessionsController extends AppController
           $search['Sessions.user_id'] = $users_id;
           }
         if (isset($user_type) && ($user_type == 2)) {
-          $search['Sessions.partner_id'] = $users_id;
+          $search['Users.partner_id'] = $users_id;
           }
         if (isset($user_type) && ($user_type == 4)) {
           $search['Users.trainer_userid'] = $users_id;
