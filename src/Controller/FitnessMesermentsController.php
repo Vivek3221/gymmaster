@@ -124,7 +124,7 @@ class FitnessMesermentsController extends AppController
         }
         
        $fitnessMeserment = $this->FitnessMeserments->find()
-                                   ->select(['id','weight','height','bmi','created','date','thigh','hips','waist','chest','neck','upper_arm','imagesl','imagesr','imagesf','imagesb'])
+                                   ->select(['id','weight','height','bmi','created','date','thigh','hips','waist','chest','neck','upper_arm','imagesl','imagesr','imagesf','imagesb','lower_abdomen','calf'])
                                    ->contain(['Users'])
                                    ->where(['FitnessMeserments.user_id'=>$user_id, 'FitnessMeserments.id <=' =>$id])
                                    ->order(['FitnessMeserments.id DESC'])->limit(2)->toArray();

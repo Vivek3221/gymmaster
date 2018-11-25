@@ -147,8 +147,30 @@ $getPayDuration = $this->Common->getPayDuration();
                                         <td><?= ucfirst(h($fitnessMeserment[1]['thigh'])); ?></td>
                                     <?php } ?>
                                 </tr>
-                                
+                                <tr>
+                                    <th scope="row"><a href="?moredata=lower_abdomen" class="waves-effect "><?= __('Lower Abdomen') ?></a></th>
+                                    <?php if (isset($fitnessMeserment[0]['lower_abdomen'])) {
+                                        ?>
+                                        <td><?= ucfirst(h($fitnessMeserment[0]['lower_abdomen'])); ?></td>
+                                    <?php } ?>
 
+                                    <?php if (isset($fitnessMeserment[1]['lower_abdomen'])) {
+                                        ?>
+                                        <td><?= ucfirst(h($fitnessMeserment[1]['lower_abdomen'])); ?></td>
+                                    <?php } ?>
+                                </tr>
+                                 <tr>
+                                    <th scope="row"><a href="?moredata=calf" class="waves-effect "><?= __('Calf') ?></a></th>
+                                    <?php if (isset($fitnessMeserment[0]['calf'])) {
+                                        ?>
+                                        <td><?= ucfirst(h($fitnessMeserment[0]['calf'])); ?></td>
+                                    <?php } ?>
+
+                                    <?php if (isset($fitnessMeserment[1]['calf'])) {
+                                        ?>
+                                        <td><?= ucfirst(h($fitnessMeserment[1]['calf'])); ?></td>
+                                    <?php } ?>
+                                </tr>
 
 
 
