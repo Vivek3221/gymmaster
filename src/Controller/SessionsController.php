@@ -79,7 +79,7 @@ class SessionsController extends AppController
         if (isset($search)) {
             $count = $this->Sessions->find('all')
                     ->where([$search])
-                     ->order(['date' => 'DESC']);;
+                     ->order(['date' => 'DESC']);
         } else {
             $count = $this->Sessions->find('all');
         }
