@@ -63,7 +63,9 @@ $partners = $this->Common->getpartner();
                                     <tr>
                                         <th><?= __('User') ?></th>
                                         <th><?= __('Body Weight') ?></th>
+                                        <th><?= __('Comment') ?></th>
                                         <th><?= __('Date') ?></th>
+                                        <th><?= __('Type') ?></th>
                                        <?php if($user_type != 3) {?>
                                         <th><?= __('Status') ?></th>
                                        <?php } ?>
@@ -74,7 +76,9 @@ $partners = $this->Common->getpartner();
                                     <tr>
                                         <th><?= __('User') ?></th>
                                         <th><?= __('Body Weight') ?></th>
+                                        <th><?= __('Comment') ?></th>
                                         <th><?= __('Date') ?></th>
+                                        <th><?= __('Type') ?></th>
                                        <?php if($user_type != 3) {?>
                                         <th><?= __('Status') ?></th>
                                        <?php } ?>
@@ -88,7 +92,9 @@ $partners = $this->Common->getpartner();
 
                                             <td><?= ucfirst($session->user->name) ?></td>
                                             <td><?= ucfirst($session->body_weight) ?></td>
+                                            <td title="<?= ucfirst($session->notes) ?>"><?= ucfirst(substr($session->notes , 0,20)) ?></td>
                                             <td> <?= date('d-m-Y', strtotime($session->date))?></td>
+                                            <td><?= ucfirst($session->session_type) ?></td>
                                         <?php if($user_type != 3) {?>
                                             <td id='status<?= $session->id ?>'> <?php
                                                 if (isset($session->status) && $session->status == '1') {

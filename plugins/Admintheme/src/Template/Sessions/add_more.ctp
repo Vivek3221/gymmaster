@@ -40,7 +40,12 @@
                                 <?= $this->Form->control('date', ['id'=>'test-div','class' => 'form-control date-pick dp-applied', 'rows'=>1,'type' => 'textarea', 'placeholder' => 'Select Date', 'label' => FALSE, 'required', 'format' => 'YYYY-MM-DD']) ?>          
                             </div>
                         </div> 
-                        
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?= $this->Form->control('session_type', ['class' => 'form-control', 'type' => 'text', 'label' => FALSE]) ?> 
+                                <label class="form-label">Session Type</label>
+                            </div>
+                        </div>
                         <div id="exerDataDiv" class="col-sm-12" style="margin-bottom: -2px;">
                             <?php foreach ($session_values as $key => $value) {
                                 $excid = $key;

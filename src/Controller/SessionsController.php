@@ -161,7 +161,7 @@ class SessionsController extends AppController
         $users_id   = $this->usersdetail['users_id'];
         $session    = $this->Sessions->newEntity();
         if ($this->request->is('post')) {
-             $data1 =[];
+            $data1 =[];
             $data = $this->request->data;
             $users = $this->request->data['user_id'];
     // if($data); die;
@@ -174,20 +174,21 @@ class SessionsController extends AppController
                   $data1['partner_id'] = $this->usersdetail['users_id'];     
                   $data1['user_id'] = $value;     
               }   
-                      $data1['ex_detail'] = json_encode($data['excrcise']);
-                      $data1['status'] = $data['status'];
-                      $data1['date'] = $date;
+                      $data1['ex_detail']       = json_encode($data['excrcise']);
+                      $data1['status']          = $data['status'];
+                      $data1['session_type']    = $data['session_type'];
+                      $data1['date']            = $date;
 
                    //  pr($data1); die;
                       $sessione = $this->Sessions->newEntity();
                   $session = $this->Sessions->patchEntity($sessione, $data1);
                  // pr($session); die;
                   if ($this->Sessions->save($session)) {
-                      //$this->Flash->success(__('The session has been saved.'));
+                      $this->Flash->success(__('The session has been created.'));
 
-                     // return $this->redirect(['action' => 'index']);
+                     return $this->redirect(['action' => 'index']);
                   }
-                 // $this->Flash->error(__('The session could not be saved. Please, try again.'));
+                 $this->Flash->error(__('The session could not be saved. Please, try again.'));
               }
             }
          return $this->redirect(['action' => 'index']);
@@ -229,14 +230,15 @@ class SessionsController extends AppController
             $data1['partner_id'] = $this->usersdetail['users_id'];     
             $data1['user_id'] = $this->request->data['user_id'];     
         }     
-                 $data1['ex_detail'] = json_encode($data['excrcise']);
-                $data1['status'] = $data['status'];
-                $data1['date'] = $data['date'];
+                 $data1['ex_detail']      = json_encode($data['excrcise']);
+                $data1['status']          = $data['status'];
+                $data1['session_type']    = $data['session_type'];
+                $data1['date']            = $data['date'];
                 
              //   pr($data1); die;
             $session = $this->Sessions->patchEntity($session, $data1);
             if ($this->Sessions->save($session)) {
-                $this->Flash->success(__('The session has been saved.'));
+                $this->Flash->success(__('The session has been edited.'));
 
                 return $this->redirect(['action' => 'index']);
             }
@@ -278,9 +280,10 @@ class SessionsController extends AppController
               }   
 
                   //pr($data); die;
-                      $data1['ex_detail'] = json_encode($data['excrcise']);
-                      $data1['status'] = $data['status'];
-                      $data1['date'] = $date;
+                      $data1['ex_detail']       = json_encode($data['excrcise']);
+                      $data1['status']          = $data['status'];
+                      $data1['session_type']    = $data['session_type'];
+                      $data1['date']            = $date;
 
                    //  pr($data1); die;
                   $sessione = $this->Sessions->newEntity();
