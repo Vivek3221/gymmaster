@@ -50,7 +50,7 @@ class UsersController extends AppController
         }
         $name = '';
         $email = '';
-        $norec = 10;
+        $norec = 20;
         $status = '';
         $user_type = '';
         $partner   ='';

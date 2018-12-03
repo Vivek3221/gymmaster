@@ -29,7 +29,7 @@ class SessionsController extends AppController
         $name = '';
         $sdate ='';
         $edate ='';
-        $norec = 10;
+        $norec = 20;
         $status = '';
         $partner = '';
         $search = [];
