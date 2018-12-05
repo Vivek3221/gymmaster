@@ -38,6 +38,7 @@ class FitnessTest extends Entity
         'created' => true,
         'modified' => true,
         'user' => true,
-        'exercise' => true
+        'exercise' => true,
+        'date'=>true
     ];
 }

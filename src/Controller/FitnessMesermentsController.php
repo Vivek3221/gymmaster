@@ -168,7 +168,7 @@ class FitnessMesermentsController extends AppController
     public function add()
     {
         
-                     if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+    if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
         

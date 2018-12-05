@@ -76,7 +76,7 @@ class SessionsController extends AppController
         if (isset($user_type) && ($user_type == 4)) {
           $search['Users.trainer_userid'] = $users_id;
           }  
-        if (isset($search)) {
+        if (!empty($search)) {
             $count = $this->Sessions->find('all')
                     ->where([$search])
                      ->order(['date' => 'DESC']);
