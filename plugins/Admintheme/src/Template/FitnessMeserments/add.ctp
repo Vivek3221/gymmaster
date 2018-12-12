@@ -164,6 +164,7 @@
                            <div class="form-line image">
                               <?= $this->Form->control('imagesr', ['label' => 'Side Image', 'class' => 'form-control', 'type' => 'file', 'onchange' => "ImageFilesizer();"]) ?>            
                            </div>
+                           <strong>Hint:</strong> *Allowed only .gif .png .bmp .jpg .jpeg with maximum image sizes 2MB.
                         </div>
                      </div>
                   </div>
@@ -173,6 +174,7 @@
                            <div class="form-line image">
                               <?= $this->Form->control('imagesf', ['label' => 'Front Image', 'class' => 'form-control', 'type' => 'file', 'onchange' => "ImageFilesizef();"]) ?>            
                            </div>
+                           <strong>Hint:</strong> *Allowed only .gif .png .bmp .jpg .jpeg with maximum image sizes 2MB.
                         </div>
                      </div>
                      <div class="col-md-6">
@@ -180,6 +182,7 @@
                            <div class="form-line image">
                               <?= $this->Form->control('imagesb', ['label' => 'Back Image', 'class' => 'form-control', 'type' => 'file', 'onchange' => "ImageFilesizeb();"]) ?>            
                            </div>
+                           <strong>Hint:</strong> *Allowed only .gif .png .bmp .jpg .jpeg with maximum image sizes 2MB.
                         </div>
                      </div>
                   </div>

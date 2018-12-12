@@ -155,34 +155,31 @@ class SessionsController extends AppController
           if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-       // pr($this->usersdetail); die;
         $user_type  = $this->usersdetail['users_type'];
         $partner_id = $this->usersdetail['partner_id'];
         $users_id   = $this->usersdetail['users_id'];
         $session    = $this->Sessions->newEntity();
         if ($this->request->is('post')) {
-            $data1 =[];
-            $data = $this->request->data;
+            $datas =[];
+            $data  = $this->request->data;
             $users = $this->request->data['user_id'];
-    // if($data); die;
             $dates = explode(',',substr($data['date'],0,-1));
             foreach($dates as $date) {
                 foreach($users as $value)
                 {
                    if($user_type != 3)
               {
-                  $data1['partner_id'] = $this->usersdetail['users_id'];     
-                  $data1['user_id'] = $value;     
+                  $datas['partner_id'] = $this->usersdetail['users_id'];     
+                  $datas['user_id'] = $value;     
               }   
-                      $data1['ex_detail']       = json_encode($data['excrcise']);
-                      $data1['status']          = $data['status'];
-                      $data1['session_type']    = $data['session_type'];
-                      $data1['date']            = $date;
+                      $datas['ex_detail']       = json_encode($data['excrcise']);
+                      $datas['status']          = $data['status'];
+                      $datas['session_type']    = $data['session_type'];
+                      $datas['date']            = $date;
 
-                   //  pr($data1); die;
-                      $sessione = $this->Sessions->newEntity();
-                  $session = $this->Sessions->patchEntity($sessione, $data1);
-                 // pr($session); die;
+                  $sessione = $this->Sessions->newEntity();
+                  $session  = $this->Sessions->patchEntity($sessione, $datas);
+                 
                   if ($this->Sessions->save($session)) {
                       $this->Flash->success(__('The session has been created.'));
 
@@ -196,8 +193,6 @@ class SessionsController extends AppController
         $AdminofTrainner = $this->Sessions->Users->find()
                                        ->select(['partner_id'])
                                        ->where(['id =' => $partner_id])->first();
-//        $users = $this->Sessions->Users->find('list', ['limit' => 200]);
-//        $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
         $this->set(compact('session', 'users', 'partners','user_type','users_id','partner_id','AdminofTrainner'));
         $this->set('_serialize', ['session']);
     }
@@ -222,21 +217,21 @@ class SessionsController extends AppController
         $user_type = $this->usersdetail['users_type'];
         $partner_id = $this->usersdetail['partner_id'];
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $data1 =[];
+            $datas =[];
             $data = $this->request->data;
     // pr($data); die;
              if($user_type != 3)
         {
-            $data1['partner_id'] = $this->usersdetail['users_id'];     
-            $data1['user_id'] = $this->request->data['user_id'];     
+            $datas['partner_id'] = $this->usersdetail['users_id'];     
+            $datas['user_id'] = $this->request->data['user_id'];     
         }     
-                 $data1['ex_detail']      = json_encode($data['excrcise']);
-                $data1['status']          = $data['status'];
-                $data1['session_type']    = $data['session_type'];
-                $data1['date']            = $data['date'];
+                 $datas['ex_detail']      = json_encode($data['excrcise']);
+                $datas['status']          = $data['status'];
+                $datas['session_type']    = $data['session_type'];
+                $datas['date']            = $data['date'];
                 
-             //   pr($data1); die;
-            $session = $this->Sessions->patchEntity($session, $data1);
+             //   pr($datas); die;
+            $session = $this->Sessions->patchEntity($session, $datas);
             if ($this->Sessions->save($session)) {
                 $this->Flash->success(__('The session has been edited.'));
 
@@ -264,7 +259,7 @@ class SessionsController extends AppController
         $users_id = $this->usersdetail['users_id'];
         $user_type = $this->usersdetail['users_type'];
         if ($this->request->is(['patch', 'post', 'put'])) {
-           $data1 =[];
+           $datas =[];
             $data = $this->request->data;
             $users = $this->request->data['user_id'];
         // pr($users); die;
@@ -275,19 +270,19 @@ class SessionsController extends AppController
 
                    if($user_type != 3)
               {
-                  $data1['partner_id'] = $this->usersdetail['users_id'];     
-                  $data1['user_id'] = $value;     
+                  $datas['partner_id'] = $this->usersdetail['users_id'];     
+                  $datas['user_id'] = $value;     
               }   
 
                   //pr($data); die;
-                      $data1['ex_detail']       = json_encode($data['excrcise']);
-                      $data1['status']          = $data['status'];
-                      $data1['session_type']    = $data['session_type'];
-                      $data1['date']            = $date;
+                      $datas['ex_detail']       = json_encode($data['excrcise']);
+                      $datas['status']          = $data['status'];
+                      $datas['session_type']    = $data['session_type'];
+                      $datas['date']            = $date;
 
-                   //  pr($data1); die;
+                   //  pr($datas); die;
                   $sessione = $this->Sessions->newEntity();
-                  $sessions  = $this->Sessions->patchEntity($sessione, $data1);
+                  $sessions  = $this->Sessions->patchEntity($sessione, $datas);
                  // pr($session); die;
                   if ($this->Sessions->save($sessions)) {
                       //$this->Flash->success(__('The session has been saved.'));
@@ -319,17 +314,17 @@ class SessionsController extends AppController
         $users_id = $this->usersdetail['users_id'];
         $user_type = $this->usersdetail['users_type'];
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $data1 =[];
+            $datas =[];
             $data = $this->request->data;
           //pr($data); die;
-            $data1['user_detail'] = json_encode($data['userexcrcise']);
-            $data1['user_date']   = date('Y-m-d');
-            $data1['body_weight'] = $this->request->data('body_weight');
-            $data1['hydration']   = $this->request->data('hydration');
-            $data1['sleep']       = $this->request->data('sleep');
-            $data1['notes']       = $this->request->data('notes');
-             //  pr($data1); die;
-            $session = $this->Sessions->patchEntity($session, $data1);
+            $datas['user_detail'] = json_encode($data['userexcrcise']);
+            $datas['user_date']   = date('Y-m-d');
+            $datas['body_weight'] = $this->request->data('body_weight');
+            $datas['hydration']   = $this->request->data('hydration');
+            $datas['sleep']       = $this->request->data('sleep');
+            $datas['notes']       = $this->request->data('notes');
+             //  pr($datas); die;
+            $session = $this->Sessions->patchEntity($session, $datas);
             if ($this->Sessions->save($session)) {
                 $this->Flash->success(__('The session has been saved.'));
 
