@@ -19,7 +19,8 @@ class ExercisesController extends AppController
         $this->loadComponent('Flash'); 
     }
     
-     public function beforeFilter(Event $event) {
+     public function beforeFilter(Event $event) 
+     {
         parent::beforeFilter($event);
        // $this->Users->userAuth = $this->UserAuth;
         $this->Auth->allow(['index','add','view','delete','edit','status','privacyPolicy']);
