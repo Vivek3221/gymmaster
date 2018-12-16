@@ -243,19 +243,19 @@ class UsersController extends AppController
         $this->PlanSubscribers = TableRegistry::get('PlanSubscribers');
         $this->Payments        = TableRegistry::get('Payments');
         $planSubscribers       = $this->PlanSubscribers->newEntity();
-        $payments       = $this->Payments->newEntity();
-        $plandata   =   $paymentdata = [];
+        $payments              = $this->Payments->newEntity();
+        $plandata              =   $paymentdata = [];
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
         $users_type = $this->usersdetail['users_type'];
         $users_name = $this->usersdetail['users_name'];
-        $users_id = $this->usersdetail['users_id'];
-        $user = $this->Users->get($id, [
-            'contain' => []
-        ]);
+        $users_id   = $this->usersdetail['users_id'];
+        $user       = $this->Users->get($id, [
+                      'contain' => [] ]);
 
-        if ($this->request->is(['patch', 'post', 'put'])) {
+        if ($this->request->is(['patch', 'post', 'put'])) 
+           {
             $data = $this->request->data;
             if(!empty($data['password'])) {    
                 if ($data['password'] != $data['cpassword']) {
@@ -270,9 +270,12 @@ class UsersController extends AppController
                     $data['photo'] = $flname;
                 }
             }
+            if(!empty($data['trainer_userid']))
+            {
             $user->trainer_userid = $data['trainer_userid'];
-            $user    = $this->Users->patchEntity($user, $data);
-            $useradd = $this->Users->save($user);
+            }
+            $user                 = $this->Users->patchEntity($user, $data);
+            $useradd              = $this->Users->save($user);
             if ($useradd) {
                 
                 // insert into plan_subscribers
@@ -378,7 +381,11 @@ class UsersController extends AppController
                 }
             }
           //  pr($data); die;
-            $user->trainer_userid = $data['trainer_userid'];
+            if(!empty($data['trainer_userid']))
+            {
+             $user->trainer_userid = $data['trainer_userid'];
+            }
+           
             $user = $this->Users->patchEntity($user, $data);
         //   pr($user); die;
             if ($this->Users->save($user)) {
