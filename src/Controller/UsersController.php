@@ -45,6 +45,7 @@ class UsersController extends AppController
     {
         
        //pr($this->usersdetail['users_email']); die;
+        
                       if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
