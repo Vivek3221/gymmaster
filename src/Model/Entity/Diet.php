@@ -4,20 +4,24 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * FitnessTest Entity
+ * Diet Entity
  *
  * @property int $id
  * @property int $user_id
- * @property int $exercise_id
- * @property string $exercise_type
+ * @property int $partner_id
+ * @property \Cake\I18n\FrozenDate $date
+ * @property string $diet_details
+ * @property string $user_detail
+ * @property string $notes
+ * @property \Cake\I18n\FrozenTime $user_date
  * @property int $status
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *
  * @property \App\Model\Entity\User $user
- * @property \App\Model\Entity\Exercise $exercise
+ * @property \App\Model\Entity\Partner $partner
  */
-class FitnessTest extends Entity
+class Diet extends Entity
 {
 
     /**
@@ -31,14 +35,16 @@ class FitnessTest extends Entity
      */
     protected $_accessible = [
         'user_id' => true,
-        'exercise_id' => true,
-        'exercise_type' => true,
         'partner_id' => true,
+        'date' => true,
+        'diet_details' => true,
+        'user_detail' => true,
+        'notes' => true,
+        'user_date' => true,
         'status' => true,
         'created' => true,
         'modified' => true,
         'user' => true,
-        'exercise' => true,
-        'date'=>true
+        'partner' => true
     ];
 }

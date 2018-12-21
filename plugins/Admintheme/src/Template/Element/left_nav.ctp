@@ -65,16 +65,25 @@ $action = $this->request['action'];
                  <?php } ?>
                 <?php if($usersdetail['users_type'] == 1 || $usersdetail['users_type'] == 2){; ?>
                 <li class="<?php if (($controller == 'ExrciseDirectories' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'logoutqq' || $action == 'payment'))){echo "active";}?>">
-                    <a href="<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'index']); ?>">
+                <a href="<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'index']); ?>">
                         <i class="material-icons">home</i>
                         <span><?= __('Exercise Directory') ?></span>
                     </a>
                 </li>
                 <?php } ?>
-             <li class="<?php if (($controller == 'Bodies')  || ($controller == 'FitnessMeserments') || ($controller == 'FitnessTests')){echo "active";}?>">
+
+
+                <li class="<?php if ($controller == 'FitnessTests' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
+                <a href="<?= $this->Url->build(['controller' => 'FitnessTests', 'action' => 'index']); ?>">
+                        <i class="material-icons">home</i>
+                        <span><?= __('Fitness Test') ?></span>
+                </a>
+             </li>
+
+             <li class="<?php if (($controller == 'Bodies')  || ($controller == 'FitnessMeserments') || ($controller == 'Diets') || ($controller == 'DietDirectories')){echo "active";}?>">
                     <a href="javascript:void(0);" class="menu-toggle">
                         <i class="material-icons">text_fields</i>
-                        <span><?= __('Workout Directory') ?></span>
+                        <span><?= __('Nutrition') ?></span>
                     </a>
                     <ul class="ml-menu">
 <!--                        <li class="<?php if ($controller == 'Bodies' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
@@ -83,12 +92,18 @@ $action = $this->request['action'];
                    <li class="<?php if ($controller == 'Exercises' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
                         <?= $this->Html->link(__('Exercise List'), ['controller' => 'Exercises', 'action' => 'index']) ?>
                    </li>-->
+                   <?php if($usersdetail['users_type'] == 1 || $usersdetail['users_type'] == 2){; ?>
+                   <li class="<?php if ($controller == 'DietDirectories' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
+                        <?= $this->Html->link(__('Diet Directories'), ['controller' => 'DietDirectories', 'action' => 'index']) ?>
+                   </li>
+                  <?php } ?>
+                   <li class="<?php if ($controller == 'Diets' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
+                        <?= $this->Html->link(__('Diets'), ['controller' => 'Diets', 'action' => 'index']) ?>
+                   </li>
                    <li class="<?php if ($controller == 'FitnessMeserments' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
-                        <?= $this->Html->link(__('Body Measurement List'), ['controller' => 'FitnessMeserments', 'action' => 'index']) ?>
+                        <?= $this->Html->link(__('Body Measurement'), ['controller' => 'FitnessMeserments', 'action' => 'index']) ?>
                    </li>
-                   <li class="<?php if ($controller == 'FitnessTests' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
-                        <?= $this->Html->link(__('Fitness Test'), ['controller' => 'FitnessTests', 'action' => 'index']) ?>
-                   </li>
+                   
                     </ul>
                 </li>
                 <?php if($usersdetail['users_type'] != 3){ ;?>

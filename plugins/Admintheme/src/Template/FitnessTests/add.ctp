@@ -26,15 +26,22 @@ $user_name = $this->Common->getUsers();
                         <!--                            <form id="form_validation" method="POST">-->
                         <?php //echo $this->element('Usermgmt.ajax_validation', ['formId'=>'addUserForm', 'submitButtonId'=>'addUserSubmitBtn']);  ?>
                         <?= $this->Form->create($fitnessTest, ['id' => 'addbody', 'templates' => ['inputContainer' => '{{content}}']]) ?>
-                            <?php if($user_type !=3)
-                       {?>
+                 <?php if($user_type !=3){?>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?= $this->Form->control('user_id', ['class' => 'form-control select2', 'type' => 'select','empty'=>__('Select User'),'options' => $user_name]) ?> 
                             </div>
                         </div>
                        <?php }?>
-
+                       <div class="row">
+                       <div class="col-md-6">
+                        <div class="form-group form-float">
+                           <div class="form-line">
+                              <?= $this->Form->control('date', ['class' => 'form-control datetimepicker', 'type' => 'text', 'placeholder' => 'Select Date', 'label' => FALSE ,'required', 'format'=>'YYYY-MM-DD']) ?>          
+                           </div>
+                        </div>
+                     </div>
+                 </div>
                          <?php if(!empty($bodies_lists)) {
                                         foreach ($bodies_lists as $bodies_list):
                                         ?>
@@ -74,3 +81,9 @@ $user_name = $this->Common->getUsers();
 
     </div>
 </section>
+<script type="text/javascript">
+    $(document).ready(function () {
+   $('.datetimepicker').bootstrapMaterialDatePicker({format: 'YYYY-MM-DD', lang: 'fr', weekStart: 1, cancelText: 'Cancel',maxDate : new Date(),time:'false'});
+   $('').bootstrapMaterialDatePicker({ format : 'DD/MM/YYYY HH:mm', minDate : new Date() });
+   });
+</script>

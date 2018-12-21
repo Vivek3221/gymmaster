@@ -139,26 +139,35 @@
                            <div class="form-line">
                               <?php
                                  $date='';
-                                             if($fitnessMeserment->date !='')
-                                             {
-                                             
+                                if($fitnessMeserment->date !='')
+                                  {
                                  $date = ($fitnessMeserment->date->i18nFormat('YYYY-MM-dd'));
-                                             }
-                                 // $datetime = $news->news_expire;
-                                 
-                                 ?>
+                                 }
+                                ?>
                               <?= $this->Form->control('date', ['class' => 'form-control datetimepicker', 'type' => 'text','value'=>$date, 'placeholder' => 'Select Date', 'label' => FALSE, 'required', 'format' => 'YYYY-MM-DD']) ?>          
                            </div>
                         </div>
                         <small class="text-muted">*Select date.</small>
                      </div>
+
                      <div class="col-md-6">
                         <div class="form-group form-float">
                            <div class="form-line image">
                               <?= $this->Form->control('imagesru', ['label' => 'Side Image', 'class' => 'form-control', 'type' => 'file', 'onchange' => "ImageFilesizeru();"]) ?>            
                            </div>
+                           <strong>Hint:</strong> *Allowed only .gif .png .bmp .jpg .jpeg with maximum image sizes 2MB.
                         </div>
+                      <?php if(!empty($fitnessMeserment->imagesr)) { ?>
+                      <div class="add-pic">
+                      <?php $cover = '/img/' .$fitnessMeserment->imagesr;
+                      if (strpos($fitnessMeserment->imagesr, 'http') !== false) {
+                      $cover = $fitnessMeserment->imagesr;
+                      }?>
+                      <?= $this->Html->image($cover, ['class' => 'add-img', 'alt' => 'related-news', 'accept' => 'image/*','width' => 150, 'height' => 70]); ?>
+                      </div>
+                    <?php } ?>
                      </div>
+                      
                   </div>
                   <div class="row">
                      <div class="col-md-6">
@@ -166,14 +175,35 @@
                            <div class="form-line image">
                               <?= $this->Form->control('imagesfu', ['label' => 'Front Image', 'class' => 'form-control', 'type' => 'file', 'onchange' => "ImageFilesizefu();"]) ?>            
                            </div>
+                           <strong>Hint:</strong> *Allowed only .gif .png .bmp .jpg .jpeg with maximum image sizes 2MB.
                         </div>
+                        <?php if(!empty($fitnessMeserment->imagesf)) { ?>
+                      <div class="add-pic">
+                      <?php $cover = '/img/' .$fitnessMeserment->imagesf;
+                      if (strpos($fitnessMeserment->imagesf, 'http') !== false) {
+                      $cover = $fitnessMeserment->imagesf;
+                      }?>
+                      <?= $this->Html->image($cover, ['class' => 'add-img', 'alt' => 'related-news', 'accept' => 'image/*','width' => 150, 'height' => 70]); ?>
+                      </div>
+                      <?php  } ?>
+                      
                      </div>
                      <div class="col-md-6">
                         <div class="form-group form-float">
                            <div class="form-line image">
                               <?= $this->Form->control('imagesbu', ['label' => 'Back Image', 'class' => 'form-control', 'type' => 'file', 'onchange' => "ImageFilesizebu();"]) ?>            
                            </div>
+                           <strong>Hint:</strong> *Allowed only .gif .png .bmp .jpg .jpeg with maximum image sizes 2MB.
                         </div>
+                      <?php if(!empty($fitnessMeserment->imagesb)) { ?>
+                      <div class="add-pic">
+                      <?php $cover = '/img/' .$fitnessMeserment->imagesb;
+                      if (strpos($fitnessMeserment->imagesb, 'http') !== false) {
+                      $cover = $fitnessMeserment->imagesb;
+                      }?>
+                      <?= $this->Html->image($cover, ['class' => 'add-img', 'alt' => 'related-news', 'accept' => 'image/*','width' => 150, 'height' => 70]); ?>
+                      </div>
+                    <?php } ?>
                      </div>
                   </div>
                   <div class="row">

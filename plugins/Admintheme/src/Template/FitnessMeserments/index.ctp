@@ -73,7 +73,7 @@ $user_name = $this->Common->getUsers();
                                     <?php foreach ($fitnessMeserments as $fitnessMeserment) { ?>
                                     <tr>
                                         <?php if($usersdetail['users_type'] != 3){; ?>
-                                        <td><?= ($fitnessMeserment['user']['name'])?></td>
+                                        <td><?= ucfirst($fitnessMeserment['user']['name'])?></td>
                                         <?php }?>
                                         <td><?= $fitnessMeserment['weight'] ?></td>
                                         <td><?= ($fitnessMeserment['height']) ?></td>

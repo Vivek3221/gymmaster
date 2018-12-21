@@ -46,8 +46,8 @@ class FitnessTestsController extends AppController
             $sdate = date('Y-m-d H:i:s',strtotime($this->request->query['from_date'])); 
             $edate = date('Y-m-d H:i:s',strtotime($this->request->query['to_date'])) ;
 
-            $search['FitnessTests.created >='] = $sdate;
-            $search['FitnessTests.created <='] = $edate;  
+            $search['FitnessTests.date >='] = $sdate;
+            $search['FitnessTests.date <='] = $edate;  
             $sdate = $this->request->query['from_date']; 
             $edate = $this->request->query['to_date'] ;
         }
@@ -153,32 +153,33 @@ class FitnessTestsController extends AppController
      */
     public function add()
     {
-                      if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+      if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
        $fitnessTest = $this->FitnessTests->newEntity();
-       $user_type = $this->usersdetail['users_type'];
+       $user_type   = $this->usersdetail['users_type'];
         if ($this->request->is('post')) {
             $data1 =[];
-            $data = $this->request->data;
-            //pr($data); die;
+            $data  = $this->request->data;
+            // pr($data); die;
            
-                 if($user_type == 3)
+        if($user_type == 3)
         {
-            $data1['user_id'] = $this->usersdetail['users_id']; 
+            $data1['user_id']    = $this->usersdetail['users_id']; 
             $data1['partner_id'] = $this->usersdetail['partner_id'];  
         }
              if($user_type != 3)
         {
             $data1['partner_id'] = $this->usersdetail['users_id'];     
-            $data1['user_id'] = $this->request->data['user_id'];     
+            $data1['user_id']    = $this->request->data['user_id'];     
         }
                 $data1['exercise_type'] = json_encode($data);
-                $data1['status'] = 1;
-                $data1['exercise_id'] = $data['exercise_id'];
-               //pr($data1); die;
+                $data1['status']        = 1;
+                $data1['exercise_id']   = $data['exercise_id'];
+                $data1['date']          = $data['date'];
+               // pr($data1); die;
                
-                $fitnessTest = $this->FitnessTests->patchEntity($fitnessTest, $data1);
+            $fitnessTest = $this->FitnessTests->patchEntity($fitnessTest, $data1);
             if ($this->FitnessTests->save($fitnessTest)) {
            
            return $this->redirect(['action' => 'index']);
@@ -211,11 +212,13 @@ class FitnessTestsController extends AppController
         $user_type = $this->usersdetail['users_type'];
         if ($this->request->is(['patch', 'post', 'put'])) {
             $fitnessTest = $this->FitnessTests->patchEntity($fitnessTest, $this->request->getData());
-               $data1 =[];
-            $data = $this->request->data;
-            $data1['exercise_type'] = json_encode($data);
+                $data1 =[];
+                $data  = $this->request->data;
+                $data1['exercise_type'] = json_encode($data);
                 $data1['status'] = 1;
                 $data1['exercise_id'] = $data['exercise_id'];
+                $data1['date'] = $data['date'];
+
                //pr($data1); die;
                
                 $fitnessTest = $this->FitnessTests->patchEntity($fitnessTest, $data1);
