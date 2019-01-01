@@ -112,9 +112,18 @@ class DietDirectoriesController extends AppController
      */
     public function add()
     {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        $users_id = $this->usersdetail['users_id'];
+        $user_type = $this->usersdetail['users_type'];
         $dietDirectory = $this->DietDirectories->newEntity();
         if ($this->request->is('post')) {
-            $dietDirectory = $this->DietDirectories->patchEntity($dietDirectory, $this->request->getData());
+            $data = $this->request->data;
+            $data['user_id']   = $users_id;
+            $data['user_type'] = $user_type;
+
+            $dietDirectory = $this->DietDirectories->patchEntity($dietDirectory, $data);
             if ($this->DietDirectories->save($dietDirectory)) {
                 $this->Flash->success(__('The diet directory has been saved.'));
 
@@ -135,6 +144,9 @@ class DietDirectoriesController extends AppController
      */
     public function edit($id = null)
     {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
         $dietDirectory = $this->DietDirectories->get($id, [
             'contain' => []
         ]);
@@ -200,7 +212,7 @@ class DietDirectoriesController extends AppController
         }
     }
   
-  public function addDiet() {
+           public function addDiet() {
              $this->viewBuilder()->layout("ajax");
              $exrcisedirectorie_id ='';
              $start_id ='';

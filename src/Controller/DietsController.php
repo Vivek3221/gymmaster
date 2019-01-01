@@ -157,7 +157,8 @@ class DietsController extends AppController
         $partner_id = $this->usersdetail['partner_id'];
         $users_id   = $this->usersdetail['users_id'];
         $diet    = $this->Diets->newEntity();
-        if ($this->request->is('post')) {
+        if ($this->request->is('post')) 
+          {
             $datas =[];
             $data  = $this->request->data;
             $users = $this->request->data['user_id'];
@@ -171,21 +172,21 @@ class DietsController extends AppController
                   $datas['user_id'] = $value;     
               }   
                       $datas['diet_details']       = json_encode($data['excrcise']);
-                      $datas['status']          = $data['status'];
-                      $datas['diet_type']       = $data['diet_type'];
-                      $datas['date']            = $date;
+                      $datas['status']             = $data['status'];
+                      // $datas['diet_type']       = $data['diet_type'];
+                      $datas['date']               = $date;
 
                   //$diets = $this->Diets->newEntity();
-                  // print_r($diets); die;
-                  $diets  = $this->Diets->patchEntity($diet, $datas);
+                  $diet    = $this->Diets->newEntity();
+                  $diets   = $this->Diets->patchEntity($diet, $datas);
 
                  
                   if ($this->Diets->save($diets)) {
-                      $this->Flash->success(__('The diet has been created.'));
+                      // $this->Flash->success(__('The diet has been created.'));
 
-                     return $this->redirect(['action' => 'index']);
+                     // return $this->redirect(['action' => 'index']);
                   }
-                 $this->Flash->error(__('The diet could not be saved. Please, try again.'));
+                 // $this->Flash->error(__('The diet could not be saved. Please, try again.'));
               }
             }
          return $this->redirect(['action' => 'index']);

@@ -193,7 +193,7 @@ class ExrciseDirectoriesController extends AppController
     }
     
      public function status() {
-                       if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+     if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
         $id     = $this->request->params['pass'][0];

@@ -17,7 +17,7 @@ $partners = $this->Common->getpartner();
                 <div class="card">
                     <div class="header">
                         <h2 >
-                            <?= __('diets List') ?>
+                            <?= __('Diets List') ?>
                         </h2>
                     </div>
                     <div class="body">

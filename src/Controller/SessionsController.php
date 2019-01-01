@@ -181,11 +181,11 @@ class SessionsController extends AppController
                   $session  = $this->Sessions->patchEntity($sessione, $datas);
                  
                   if ($this->Sessions->save($session)) {
-                      $this->Flash->success(__('The session has been created.'));
+                      // $this->Flash->success(__('The session has been created.'));
 
-                     return $this->redirect(['action' => 'index']);
+                     // return $this->redirect(['action' => 'index']);
                   }
-                 $this->Flash->error(__('The session could not be saved. Please, try again.'));
+                 // $this->Flash->error(__('The session could not be saved. Please, try again.'));
               }
             }
          return $this->redirect(['action' => 'index']);
