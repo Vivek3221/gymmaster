@@ -171,7 +171,7 @@
        var partner_id = admin_id;
        //alert(partner_id);
        // if (partner_id) {
-            var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'partnerExcr']) ?>';
+            var urls = '<?= $this->Url->build(['controller' => 'DietDirectories', 'action' => 'partnerExcr']) ?>';
             var data = '&partner_id=' + escape(partner_id);
             $.ajax({
                 type: "POST",
@@ -192,7 +192,7 @@
        var partner_id = '';
        //alert(partner_id);
        // if (partner_id) {
-            var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'partnerExcr']) ?>';
+            var urls = '<?= $this->Url->build(['controller' => 'DietDirectories', 'action' => 'partnerExcr']) ?>';
             var data = '&partner_id=' + escape(partner_id);
             $.ajax({
                 type: "POST",
@@ -213,7 +213,7 @@
         var partner_id = $('#partner-id').val();
       // alert(partner_id);
         if (partner_id) {
-            var urls = '<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'partnerExcr']) ?>';
+            var urls = '<?= $this->Url->build(['controller' => 'DietDirectories', 'action' => 'partnerExcr']) ?>';
             var data = '&partner_id=' + escape(partner_id);
             $.ajax({
                 type: "POST",
