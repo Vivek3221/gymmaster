@@ -15,7 +15,7 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            <?= __('Edit diet') ?>
+                            <?= __('Edit Dateiet') ?>
                         </h2>
                     </div>
                     <div class="body">
@@ -141,34 +141,34 @@
                            <?= $this->Form->control('partner_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Partner'), 'options' => $partner , 'onchange' => 'getpartnerexcr(this.id)', 'label'=>FALSE]) ?>
                         </div>
                             <div id="exerDataDiva" class="col-sm-4"> 
-                            <span id="exrcisedirectorie" onclick="getOwnexer()" class="btn btn-success"><?= __('Own Excercise') ?></span>
+                            <span id="exrcisedirectorie" onclick="getOwnexer()" class="btn btn-success"><?= __('Own Diet') ?></span>
                              </div>
                         </div>
                           <?php } ?>
                          <?php if ($user_type == 2) {  ?>
                         <div class="input-group" style="margin-bottom: -12px;">
                             <div id="exerDataDivp" class="col-sm-4"> 
-                       <span id="<?= $partner_id ?>" onclick="getPartnere(this.id)" value="<?= $partner_id ?>" class="btn btn-success"><?= __('Admin Excercise') ?></span>
+                       <span id="<?= $partner_id ?>" onclick="getPartnere(this.id)" value="<?= $partner_id ?>" class="btn btn-success"><?= __('Admin Diet') ?></span>
                             </div>
                             <div id="exerDataDivp" class="col-sm-4"> 
-                            <span id="<?= $users_id ?>" onclick="getPartnere(this.id)" value="<?= $users_id ?>" class="btn btn-success"><?= __('Own Excercise') ?></span>
+                            <span id="<?= $users_id ?>" onclick="getPartnere(this.id)" value="<?= $users_id ?>" class="btn btn-success"><?= __('Own Diet') ?></span>
                              </div>
                         </div>
                           <?php } if ($user_type == 4) { ?>
                         <div id="exerDataDivp" class="col-sm-4"> 
-                       <span id="<?= $AdminofTrainner->partner_id ?>" onclick="getPartnere(this.id)" value="<?= $AdminofTrainner->partner_id ?>" class="btn btn-success"><?= __('Admin Excercise') ?></span>
+                       <span id="<?= $AdminofTrainner->partner_id ?>" onclick="getPartnere(this.id)" value="<?= $AdminofTrainner->partner_id ?>" class="btn btn-success"><?= __('Admin Diet') ?></span>
                             </div>
                           <div id="exerDataDivp" class="col-sm-4"> 
-                       <span id="<?= $partner_id ?>" onclick="getPartnere(this.id)" value="<?= $partner_id ?>" class="btn btn-success"><?= __('Own Excercise') ?></span>
+                       <span id="<?= $partner_id ?>" onclick="getPartnere(this.id)" value="<?= $partner_id ?>" class="btn btn-success"><?= __('Own Diet') ?></span>
                             </div>
                           <?php  } ?>
                         <div class="input-group" style="margin-top: -18px">
-                            <label class="form-label">Exercise</label>
+                            <label class="form-label">Diet</label>
                             <div id="changeexcr">
                             <?= $this->Form->control('dietdirectories_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Diet'), 'options' => $get_dietdirectories_lists, 'label' => FALSE]) ?>
                             </div>
                                 <span class="input-group-btn" style="padding-top: 23px;">
-                                <span id="exrcisedirectorie" onclick="get_Diets()" class="btn btn-success"><?= __('+ Add Excercise') ?></span>
+                                <span id="exrcisedirectorie" onclick="get_Diets()" class="btn btn-success"><?= __('+ Add Diet') ?></span>
                             </span>
                         </div>
                         
