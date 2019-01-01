@@ -81,9 +81,6 @@ class DietsTable extends Table
             ->maxLength('notes', 250)
             ->allowEmpty('notes');
 
-        $validator
-            ->dateTime('user_date')
-            ->allowEmpty('user_date');
 
         $validator
             ->requirePresence('status', 'create')

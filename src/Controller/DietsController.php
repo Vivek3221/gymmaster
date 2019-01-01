@@ -327,7 +327,7 @@ class DietsController extends AppController
             $datas['notes']       = $this->request->data('notes');
              //  pr($datas); die;
             $userdiet = $this->Diets->patchEntity($diets, $datas);
-            pr($userdiet); die;
+           // pr($userdiet); die;
             if ($this->Diets->save($userdiet)) {
                 $this->Flash->success(__('The Diet has been saved.'));
 
