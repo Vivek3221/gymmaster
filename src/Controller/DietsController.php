@@ -163,14 +163,15 @@ class DietsController extends AppController
             $data  = $this->request->data;
             $users = $this->request->data['user_id'];
             $dates = explode(',',substr($data['date'],0,-1));
-            foreach($dates as $date) {
+            foreach($dates as $date) 
+            {
                 foreach($users as $value)
                 {
                    if($user_type != 3)
-              {
+                 {
                   $datas['partner_id'] = $this->usersdetail['users_id'];     
                   $datas['user_id'] = $value;     
-              }   
+                 }   
                       $datas['diet_details']       = json_encode($data['excrcise']);
                       $datas['status']             = $data['status'];
                       // $datas['diet_type']       = $data['diet_type'];
@@ -227,7 +228,7 @@ class DietsController extends AppController
         }     
                 $datas['diet_details']      = json_encode($data['excrcise']);
                 $datas['status']          = $data['status'];
-                $datas['diet_type']    = $data['diet_type'];
+                // $datas['diet_type']    = $data['diet_type'];
                 $datas['date']            = $data['date'];
                 
              //  pr($datas); die;
@@ -276,12 +277,10 @@ class DietsController extends AppController
                   $datas['partner_id'] = $this->usersdetail['users_id'];     
                   $datas['user_id'] = $value;     
               }   
-
-                  //pr($data); die;
                       $datas['diet_details']       = json_encode($data['excrcise']);
-                      $datas['status']          = $data['status'];
-                      $datas['diet_type']    = $data['diet_type'];
-                      $datas['date']            = $date;
+                      $datas['status']             = $data['status'];
+                      // $datas['diet_type']    = $data['diet_type'];
+                      $datas['date']               = $date;
 
                    //  pr($datas); die;
                   $diete = $this->Diets->newEntity();
@@ -370,6 +369,36 @@ class DietsController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
+     public function status() {
+                       if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        $id     = $this->request->params['pass'][0];
+        $status = $this->request->params['pass'][1];
+        $user   = $this->Diets->get($id);
+        if ($status == 1) {
+            $user_data['status'] = 0;
+            $user_data['id'] = $id;
+            $user = $this->Diets->patchEntity($user, $user_data);
+            if ($this->Diets->save($user)) {
+                $st = $user_data['status'] ? '<span class="label label-success">' . __('Active') . '</span>' : '<span class="label label-danger">' . __('Inactive') . '</span>';
+                // echo "<a href= '#' onclick = 'updateStatus(" . $id . "," . $user_data['status'] . ")'> " . $st . " </a>";
+                echo '<button id=' . $id . ' class="btn btn-primary waves-effect status" value=' . $user_data['status'] . ' onclick="updateStatus(this.id,' . $user_data['status'] . ')" type="submit">Inactive</button>';
+                exit;
+            }
+        } else {
+            $user_data['status'] = 1;
+            $user_data['id'] = $id;
+            $user = $this->Diets->patchEntity($user, $user_data);
+            if ($this->Diets->save($user)) {
+                $st = $user_data['status'] ? '<span class="label label-success">' . __('Active') . '</span>' : '<span class="label label-danger">' . __('Inactive') . '</span>';
+                echo '<button id=' . $id . ' class="btn btn-success waves-effect status" value=' . $user_data['status'] . ' onclick="updateStatus(this.id,' . $user_data['status'] . ')" type="submit">Active</button>';
+                exit;
+            }
+        }
+    }
+    
 
     public function beforeRender(\Cake\Event\Event $event) {
         parent::beforeRender($event);

@@ -50,31 +50,31 @@
                            <?= $this->Form->control('partner_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Partner'), 'options' => $partner , 'onchange' => 'getpartnerexcr(this.id)', 'label'=>FALSE]) ?>
                         </div>
                             <div id="exerDataDiva" class="col-sm-4" > 
-                            <span id="exrcisedirectorie" onclick="getOwnexer()" class="btn btn-success"><?= __('Own Excercise') ?></span>
+                            <span id="exrcisedirectorie" onclick="getOwnexer()" class="btn btn-success"><?= __('Own Diet') ?></span>
                              </div>
                         </div>
                           <?php } ?>
                          <?php if ($user_type == 2) {  ?>
                         <div class="input-group" style="margin-bottom: -12px;">
                             <div id="exerDataDivp" class="col-sm-4"> 
-                       <span id="<?= $partner_id ?>" onclick="getPartnere(this.id)" value="<?= $partner_id ?>" class="btn btn-success"><?= __('Admin Excercise') ?></span>
+                       <span id="<?= $partner_id ?>" onclick="getPartnere(this.id)" value="<?= $partner_id ?>" class="btn btn-success"><?= __('Admin Diet') ?></span>
                             </div>
                             <div id="exerDataDivp" class="col-sm-4"> 
-                            <span id="<?= $users_id ?>" onclick="getPartnere(this.id)" value="<?= $users_id ?>" class="btn btn-success"><?= __('Own Excercise') ?></span>
+                            <span id="<?= $users_id ?>" onclick="getPartnere(this.id)" value="<?= $users_id ?>" class="btn btn-success"><?= __('Own Diet') ?></span>
                              </div>
                         </div>
                           <?php } if ($user_type == 4) { ?>
                         <div id="exerDataDivp" class="col-sm-4"> 
-                       <span id="<?= $AdminofTrainner->partner_id ?>" onclick="getPartnere(this.id)" value="<?= $AdminofTrainner->partner_id ?>" class="btn btn-success"><?= __('Admin Excercise') ?></span>
+                       <span id="<?= $AdminofTrainner->partner_id ?>" onclick="getPartnere(this.id)" value="<?= $AdminofTrainner->partner_id ?>" class="btn btn-success"><?= __('Admin Diet') ?></span>
                             </div>
                           <div id="exerDataDivp" class="col-sm-4"> 
-                       <span id="<?= $partner_id ?>" onclick="getPartnere(this.id)" value="<?= $partner_id ?>" class="btn btn-success"><?= __('Own Excercise') ?></span>
+                       <span id="<?= $partner_id ?>" onclick="getPartnere(this.id)" value="<?= $partner_id ?>" class="btn btn-success"><?= __('Own Diet') ?></span>
                             </div>
                           <?php  } ?>
                         <div class="input-group">
                             <label class="form-label">Diets</label>
                             <div class="select-m" id="changeexcr">
-                            <?= $this->Form->control('dietdirectories_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select DietDirectories'), 'options' => $get_dietdirectories_lists , 'label'=>FALSE]) ?>
+                            <?= $this->Form->control('dietdirectories_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select Diet'), 'options' => $get_dietdirectories_lists , 'label'=>FALSE]) ?>
                             </div>
                             <span class="input-group-btn" style="padding-top: 23px;">
                                <span id="dietdirectories" onclick="get_Diets()" class="btn btn-success"><?= __('+ Add Diets') ?></span>

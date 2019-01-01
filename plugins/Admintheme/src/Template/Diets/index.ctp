@@ -62,10 +62,10 @@ $partners = $this->Common->getpartner();
                                 <thead>
                                     <tr>
                                         <th><?= __('User') ?></th>
-                                        <th><?= __('Body Weight') ?></th>
-                                        <th><?= __('Comment') ?></th>
+                                        <!-- <th><?= __('Body Weight') ?></th> -->
+                                        <!-- <th><?= __('Comment') ?></th> -->
                                         <th><?= __('Date') ?></th>
-                                        <th><?= __('Type') ?></th>
+                                        <!-- <th><?= __('Type') ?></th> -->
                                        <?php if($user_type != 3) {?>
                                         <th><?= __('Status') ?></th>
                                        <?php } ?>
@@ -75,10 +75,10 @@ $partners = $this->Common->getpartner();
                                 <tfoot>
                                     <tr>
                                         <th><?= __('User') ?></th>
-                                        <th><?= __('Body Weight') ?></th>
-                                        <th><?= __('Comment') ?></th>
+                                        <!-- <th><?= __('Body Weight') ?></th> -->
+                                        <!-- <th><?= __('Comment') ?></th> -->
                                         <th><?= __('Date') ?></th>
-                                        <th><?= __('Type') ?></th>
+                                        <!-- <th><?= __('Type') ?></th> -->
                                        <?php if($user_type != 3) {?>
                                         <th><?= __('Status') ?></th>
                                        <?php } ?>
@@ -91,10 +91,10 @@ $partners = $this->Common->getpartner();
                                         <tr>
 
                                             <td><?= ucfirst($diet->user->name) ?></td>
-                                            <td><?= ucfirst($diet->body_weight) ?></td>
-                                            <td title="<?= ucfirst($diet->notes) ?>"><?= ucfirst(substr($diet->notes , 0,20)) ?></td>
+                                            <!-- <td><?= ucfirst($diet->body_weight) ?></td> -->
+                                            <!-- <td title="<?= ucfirst($diet->notes) ?>"><?= ucfirst(substr($diet->notes , 0,20)) ?></td> -->
                                             <td> <?= date('d-m-Y', strtotime($diet->date))?></td>
-                                            <td><?= ucfirst($diet->diet_type) ?></td>
+                                            <!-- <td><?= ucfirst($diet->diet_type) ?></td> -->
                                         <?php if($user_type != 3) {?>
                                             <td id='status<?= $diet->id ?>'> <?php
                                                 if (isset($diet->status) && $diet->status == '1') {
