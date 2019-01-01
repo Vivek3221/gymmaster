@@ -333,10 +333,18 @@ class SessionsController extends AppController
             $this->Flash->error(__('The session could not be saved. Please, try again.'));
         }
          $session_values = json_decode($session->ex_detail);
+         $session_user_values = json_decode($session->user_detail);
+         if(isset($session_user_values) && !empty($session_user_values))
+         {
+            $users_diet_values = $session_user_values;
+         }else
+         {
+          $users_diet_values =   $session_values;
+         }
       // pr($session_values); die;
         //$users = $this->Sessions->Users->find('list', ['limit' => 200]);
        // $partners = $this->Sessions->Partners->find('list', ['limit' => 200]);
-        $this->set(compact('session', 'users', 'partners','user_type','session_values','users_id'));
+        $this->set(compact('session', 'users', 'partners','user_type','session_values','users_id','users_diet_values'));
         $this->set('_serialize', ['session']);
     }
 

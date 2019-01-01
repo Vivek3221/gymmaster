@@ -2,8 +2,8 @@
 $status = $this->Common->getstatus();
 $new_id = '';
 //$exercises = $this->Common->getExercises();
-$get_exrcisedirectorie_lists = $this->Common->getExrciseDirectories($users_id);
-//$get_exrcisedirectorie_name = $this->Common->getExrciseDirectoriesname(1);
+$get_dietdirectories_lists = $this->Common->getDietsDirectories($users_id);
+//$get_exrcisedirectorie_name = $this->Common->getDietDirectoriesname(1);
 
 $user_name = $this->Common->getUsers();
 //pr($session_values); die;
@@ -71,18 +71,18 @@ $user_name = $this->Common->getUsers();
                                 <div>
                             <span class="">  <h3 class="text-center">Planned</h3></span> 
                                 </div>
-                                <?php foreach ($session_values as $key => $value) {
+                                <?php foreach ($diets_values as $key => $value) {
                                     ?>
                                 
                                     <div class="body">
             <div>
-                            <?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
+                            <?php $ex_name = $this->Common->getDietDirectoriesname($key) ?>
                             <span class=""> <p class="text-primary"><?=  ucfirst($ex_name->name)  ?></p></span>
                                 </div>
                                         <?php foreach ($value as $val => $vale) {
                                             foreach ($vale as $valn => $valen) {
                                             ?>
-                                            <div class="col-md-3"> 
+                                            <div class="col-md-2"> 
                                                 <div class="form-group form-float">
                                                     <label class="form-label"><?= ucfirst($valn) ?></label>
                                                     <div class="form-line">
@@ -103,13 +103,13 @@ $user_name = $this->Common->getUsers();
                                 <?php foreach ($users_diet_values as $key => $value) {
                                     ?>
                                  <div class="body">
- <div><?php $ex_name = $this->Common->getExrciseDirectoriesname($key) ?>
+ <div><?php $ex_name = $this->Common->getDietDirectoriesname($key) ?>
                             <span class=""> <p class="text-primary"><?=  ucfirst($ex_name->name)  ?></p></span> </div> 
                                         <?php $i =10; foreach ($value as $val => $vale) {
                                             
                                             foreach ($vale as $valn => $valen) {
                                             ?>
-                                            <div class="col-md-3"> 
+                                            <div class="col-md-2"> 
                                                 <div class="form-group form-float">
                                                     <label class="form-label"><?= ucfirst($valn) ?></label>
                                                     <div class="form-line">
@@ -118,7 +118,7 @@ $user_name = $this->Common->getUsers();
                                                          {
                                                        echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$key.$i, 'value' => $valen, 'label' => false, 'required']) ;
                                                          } elseif ($i == 11 OR $i == 15 OR $i == 19 OR $i == 23 OR $i == 27 OR $i == 31) {
-                                                        echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$key.$i,'onkeyup'=>'getSum(this.id)','value' => $valen, 'label' => false, 'required']); 
+                                                        echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text','id'=>'a'.$key.$i,'value' => $valen, 'label' => false, 'required']); 
                                                          } elseif ($i == 13 OR $i == 17 OR $i == 21 OR $i == 25 OR $i == 29 OR $i == 33) {
                                                         echo $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][' . $valn . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'id'=>'a'.$key.$i, 'label' => false, 'required', 'readonly']) ;
                                                         } else {

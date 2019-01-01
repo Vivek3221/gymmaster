@@ -34,17 +34,6 @@ class Diet extends Entity
      * @var array
      */
     protected $_accessible = [
-        'user_id' => true,
-        'partner_id' => true,
-        'date' => true,
-        'diet_details' => true,
-        'user_detail' => true,
-        'notes' => true,
-        'user_date' => true,
-        'status' => true,
-        'created' => true,
-        'modified' => true,
-        'user' => true,
-        'partner' => true
+        '*'=>true,
     ];
 }

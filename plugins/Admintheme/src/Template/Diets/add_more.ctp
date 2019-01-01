@@ -25,7 +25,7 @@
                             <div class="form-group form-float">
                                 <label class="form-label">Select Users</label>
                                 <div class="form-line">
-                                    <?= $this->Form->control('user_id', ['class' => 'form-control select2', 'type' => 'select', 'empty' => __('Select User'), 'options' => $user_name, 'label' => false]) ?> 
+                                    <?= $this->Form->control('user_id', ['class' => 'form-control select2', 'type' => 'select','multiple'=>'multiple', 'empty' => __('Select User'), 'options' => $user_name, 'label' => false]) ?> 
                                 </div>
                             </div>
                         <?php } ?>
@@ -271,7 +271,7 @@ function getPartnere(admin_id) {
     var start = 100;
    function get_Diets() {
         var dietdirectories_id = $('#dietdirectories-id').val();
-     //   alert(dietdirectories_id);
+       // alert(dietdirectories_id);
         var next_id = $('#dietdirectories_id').val();
         var first =  $('#getdiets'+ dietdirectories_id).html();
       //  alert(first);

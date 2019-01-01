@@ -199,6 +199,36 @@ class DietDirectoriesController extends AppController
             }
         }
     }
+  
+  public function addDiet() {
+             $this->viewBuilder()->layout("ajax");
+             $exrcisedirectorie_id ='';
+             $start_id ='';
+             $first = 'no';
+             $dietdirectories_id = $this->request->data['dietdirectories_id'];
+             $start_id = $this->request->data['start'];
+             if(!empty($this->request->data['first'])) {
+                $first = $this->request->data['first'];
+             }
+             $users_id = $this->usersdetail['users_id'];
+             $new_id = '';
+//             if(isset($new_id) && !empty($new_id))
+//             {
+//                 if($new_id == $exrcisedirectorie_id)
+//                 {
+//                     $new_id = $exrcisedirectorie_id;
+//                 }
+//                 
+//             }
+//             
+             $this->request->session()->write('addmore',$dietdirectories_id);
+             
+              $get_dietdirectories = $this->DietDirectories->find()->select(['name', 'technical1','id','technical2','technical3','technical4','technical5'])->where(['status' => 1,'id'=>$dietdirectories_id])->first();
+  //pr($get_exrcisedirectories); die;
+       $this->set(compact('get_dietdirectories','new_id','dietdirectories_id','start_id','users_id','first'));
+    }
+    
+
 
     public function beforeRender(\Cake\Event\Event $event) {
         parent::beforeRender($event);

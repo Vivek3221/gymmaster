@@ -236,6 +236,29 @@ class CommonHelper extends Helper {
         
     }
 
+     public function getDietsDirectories($users_id)
+    {
+         
+        $get_dietdirectories = TableRegistry::get('DietDirectories');
+        $get_dietdirectories_lists = $get_dietdirectories->find('list')->where(['status' => 1,'user_id'=>$users_id])->toArray();
+        return $get_dietdirectories_lists;
+    }
+
+     public function getDietsDirectoriesm()
+    {
+         
+        $get_dietdirectories = TableRegistry::get('DietDirectories');
+        $get_dietdirectories_lists = $get_dietdirectories->find('list')->where(['status' => 1])->toArray();
+        return $get_dietdirectories_lists;
+    }
+
+      public function getDietDirectoriesname($id)
+    {
+        $get_dietirectories = TableRegistry::get('DietDirectories');
+        $get_dietirectories_lists = $get_dietirectories->find()->select(['name','id','technical1','technical2','technical3','technical4','technical5'])->where(['status' => 1,'id'=>$id])->first();
+        return $get_dietirectories_lists;
+    }
+
 
     
     
