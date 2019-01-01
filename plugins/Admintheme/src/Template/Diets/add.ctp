@@ -113,7 +113,7 @@
                         {
                             $(this).dpDisplay();
                             this.blur();
-                                                        $('#test-div').html('');
+                            $('#test-div').html('');
                             return false;
                         }
                     )
