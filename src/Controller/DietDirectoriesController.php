@@ -239,6 +239,26 @@ class DietDirectoriesController extends AppController
   //pr($get_exrcisedirectories); die;
        $this->set(compact('get_dietdirectories','new_id','dietdirectories_id','start_id','users_id','first'));
     }
+
+
+    
+      public function partnerExcr() {
+         $this->viewBuilder()->layout("ajax");
+       $users_id = $this->request->data['partner_id'];
+      // pr($users_id); die;
+      // $get_exrcisedirectories = TableRegistry::get('ExrciseDirectories');
+       if(isset($users_id) && !empty($users_id))
+       {
+       $get_exrcisedirectorie_lists = $this->DietDirectories->find('list')->where(['status' => 1,'user_id'=>$users_id])->toArray();
+       } else {
+           $users_id = $this->usersdetail['users_id'];
+      $get_exrcisedirectorie_lists = $this->DietDirectories->find('list')->where(['status' => 1,'user_id'=>$users_id])->toArray();
+       
+       }
+        $this->set(compact('get_exrcisedirectorie_lists'));
+       // $this->set('_serialize', ['cities']); 
+       
+    }
     
 
 
