@@ -97,7 +97,7 @@ $action = $this->request['action'];
                         <?= $this->Html->link(__('Diet Directories'), ['controller' => 'DietDirectories', 'action' => 'index']) ?>
                    </li>
                   <?php } ?>
-                   <li class="<?php if ($controller == 'Diets' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
+                   <li class="<?php if ($controller == 'Diets' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view' || $action == 'addMore' || $action == 'userEdit')) {echo 'active';} ?>">
                         <?= $this->Html->link(__('Diets'), ['controller' => 'Diets', 'action' => 'index']) ?>
                    </li>
                    <li class="<?php if ($controller == 'FitnessMeserments' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
