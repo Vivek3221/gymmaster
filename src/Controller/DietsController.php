@@ -318,13 +318,13 @@ class DietsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $datas =[];
             $data = $this->request->data;
-          //pr($data); die;
+       //   pr($data); die;
             $datas['user_detail'] = json_encode($data['userexcrcise']);
             $datas['user_date']   = date('Y-m-d');
-            $datas['body_weight'] = $this->request->data('body_weight');
-            $datas['hydration']   = $this->request->data('hydration');
-            $datas['sleep']       = $this->request->data('sleep');
-            $datas['notes']       = $this->request->data('notes');
+          //  $datas['body_weight'] = $this->request->data('body_weight');
+          //  $datas['hydration']   = $this->request->data('hydration');
+           // $datas['sleep']       = $this->request->data('sleep');
+//           $datas['notes']       = $this->request->data('notes');
              //  pr($datas); die;
             $userdiet = $this->Diets->patchEntity($diets, $datas);
            // pr($userdiet); die;
