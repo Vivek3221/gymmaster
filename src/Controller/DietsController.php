@@ -134,13 +134,23 @@ class DietsController extends AppController
      * @return \Cake\Http\Response|void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+       public function view($id = null)
     {
+          if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+           $users_id = $this->usersdetail['users_id'];
         $diet = $this->Diets->get($id, [
-            'contain' => ['Users', 'Partners']
+            'contain' => ['Users']
         ]);
+   
+      $diet_values = json_decode($diet->diet_details);
+//pr($session_values);
+      $user_values = json_decode($diet->user_detail);
+//pr($user_values); die;
 
-        $this->set('diet', $diet);
+        $this->set(compact('diet', 'user_values', 'partners','user_type','diet_values','users_id'));
+        $this->set('_serialize', ['session']);
     }
 
     /**

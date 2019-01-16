@@ -1,68 +1,144 @@
-<?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Diet $diet
- */
+    <?php
+
+$status = $this->Common->getstatus();
+
+//$exercises = $this->Common->getExercises();
+$get_dietdirectories_lists = $this->Common->getDietsDirectories($users_id);
+//$get_exrcisedirectorie_name = $this->Common->getDietDirectoriesname(1);
+
+$user_name = $this->Common->getUsers();
+ foreach ($diet_values as $key => $value) {
+    
+     //pr($value);
+    
+}
+//die;
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit Diet'), ['action' => 'edit', $diet->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete Diet'), ['action' => 'delete', $diet->id], ['confirm' => __('Are you sure you want to delete # {0}?', $diet->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Diets'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Diet'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Partners'), ['controller' => 'Partners', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Partner'), ['controller' => 'Partners', 'action' => 'add']) ?> </li>
-    </ul>
-</nav>
-<div class="diets view large-9 medium-8 columns content">
-    <h3><?= h($diet->id) ?></h3>
-    <table class="vertical-table">
-        <tr>
-            <th scope="row"><?= __('User') ?></th>
-            <td><?= $diet->has('user') ? $this->Html->link($diet->user->name, ['controller' => 'Users', 'action' => 'view', $diet->user->id]) : '' ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Partner') ?></th>
-            <td><?= $diet->has('partner') ? $this->Html->link($diet->partner->id, ['controller' => 'Partners', 'action' => 'view', $diet->partner->id]) : '' ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Notes') ?></th>
-            <td><?= h($diet->notes) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Id') ?></th>
-            <td><?= $this->Number->format($diet->id) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Status') ?></th>
-            <td><?= $this->Number->format($diet->status) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Date') ?></th>
-            <td><?= h($diet->date) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('User Date') ?></th>
-            <td><?= h($diet->user_date) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Created') ?></th>
-            <td><?= h($diet->created) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Modified') ?></th>
-            <td><?= h($diet->modified) ?></td>
-        </tr>
-    </table>
-    <div class="row">
-        <h4><?= __('Diet Details') ?></h4>
-        <?= $this->Text->autoParagraph(h($diet->diet_details)); ?>
-    </div>
-    <div class="row">
-        <h4><?= __('User Detail') ?></h4>
-        <?= $this->Text->autoParagraph(h($diet->user_detail)); ?>
-    </div>
-</div>
+
+
+<section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2>Session View</h2>
+            </div>
+            <div class="row">
+       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="card" style="background-color: #e5fff2">
+                        <div class="header" style=" background-color: #a2d4bf;">
+                            <h2>Planned</h2>
+                           
+                        </div>
+                        <?php foreach ($diet_values as $key => $value) {
+                                $excid = $key;
+                                $addexc[] = $key;
+                            ?>
+                        <div class="body table-responsive">
+                            <h5><?php $ex_name = $this->Common->getDietDirectoriesname($key) ?>
+                            <?=  ucfirst($ex_name->name)  ?></h5>
+                            <table class="table">
+                                <thead>
+                                    <?php $ex_name = $this->Common->getDietDirectoriesname($key) ?>
+                                    <tr>
+                                            <th><?= ucfirst($ex_name->technical1) ?></th>
+                                            <th><?= ucfirst($ex_name->technical2) ?></th>
+                                            <th><?= ucfirst($ex_name->technical3) ?></th>
+                                            <th><?= ucfirst($ex_name->technical4) ?></th>
+                                            <th><?= ucfirst($ex_name->technical5) ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                     <?php
+                                                $count = count($value);
+                                                $i = 10;
+                                                $j = 0;
+
+                                                ?>
+                                    <?php
+                                                foreach ($value as $val => $vale) {
+                                              if ($j % 5 == 0){
+                                                        echo '<tr>';
+                                                    }
+                                                echo '<td>';
+                                                    foreach ($vale as $valn => $valen) {
+                                                      echo $valen;  
+                                                        
+                                                    }
+                                                 echo '</td>';   
+                                                    $i++;
+                                                    $j++;
+                                                    if ($j % 5 == 0) {
+                                                        
+                                                        echo '</tr>';
+                                                    }
+                                                }
+                                                ?>  
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                        <?php } ?>
+                    </div>
+                 </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="card" style="background-color: #bcdce0">
+                        <div class="header" style="background-color: #96bbbf;">
+                            <h2>Report</h2>
+                            
+                        </div>
+                         <?php if(isset($user_values) && $user_values != '') {?>
+                       <?php foreach ($user_values as $key => $value) {
+                                $excid = $key;
+                                $addexc[] = $key;
+                            ?>
+                        <div class="body table-responsive">
+                            <h5><?php $ex_name = $this->Common->getDietDirectoriesname($key) ?>
+                            <?=  ucfirst($ex_name->name)  ?></h5>
+                            <table class="table">
+                                <thead>
+                                    <?php $ex_name = $this->Common->getDietDirectoriesname($key) ?>
+                                    <tr>
+                                            <th><?= ucfirst($ex_name->technical1) ?></th>
+                                            <th><?= ucfirst($ex_name->technical2) ?></th>
+                                            <th><?= ucfirst($ex_name->technical3) ?></th>
+                                            <th><?= ucfirst($ex_name->technical4) ?></th>
+                                            <th><?= ucfirst($ex_name->technical5) ?></th>
+                                            <th>Comment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                     <?php
+                                                $count = count($value);
+                                                $i = 10;
+                                                $j = 0;
+
+                                                ?>
+                                    <?php
+                                                foreach ($value as $val => $vale) {
+                                              if ($j % 6 == 0){
+                                                        echo '<tr>';
+                                                    }
+                                                echo '<td>';
+                                                    foreach ($vale as $valn => $valen) {
+                                                      echo $valen;  
+                                                        
+                                                    }
+                                                 echo '</td>';   
+                                                    $i++;
+                                                    $j++;
+                                                    if ($j % 6 == 0) {
+                                                        
+                                                        echo '</tr>';
+                                                    }
+                                                }
+                                                ?>  
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                        <?php } ?>
+                         <?php } ?>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>

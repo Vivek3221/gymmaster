@@ -66,7 +66,7 @@ $user_type = $this->Common->getType();
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                               <input type="radio" name="gender" id="a"  value="1"class="indual with-gap" > <label for="a"><?= __('Male') ?></label>
+                               <input type="radio" name="gender" id="a"  value="1" class="indual with-gap" > <label for="a"><?= __('Male') ?></label>
                                <input type="radio" name="gender" id="b" value="2" class="company with-gap"> <label for="b"><?= __('Female') ?></label>
                                     
                                 
