@@ -134,7 +134,7 @@
                                                     var mm = selectedDate.getMonth()+1; //January is 0!
                                                     var yyyy = selectedDate.getFullYear();
 
-                                                    if(dd<20) {
+                                                    if(dd<10) {
                                                         dd = '0'+dd
                                                     } 
 

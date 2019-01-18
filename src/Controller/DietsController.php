@@ -190,7 +190,7 @@ class DietsController extends AppController
                   //$diets = $this->Diets->newEntity();
                   $diet    = $this->Diets->newEntity();
                   $diets   = $this->Diets->patchEntity($diet, $datas);
-
+// pr($diets);die();
                  
                   if ($this->Diets->save($diets)) {
                       // $this->Flash->success(__('The diet has been created.'));
