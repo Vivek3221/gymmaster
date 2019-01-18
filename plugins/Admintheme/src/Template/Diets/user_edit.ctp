@@ -93,7 +93,7 @@ $user_name = $this->Common->getUsers();
                                                 <div <?php if($valen == '') { echo 'hidden'; } ?> class="form-group form-float" id="<?= $key.$nextval ?>">
                                                     <label class="form-label"><?= ucfirst("Comment") ?></label>
                                                     <div class="form-line">
-                                                  <?= $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][comment]', ['class' => 'form-control', 'type' => 'textarea', 'id'=>$key.$nextval, 'value'=> $valen ,'label' => false]) ?>  
+                                                  <?= $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][comment]', ['class' => 'form-control', 'type' => 'text', 'id'=>$key.$nextval, 'value'=> $valen ,'label' => false]) ?>  
                                                   </div>
                                                    </div> 
                                                </div>   
@@ -153,7 +153,7 @@ $user_name = $this->Common->getUsers();
                                                 <div class="form-group form-float" hidden="" id="<?= $key.$nextval ?>">
                                                     <label class="form-label"><?= ucfirst("Comment") ?></label>
                                                     <div class="form-line">
-                                                  <?= $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][comment]', ['class' => 'form-control', 'type' => 'textarea', 'id'=>'c'.$key.$nextval, 'value'=>'' ,'label' => false]) ?>  
+                                                  <?= $this->Form->control('userexcrcise[' . $key . '][' . $new_id . '][comment]', ['class' => 'form-control', 'type' => 'text', 'id'=>'c'.$key.$nextval, 'value'=>'' ,'label' => false]) ?>  
                                                   </div>
                                                    </div> 
                                                </div>   

@@ -237,7 +237,7 @@ $getPayDuration = $this->Common->getPayDuration();
       </div>
    </div>
    <?php } ?>
-   <?php if (isset($fitnessMeserment[1]['imagesr'])&& !empty($fitnessMeserment[1]['imagesl'])) {
+   <?php if (isset($fitnessMeserment[1]['imagesr'])&& !empty($fitnessMeserment[1]['imagesr'])) {
       $coverr = '/img/' .$fitnessMeserment[1]['imagesr'];
                ?>
    <div class="text-center">
