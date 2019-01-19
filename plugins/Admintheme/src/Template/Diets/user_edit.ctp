@@ -39,11 +39,15 @@ $user_name = $this->Common->getUsers();
             <div>
                             <?php $ex_name = $this->Common->getDietDirectoriesname($key) ?>
                             <span class=""> <p class="text-primary"><?=  ucfirst($ex_name->name)  ?></p></span>
-                                </div>    
-                                        <?php foreach ($value as $val => $vale) {
+                                </div>   
+                                        <?php 
+                                        $u = 1;
+                                        foreach ($value as $val => $vale) {
                                             foreach ($vale as $valn => $valen) {
+                                             if($u % 5 ==0) 
+                                             {
                                             ?>
-                                            <div class="col-md-2"> 
+                                            <div class="col-md-4"> 
                                                 <div class="form-group form-float">
                                                     <label class="form-label"><?= ucfirst($valn) ?></label>
                                                     <div class="form-line">
@@ -52,7 +56,23 @@ $user_name = $this->Common->getUsers();
 
                                                 </div>
                                             </div>
-                                        <?php } } ?>
+                                        <?php }else
+                                        { ?>
+                                              <div class="col-md-2"> 
+                                                <div class="form-group form-float">
+                                                    <label class="form-label"><?= ucfirst($valn) ?></label>
+                                                    <div class="form-line">
+                                                        <?= $this->Form->control('excrcise[' . $key . '][' . $val . ']', ['class' => 'form-control', 'type' => 'text', 'value' => $valen, 'label' => false, 'readonly']) ?> 
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                      <?php  }
+
+                                              
+
+                                         } $u++; } ?>
 
                                     </div><?php } ?>
 
