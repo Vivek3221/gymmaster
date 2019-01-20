@@ -119,7 +119,22 @@ $user_name = $this->Common->getUsers();
                                                     }
                                                 echo '<td>';
                                                     foreach ($vale as $valn => $valen) {
+
+                                                     if($valn == 'comment')
+                                                     {
+                                                     if(isset($valen) && !empty($valen))
+                                                     {
+                                                     echo $valen ;
+                                                     }else
+                                                     {
+                                                     echo 'Yes';
+                                                     }
+
+
+                                                     }else
+                                                     {
                                                       echo $valen;  
+                                                      }
                                                         
                                                     }
                                                  echo '</td>';   
