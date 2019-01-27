@@ -27,24 +27,32 @@
                             <h3><?= h($dietDirectory->name) ?></h3>
                             <table class="vertical-table">
                                 <tr>
-                                    <th scope="row"><?= __('Number of repetetion') ?></th>
+                                    <th scope="row"><?= __('Point 1') ?></th>
                                     <td><?= h($dietDirectory->technical1) ?></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><?= __('Time') ?></th>
+                                    <th scope="row"><?= __('Point 2') ?></th>
                                     <td><?= h($dietDirectory->technical2) ?></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><?= __('Rest') ?></th>
+                                    <th scope="row"><?= __('Point 3') ?></th>
                                     <td><?= h($dietDirectory->technical3) ?></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><?= __('Tempo') ?></th>
+                                    <th scope="row"><?= __('Point 4') ?></th>
                                     <td><?= h($dietDirectory->technical4) ?></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><?= __('Tempo') ?></th>
+                                    <th scope="row"><?= __('Point 5') ?></th>
                                     <td><?= h($dietDirectory->technical5) ?></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><?= __('Point 6') ?></th>
+                                    <td><?= h($dietDirectory->technical6) ?></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><?= __('Point 7') ?></th>
+                                    <td><?= h($dietDirectory->technical7) ?></td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><?= __('Status') ?></th>
