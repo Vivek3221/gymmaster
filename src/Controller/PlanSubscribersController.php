@@ -50,6 +50,14 @@ class PlanSubscribersController extends AppController
             $partner = $this->request->query['partners'];
             $search['PlanSubscribers.partner_id'] = $partner;
         }
+        if (isset($this->request->query['payments']) && trim($this->request->query['payments']) != "") {
+            $payment = date('Y-m-d');
+            $search['PlanSubscribers.payment_due_date <'] = $payment;
+        }
+        if (isset($this->request->query['planexp']) && trim($this->request->query['planexp']) != "") {
+            $payment = date('Y-m-d');
+            $search['PlanSubscribers.plan_expire_date <'] = $payment;
+        }
         
         if (!empty($search)) {
             $this->Amount = $this->PlanSubscribers->find()

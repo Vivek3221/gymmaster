@@ -1,8 +1,6 @@
-
-
 <?php
-$statu = $this->Common->getstatus();
-$nofrec = $this->Common->getNoOfRec();
+$statu    = $this->Common->getstatus();
+$nofrec   = $this->Common->getNoOfRec();
 $partners = $this->Common->getpartner();
 ?>
 <section class="content">
@@ -49,6 +47,9 @@ $partners = $this->Common->getpartner();
                             <?php  } ?>
                             <div class="col-md-2">
                                 <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'), 'options' => $nofrec, 'value' => $norec]); ?>
+                            </div>
+                            <div class="col-md-2">
+                                <?= $this->Form->input('stat', ['label' => __('Session Status'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'), 'options' => ['0'=>'..Select..', '1'=>'Not Reported'], 'value' => $stat]); ?>
                             </div>
                             <div class="col-md-3 marginTop25">
                                 <?= $this->Form->button(__('Search'), ['class' => 'btn btn-primary']) ?>

@@ -1,6 +1,9 @@
 <?php 
 $session = $this->Common->getSession();
-//pr($session);exit;
+$birthday = $this->Common->getBirthday();
+$paymantexp = $this->Common->getPaymentDue();
+$planexpire = $this->Common->getPlanexpire();
+// pr($paymantexp);exit;
 ?>
 <body class="theme-red">
     <!-- Page Loader -->
@@ -56,15 +59,43 @@ $session = $this->Common->getSession();
                             <li class="header"><?= __('NOTIFICATIONS') ?></li>
                             <li class="body">
                                 <ul class="menu">
-                                    
-                                    
-                                    <li>
-                                        <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index',]) ?>?sessions=notedit">
+                                <li>
+                                <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index',]) ?>?sessions=notedit">
                                             <div class="icon-circle bg-light-green">
                                               <i class="material-icons">library_books</i>
                                             </div>
                                             <div class="menu-info">
-                                                <h4><?= $session . ' Users' ?></h4>
+                                                <h4><?= $session . ' Users session not reported.' ?></h4>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index',]) ?>?users=birthday">
+                                            <div class="icon-circle bg-light-blue">
+                                              <i class="material-icons">face</i>
+                                            </div>
+                                            <div class="menu-info">
+                                                <h4><?= $birthday . ' Users birthday today.' ?></h4>
+                                            </div>
+                                        </a>
+                                    </li>
+                                <li>
+                                <a href="<?= $this->Url->build(['controller' => 'PlanSubscribers', 'action' => 'index',]) ?>?payments=paymentexp">
+                                            <div class="icon-circle bg-red">
+                                              <i class="material-icons">person_add_disabled</i>
+                                            </div>
+                                            <div class="menu-info">
+                                                <h4><?= $paymantexp . ' Users payment due.' ?></h4>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                <a href="<?= $this->Url->build(['controller' => 'PlanSubscribers', 'action' => 'index',]) ?>?planexp=planexpire">
+                                            <div class="icon-circle bg-red">
+                                              <i class="material-icons">highlight_off</i>
+                                            </div>
+                                            <div class="menu-info">
+                                                <h4><?= $planexpire . ' Users plan expire.' ?></h4>
                                             </div>
                                         </a>
                                     </li>

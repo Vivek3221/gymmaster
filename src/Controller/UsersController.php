@@ -92,6 +92,11 @@ class UsersController extends AppController
             $trainer = $this->request->query['trainers'];
             $search['Users.trainer_userid'] = $trainer;
         }
+        if (isset($this->request->query['users']) && trim($this->request->query['users']) != "")
+        {
+            $news_user = date('Y-m-d');
+            $search['Users.dob ='] = $news_user;
+        }
         
          if (isset($users_type) && ($users_type == 2)) {
           $search['Users.partner_id'] = $users_id;
