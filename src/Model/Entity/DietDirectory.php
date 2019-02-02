@@ -42,6 +42,8 @@ class DietDirectory extends Entity
         'technical3' => true,
         'technical4' => true,
         'technical5' => true,
+        'technical6' => true,
+        'technical7' => true,
         'status' => true,
         'created' => true,
         'modified' => true,

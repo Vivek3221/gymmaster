@@ -214,6 +214,46 @@ class CommonHelper extends Helper {
         return $session;
         
     }
+
+    public function getBirthday(){
+         $users_type = $this->request->session()->read('users');
+         $users_id = $users_type['users_id'];
+         $get_user = TableRegistry::get('Users');
+         $session  = $get_user->find()
+                             ->select('dob')
+                             ->where(['dob =' => date('Y-m-d') ,'partner_id'=>$users_id])
+                             ->count();
+        return $session;
+        
+    }
+
+    public function getPaymentDue(){
+         $users_type = $this->request->session()->read('users');
+         $users_id = $users_type['users_id'];
+         $get_user = TableRegistry::get('PlanSubscribers');
+         $session  = $get_user->find()
+                             ->select('user_id')
+                             ->where(['payment_due_date <' => date('Y-m-d') ,'partner_id'=>$users_id])
+                             ->count();
+        return $session;
+        
+    }
+
+     public function getPlanexpire(){
+         $users_type = $this->request->session()->read('users');
+         $users_id = $users_type['users_id'];
+         $get_user = TableRegistry::get('PlanSubscribers');
+         $session  = $get_user->find()
+                             ->select('user_id')
+                             ->where(['plan_expire_date <' => date('Y-m-d') ,'partner_id'=>$users_id])
+                             ->count();
+        return $session;
+        
+    }
+
+
+
+
     public function getpartner(){
         $get_users = TableRegistry::get('Users');
         $get_users_name = $get_users->find('list')
