@@ -70,6 +70,8 @@
                                             <th><?= ucfirst($ex_name->technical3) ?></th>
                                             <th><?= ucfirst($ex_name->technical4) ?></th>
                                              <th><?= ucfirst($ex_name->technical5) ?></th>
+                                             <th><?= ucfirst($ex_name->technical6) ?></th>
+                                             <th><?= ucfirst($ex_name->technical7) ?></th>
                                             <th>Remove</th>
                                             </thead>
                                             <tbody id="addmore<?= $key ?>" >
@@ -83,7 +85,7 @@
                                                 <?php
                                                 foreach ($value as $val => $vale) {
 
-                                                    if ($j % 5 == 0){
+                                                    if ($j % 7 == 0){
                                                         $inClass= 0;
                                                         $k = $j;
                                                         echo '<tr id=remove'.$key.$j.' class="'.$key.$j.'">';
@@ -96,11 +98,15 @@
                                                         }else if($inClass==1){
                                                             $class='b' ;
                                                          }else if($inClass==2){
-                                                            $class='d' ;
-                                                        }else if($inClass==3){
                                                             $class='c' ;
+                                                        }else if($inClass==3){
+                                                            $class='d' ;
                                                         }else if($inClass==4){
                                                             $class='e' ;
+                                                        }else if($inClass==5){
+                                                            $class='f' ;
+                                                        }else if($inClass==6){
+                                                            $class='g' ;
                                                         }
                                                         $inClass++;
                                                         if ($i == 10) {
@@ -117,7 +123,7 @@
 
                                                     $i++;
                                                     $j++;
-                                                    if ($j % 5 == 0) {
+                                                    if ($j % 7 == 0) {
                                                       echo '<td>'
                                                         . '<button type="button" class="btn btn-default btn-sm" id="'.$key.$k.'" onclick="removeExcercise(this.id,'.$key.$k.')">
                                                             <i class="material-icons">clear</i>
@@ -320,12 +326,15 @@ function getPartnere(admin_id) {
                 data: data,
                 url: urls,
                 success: function (html) {
+                    alert(html);
                     $('#addmore' +dietdirectories_id).append(html);
                     $('#a'+starttr).val($('#a'+lasttr).val());
                     $('#b'+starttr).val($('#b'+lasttr).val());
                     $('#c'+starttr).val($('#c'+lasttr).val());
                     $('#d'+starttr).val($('#d'+lasttr).val());
                     $('#e'+starttr).val($('#e'+lasttr).val());
+                    $('#f'+starttr).val($('#f'+lasttr).val());
+                    $('#g'+starttr).val($('#g'+lasttr).val());
                     $('#getdietsmore').show();
                 }
             });

@@ -255,7 +255,7 @@ class CommonHelper extends Helper {
       public function getDietDirectoriesname($id)
     {
         $get_dietirectories = TableRegistry::get('DietDirectories');
-        $get_dietirectories_lists = $get_dietirectories->find()->select(['name','id','technical1','technical2','technical3','technical4','technical5'])->where(['status' => 1,'id'=>$id])->first();
+        $get_dietirectories_lists = $get_dietirectories->find()->select(['name','id','technical1','technical2','technical3','technical4','technical5','technical6','technical7'])->where(['status' => 1,'id'=>$id])->first();
         return $get_dietirectories_lists;
     }
 

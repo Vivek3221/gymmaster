@@ -287,6 +287,8 @@
                     $('#c'+starttr).val($('#c'+lasttr).val());
                     $('#d'+starttr).val($('#d'+lasttr).val());
                     $('#e'+starttr).val($('#e'+lasttr).val());
+                    $('#f'+starttr).val($('#f'+lasttr).val());
+                    $('#g'+starttr).val($('#g'+lasttr).val());
                     $('#getdietsmore').show();
                 }
             });
