@@ -235,7 +235,7 @@ class DietDirectoriesController extends AppController
 //             
              $this->request->session()->write('addmore',$dietdirectories_id);
              
-              $get_dietdirectories = $this->DietDirectories->find()->select(['name', 'technical1','id','technical2','technical3','technical4','technical5'])->where(['status' => 1,'id'=>$dietdirectories_id])->first();
+              $get_dietdirectories = $this->DietDirectories->find()->select(['name', 'technical1','id','technical2','technical3','technical4','technical5','technical6','technical7'])->where(['status' => 1,'id'=>$dietdirectories_id])->first();
   //pr($get_exrcisedirectories); die;
        $this->set(compact('get_dietdirectories','new_id','dietdirectories_id','start_id','users_id','first'));
     }

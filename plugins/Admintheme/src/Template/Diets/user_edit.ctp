@@ -44,10 +44,10 @@ $user_name = $this->Common->getUsers();
                                         $u = 1;
                                         foreach ($value as $val => $vale) {
                                             foreach ($vale as $valn => $valen) {
-                                             if($u % 5 ==0) 
+                                             if($u % 7 ==0) 
                                              {
                                             ?>
-                                            <div class="col-md-4"> 
+                                            <div class="col-md-2" style="width: 14.28% !important;"> 
                                                 <div class="form-group form-float">
                                                     <label class="form-label"><?= ucfirst($valn) ?></label>
                                                     <div class="form-line">
@@ -58,7 +58,7 @@ $user_name = $this->Common->getUsers();
                                             </div>
                                         <?php }else
                                         { ?>
-                                              <div class="col-md-2"> 
+                                              <div class="col-md-2" style="width: 14.28% !important;"> 
                                                 <div class="form-group form-float">
                                                     <label class="form-label"><?= ucfirst($valn) ?></label>
                                                     <div class="form-line">
@@ -86,21 +86,21 @@ $user_name = $this->Common->getUsers();
                                  <div class="body">
  <div><?php $ex_name = $this->Common->getDietDirectoriesname($key) ?>
                             <span class=""> <p class="text-primary"><?=  ucfirst($ex_name->name)  ?></p></span> </div> 
-                                        <?php $i =11; foreach ($value as $val => $vale) {
+                                        <?php $i =1; foreach ($value as $val => $vale) {
                                            // echo '<pre>';
                                            //// print_r($vale);
                                            // echo '</pre>';
                                              $arraycount = count($value); 
                                             foreach ($vale as $valn => $valen) {
-                                                if($arraycount % 6== 0)
+                                                if($arraycount % 8== 0)
                                                 {
 
-                                           if($i ==16  OR $i == 22 OR $i == 28 OR $i == 34 OR $i == 40 OR $i == 46)
+                                           if($i ==8  OR $i == 16 OR $i == 24 OR $i == 32 OR $i == 40 OR $i == 48)
                                                      {  
                                                      $sum = 1;         
                                                  $nextval = $i + $sum;
                                                 ?>
-                                                 <div class="col-md-2"> 
+                                                 <div class="col-md-2" style="width: 12.5% !important;"> 
                                                 
                         <div class="form-group form-float">
                             <div class="form-line">
@@ -119,7 +119,7 @@ $user_name = $this->Common->getUsers();
                                                </div>   
                                                        <?php }else {?>
                                                     
-                                                      <div class="col-md-2"> 
+                                                      <div class="col-md-2" style="width: 12.5% !important;"> 
                                                 <div class="form-group form-float">
                                                     <label class="form-label"><?= ucfirst($valn) ?></label>
                                                     <div class="form-line">
@@ -140,7 +140,7 @@ $user_name = $this->Common->getUsers();
                                                 else
                                                 {
                                             ?>
-                                            <div class="col-md-2"> 
+                                            <div class="col-md-2" style="width: 12.5% !important;"> 
                                                 <div class="form-group form-float">
                                                     <label class="form-label"><?= ucfirst($valn) ?></label>
                                                     <div class="form-line">
@@ -155,12 +155,12 @@ $user_name = $this->Common->getUsers();
                                             </div>
                                             <?php 
 
-                                           if($i % 5 == 0)
+                                           if($i % 7 == 0)
                                                      {  
                                                      $sum = 1;         
                                                  $nextval = $i + $sum;
                                                 ?>
-                                                 <div class="col-md-2"> 
+                                                 <div class="col-md-2" style="width: 12.5% !important;"> 
                                                 
                         <div class="form-group form-float">
                             <div class="form-line">

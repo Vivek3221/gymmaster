@@ -44,6 +44,8 @@ $user_name = $this->Common->getUsers();
                                             <th><?= ucfirst($ex_name->technical3) ?></th>
                                             <th><?= ucfirst($ex_name->technical4) ?></th>
                                             <th><?= ucfirst($ex_name->technical5) ?></th>
+                                            <th><?= ucfirst($ex_name->technical6) ?></th>
+                                            <th><?= ucfirst($ex_name->technical7) ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -55,7 +57,7 @@ $user_name = $this->Common->getUsers();
                                                 ?>
                                     <?php
                                                 foreach ($value as $val => $vale) {
-                                              if ($j % 5 == 0){
+                                              if ($j % 7 == 0){
                                                         echo '<tr>';
                                                     }
                                                 echo '<td>';
@@ -66,7 +68,7 @@ $user_name = $this->Common->getUsers();
                                                  echo '</td>';   
                                                     $i++;
                                                     $j++;
-                                                    if ($j % 5 == 0) {
+                                                    if ($j % 7 == 0) {
                                                         
                                                         echo '</tr>';
                                                     }
@@ -102,6 +104,8 @@ $user_name = $this->Common->getUsers();
                                             <th><?= ucfirst($ex_name->technical3) ?></th>
                                             <th><?= ucfirst($ex_name->technical4) ?></th>
                                             <th><?= ucfirst($ex_name->technical5) ?></th>
+                                            <th><?= ucfirst($ex_name->technical6) ?></th>
+                                            <th><?= ucfirst($ex_name->technical7) ?></th>
                                             <th>Comment</th>
                                     </tr>
                                 </thead>
@@ -114,7 +118,7 @@ $user_name = $this->Common->getUsers();
                                                 ?>
                                     <?php
                                                 foreach ($value as $val => $vale) {
-                                              if ($j % 6 == 0){
+                                              if ($j % 8 == 0){
                                                         echo '<tr>';
                                                     }
                                                 echo '<td>';
@@ -140,7 +144,7 @@ $user_name = $this->Common->getUsers();
                                                  echo '</td>';   
                                                     $i++;
                                                     $j++;
-                                                    if ($j % 6 == 0) {
+                                                    if ($j % 8 == 0) {
                                                         
                                                         echo '</tr>';
                                                     }

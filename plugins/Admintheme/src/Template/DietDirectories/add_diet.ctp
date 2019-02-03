@@ -91,10 +91,10 @@
                 <?= $this->Form->control('excrcise['.$get_dietdirectories->id . '][' . $new_id . '][' . $get_dietdirectories->technical5 . ']', ['class' => 'form-control', 'type' => 'text','id'=>'e'.$get_dietdirectories->id.$start_id, 'label' => false, 'required', '']) ?> 
          </td>
          <td>
-                <?= $this->Form->control('excrcise['.$get_dietdirectories->id . '][' . $new_id . '][' . $get_dietdirectories->technical56 . ']', ['class' => 'form-control', 'type' => 'text','id'=>'f'.$get_dietdirectories->id.$start_id, 'label' => false, 'required', '']) ?> 
+                <?= $this->Form->control('excrcise['.$get_dietdirectories->id . '][' . $new_id . '][' . $get_dietdirectories->technical6 . ']', ['class' => 'form-control', 'type' => 'text','id'=>'f'.$get_dietdirectories->id.$start_id, 'label' => false, 'required', '']) ?> 
          </td>
          <td>
-                <?= $this->Form->control('excrcise['.$get_dietdirectories->id . '][' . $new_id . '][' . $get_dietdirectories->technical6 . ']', ['class' => 'form-control', 'type' => 'text','id'=>'g'.$get_dietdirectories->id.$start_id, 'label' => false, 'required', '']) ?> 
+                <?= $this->Form->control('excrcise['.$get_dietdirectories->id . '][' . $new_id . '][' . $get_dietdirectories->technical7 . ']', ['class' => 'form-control', 'type' => 'text','id'=>'g'.$get_dietdirectories->id.$start_id, 'label' => false, 'required', '']) ?> 
          </td>
             <td>
         <button type="button" class="btn btn-default btn-sm" id="<?= $get_dietdirectories->id.$start_id ?>" onclick="removeExcercise(this.id,<?= $get_dietdirectories->id.$start_id ?>)">

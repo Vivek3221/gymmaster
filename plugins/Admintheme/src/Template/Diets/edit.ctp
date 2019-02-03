@@ -49,7 +49,7 @@
                                 $excid = $key;
                                 $addexc[] = $key;
                             ?>
-                                <div class="row" id="getexercise<?= $key ?>" style="margin-bottom: 10px">
+                                <div class="row" id="getdiets<?= $key ?>" style="margin-bottom: 10px">
                                     
                                     <?php $ex_name = $this->Common->getDietDirectoriesname($key) ?>
                                     <span class="pull-right" id="getdietsmore" style="margin-bottom: -6px">
@@ -205,7 +205,7 @@
         $('#' + id).remove();
     }
      function removeExcerciseall(clicked_id) {
-        var id = 'getexercise' + clicked_id;
+        var id = 'getdiets' + clicked_id;
         $('#' + id).remove();
     }
 function getPartnere(admin_id) {
@@ -326,7 +326,6 @@ function getPartnere(admin_id) {
                 data: data,
                 url: urls,
                 success: function (html) {
-                    alert(html);
                     $('#addmore' +dietdirectories_id).append(html);
                     $('#a'+starttr).val($('#a'+lasttr).val());
                     $('#b'+starttr).val($('#b'+lasttr).val());
