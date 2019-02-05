@@ -15,7 +15,7 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            <?= __('Edit Dateiet') ?>
+                            <?= __('Edit Diet') ?>
                         </h2>
                     </div>
                     <div class="body">
