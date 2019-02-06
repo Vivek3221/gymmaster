@@ -111,7 +111,7 @@ $partners = $this->Common->getpartner();
                                             </td>
                                         <?php } ?>
                                             <td>
-                                                <?php if(($user_type == 3) && (empty($diet->user_detail))) { ?>
+                                                <?php if(($user_type == 3)) { ?>
                                                      <i class="material-icons" title="Report diet"><?= $this->Html->link(__('mode_edit'), ['action' => 'userEdit', $diet['id']]) ?></i>
                                              <?php   } ?>
                                              

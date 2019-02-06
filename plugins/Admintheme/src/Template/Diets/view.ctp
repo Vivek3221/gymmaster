@@ -19,7 +19,7 @@ $user_name = $this->Common->getUsers();
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>Session View</h2>
+                <h2>Diet View</h2>
             </div>
             <div class="row">
        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
