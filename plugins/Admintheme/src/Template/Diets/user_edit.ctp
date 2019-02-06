@@ -47,7 +47,7 @@ $user_name = $this->Common->getUsers();
                                              if($u % 7 ==0) 
                                              {
                                             ?>
-                                            <div class="col-md-2" style="width: 14.28% !important;"> 
+                                            <div class="col-md-2 widthforthin" style=""> 
                                                 <div class="form-group form-float">
                                                     <label class="form-label"><?= ucfirst($valn) ?></label>
                                                     <div class="form-line">
@@ -58,7 +58,7 @@ $user_name = $this->Common->getUsers();
                                             </div>
                                         <?php }else
                                         { ?>
-                                              <div class="col-md-2" style="width: 14.28% !important;"> 
+                                              <div class="col-md-2 widthforthin" style=""> 
                                                 <div class="form-group form-float">
                                                     <label class="form-label"><?= ucfirst($valn) ?></label>
                                                     <div class="form-line">
@@ -100,7 +100,7 @@ $user_name = $this->Common->getUsers();
                                                      $sum = 1;         
                                                  $nextval = $i + $sum;
                                                 ?>
-                                                 <div class="col-md-2" style="width: 12.5% !important;"> 
+                                                 <div class="col-md-2 widthtwl" style=""> 
                                                 
                         <div class="form-group form-float">
                             <div class="form-line">
@@ -119,7 +119,7 @@ $user_name = $this->Common->getUsers();
                                                </div>   
                                                        <?php }else {?>
                                                     
-                                                      <div class="col-md-2" style="width: 12.5% !important;"> 
+                                                      <div class="col-md-2 widthtwl" style=""> 
                                                 <div class="form-group form-float">
                                                     <label class="form-label"><?= ucfirst($valn) ?></label>
                                                     <div class="form-line">
@@ -140,7 +140,7 @@ $user_name = $this->Common->getUsers();
                                                 else
                                                 {
                                             ?>
-                                            <div class="col-md-2" style="width: 12.5% !important;"> 
+                                            <div class="col-md-2 widthtwl" style=""> 
                                                 <div class="form-group form-float">
                                                     <label class="form-label"><?= ucfirst($valn) ?></label>
                                                     <div class="form-line">
@@ -160,7 +160,7 @@ $user_name = $this->Common->getUsers();
                                                      $sum = 1;         
                                                  $nextval = $i + $sum;
                                                 ?>
-                                                 <div class="col-md-2" style="width: 12.5% !important;"> 
+                                                 <div class="col-md-2 widthtwl" style=""> 
                                                 
                         <div class="form-group form-float">
                             <div class="form-line">

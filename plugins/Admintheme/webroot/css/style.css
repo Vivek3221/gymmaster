@@ -8095,3 +8095,13 @@ vertical-align: middle;}
 
 /*for home page*/
 .table-responsive.list-page{overflow-x: visible!important;}
+
+
+@media (min-width: 1000px) {
+.widthforthin{
+   width: 14.28% !important;
+  }
+  .widthtwl{
+    width: 12.5% !important;
+  }
+  }
