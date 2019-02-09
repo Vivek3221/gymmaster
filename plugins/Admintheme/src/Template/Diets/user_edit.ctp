@@ -38,7 +38,7 @@ $user_name = $this->Common->getUsers();
                                     <div class="row">
             <div>
                             <?php $ex_name = $this->Common->getDietDirectoriesname($key) ?>
-                            <span class=""> <p class="text-primary"><?=  ucfirst($ex_name->name)  ?></p></span>
+                            <span class=""> <p class="text-primary" style="margin-left: 17px;"><?=  ucfirst($ex_name->name)  ?></p></span>
                                 </div>   
                                         <?php 
                                         $u = 1;
@@ -85,7 +85,7 @@ $user_name = $this->Common->getUsers();
                                     ?>
                                  <div class="row">
  <div class="row"><?php $ex_name = $this->Common->getDietDirectoriesname($key) ?>
-                            <span class=""> <p class="text-primary"><?=  ucfirst($ex_name->name)  ?></p></span> </div> 
+                            <span class=""> <p class="text-primary" style="margin-left: 17px;"><?=  ucfirst($ex_name->name)  ?></p></span> </div> 
                                         <?php $i =1; foreach ($value as $val => $vale) {
                                            // echo '<pre>';
                                            //// print_r($vale);
@@ -104,9 +104,9 @@ $user_name = $this->Common->getUsers();
                                                 
                         <div class="form-group form-float">
                             <div class="form-line">
-                 <label><input type="radio" name="radio<?= $nextval ?>" class="radion" value="<?= $key.$nextval ?>" <?php if($valen == '') { echo 'checked'; } ?> style="margin-left: 29px; left: 0; opacity: 111;">Yes</label> 
+                 <label class="radioyes"><input type="radio" name="radio<?= $nextval ?>" class="radion" value="<?= $key.$nextval ?>" <?php if($valen == '') { echo 'checked'; } ?> style="margin-left: 29px; left: 0; opacity: 111;">Yes</label> 
 
-                 <label><input type="radio" name="radio<?= $nextval ?>" class="radio" <?php if($valen != '') { echo 'checked'; } ?> value="<?= $key.$nextval ?>" style="margin-left: 29px; left: 0; opacity: 111;">No</label>
+                 <label><input type="radio" name="radio<?= $nextval ?>" class="radio radiono" <?php if($valen != '') { echo 'checked'; } ?> value="<?= $key.$nextval ?>" style="margin-left: 29px; left: 0; opacity: 111;">No</label>
                        </div> </div>
                                                </div>
                                             <div class="col-md-12" > 
@@ -164,9 +164,9 @@ $user_name = $this->Common->getUsers();
                                                 
                         <div class="form-group form-float">
                             <div class="form-line">
-                 <label><input type="radio" name="radio<?= $nextval ?>" class="radion" value="<?= $key.$nextval ?>" style="margin-left: 29px; left: 0; opacity: 111;">Yes</label> 
+                 <label class="radioyes"><input type="radio" name="radio<?= $nextval ?>" class="radion" value="<?= $key.$nextval ?>" style="margin-left: 29px; left: 0; opacity: 111;">Yes</label> 
 
-                 <label><input type="radio" name="radio<?= $nextval ?>" class="radio" value="<?= $key.$nextval ?>" style="margin-left: 29px; left: 0; opacity: 111;">No</label>
+                 <label><input type="radio" name="radio<?= $nextval ?>" class="radio radiono" value="<?= $key.$nextval ?>" style="margin-left: 29px; left: 0; opacity: 111;">No</label>
                        </div> </div>
                                                </div>
                                             <div class="col-md-12" > 

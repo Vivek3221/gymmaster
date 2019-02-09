@@ -2346,7 +2346,16 @@
     margin-bottom: 15px; }
   .panel-switch-btn {
     top: 12px;
-    right: 0 !important; } }
+    right: 0 !important; }
+
+  .radioyes{
+        width: 78px !important;
+  }
+  .radiono
+  {
+  margin-left: 124px !important;
+  }
+     }
 /*
     @media only screen and (max-width: 467px) {
   .select2-container--default .select2-selection--multiple{width:267px;}
