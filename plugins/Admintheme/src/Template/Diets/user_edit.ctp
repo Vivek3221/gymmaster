@@ -28,7 +28,7 @@ $user_name = $this->Common->getUsers();
                         <?= $this->Form->create($diets, ['id' => 'addsession', 'templates' => ['inputContainer' => '{{content}}']]) ?>
                         
                         <div class="row" id="getexercise">
-                            <div class="col-sm-6" style="background-color:lavender;">
+                            <div class="col-sm-6" style="background-color:lavender; display: none;">
                                 <div>
                             <span class="">  <h3 class="text-center">Planned</h3></span> 
                                 </div>
@@ -77,14 +77,14 @@ $user_name = $this->Common->getUsers();
                                     </div><?php } ?>
 
                             </div>
-                            <div class="col-sm-6" style="background-color:#f1e6fa;">
+                            <div class="col-sm-12" style="background-color:#f1e6fa;">
                                 <div>
                             <span class=""> <h3 class="text-center">Report</h3> </span> 
                                 </div>
                                 <?php foreach ($users_diet_values as $key => $value) {
                                     ?>
-                                 <div class="body">
- <div><?php $ex_name = $this->Common->getDietDirectoriesname($key) ?>
+                                 <div class="row">
+ <div class="row"><?php $ex_name = $this->Common->getDietDirectoriesname($key) ?>
                             <span class=""> <p class="text-primary"><?=  ucfirst($ex_name->name)  ?></p></span> </div> 
                                         <?php $i =1; foreach ($value as $val => $vale) {
                                            // echo '<pre>';
