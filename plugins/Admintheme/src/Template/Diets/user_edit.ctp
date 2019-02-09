@@ -35,7 +35,7 @@ $user_name = $this->Common->getUsers();
                                 <?php foreach ($diets_values as $key => $value) {
                                     ?>
                                 
-                                    <div class="body">
+                                    <div class="row">
             <div>
                             <?php $ex_name = $this->Common->getDietDirectoriesname($key) ?>
                             <span class=""> <p class="text-primary"><?=  ucfirst($ex_name->name)  ?></p></span>
