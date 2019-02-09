@@ -28,7 +28,7 @@ $user_name = $this->Common->getUsers();
                         <?= $this->Form->create($diets, ['id' => 'addsession', 'templates' => ['inputContainer' => '{{content}}']]) ?>
                         
                         <div class="row" id="getexercise">
-                            <div class="col-sm-6" style="background-color:lavender; display: none;">
+                            <div class="col-sm-6" style="background-color:lavender; display: block;">
                                 <div>
                             <span class="">  <h3 class="text-center">Planned</h3></span> 
                                 </div>
@@ -77,7 +77,7 @@ $user_name = $this->Common->getUsers();
                                     </div><?php } ?>
 
                             </div>
-                            <div class="col-sm-12" style="background-color:#f1e6fa;">
+                            <div class="col-sm-6" style="background-color:#f1e6fa;">
                                 <div>
                             <span class=""> <h3 class="text-center">Report</h3> </span> 
                                 </div>
