@@ -31,7 +31,7 @@ class UsersController extends AppController
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
        // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment','forgetPassword','forgotPassword','resetPassword']);
+        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment','forgetPassword','forgotPassword','resetPassword','siteMap']);
         
     }
 
@@ -929,6 +929,14 @@ class UsersController extends AppController
         $this->set(compact('user'));
     }
     
+
+public function siteMap()
+    {
+       $this->viewBuilder()->layout('sitemap');
+       $this->RequestHandler->respondAs('xml');
+
+    }
+
     public function beforeRender(\Cake\Event\Event $event) {
         parent::beforeRender($event);
         $this->viewBuilder()->theme('Admintheme');
