@@ -112,8 +112,7 @@ position: absolute;
     right: 28px;
 }
   </style>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-133201715-1"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-133201715-1"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -121,8 +120,6 @@ position: absolute;
 
   gtag('config', 'UA-133201715-1');
 </script>
-
-
 </head>
 <body style="height: 100%;">
 
@@ -138,7 +135,6 @@ position: absolute;
       </div>
       <!-- start:login page for desktop -->
       <div class="col-sm-8 text-right home-email">
-        <div class="text-center col-sm-9">
         <?= $this->Form->create('Login Form', ['url' => ['controller' => 'Users', 'action' => 'login'], 'class'=>'form-inline manage-form','id' => 'adminloginform', 'novalidate' => 'novalidate']) ?>    
           <div class="form-group">
             <?= $this->Form->control('email', ['class' => 'form-control', 'type' => 'text', 'placeholder' => 'Enter Email', 'label' => false, 'required'=>'required']) ?> 
@@ -151,10 +147,6 @@ position: absolute;
             <a href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>" style=" color: #fff;">Forgot Password?</a>
           </div>
         <?= $this->Form->end() ?>
-      </div>
-        <div class="text-center col-sm-3" style="margin-top: 11px;" data-toggle="modal" data-target="#modalRegisterForm">
-                    <button class="btn-custom button-l margin-b" style="font-size: 13px;" ><?= __('Register') ?></button>
-                  </div>
       </div>
       <!-- End login desktop -->
     </div>
@@ -185,9 +177,6 @@ position: absolute;
                   <div class="text-center mt-15">
                   <a class="text-darkyellow f-15" href="<?= $this->Url->build(['action'=>'forgotPassword']) ?>">Forgot your password?</a></div>
               <?= $this->Form->end() ?>
-              <div class="text-center mt-25" style="margin-top: 11px;" data-toggle="modal" data-target="#modalRegisterForm">
-                    <button class="btn-custom button-l margin-b" style="font-size: 13px;" ><?= __('Register') ?></button>
-                  </div>
           </div>
       </div>
     </div>
@@ -240,44 +229,7 @@ position: absolute;
       <span class="glyphicon glyphicon-chevron-right"></span>
       <span class="sr-only">Next</span>
     </a>
- </div>  
-</div>
-
-<!--  register pop up -->
-<div class="modal fade" id="modalRegisterForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Sign up</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <i class="fas fa-user prefix grey-text"></i>
-          <input type="text" id="orangeForm-name" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="orangeForm-name">Your name</label>
-        </div>
-        <div class="md-form mb-5">
-          <i class="fas fa-envelope prefix grey-text"></i>
-          <input type="email" id="orangeForm-email" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="orangeForm-email">Your email</label>
-        </div>
-
-        <div class="md-form mb-4">
-          <i class="fas fa-lock prefix grey-text"></i>
-          <input type="password" id="orangeForm-pass" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="orangeForm-pass">Your password</label>
-        </div>
-
-      </div>
-      <div class="modal-footer d-flex justify-content-center">
-        <button class="btn btn-deep-orange">Sign up</button>
-      </div>
-    </div>
-  </div>
+  </div>  
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
