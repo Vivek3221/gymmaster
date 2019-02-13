@@ -4,6 +4,8 @@
   <title>Athlete Monitoring Software,Fitness Testing,Athlete Management System</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="Keywords" content="Fitness Testing, Athlete Management System,Gym in gurgaon, Gym in Punjab,Data Monitoring Software,gym and fitness centre,fitness center in india,group exercise classes, group exercise training">
+<meta name="Description" content="Data Monitoring is best Software in india provide latest gym Management System">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">  
   <style type="text/css">
     .top-panel{
