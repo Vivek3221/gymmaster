@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="Keywords" content="Fitness Testing, Athlete Management System,Gym in gurgaon, Gym in Punjab,Data Monitoring Software,gym and fitness centre,fitness center in india,group exercise classes, group exercise training">
-<meta name="Description" content="Data Monitoring is best Software in india provide latest gym Management System">
+<meta name="Description" content="Data Monitoring is best Software in india provide latest gym Management System.Data Monitoring deal with gym partner and individual Users.">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">  
   <style type="text/css">
     .top-panel{
@@ -114,6 +114,10 @@ position: absolute;
     right: 28px;
 }
   </style>
+
+ <?php 
+if($this->request->env('HTTP_HOST')=='datamonitering.com' || $this->request->env('HTTP_HOST')=='datamonitering.com'){ ?>
+
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-133201715-1"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -122,6 +126,7 @@ position: absolute;
 
   gtag('config', 'UA-133201715-1');
 </script>
+ <?php } ?>
 </head>
 <body style="height: 100%;">
 
