@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 use Cake\Event\Event;
 use Cake\Core\Configure;
 use Cake\Network\Http\Client;
@@ -59,7 +60,14 @@ class FitnessTestsController extends AppController
             $search['FitnessTests.user_id'] = $users_id;
         }
         if (isset($users_type) && ($users_type == 2)) {
-            $search['FitnessTests.partner_id'] = $users_id;
+            //$search['FitnessTests.partner_id'] = $users_id;
+          $usersData = TableRegistry::get('Users');
+          $users_list[] = $users_id;
+          $usersIds = $usersData->find('list')->select(['id'])->where(['partner_id' => $users_id])->toArray();
+          foreach ($usersIds as $key => $value) {
+                $users_list[$key] = $key;
+            }
+          $search['FitnessTests.partner_id IN'] = $users_list;
         }
         if (isset($users_type) && ($users_type == 4)) {
           $search['Users.trainer_userid'] = $users_id;
