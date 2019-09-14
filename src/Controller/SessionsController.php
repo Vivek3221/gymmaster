@@ -25,18 +25,24 @@ class SessionsController extends AppController
         }
         
         $user_type = $this->usersdetail['users_type'];
-        $users_id = $this->usersdetail['users_id'];
-        $name = '';
-        $sdate ='';
-        $edate ='';
-        $norec = 20;
-        $status = '';
-        $partner = '';
-        $stat = '';
-        $search = [];
+        $users_id  = $this->usersdetail['users_id'];
+        $name      = '';
+        $sdate     ='';
+        $edate     ='';
+        $norec     = 20;
+        $status    = '';
+        $partner   = '';
+        $stat      = '';
+        $search    = [];
+        $s_type    = '';
          if (isset($this->request->query['name']) && trim($this->request->query['name']) != "") {
             $name = $this->request->query['name'];
             $search['Sessions.user_id'] = $name;
+        }
+        if (isset($this->request->query['s_type']) && trim($this->request->query['s_type']) != "") {
+            $s_type = $this->request->query['s_type'];
+            //$search['Users.name REGEXP'] = $name;
+            $search['Sessions.session_type REGEXP'] = $s_type;
         }
         //sessions=notedit
          if (isset($this->request->query['sessions']) && trim($this->request->query['sessions']) != "") {
@@ -84,11 +90,11 @@ class SessionsController extends AppController
         } else {
             $count = $this->Sessions->find('all');
         }
-        if (isset($user_type) && ($user_type == 3)) {
-        $count = $count->where(['Sessions.status ' => '1' ,'Sessions.date <=' => date('Y-m-d')]);
-        } else {
-             $count = $count->where(['Sessions.status !=' => '2']);
-        }
+            if (isset($user_type) && ($user_type == 3)) {
+            $count = $count->where(['Sessions.status ' => '1' ,'Sessions.date <=' => date('Y-m-d')]);
+            } else {
+                 $count = $count->where(['Sessions.status !=' => '2']);
+            }
         if(isset($sessions_value) && !empty($sessions_value))
         {
            $count = $count->where(['date <' => date('Y-m-d') ,'user_detail Is Null']);  
@@ -97,6 +103,7 @@ class SessionsController extends AppController
         {
            $count = $count->where(['user_detail Is Null']);  
         }
+    //debug($count);die();
         $this->paginate = [
             'contain' => ['Users'],
             'limit' => $norec, 
@@ -114,7 +121,7 @@ class SessionsController extends AppController
        
 
        // $partners = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.partner_id'=> $users_id,'user_type' =>2]);
-        $this->set(compact('sessions','name','status','norec','users','user_type','sdate','edate','partner','stat'));
+        $this->set(compact('sessions','name','status','norec','users','user_type','sdate','edate','partner','stat','s_type'));
         $this->set('_serialize', ['sessions']);
     }
 

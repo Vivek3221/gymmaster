@@ -51,6 +51,9 @@ $partners = $this->Common->getpartner();
                             <div class="col-md-2">
                                 <?= $this->Form->input('stat', ['label' => __('Session Status'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'), 'options' => ['0'=>'..Select..', '1'=>'Not Reported'], 'value' => $stat]); ?>
                             </div>
+                            <div class="col-md-2">
+                                    <?php echo $this->Form->input('s_type', ['label' => __('Session Type'),'class' => 'form-control', 'type' => 'text', 'placeholder' => __('-- Session Type --'), 'value' => $s_type]); ?>
+                            </div>
                             <div class="col-md-3 marginTop25">
                                 <?= $this->Form->button(__('Search'), ['class' => 'btn btn-primary']) ?>
                                 <?= $this->Html->link(__('Clear'), ['controller' => 'Sessions'], ['class' => 'btn btn-danger']) ?>
@@ -112,12 +115,10 @@ $partners = $this->Common->getpartner();
                                             </td>
                                         <?php } ?>
                                             <td>
-                                                <?php if(($user_type == 3) && (empty($session->user_detail))) { ?>
+                                            <?php if(($user_type == 3) && (empty($session->user_detail))) { ?>
                                                      <i class="material-icons" title="Report Session"><?= $this->Html->link(__('mode_edit'), ['action' => 'userEdit', $session['id']]) ?></i>
                                              <?php   } ?>
                                              
-                                                   
-
                                                 <i class="material-icons" title="View"><?= $this->Html->link(__('visibility'), ['action' => 'view', $session['id']]) ?></i>
                                                <?php if($user_type != 3){?>
                                                 <?php if(empty($session->user_detail)){?>
@@ -129,10 +130,10 @@ $partners = $this->Common->getpartner();
                                                <?php if($user_type != 3){?>
                                                 <i class="material-icons"><?= $this->Html->link(__('content_copy'), ['action' => 'addMore', $session['id']],['title'=> 'Add Duplicate'] ) ?></i>
                                                <?php } ?>
-                                               <?php if(($user_type == 1) && (!empty($session->user_detail))) {?>
+                                               <?php if(($user_type == 1 || $user_type == 2) && (!empty($session->user_detail))) {?>
                                                <i class="material-icons" title="Reported session edit"><?= $this->Html->link(__('border_color'), ['action' => 'userEdit', $session['id']]) ?></i>
                                              <?php } ?>
-                                             <?php if($user_type == 4){?>  
+                                             <?php if(($user_type == 4)  && (empty($session->user_detail))){?>  
                                                    <i class="material-icons" title="Report session"><?= $this->Html->link(__('build'), ['action' => 'userEdit', $session['id']]) ?></i> 
                                                  <?php } ?>
                                             </td>

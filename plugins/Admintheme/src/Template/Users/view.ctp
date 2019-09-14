@@ -38,11 +38,6 @@ $user_type = $this->Common->getType();
                                     <th scope="row"><?= __('Email') ?></th>
                                     <td><?= h($user['email']);?></td>
                                 </tr>
-<!--                                <tr>
-                                    
-                                    <th scope="row"><?= __('Birthday') ?></th>
-                                    <td><?php if(!empty($user['bday'])) { echo date('d M Y',strtotime($user['bday'])); } ?></td>
-                                </tr>-->
                                 <tr>
                                     <th scope="row"><?= __('Contact No.') ?></th>
                                     <td><?php echo h($user['mobile_no']);?></td>
@@ -68,12 +63,15 @@ $user_type = $this->Common->getType();
                                         }
                                         ?></td>
                                 </tr>
-
-
                                 <tr>
                                     <th scope="row"><?= __('Joined') ?></th>
                                      <?php $birthdate = ($user['created']->format('d-M-Y')); ?>
                                     <td><?php if(!empty($user['created'])) { echo $birthdate; } ?></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><?= __('Last Updated') ?></th>
+                                     <?php $birthdate = ($user['modified']->format('d-M-Y')); ?>
+                                    <td><?php if(!empty($user['modified'])) { echo $birthdate; } ?></td>
                                 </tr>
                                   <?php if(!empty($user->payment)) {    ?>
                                 <tr>
