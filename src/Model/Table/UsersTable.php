@@ -42,6 +42,11 @@ class UsersTable extends Table
             'foreignKey' => 'partner_id',
             'joinType' => 'INNER'
         ]);
+
+        $this->hasMany('UserRemarks', [
+            'foreignKey' => 'user_id',
+            'dependent' => true
+        ]);
     }
 
     /**

@@ -60,7 +60,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
             <button id="closeLoginModal" style="position: absolute; top: 15px; right: 20px; background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; transition: color 0.3s;">&times;</button>
             
             <div style="text-align: center; margin-bottom: 30px;">
-                <img src="<?= $this->Url->build('/assets/images/logo.png') ?>" alt="Logo" style="max-height: 45px; margin-bottom: 15px;">
+                <img src="<?= $this->Url->build('/assets/images/final-logo.png') ?>" alt="Logo" style="max-height: 45px; margin-bottom: 15px;">
                 <h3 style="color: #fff; font-weight: 700; font-size: 24px;">Admin Sign In</h3>
                 <p style="color: #888; font-size: 14px;">Access your GymMaster Dashboard</p>
             </div>

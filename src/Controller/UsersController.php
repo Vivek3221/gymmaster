@@ -31,8 +31,115 @@ class UsersController extends AppController
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
        // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment','forgetPassword','forgotPassword','resetPassword','siteMap']);
+        $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment','forgetPassword','forgotPassword','resetPassword','siteMap','about','contact','sendContact','userProfile','saveRemark','getRemarks']);
         
+    }
+
+    public function about()
+    {
+        // Auto renders about.ctp
+    }
+
+    public function contact()
+    {
+        // Auto renders contact.ctp
+    }
+
+    /**
+     * Handle contact form submission via AJAX.
+     * Sends details to makeover72@gmail.com via SMTP.
+     */
+    public function sendContact()
+    {
+        $this->autoRender = false;
+        $this->request->allowMethod(['post']);
+
+        // Read directly from $_POST — most reliable for multipart/form-data AJAX
+        $senderName   = isset($_POST['name'])    ? trim($_POST['name'])    : '';
+        $senderEmail  = isset($_POST['email'])   ? trim($_POST['email'])   : '';
+        $senderPhone  = isset($_POST['phone'])   ? trim($_POST['phone'])   : '';
+        $senderMessage= isset($_POST['message']) ? trim($_POST['message']) : '';
+
+        // Basic validation
+        if (empty($senderName) || empty($senderEmail) || empty($senderMessage)) {
+            echo json_encode(['success' => false, 'msg' => 'Please fill in all required fields.']);
+            exit();
+        }
+        if (!filter_var($senderEmail, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode(['success' => false, 'msg' => 'Please enter a valid email address.']);
+            exit();
+        }
+
+        $toEmail = 'makeover72@gmail.com';
+        $subject = 'New Contact Enquiry from ' . $senderName . ' | MakeOver Star HIIT';
+
+        $viewVars = [
+            'senderName'    => $senderName,
+            'senderEmail'   => $senderEmail,
+            'senderPhone'   => $senderPhone,
+            'senderMessage' => $senderMessage,
+        ];
+
+        try {
+            $email = new Email();
+            $email->transport('default');
+            $email->emailFormat('html')
+                  ->template('contact_inquiry')
+                  ->from(['support@datamonitering.com' => 'MakeOver Star HIIT'])
+                  ->to($toEmail)
+                //   ->cc('singhabhi841417@gmail.com')
+                  ->subject($subject)
+                  ->viewVars($viewVars)
+                  ->send();
+
+            echo json_encode(['success' => true, 'msg' => 'Your message has been sent successfully! We will get back to you soon.']);
+        } catch (\Exception $e) {
+            echo json_encode(['success' => false, 'msg' => 'Failed to send message. Please try again or contact us directly.']);
+        }
+        exit();
+    }
+
+    public function userProfile()
+    {
+        if (empty($this->usersdetail['users_id'])) {
+            return $this->redirect('/');
+        }
+        $userId = $this->usersdetail['users_id'];
+        $Users  = TableRegistry::get('Users');
+        $user   = $Users->get($userId);
+
+        if ($this->request->is(['post', 'put'])) {
+            $data = $this->request->data;
+
+            // Update name
+            if (!empty($data['users_name'])) {
+                $user->name = trim($data['users_name']);
+            }
+
+            // Update password only if provided
+            if (!empty($data['new_password'])) {
+                if ($data['new_password'] !== $data['confirm_password']) {
+                    $this->Flash->error('Passwords do not match.');
+                    $this->set(compact('user'));
+                    return;
+                }
+                $user->password = md5($data['new_password']);
+            }
+
+            if ($Users->save($user)) {
+                // Refresh session with updated name
+                $session = $this->request->session()->read('users');
+                $session['users_name'] = $user->name;
+                $this->request->session()->write('users', $session);
+                $this->Cookie->write('users', $session);
+                $this->Flash->success('Profile updated successfully!');
+                return $this->redirect(['action' => 'userProfile']);
+            } else {
+                $this->Flash->error('Could not update profile. Please try again.');
+            }
+        }
+
+        $this->set(compact('user'));
     }
 
 
@@ -56,6 +163,8 @@ class UsersController extends AppController
         $user_type = '';
         $partner   ='';
         $trainer   = '';
+        $start_date = '';
+        $end_date = '';
         $search = [];
         $users_type = $this->usersdetail['users_type'];
         $users_id = $this->usersdetail['users_id'];
@@ -71,9 +180,23 @@ class UsersController extends AppController
             $search['Users.email REGEXP'] = $email;
         }
 
-        if (isset($this->request->query['status']) && trim($this->request->query['status']) != "") {
+        if (isset($this->request->query['status'])) {
             $status = $this->request->query['status'];
-            $search['Users.active'] = $status;
+            if (trim($status) !== "") {
+                $search['Users.active'] = $status;
+            }
+        } else {
+            $status = '';
+        }
+
+        if (isset($this->request->query['start_date']) && trim($this->request->query['start_date']) != "") {
+            $start_date = $this->request->query['start_date'];
+            $search['Users.created >='] = $start_date . ' 00:00:00';
+        }
+
+        if (isset($this->request->query['end_date']) && trim($this->request->query['end_date']) != "") {
+            $end_date = $this->request->query['end_date'];
+            $search['Users.created <='] = $end_date . ' 23:59:59';
         }
 
         if (isset($this->request->query['norec']) && trim($this->request->query['norec']) != "") {
@@ -125,7 +248,7 @@ class UsersController extends AppController
        $trainers = $this->Users->find('list')
                     ->where(['Users.user_type'=>4,'Users.partner_id'=>$users_id]);
 
-        $this->set(compact('users', 'name', 'status', 'norec','email','user_type','users_type','partners','partner','trainers','trainer'));
+        $this->set(compact('users', 'name', 'status', 'norec','email','user_type','users_type','partners','partner','trainers','trainer', 'start_date', 'end_date'));
         $this->set('_serialize', ['users']);
     }
 
@@ -144,7 +267,9 @@ class UsersController extends AppController
             return $this->redirect('/');
         }
         $user = $this->Users->get($id, [
-            'contain' => []
+            'contain' => ['UserRemarks' => function($q) {
+                return $q->order(['UserRemarks.id' => 'DESC']);
+            }]
         ]);
 
         // plans list
@@ -503,9 +628,9 @@ class UsersController extends AppController
     */
     public function adminLogin() {
         $this->viewBuilder()->layout("ajax");
-        if (!empty($this->Cookie->read('user_email'))) {
-            return $this->redirect(['controller'=>'Users','action'=>'dashboard']);
-        }
+        // Only redirect to dashboard if this is a direct login action visit,
+        // not when browsing the homepage while already logged in.
+        // The homepage IS the adminLogin page, so we just render it normally.
     }
       public function dashboard(){
              if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
@@ -555,14 +680,16 @@ class UsersController extends AppController
         }
         
         
-         public function logout()
+    public function logout()
     {
-             $this->autoRender = false;
-             $this->Cookie->delete('user_email');
-             $this->Cookie->delete('users');
-              $this->Auth->logout();
-             return $this->redirect(['controller' => '/']);
- }
+        $this->autoRender = false;
+        $this->Cookie->delete('user_email');
+        $this->Cookie->delete('users');
+        $this->request->session()->delete('users');
+        $this->request->session()->destroy();
+        $this->Auth->logout();
+        return $this->redirect('/');
+    }
     
     /*
     *forgot password page
@@ -935,6 +1062,54 @@ public function siteMap()
        $this->viewBuilder()->layout('sitemap');
        $this->RequestHandler->respondAs('xml');
 
+    }
+
+    public function saveRemark()
+    {
+        $this->autoRender = false;
+        $this->request->allowMethod(['post']);
+        
+        $this->UserRemarks = TableRegistry::get('UserRemarks');
+        $remarkEntity = $this->UserRemarks->newEntity();
+        
+        $data = $this->request->data;
+        if (!empty($data['followup_date'])) {
+            $data['followup_date'] = date('Y-m-d H:i:s', strtotime($data['followup_date']));
+        }
+        
+        $remarkEntity = $this->UserRemarks->patchEntity($remarkEntity, $data);
+        if ($this->UserRemarks->save($remarkEntity)) {
+            $response = ['status' => 'success', 'message' => __('Remark saved successfully.')];
+        } else {
+            $errors = $remarkEntity->errors();
+            $response = ['status' => 'error', 'message' => __('Could not save remark.'), 'errors' => $errors];
+        }
+        
+        echo json_encode($response);
+        exit;
+    }
+
+    public function getRemarks($userId)
+    {
+        $this->autoRender = false;
+        $this->UserRemarks = TableRegistry::get('UserRemarks');
+        
+        $remarks = $this->UserRemarks->find('all')
+            ->where(['user_id' => $userId])
+            ->order(['created' => 'DESC'])
+            ->toArray();
+            
+        $formatted = [];
+        foreach ($remarks as $remark) {
+            $formatted[] = [
+                'remark' => h($remark->remark),
+                'followup_date' => $remark->followup_date ? $remark->followup_date->format('Y-m-d H:i:s') : 'N/A',
+                'created' => $remark->created ? $remark->created->format('Y-m-d H:i:s') : 'N/A'
+            ];
+        }
+        
+        echo json_encode($formatted);
+        exit;
     }
 
     public function beforeRender(\Cake\Event\Event $event) {

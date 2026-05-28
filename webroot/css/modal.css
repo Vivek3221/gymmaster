@@ -1,0 +1,186 @@
+/* ---------- Nav Login Button ---------- */
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+.nav-login-btn {
+  background: linear-gradient(135deg, #f7931e, #0b6ea8) !important;
+  border: none !important;
+  color: #fff !important;
+  padding: 10px 22px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-family: 'Poppins', system-ui, sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.35s;
+  box-shadow: 0 4px 16px rgba(247,147,30,0.5);
+  line-height: 1;
+  white-space: nowrap;
+}
+.nav-login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(247,147,30,0.55);
+}
+@media (max-width: 720px) {
+  .nav-login-btn {
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
+  }
+}
+
+/* ---------- My Account Dropdown ---------- */
+.account-dropdown { position: relative; }
+.account-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  padding: 9px 20px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-family: 'Poppins', system-ui, sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  transition: 0.35s;
+  line-height: 1;
+  white-space: nowrap;
+}
+.account-btn:hover {
+  background: rgba(247,147,30,0.18);
+  border-color: #f7931e;
+  color: #f7931e;
+}
+.account-btn .avatar-circle {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f7931e, #0b6ea8);
+  display: grid; place-items: center;
+  font-size: 0.75rem; font-weight: 700; color: #fff;
+  flex-shrink: 0;
+}
+.account-menu {
+  position: absolute;
+  top: 100%; right: 0;
+  padding: 14px 0 0 0;
+  min-width: 210px;
+  z-index: 1100;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.account-menu-inner {
+  background: #121821;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.55);
+}
+.account-dropdown:hover .account-menu,
+.account-dropdown.open .account-menu {
+  opacity: 1; pointer-events: auto; transform: translateY(0);
+}
+.account-menu-header {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  margin-bottom: 6px;
+}
+.account-menu-header .name {
+  color: #fff; font-weight: 600; font-size: 0.9rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.account-menu-header .role { color: #f7931e; font-size: 0.75rem; margin-top: 2px; }
+.account-menu a,
+.account-menu button {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 10px 14px; border-radius: 8px;
+  color: #c9d1d9; font-size: 0.875rem;
+  font-family: 'Poppins', system-ui, sans-serif;
+  font-weight: 500; background: none; border: none;
+  cursor: pointer; text-align: left;
+  transition: background 0.2s, color 0.2s; text-decoration: none;
+}
+.account-menu a:hover,
+.account-menu button:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.account-menu a i, .account-menu button i { width: 16px; color: #8b95a5; font-size: 0.85rem; }
+.account-menu a:hover i, .account-menu button:hover i { color: #f7931e; }
+.account-menu .logout-btn { color: #ff7b72; }
+.account-menu .logout-btn i { color: #ff7b72; }
+.account-menu .logout-btn:hover { background: rgba(248,81,73,0.1); color: #ff7b72; }
+.account-menu-divider { height: 1px; background: rgba(255,255,255,0.07); margin: 6px 0; }
+
+/* ---------- Login Modal ---------- */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(8,11,16,0.88); backdrop-filter: blur(8px);
+  z-index: 2000; display: flex; justify-content: center; align-items: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+}
+.modal-overlay.open { opacity: 1; pointer-events: auto; }
+.modal-card {
+  background: #121821; border: 1px solid rgba(255,255,255,0.1);
+  width: 100%; max-width: 460px; border-radius: 20px; padding: 40px 32px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6); position: relative;
+  transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  margin: 16px;
+}
+.modal-overlay.open .modal-card { transform: scale(1); }
+.modal-close-btn {
+  position: absolute; top: 18px; right: 18px;
+  background: none; border: none; color: #8b95a5;
+  font-size: 1.7rem; cursor: pointer; transition: 0.3s; line-height: 1;
+}
+.modal-close-btn:hover { color: #fff; transform: rotate(90deg); }
+.modal-container.hidden { display: none; }
+.modal-header { text-align: center; margin-bottom: 28px; }
+.modal-header h2 { font-size: 1.7rem; margin-bottom: 8px; color: #fff; }
+.modal-header p { color: #8b95a5; font-size: 0.9rem; }
+.modal-form .form-group { margin-bottom: 18px; }
+.modal-form label { display: block; margin-bottom: 8px; font-size: 0.85rem; font-weight: 500; color: #c9d1d9; }
+.input-icon-wrap { position: relative; }
+.input-icon-wrap input {
+  width: 100%; padding: 13px 16px 13px 44px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px; color: #fff;
+  font-family: 'Poppins', system-ui, sans-serif;
+  font-size: 0.95rem; transition: 0.3s; outline: none;
+}
+.input-icon-wrap input:focus {
+  border-color: #f7931e; box-shadow: 0 0 0 3px rgba(247,147,30,0.2);
+  background: rgba(255,255,255,0.06);
+}
+.input-icon {
+  position: absolute; left: 15px; top: 50%;
+  transform: translateY(-50%); color: #8b95a5; font-size: 1rem;
+  pointer-events: none; transition: color 0.3s;
+}
+.input-icon-wrap:focus-within .input-icon { color: #f7931e; }
+.form-options { display: flex; justify-content: flex-end; margin-bottom: 22px; }
+.forgot-link { font-size: 0.85rem; color: #f7931e; font-weight: 500; transition: 0.3s; }
+.forgot-link:hover { color: #fff; text-decoration: underline; }
+.modal-submit-btn {
+  width: 100%; justify-content: center;
+  padding: 14px; font-size: 1rem; border-radius: 12px;
+  font-family: 'Poppins', system-ui, sans-serif;
+}
+.form-footer { text-align: center; margin-top: 22px; }
+.back-link {
+  font-size: 0.9rem; color: #8b95a5;
+  display: inline-flex; align-items: center; gap: 8px; transition: 0.3s;
+}
+.back-link:hover { color: #fff; }
+.modal-alert {
+  padding: 12px 16px; border-radius: 8px;
+  font-size: 0.88rem; margin-bottom: 18px; text-align: center; line-height: 1.5;
+}
+.modal-alert.hidden { display: none; }
+.modal-alert.success { background: rgba(46,160,67,0.15); border: 1px solid #2ea043; color: #56d364; }
+.modal-alert.error   { background: rgba(248,81,73,0.15);  border: 1px solid #f85149; color: #ff7b72; }

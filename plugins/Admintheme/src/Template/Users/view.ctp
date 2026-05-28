@@ -141,6 +141,30 @@ $user_type = $this->Common->getType();
                             <?php } ?>
                                 </table>
                             <?php } ?>
+
+                            <?php if(!empty($user->user_remarks)) { ?>
+                                <h3 style="margin-top:30px; font-weight: bold; font-size: 18px; color: #333; border-bottom: 2px solid #ff9800; padding-bottom: 10px;"><?= __('Remarks & Follow-ups') ?></h3>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <thead>
+                                            <tr style="background-color: #f5f5f5;">
+                                                <th><?= __('Remark') ?></th>
+                                                <th><?= __('Followup Date & Time') ?></th>
+                                                <th><?= __('Created Date') ?></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach ($user->user_remarks as $remark) { ?>
+                                            <tr>
+                                                <td><?= h($remark->remark) ?></td>
+                                                <td><?= $remark->followup_date ? $remark->followup_date->format('d-M-Y H:i') : 'N/A' ?></td>
+                                                <td><?= $remark->created ? $remark->created->format('d-M-Y H:i') : 'N/A' ?></td>
+                                            </tr>
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <?php } ?>
                         </div>
                         
                     </div>

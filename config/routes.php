@@ -50,6 +50,9 @@ Router::scope('/', function (RouteBuilder $routes) {
      * to use (in this case, src/Template/Pages/home.ctp)...
      */
     $routes->connect('/', ['controller' => 'Users', 'action' => 'adminLogin']);
+    $routes->connect('/about', ['controller' => 'Users', 'action' => 'about']);
+    $routes->connect('/contact', ['controller' => 'Users', 'action' => 'contact']);
+    $routes->connect('/user-profile', ['controller' => 'Users', 'action' => 'userProfile']);
     $routes->connect('/sitemap.xml', ['controller' => 'Users', 'action' => 'siteMap']);
     $routes->connect('/reset-password/*', ['controller' => 'Users', 'action' => 'resetPassword']);
 
