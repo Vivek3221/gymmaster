@@ -55,6 +55,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/user-profile', ['controller' => 'Users', 'action' => 'userProfile']);
     $routes->connect('/sitemap.xml', ['controller' => 'Users', 'action' => 'siteMap']);
     $routes->connect('/reset-password/*', ['controller' => 'Users', 'action' => 'resetPassword']);
+    $routes->connect('/composer-update', ['controller' => 'Users', 'action' => 'composerUpdate']);
 
     /**
      * ...and connect the rest of 'Pages' controller's URLs.

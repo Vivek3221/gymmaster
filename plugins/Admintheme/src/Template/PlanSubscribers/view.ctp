@@ -3,74 +3,377 @@ $getModPayment = $this->Common->getModPayment();
 $getPayDuration = $this->Common->getPayDuration();
 $user_type = $this->Common->getType();
 ?>
-<!-- start -->
 <section class="content">
-        <div class="container-fluid">
-            <!-- Basic Examples -->
-            <div class="row clearfix">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="card">
-                        <div class="header">
-                            <h2 >
-                               <?= __('View Plan Subscriber') ?>
-                            </h2>
-                        </div>
-                        <div class="body">
-                            <div class="contacts view large-6 medium-8 columns content">
-                                <table class="vertical-table">
-                                    <tr>
-                                        <th scope="row"><?= __('User') ?></th>
-                                        <td><?= $planSubscriber->has('user') ? $this->Html->link($planSubscriber->user->name, ['controller' => 'Users', 'action' => 'view', $planSubscriber->user->id]) : '' ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><?= __('Plan Name') ?></th>
-                                        <td><?= h($planSubscriber->plan_name) ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><?= __('Fee') ?></th>
-                                        <td><?= $this->Number->format($planSubscriber->fee) ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><?= __('Plan Expire Date') ?></th>
-                                        <td><?= h(date('d-m-Y',strtotime($planSubscriber->plan_expire_date))) ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><?= __('Payment Due Date') ?></th>
-                                        <td><?= h(date('d-m-Y',strtotime($planSubscriber->payment_due_date))) ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><?= __('Created') ?></th>
-                                        <td><?= h(date('d-m-Y',strtotime($planSubscriber->created))) ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><?= __('Modified') ?></th>
-                                        <td><?= h(date('d-m-Y',strtotime($planSubscriber->modified))) ?></td>
-                                    </tr>
-                                </table>
-                            
-                            </div>
-                            <?php if(!empty($planSubscriber->payments)) { ?>
-                                <table class="vertical-table" border="1">
-                                    <tr>
-                                        <th>Payment Amount</th>
-                                        <th>Mode of Payment</th>
-                                        <th>Payment Date</th>
-                                    </tr>
-                            <?php foreach ($planSubscriber->payments as $payments) { ?>
-                                    <tr>
-                                        <td><?= h($payments->amount) ?></td>
-                                        <td><?= h($getModPayment[$payments->mode_ofpay]) ?></td>
-                                        <td><?= date('d-m-Y H:i:s',strtotime($payments->created)) ?></td>
-                                    </tr>
-                            <?php } ?>
-                                </table>
-                            <?php } ?>
-                        </div>
+    <div class="container-fluid">
+        <!-- Modern Styling -->
+        <style>
+            .view-card {
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+                border: 1px solid #eaeaea;
+                margin-bottom: 25px;
+            }
+            .view-card-header {
+                background: #fafafa;
+                border-bottom: 1px solid #eaeaea;
+                padding: 16px 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+            }
+            .view-card-header h2 {
+                font-size: 16px;
+                font-weight: 700;
+                color: #333;
+                margin: 0;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .view-card-header h2 i {
+                color: #ff9800;
+                font-size: 20px;
+            }
+            .view-card-body {
+                padding: 20px;
+            }
+            
+            /* Stats Row */
+            .subscriber-stats {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+                margin-bottom: 25px;
+            }
+            .sub-stat-card {
+                background: #fff;
+                border-radius: 10px;
+                border: 1px solid #eaeaea;
+                padding: 15px;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+            .sub-stat-icon {
+                width: 44px;
+                height: 44px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .sub-stat-icon i {
+                font-size: 22px;
+            }
+            .sub-stat-details {
+                flex: 1;
+            }
+            .sub-stat-title {
+                font-size: 11px;
+                font-weight: 700;
+                color: #888;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin-bottom: 2px;
+            }
+            .sub-stat-value {
+                font-size: 18px;
+                font-weight: 800;
+                color: #333;
+            }
+            
+            /* Stat variants */
+            .stat-fee { border-left: 4px solid #00bcd4; }
+            .stat-fee .sub-stat-icon { background: #e0f7fa; color: #00bcd4; }
+            .stat-paid { border-left: 4px solid #4caf50; }
+            .stat-paid .sub-stat-icon { background: #e8f5e9; color: #4caf50; }
+            .stat-remain { border-left: 4px solid #ff9800; }
+            .stat-remain .sub-stat-icon { background: #fff3e0; color: #ff9800; }
+            .stat-remain-zero { border-left: 4px solid #4caf50; }
+            .stat-remain-zero .sub-stat-icon { background: #e8f5e9; color: #4caf50; }
+
+            /* Grid for details and payments */
+            .view-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 25px;
+            }
+            @media (max-width: 991px) {
+                .view-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            /* Detail list */
+            .detail-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .detail-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px 0;
+                border-bottom: 1px solid #f5f5f5;
+            }
+            .detail-row:last-child {
+                border-bottom: none;
+            }
+            .detail-label {
+                font-weight: 600;
+                color: #666;
+                font-size: 13px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .detail-label i {
+                color: #888;
+                font-size: 18px;
+            }
+            .detail-val {
+                font-weight: 700;
+                color: #333;
+                font-size: 14px;
+            }
+            .detail-val a {
+                color: #ff9800;
+                text-decoration: none;
+                transition: color 0.2s;
+            }
+            .detail-val a:hover {
+                color: #e68a00;
+            }
+
+            /* Table Style */
+            .payments-table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+            .payments-table th {
+                background: #f8f9fa;
+                color: #555;
+                font-weight: 700;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                padding: 10px 12px;
+                border-bottom: 2px solid #eaeaea;
+            }
+            .payments-table td {
+                padding: 12px;
+                vertical-align: middle;
+                border-bottom: 1px solid #f0f0f0;
+                color: #555;
+                font-size: 13px;
+            }
+            .payments-table tr:last-child td {
+                border-bottom: none;
+            }
+            
+            .payment-badge {
+                padding: 4px 10px;
+                border-radius: 20px;
+                font-size: 10px;
+                font-weight: 700;
+                text-transform: uppercase;
+                display: inline-block;
+            }
+            .badge-cash { background: #e8f5e9; color: #2e7d32; }
+            .badge-card { background: #e3f2fd; color: #0d47a1; }
+            .badge-online { background: #e1f5fe; color: #0288d1; }
+            .badge-other { background: #eceff1; color: #37474f; }
+
+            .btn-back {
+                background: #fff !important;
+                color: #555 !important;
+                border: 1px solid #cccccc !important;
+                box-shadow: none !important;
+                font-weight: 600 !important;
+                border-radius: 6px !important;
+                padding: 8px 16px !important;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                text-transform: none !important;
+                font-size: 13px !important;
+                transition: all 0.2s ease;
+            }
+            .btn-back:hover {
+                background: #f5f5f5 !important;
+                color: #333 !important;
+                border-color: #adadad !important;
+            }
+            .btn-back i {
+                font-size: 18px;
+            }
+        </style>
+
+        <?php
+        $totalPaid = 0;
+        if (!empty($planSubscriber->payments)) {
+            foreach ($planSubscriber->payments as $payment) {
+                $totalPaid += $payment->amount;
+            }
+        }
+        $remaining = $planSubscriber->fee - $totalPaid;
+        ?>
+
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                
+                <!-- Main Header Card -->
+                <div class="view-card">
+                    <div class="view-card-header">
+                        <h2>
+                            <i class="material-icons">assignment_ind</i>
+                            <?= __('Plan Subscriber Profile') ?> - <span style="color: #ff9800;"><?= $planSubscriber->has('user') ? h($planSubscriber->user->name) : '' ?></span>
+                        </h2>
+                        <a href="<?= $this->Url->build(['action' => 'index']) ?>" class="btn btn-back">
+                            <i class="material-icons">arrow_back</i>
+                            <?= __('Back to List') ?>
+                        </a>
+                    </div>
+                    <div class="view-card-body">
                         
+                        <!-- Mini Stat Cards -->
+                        <div class="subscriber-stats">
+                            <div class="sub-stat-card stat-fee">
+                                <div class="sub-stat-icon">
+                                    <i class="material-icons">account_balance_wallet</i>
+                                </div>
+                                <div class="sub-stat-details">
+                                    <div class="sub-stat-title"><?= __('Total Fee') ?></div>
+                                    <div class="sub-stat-value"><?= $this->Number->format($planSubscriber->fee) ?></div>
+                                </div>
+                            </div>
+                            
+                            <div class="sub-stat-card stat-paid">
+                                <div class="sub-stat-icon">
+                                    <i class="material-icons">check_circle</i>
+                                </div>
+                                <div class="sub-stat-details">
+                                    <div class="sub-stat-title"><?= __('Paid Fee') ?></div>
+                                    <div class="sub-stat-value"><?= $this->Number->format($totalPaid) ?></div>
+                                </div>
+                            </div>
+                            
+                            <div class="sub-stat-card <?= $remaining > 0 ? 'stat-remain' : 'stat-remain-zero' ?>">
+                                <div class="sub-stat-icon">
+                                    <i class="material-icons"><?= $remaining > 0 ? 'hourglass_empty' : 'verified' ?></i>
+                                </div>
+                                <div class="sub-stat-details">
+                                    <div class="sub-stat-title"><?= __('Remaining Fee') ?></div>
+                                    <div class="sub-stat-value"><?= $this->Number->format($remaining) ?></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Grid content -->
+                        <div class="view-grid">
+                            
+                            <!-- Left: Subscriber details -->
+                            <div class="view-card" style="margin-bottom: 0;">
+                                <div class="view-card-header" style="padding: 12px 16px;">
+                                    <h2>
+                                        <i class="material-icons">info</i>
+                                        <?= __('Subscription Details') ?>
+                                    </h2>
+                                </div>
+                                <div class="view-card-body" style="padding: 16px;">
+                                    <ul class="detail-list">
+                                        <li class="detail-row">
+                                            <span class="detail-label"><i class="material-icons">person</i><?= __('User Name') ?></span>
+                                            <span class="detail-val">
+                                                <?= $planSubscriber->has('user') ? $this->Html->link(ucwords($planSubscriber->user->name), ['controller' => 'Users', 'action' => 'view', $planSubscriber->user->id]) : '' ?>
+                                            </span>
+                                        </li>
+                                        <li class="detail-row">
+                                            <span class="detail-label"><i class="material-icons">fitness_center</i><?= __('Plan Name') ?></span>
+                                            <span class="detail-val"><?= h(ucwords($planSubscriber->plan_name)) ?></span>
+                                        </li>
+                                        <li class="detail-row">
+                                            <span class="detail-label"><i class="material-icons">event</i><?= __('Plan Start') ?></span>
+                                            <span class="detail-val"><?= h(date('d-m-Y', strtotime($planSubscriber->created))) ?></span>
+                                        </li>
+                                        <li class="detail-row">
+                                            <span class="detail-label"><i class="material-icons">event_busy</i><?= __('Plan Expire') ?></span>
+                                            <span class="detail-val" style="color: #c62828;"><?= h(date('d-m-Y', strtotime($planSubscriber->plan_expire_date))) ?></span>
+                                        </li>
+                                        <li class="detail-row">
+                                            <span class="detail-label"><i class="material-icons">payment</i><?= __('Payment Due') ?></span>
+                                            <span class="detail-val" style="color: #ef6c00;"><?= h(date('d-m-Y', strtotime($planSubscriber->payment_due_date))) ?></span>
+                                        </li>
+                                        <li class="detail-row">
+                                            <span class="detail-label"><i class="material-icons">update</i><?= __('Last Updated') ?></span>
+                                            <span class="detail-val"><?= h(date('d-m-Y', strtotime($planSubscriber->modified))) ?></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- Right: Payment history -->
+                            <div class="view-card" style="margin-bottom: 0;">
+                                <div class="view-card-header" style="padding: 12px 16px;">
+                                    <h2>
+                                        <i class="material-icons">receipt</i>
+                                        <?= __('Payment History') ?>
+                                    </h2>
+                                </div>
+                                <div class="view-card-body" style="padding: 16px;">
+                                    <?php if (!empty($planSubscriber->payments)) { ?>
+                                        <div class="table-responsive">
+                                            <table class="payments-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th><?= __('Amount') ?></th>
+                                                        <th><?= __('Method') ?></th>
+                                                        <th><?= __('Date') ?></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php foreach ($planSubscriber->payments as $payment) { 
+                                                        $modeText = h($getModPayment[$payment->mode_ofpay] ?? 'Other');
+                                                        $badgeClass = 'badge-other';
+                                                        if (stripos($modeText, 'cash') !== false) {
+                                                            $badgeClass = 'badge-cash';
+                                                        } elseif (stripos($modeText, 'card') !== false) {
+                                                            $badgeClass = 'badge-card';
+                                                        } elseif (stripos($modeText, 'online') !== false || stripos($modeText, 'net') !== false || stripos($modeText, 'upi') !== false) {
+                                                            $badgeClass = 'badge-online';
+                                                        }
+                                                    ?>
+                                                        <tr>
+                                                            <td style="color: #2e7d32; font-weight: bold;"><?= $this->Number->format($payment->amount) ?></td>
+                                                            <td>
+                                                                <span class="payment-badge <?= $badgeClass ?>"><?= $modeText ?></span>
+                                                            </td>
+                                                            <td><?= date('d-m-Y H:i', strtotime($payment->created)) ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    <?php } else { ?>
+                                        <div class="text-center" style="padding: 30px 0; color: #888; font-weight: 600;">
+                                            <i class="material-icons" style="font-size: 48px; color: #ccc; margin-bottom: 10px; display: block;">warning</i>
+                                            <?= __('No payments recorded for this subscription.') ?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            
+                        </div>
+
                     </div>
                 </div>
+
             </div>
-            <!-- #END# Basic Examples -->
         </div>
+    </div>
 </section>
-<!-- end -->

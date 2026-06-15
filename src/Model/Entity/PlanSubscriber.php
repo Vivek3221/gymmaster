@@ -20,6 +20,8 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\User $user
  * @property \App\Model\Entity\Partner $partner
  * @property \App\Model\Entity\Payment[] $payments
+ * @property int $paid_fee
+ * @property int $remain_fee
  */
 class PlanSubscriber extends Entity
 {
@@ -47,4 +49,23 @@ class PlanSubscriber extends Entity
         'partner' => true,
         'payments' => true
     ];
+
+    protected $_virtual = ['paid_fee', 'remain_fee'];
+
+    protected function _getPaidFee()
+    {
+        if (empty($this->payments)) {
+            return 0;
+        }
+        $paid = 0;
+        foreach ($this->payments as $payment) {
+            $paid += $payment->amount;
+        }
+        return $paid;
+    }
+
+    protected function _getRemainFee()
+    {
+        return $this->fee - $this->paid_fee;
+    }
 }

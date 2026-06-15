@@ -41,3 +41,11 @@ endif;
     <strong><?= __d('cake', 'Error') ?>: </strong>
     <?= h($message) ?>
 </p>
+<?php if (isset($error)) : ?>
+    <div style="background: #fee; border: 1px solid #faa; padding: 15px; margin: 15px 0; font-family: monospace; text-align: left; direction: ltr; color: #333;">
+        <h3 style="margin-top: 0; color: #a00;">Exact Exception Details:</h3>
+        <p><strong>Message:</strong> <?= h($error->getMessage()) ?></p>
+        <p><strong>File:</strong> <?= h($error->getFile()) ?> (Line: <?= h($error->getLine()) ?>)</p>
+        <pre style="white-space: pre-wrap; background: #fff; border: 1px solid #ddd; padding: 10px;"><?= h($error->getTraceAsString()) ?></pre>
+    </div>
+<?php endif; ?>

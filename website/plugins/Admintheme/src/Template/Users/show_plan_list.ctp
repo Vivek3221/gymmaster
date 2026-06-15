@@ -1,0 +1,1 @@
+<?= $this->Form->control('plan_subscriber_id', ['class' => 'form-control', 'type' => 'select','options' => $planSubscribers, 'empty'=>'Select Plan', 'required', 'label'=>'Select Plan']) ?>
