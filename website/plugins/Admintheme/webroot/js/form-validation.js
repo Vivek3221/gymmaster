@@ -266,7 +266,7 @@ $(document).ready(function () {
             },
             cpassword: {
                 required: 'Enter confirm password',
-                equalTo: 'Passwor & confirm password does not match'
+                equalTo: 'Password & confirm password does not match'
             }
         }
     });

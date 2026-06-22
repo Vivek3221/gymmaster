@@ -93,6 +93,14 @@ class PlanSubscribersTable extends Table
             ->requirePresence('payment_due_date', 'create')
             ->notEmpty('payment_due_date');
 
+        $validator
+            ->date('subscription_start_date')
+            ->allowEmpty('subscription_start_date');
+
+        $validator
+            ->date('reminder_date')
+            ->allowEmpty('reminder_date');
+
         return $validator;
     }
 

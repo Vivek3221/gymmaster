@@ -13,10 +13,18 @@ $(function () {
         return $("#phoneno").intlTelInput("isValidNumber"); // return true if field is ok or should be ignored
     });
 jQuery.validator.addMethod("lessThanEqual", function(value, element, params) {    
-    if (!/Invalid|NaN/.test(new Date(value))) {
-        return new Date(value) <= new Date($(params[0]).val());
+    var val1 = value;
+    var val2 = $(params[0]).val();
+    if (val1 === '' || val2 === '') {
+        return true; 
+    }
+    if (!isNaN(val1) && !isNaN(val2)) {
+        return Number(val1) <= Number(val2);
+    }
+    if (!/Invalid|NaN/.test(new Date(val1)) && !/Invalid|NaN/.test(new Date(val2))) {
+        return new Date(val1) <= new Date(val2);
     }    
-    return isNaN(value) && isNaN($(params[0]).val()) || (Number(value) <= Number($(params[0]).val())); 
+    return isNaN(val1) && isNaN(val2) || (Number(val1) <= Number(val2)); 
 },'Payment must be less than or equal to {1}.');
 });
 
@@ -266,7 +274,7 @@ $(document).ready(function () {
             },
             cpassword: {
                 required: 'Enter confirm password',
-                equalTo: 'Passwor & confirm password does not match'
+                equalTo: 'Password & confirm password does not match'
             }
         }
     });

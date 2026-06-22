@@ -43,6 +43,8 @@ class PlanSubscriber extends Entity
         'currency' => true,
         'plan_expire_date' => true,
         'payment_due_date' => true,
+        'subscription_start_date' => true,
+        'reminder_date' => true,
         'created' => true,
         'modified' => true,
         'user' => true,

@@ -457,7 +457,13 @@ class UsersController extends AppController
                 $plandata['fee']             = $data['fee'];
                 $plandata['currency']        = 'INR';
                 $plandata['plan_expire_date'] = date('Y-m-d H:i:s', strtotime($data['plan_expire_date']));
-                $plandata['payment_due_date'] = date('Y-m-d H:i:s', strtotime($data['payment_due_date']));
+                $plandata['payment_due_date'] = !empty($data['payment_due_date']) ? date('Y-m-d H:i:s', strtotime($data['payment_due_date'])) : null;
+                if (!empty($data['subscription_start_date'])) {
+                    $plandata['subscription_start_date'] = date('Y-m-d', strtotime($data['subscription_start_date']));
+                }
+                if (!empty($data['reminder_date'])) {
+                    $plandata['reminder_date'] = date('Y-m-d', strtotime($data['reminder_date']));
+                }
                 $planSubscribers             = $this->PlanSubscribers->patchEntity($planSubscribers, $plandata);
                 $planSubscribersAdd = $this->PlanSubscribers->save($planSubscribers);
 
@@ -516,7 +522,18 @@ class UsersController extends AppController
         $user_id = $id;
         $trainers = $this->Users->find('list')
             ->where(['Users.user_type' => 4, 'Users.partner_id' => $users_id]);
-        $this->set(compact('user_id', 'user', 'trainers', 'users_type'));
+
+        $plansTable = TableRegistry::get('Plans');
+        $planConditions = ['Plans.active' => 1];
+        if ($users_type != 1) {
+            $planConditions['Plans.partner_id'] = $users_id;
+        }
+        $availablePlans = $plansTable->find('list', [
+            'keyField' => 'id',
+            'valueField' => 'title'
+        ])->where($planConditions)->toArray();
+
+        $this->set(compact('user_id', 'user', 'trainers', 'users_type', 'availablePlans'));
         $this->set('_serialize', ['user_id', 'user', 'users_type']);
     }
 
@@ -691,7 +708,93 @@ class UsersController extends AppController
         }
         
         $users_count = $query->count();
-        $this->set(compact('users_count'));
+
+        // Initialize variables for popups
+        $expiredMembers = [];
+        $birthdayMembers = [];
+        $isMyBirthday = false;
+
+        $session = $this->request->session();
+        if (!$session->read('DashboardAlertsShown')) {
+            // 1. Expired subscriptions logic (For Admin, Partner, Trainer)
+            if (in_array($users_type, ['1', '2', '4'])) {
+                $psTable = TableRegistry::get('PlanSubscribers');
+                $allSubsQuery = $psTable->find('all')
+                    ->contain(['Users'])
+                    ->where([
+                        'Users.active !=' => 2,
+                        'Users.user_type NOT IN' => ['1', '2', '4']
+                    ]);
+
+                if ($users_type == 2) {
+                    $allSubsQuery->where(['Users.partner_id' => $users_id]);
+                } elseif ($users_type == 4) {
+                    $partnerId = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : 0;
+                    $allSubsQuery->where(['Users.partner_id' => $partnerId]);
+                }
+
+                $allSubs = $allSubsQuery->order(['PlanSubscribers.id' => 'DESC'])->toArray();
+
+                $processedUsers = [];
+                foreach ($allSubs as $sub) {
+                    $uid = $sub->user_id;
+                    if (in_array($uid, $processedUsers)) {
+                        continue;
+                    }
+                    $processedUsers[] = $uid;
+
+                    // Check if the latest subscription has expired EXACTLY TODAY (past ones ignored)
+                    if ($sub->plan_expire_date && $sub->plan_expire_date->format('Y-m-d') == date('Y-m-d')) {
+                        $expiredMembers[] = [
+                            'user_name' => $sub->user->name,
+                            'plan_name' => $sub->plan_name,
+                            'expire_date' => $sub->plan_expire_date->format('d-m-Y')
+                        ];
+                    }
+                }
+            }
+
+            // 2. Birthday greetings logic
+            // For Members (user_type == 3), check if it's their own birthday today
+            if ($users_type == 3) {
+                $me = $uesrs->find('all')
+                    ->where([
+                        'Users.id' => $users_id,
+                        'Users.dob IS NOT' => null,
+                        'MONTH(Users.dob) =' => date('m'),
+                        'DAY(Users.dob) =' => date('d')
+                    ])
+                    ->first();
+                if ($me) {
+                    $isMyBirthday = true;
+                }
+            }
+            // For Admin (1), Partner (2), or Trainer (4) - fetch members having birthday today
+            if (in_array($users_type, ['1', '2', '4'])) {
+                $bquery = $uesrs->find('all')
+                    ->where([
+                        'Users.active !=' => 2,
+                        'Users.user_type NOT IN' => ['1', '2', '4'],
+                        'Users.dob IS NOT' => null,
+                        'MONTH(Users.dob) =' => date('m'),
+                        'DAY(Users.dob) =' => date('d')
+                    ]);
+
+                if ($users_type == 2) {
+                    $bquery->where(['Users.partner_id' => $users_id]);
+                } elseif ($users_type == 4) {
+                    // Trainer uses partner_id from session/details
+                    $partnerId = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : 0;
+                    $bquery->where(['Users.partner_id' => $partnerId]);
+                }
+
+                $birthdayMembers = $bquery->toArray();
+            }
+
+            $session->write('DashboardAlertsShown', true);
+        }
+
+        $this->set(compact('users_count', 'expiredMembers', 'birthdayMembers', 'isMyBirthday'));
     }
 
 

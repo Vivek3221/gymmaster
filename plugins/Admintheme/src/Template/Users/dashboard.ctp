@@ -153,6 +153,192 @@
         --theme-light: #e8eaf6;
         --theme-shadow: rgba(63, 81, 181, 0.15);
     }
+
+    /* Modern Glassmorphic Modal */
+    .dashboard-modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 23, 42, 0.45);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .dashboard-modal-backdrop.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    .dashboard-modal {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        width: 90%;
+        max-width: 550px;
+        transform: translateY(30px) scale(0.95);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+    }
+    .dashboard-modal-backdrop.active .dashboard-modal {
+        transform: translateY(0) scale(1);
+    }
+    .dashboard-modal-header {
+        padding: 24px 28px 16px 28px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .dashboard-modal-header i {
+        font-size: 28px;
+    }
+    .dashboard-modal-header h3 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 800;
+        color: #1e293b;
+    }
+    .dashboard-modal-body {
+        padding: 24px 28px;
+        max-height: 350px;
+        overflow-y: auto;
+    }
+    .dashboard-modal-footer {
+        padding: 16px 28px 24px 28px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .dashboard-modal-btn {
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none !important;
+    }
+    .btn-close-modal {
+        background: #f1f5f9;
+        color: #475569;
+    }
+    .btn-close-modal:hover {
+        background: #e2e8f0;
+    }
+    .btn-action-modal {
+        background: #ff9800;
+        color: #fff;
+    }
+    .btn-action-modal:hover {
+        background: #e68a00;
+        box-shadow: 0 4px 12px rgba(255, 152, 0, 0.25);
+    }
+
+    /* Modal Lists */
+    .modal-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .modal-table th {
+        text-align: left;
+        font-size: 11px;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f1f5f9;
+    }
+    .modal-table td {
+        padding: 12px 0;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 14px;
+        color: #334155;
+    }
+    .modal-table tr:last-child td {
+        border-bottom: none;
+    }
+    .expire-badge {
+        background: #ffebee;
+        color: #c62828;
+        padding: 3px 8px;
+        border-radius: 30px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    /* Confetti/Celebration styles for Birthday */
+    .birthday-header {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+        color: #fff !important;
+        border-bottom: none;
+        position: relative;
+    }
+    .birthday-header h3 {
+        color: #fff !important;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .birthday-header i {
+        color: #fff !important;
+    }
+    .birthday-user-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 12px;
+        margin-bottom: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .birthday-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #ffe0b2;
+        color: #fb8c00;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        font-weight: 700;
+    }
+    .birthday-info h4 {
+        margin: 0 0 4px 0;
+        font-size: 15px;
+        font-weight: 700;
+        color: #1e293b;
+    }
+    .birthday-info p {
+        margin: 0;
+        font-size: 12px;
+        color: #64748b;
+    }
+    .cake-animation {
+        text-align: center;
+        font-size: 64px;
+        margin-bottom: 16px;
+        animation: wobble 2s infinite;
+    }
+    @keyframes wobble {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(-8deg); }
+        75% { transform: rotate(8deg); }
+    }
 </style>
 
 <section class="content">
@@ -289,4 +475,154 @@
 
         </div>
     </div>
+
+    <!-- Expired Plans Modal (For Partner) -->
+    <?php if (!empty($expiredMembers)) { ?>
+        <div id="expiredPlansModal" class="dashboard-modal-backdrop">
+            <div class="close-backdrop" style="position: absolute; top:0; left:0; width:100%; height:100%;"></div>
+            <div class="dashboard-modal">
+                <div class="dashboard-modal-header" style="border-left: 6px solid #f44336;">
+                    <i class="material-icons" style="color: #f44336;">warning</i>
+                    <h3><?= __('Expired Plan Alerts') ?></h3>
+                </div>
+                <div class="dashboard-modal-body">
+                    <p style="margin-top: 0; margin-bottom: 16px; color: #64748b; font-size: 14px;">
+                        <?= __('The following users have expired subscription plans. Please notify them or renew their plans.') ?>
+                    </p>
+                    <table class="modal-table">
+                        <thead>
+                            <tr>
+                                <th><?= __('User Name') ?></th>
+                                <th><?= __('Expired Plan') ?></th>
+                                <th><?= __('Expiry Date') ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($expiredMembers as $member) { ?>
+                                <tr>
+                                    <td style="font-weight: 600; color: #1e293b;"><?= h($member['user_name']) ?></td>
+                                    <td><?= h($member['plan_name']) ?></td>
+                                    <td><span class="expire-badge"><?= h($member['expire_date']) ?></span></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="dashboard-modal-footer">
+                    <button class="dashboard-modal-btn btn-close-modal"><?= __('Dismiss') ?></button>
+                    <a href="<?= $this->Url->build(['controller' => 'PlanSubscribers', 'action' => 'index']) ?>" class="dashboard-modal-btn btn-action-modal">
+                        <i class="material-icons" style="font-size: 16px;">autorenew</i> <?= __('Manage Subscriptions') ?>
+                    </a>
+                </div>
+            </div>
+        </div>
+    <?php } ?>
+
+    <!-- Birthday Celebration Modal (For Admin, Partner, Trainer) -->
+    <?php if (!empty($birthdayMembers)) { ?>
+        <div id="birthdayCelebrationModal" class="dashboard-modal-backdrop">
+            <div class="close-backdrop" style="position: absolute; top:0; left:0; width:100%; height:100%;"></div>
+            <div class="dashboard-modal">
+                <div class="dashboard-modal-header birthday-header">
+                    <i class="material-icons">cake</i>
+                    <h3><?= __('Today\'s Birthdays!') ?></h3>
+                </div>
+                <div class="dashboard-modal-body">
+                    <div class="cake-animation">🎂🎉</div>
+                    <p style="margin-top: 0; margin-bottom: 16px; color: #475569; font-size: 15px; font-weight: 600; text-align: center;">
+                        <?= __('Wish a very Happy Birthday to our amazing gym members celebrating today!') ?>
+                    </p>
+                    <div style="margin-top: 15px;">
+                        <?php foreach ($birthdayMembers as $bMember) { ?>
+                            <div class="birthday-user-card">
+                                <div class="birthday-avatar">
+                                    <?= strtoupper(substr($bMember->name, 0, 1)) ?>
+                                </div>
+                                <div class="birthday-info">
+                                    <h4><?= h($bMember->name) ?></h4>
+                                    <p><i class="material-icons" style="font-size: 12px; vertical-align: middle;">phone</i> <?= h($bMember->mobile_no) ?></p>
+                                </div>
+                                <div style="margin-left: auto;">
+                                    <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $bMember->mobile_no) ?>?text=Happy%20Birthday%20<?= urlencode($bMember->name) ?>!%20Have%20a%20great%20day%20ahead!%20-%20From%20Gym%20Management" target="_blank" class="btn btn-xs btn-success waves-effect" style="background-color: #25D366 !important; color: white !important; font-weight: 700; border-radius: 6px; padding: 4px 10px; display: inline-flex; align-items: center; gap: 4px; border: none; font-size: 11px; text-decoration: none;">
+                                        WhatsApp
+                                    </a>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="dashboard-modal-footer">
+                    <button class="dashboard-modal-btn btn-close-modal"><?= __('Close') ?></button>
+                </div>
+            </div>
+        </div>
+    <?php } ?>
+
+    <!-- Personal Birthday Greeting (For User) -->
+    <?php if ($isMyBirthday) { ?>
+        <div id="userPersonalBirthdayModal" class="dashboard-modal-backdrop">
+            <div class="close-backdrop" style="position: absolute; top:0; left:0; width:100%; height:100%;"></div>
+            <div class="dashboard-modal">
+                <div class="dashboard-modal-header birthday-header" style="background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);">
+                    <i class="material-icons">star</i>
+                    <h3><?= __('Happy Birthday to You!') ?></h3>
+                </div>
+                <div class="dashboard-modal-body" style="text-align: center;">
+                    <div class="cake-animation">🎂✨🎈</div>
+                    <h3 style="margin-top: 0; margin-bottom: 8px; color: #1e293b; font-weight: 800;">
+                        <?= __('Happy Birthday, {0}!', h($usersdetail['users_name'])) ?>
+                    </h3>
+                    <p style="color: #64748b; font-size: 15px; line-height: 1.6; margin-bottom: 0;">
+                        <?= __('We wish you a fantastic day filled with joy, good health, and success in reaching all your fitness goals! Thank you for being a valued member of our gym.') ?>
+                    </p>
+                </div>
+                <div class="dashboard-modal-footer">
+                    <button class="dashboard-modal-btn btn-close-modal" style="background: #3f51b5; color: #fff; width: 100%; justify-content: center;"><?= __('Thank You! 😊') ?></button>
+                </div>
+            </div>
+        </div>
+    <?php } ?>
+
+    <script>
+        $(document).ready(function() {
+            var expiredModal = $('#expiredPlansModal');
+            var birthdayModal = $('#birthdayCelebrationModal');
+            var userBirthdayModal = $('#userPersonalBirthdayModal');
+
+            // Queue of modals to show
+            var modalQueue = [];
+
+            if (expiredModal.length > 0) {
+                modalQueue.push(expiredModal);
+            }
+            if (birthdayModal.length > 0) {
+                modalQueue.push(birthdayModal);
+            }
+            if (userBirthdayModal.length > 0) {
+                modalQueue.push(userBirthdayModal);
+            }
+
+            function showNextModal() {
+                if (modalQueue.length === 0) return;
+                var nextModal = modalQueue.shift();
+                
+                // Show modal with animation class
+                nextModal.addClass('active');
+
+                nextModal.find('.btn-close-modal, .btn-action-modal, .close-backdrop').on('click', function(e) {
+                    if ($(this).hasClass('btn-action-modal') && $(this).attr('href')) {
+                        // Allow navigation for action button
+                        return true;
+                    }
+                    e.preventDefault();
+                    nextModal.removeClass('active');
+                    // Give transition time then show next
+                    setTimeout(showNextModal, 400);
+                });
+            }
+
+            // Start modal sequence
+            setTimeout(showNextModal, 600);
+        });
+    </script>
 </section>

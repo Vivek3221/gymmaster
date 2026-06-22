@@ -237,6 +237,12 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
                         <span><?= __('Users') ?></span>
                     </a>
                 </li>
+                 <li class="<?php if (($controller == 'Plans' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'))){echo "active";}?>">
+                    <a href="<?= $this->Url->build(['controller' => 'Plans', 'action' => 'index']); ?>">
+                        <i class="material-icons">loyalty</i>
+                        <span><?= __('Plans') ?></span>
+                    </a>
+                </li>
                 <li class="<?php if (($controller == 'PlanSubscribers' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'PlanSubscribers', 'action' => 'index']); ?>">
                         <i class="material-icons">pageview</i>
