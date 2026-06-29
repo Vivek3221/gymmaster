@@ -49,7 +49,8 @@ class PlanSubscriber extends Entity
         'modified' => true,
         'user' => true,
         'partner' => true,
-        'payments' => true
+        'payments' => true,
+        'collection_type' => true
     ];
 
     protected $_virtual = ['paid_fee', 'remain_fee'];

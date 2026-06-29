@@ -41,6 +41,9 @@ class PlanSubscribersController extends AppController
         $due_date_from = '';
         $due_date_to = '';
 
+        // Exclude manual collection entries from regular list
+        $search['PlanSubscribers.collection_type !='] = 'manual';
+
         if (isset($users_type) && ($users_type == 2)) {
             $search['Users.partner_id'] = $users_id;
         }
@@ -191,11 +194,12 @@ class PlanSubscribersController extends AppController
         $name = '';
         $partner   ='';
         $search = [];
+        $search['PlanSubscribers.collection_type !='] = 'manual';
         $users_type = $this->usersdetail['users_type'];
         $users_id = $this->usersdetail['users_id'];
         
         if (isset($users_type) && ($users_type == 2)) {
-            $search['Users.partner_id'] = $users_id;
+            $search['PlanSubscribers.partner_id'] = $users_id;
         }
         
         if (isset($this->request->query['name']) && trim($this->request->query['name']) != "") {
@@ -413,7 +417,7 @@ class PlanSubscribersController extends AppController
                 $monthTotals = array_fill_keys($months, 0);
 
                 foreach ($subscribersInYear as $row) {
-                    $startDateStr = $row->created->format('Y-m-d');
+                    $startDateStr = (!empty($row->subscription_start_date)) ? $row->subscription_start_date->format('Y-m-d') : $row->created->format('Y-m-d');
                     $endDateStr = $row->plan_expire_date->format('Y-m-d');
                     
                     $totalDays = round((strtotime($endDateStr) - strtotime($startDateStr)) / 86400) + 1;
@@ -599,11 +603,12 @@ class PlanSubscribersController extends AppController
         $name = '';
         $partner   ='';
         $search = [];
+        $search['PlanSubscribers.collection_type !='] = 'manual';
         $users_type = $this->usersdetail['users_type'];
         $users_id = $this->usersdetail['users_id'];
         
         if (isset($users_type) && ($users_type == 2)) {
-            $search['Users.partner_id'] = $users_id;
+            $search['PlanSubscribers.partner_id'] = $users_id;
         }
         
         if (isset($this->request->query['name']) && trim($this->request->query['name']) != "") {
@@ -806,7 +811,7 @@ class PlanSubscribersController extends AppController
             $monthTotals = array_fill_keys($months, 0);
 
             foreach ($subscribersInYear as $row) {
-                $startDateStr = $row->created->format('Y-m-d');
+                $startDateStr = (!empty($row->subscription_start_date)) ? $row->subscription_start_date->format('Y-m-d') : $row->created->format('Y-m-d');
                 $endDateStr = $row->plan_expire_date->format('Y-m-d');
                 
                 $totalDays = round((strtotime($endDateStr) - strtotime($startDateStr)) / 86400) + 1;

@@ -51,11 +51,12 @@
     }
 
     .modern-dashboard-card {
-        background: #ffffff;
+        background: linear-gradient(135deg, var(--theme-color-start) 0%, var(--theme-color-end) 100%);
+        color: #ffffff !important;
         border-radius: 14px;
         padding: 24px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        border: none !important;
+        box-shadow: 0 8px 24px var(--theme-shadow);
         display: flex;
         align-items: center;
         gap: 20px;
@@ -66,19 +67,11 @@
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .modern-dashboard-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: var(--theme-color);
-        opacity: 0.85;
+        display: none;
     }
     .modern-dashboard-card:hover {
         transform: translateY(-6px);
-        box-shadow: 0 15px 30px var(--theme-shadow);
-        border-color: var(--theme-color);
+        box-shadow: 0 16px 36px var(--theme-shadow);
     }
 
     .card-icon-wrapper {
@@ -89,25 +82,25 @@
         align-items: center;
         justify-content: center;
         font-size: 26px;
-        background: var(--theme-light);
-        color: var(--theme-color);
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffffff !important;
         transition: all 0.3s ease;
         flex-shrink: 0;
     }
     .modern-dashboard-card:hover .card-icon-wrapper {
-        background: var(--theme-color);
-        color: #ffffff;
+        background: #ffffff;
+        color: var(--theme-color-start) !important;
         transform: scale(1.08);
     }
 
     .card-details {
         flex: 1;
-        min-width: 0; /* Enables text truncation if needed */
+        min-width: 0;
     }
     .card-details .card-label {
         font-size: 11px;
         font-weight: 700;
-        color: #a0aec0;
+        color: rgba(255, 255, 255, 0.8) !important;
         text-transform: uppercase;
         letter-spacing: 0.8px;
         margin-bottom: 6px;
@@ -118,40 +111,40 @@
     .card-details .card-val {
         font-size: 20px;
         font-weight: 800;
-        color: #2d3748;
+        color: #ffffff !important;
         line-height: 1.2;
     }
 
     /* Color variables classes */
     .color-users {
-        --theme-color: #00bcd4;
-        --theme-light: #e0f7fa;
-        --theme-shadow: rgba(0, 188, 212, 0.15);
+        --theme-color-start: #00c6ff;
+        --theme-color-end: #0072ff;
+        --theme-shadow: rgba(0, 114, 255, 0.25);
     }
     .color-exercise {
-        --theme-color: #e91e63;
-        --theme-light: #fce4ec;
-        --theme-shadow: rgba(233, 30, 99, 0.15);
+        --theme-color-start: #f857a6;
+        --theme-color-end: #ff5858;
+        --theme-shadow: rgba(255, 88, 88, 0.25);
     }
     .color-body {
-        --theme-color: #8bc34a;
-        --theme-light: #f1f8e9;
-        --theme-shadow: rgba(139, 195, 74, 0.15);
+        --theme-color-start: #11998e;
+        --theme-color-end: #38ef7d;
+        --theme-shadow: rgba(56, 239, 125, 0.25);
     }
     .color-fitness {
-        --theme-color: #ff9800;
-        --theme-light: #fff3e0;
-        --theme-shadow: rgba(255, 152, 0, 0.15);
+        --theme-color-start: #fc4a1a;
+        --theme-color-end: #f7b733;
+        --theme-shadow: rgba(247, 183, 51, 0.25);
     }
     .color-session {
-        --theme-color: #9c27b0;
-        --theme-light: #f3e5f5;
-        --theme-shadow: rgba(156, 39, 176, 0.15);
+        --theme-color-start: #7F00FF;
+        --theme-color-end: #E100FF;
+        --theme-shadow: rgba(225, 0, 255, 0.25);
     }
     .color-trainers {
-        --theme-color: #3f51b5;
-        --theme-light: #e8eaf6;
-        --theme-shadow: rgba(63, 81, 181, 0.15);
+        --theme-color-start: #396afc;
+        --theme-color-end: #2948ff;
+        --theme-shadow: rgba(41, 72, 255, 0.25);
     }
 
     /* Modern Glassmorphic Modal */
@@ -474,6 +467,27 @@
             <?php } ?>
 
         </div>
+
+        <!-- Collection Graph Row (only for Admin, Partner, Trainer) -->
+        <?php if (in_array($usersdetail['users_type'], ['1', '2', '4'])): ?>
+            <div class="row clearfix" style="margin-top: 10px; margin-bottom: 24px;">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card modern-card" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); border: 1px solid #eaeaea; overflow: hidden; background: #fff;">
+                        <div class="header" style="background: #fafafa; border-bottom: 1px solid #eaeaea; padding: 20px 24px; display: flex; align-items: center; gap: 10px;">
+                            <i class="material-icons" style="color: #ff9800;">insert_chart</i>
+                            <h2 style="font-size: 16px; font-weight: 700; color: #333; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                                <?= __('Monthly Collections Trend (Last 6 Months)') ?>
+                            </h2>
+                        </div>
+                        <div class="body" style="padding: 24px;">
+                            <div style="position: relative; height: 320px; width: 100%;">
+                                <canvas id="collectionTrendChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
 
     <!-- Expired Plans Modal (For Partner) -->
@@ -583,6 +597,8 @@
         </div>
     <?php } ?>
 
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         $(document).ready(function() {
             var expiredModal = $('#expiredPlansModal');
@@ -623,6 +639,79 @@
 
             // Start modal sequence
             setTimeout(showNextModal, 600);
+
+            // Render Collection Trend Chart
+            var chartEl = document.getElementById('collectionTrendChart');
+            if (chartEl) {
+                var labels = <?php echo json_encode($chartLabels); ?>;
+                var dataValues = <?php echo json_encode($chartValues); ?>;
+                
+                new Chart(chartEl, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: '<?= __("Collection (₹)") ?>',
+                            data: dataValues,
+                            borderColor: '#ff9800',
+                            backgroundColor: 'rgba(255, 152, 0, 0.08)',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#ff9800',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            tension: 0.35,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                padding: 12,
+                                callbacks: {
+                                    label: function(context) {
+                                        return ' ' + context.dataset.label + ': ' + new Intl.NumberFormat('en-IN').format(context.raw);
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#f3f4f6'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return '₹' + new Intl.NumberFormat('en-IN').format(value);
+                                    },
+                                    color: '#718096',
+                                    font: {
+                                        weight: '600'
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: '#718096',
+                                    font: {
+                                        weight: '600'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
         });
     </script>
 </section>

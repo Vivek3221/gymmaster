@@ -399,7 +399,7 @@ class UsersController extends AppController
                         ->subject($subject)
                         ->viewVars($userDataArr)
                         ->send();
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                 }
                 $this->Flash->success(__('The user has been saved.'));
 
@@ -503,7 +503,7 @@ class UsersController extends AppController
                             ->subject($subject)
                             ->viewVars($userDataArr)
                             ->send();
-                    } catch (Exception $e) {
+                    } catch (\Exception $e) {
                     }
                 }
                 if (empty($data['password'])) {
@@ -794,7 +794,52 @@ class UsersController extends AppController
             $session->write('DashboardAlertsShown', true);
         }
 
-        $this->set(compact('users_count', 'expiredMembers', 'birthdayMembers', 'isMyBirthday'));
+        // Fetch last 6 months collection data for graph
+        $paymentsTable = TableRegistry::get('Payments');
+        $chartConditions = [
+            'Payments.created >=' => date('Y-m-01 00:00:00', strtotime('-5 months'))
+        ];
+        if ($users_type == 2) {
+            $chartConditions['Payments.partner_id'] = $users_id;
+        } elseif ($users_type == 4) {
+            $partnerId = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : 0;
+            $chartConditions['Payments.partner_id'] = $partnerId;
+        }
+
+        $rawPayments = $paymentsTable->find('all')
+            ->select(['created', 'amount'])
+            ->where($chartConditions)
+            ->toArray();
+
+        // Build last 6 months skeleton
+        $chartMonths = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $ym = date('Y-m', strtotime("-$i months"));
+            $label = date('M Y', strtotime("-$i months"));
+            $chartMonths[$ym] = [
+                'label' => $label,
+                'total' => 0
+            ];
+        }
+
+        // Aggregate in PHP
+        foreach ($rawPayments as $payment) {
+            if ($payment->created) {
+                $ym = $payment->created->format('Y-m');
+                if (isset($chartMonths[$ym])) {
+                    $chartMonths[$ym]['total'] += (float)$payment->amount;
+                }
+            }
+        }
+
+        $chartLabels = [];
+        $chartValues = [];
+        foreach ($chartMonths as $mInfo) {
+            $chartLabels[] = $mInfo['label'];
+            $chartValues[] = $mInfo['total'];
+        }
+
+        $this->set(compact('users_count', 'expiredMembers', 'birthdayMembers', 'isMyBirthday', 'chartLabels', 'chartValues'));
     }
 
 
@@ -894,7 +939,7 @@ class UsersController extends AppController
                         ->subject($subject)
                         ->viewVars($userDataArr)
                         ->send();
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                 }
                 $result = ['msg_type' => 'success', 'msg' => 'Reset password link sent on your registered email.'];
             } else {

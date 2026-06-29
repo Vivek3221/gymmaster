@@ -249,6 +249,24 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
                         <span><?= __('Plan Subscribe') ?></span>
                     </a>
                 </li>
+                <?php
+                // Manual Collection: show only to permitted emails
+                if (!empty($usersdetail['users_email'])) {
+                    try {
+                        $db = \Cake\ORM\TableRegistry::get('PlanSubscribers')->getConnection();
+                        $mcAccess = $db->execute(
+                            "SELECT id FROM manual_collection_access WHERE LOWER(email) = ? AND is_active = 1 LIMIT 1",
+                            [strtolower(trim($usersdetail['users_email']))]
+                        )->fetch('assoc');
+                    } catch(\Exception $e) { $mcAccess = false; }
+                    if ($mcAccess) { ?>
+                <li class="<?php if ($controller == 'ManualCollections'){echo "active";}?>" style="background:<?= $controller=='ManualCollections'?'#f3e5f5':''; ?>">
+                    <a href="<?= $this->Url->build(['controller' => 'ManualCollections', 'action' => 'index']); ?>" style="<?= $controller=='ManualCollections'?'color:#7b1fa2!important;':''; ?>">
+                        <i class="material-icons" style="<?= $controller=='ManualCollections'?'color:#9c27b0!important;':''; ?>">playlist_add_check</i>
+                        <span><?= __('Manual Collection') ?></span>
+                    </a>
+                </li>
+                <?php } } ?>
                 <li class="<?php if (($controller == 'Payments' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'Payments', 'action' => 'index']); ?>">
                         <i class="material-icons">payment</i>
