@@ -332,6 +332,225 @@
         25% { transform: rotate(-8deg); }
         75% { transform: rotate(8deg); }
     }
+
+    /* Today's Follow-ups Modal Styles */
+    .followup-modal-header {
+        background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+        color: #fff !important;
+        border-bottom: none;
+        position: relative;
+    }
+    .followup-modal-header h3 {
+        color: #fff !important;
+        margin: 0;
+        font-size: 20px;
+        font-weight: 800;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .followup-modal-header p {
+        color: rgba(255, 255, 255, 0.8) !important;
+        margin: 4px 0 0 0;
+        font-size: 13px;
+        font-weight: 500;
+    }
+    .followup-modal-header i {
+        color: #fff !important;
+    }
+    .followup-modal-container {
+        display: flex;
+        height: 400px;
+        background: #f8fafc;
+        border-radius: 0 0 14px 14px;
+        overflow: hidden;
+    }
+    .followup-sidebar {
+        width: 200px;
+        border-right: 1px solid #e2e8f0;
+        background: #fff;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+    }
+    .followup-sidebar-item {
+        padding: 12px 16px;
+        border-bottom: 1px solid #f1f5f9;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.2s ease;
+    }
+    .followup-sidebar-item:hover {
+        background: #f8fafc;
+    }
+    .followup-sidebar-item.active {
+        background: #eff6ff;
+        border-left: 4px solid #4f46e5;
+    }
+    .followup-sidebar-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #e0f2fe;
+        color: #0284c7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+    .followup-sidebar-item.active .followup-sidebar-avatar {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+    .followup-sidebar-info {
+        min-width: 0;
+    }
+    .followup-sidebar-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1e293b;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .followup-sidebar-time {
+        font-size: 11px;
+        color: #64748b;
+        margin-top: 2px;
+    }
+    .followup-detail-pane {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: #f8fafc;
+    }
+    .followup-card {
+        background: #ffffff;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        padding: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        transition: all 0.25s ease;
+        margin-bottom: 0;
+    }
+    .followup-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+        border-bottom: 1px solid #f1f5f9;
+        padding-bottom: 10px;
+    }
+    .followup-user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .followup-user-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #e0f2fe;
+        color: #0284c7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        font-weight: 700;
+    }
+    .followup-user-details h4 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 700;
+        color: #1e293b;
+    }
+    .followup-user-details p {
+        margin: 2px 0 0 0;
+        font-size: 12px;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .followup-user-details p a {
+        color: #64748b;
+        text-decoration: none;
+    }
+    .followup-user-details p a:hover {
+        color: #3b82f6;
+    }
+    .followup-status-badge {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 30px;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .status-active {
+        background-color: #ecfdf5;
+        color: #047857;
+    }
+    .status-inactive {
+        background-color: #fef2f2;
+        color: #b91c1c;
+    }
+    .status-enquiry {
+        background-color: #fffbeb;
+        color: #b45309;
+    }
+    .followup-card-body {
+        font-size: 13.5px;
+        color: #334155;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .followup-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #475569;
+    }
+    .followup-meta-item i {
+        font-size: 18px;
+        color: #64748b;
+    }
+    .followup-remark-box {
+        background-color: #f8fafc;
+        border-left: 3px solid #cbd5e1;
+        padding: 12px;
+        border-radius: 0 8px 8px 0;
+        font-style: italic;
+        color: #475569;
+        margin-top: 4px;
+        line-height: 1.5;
+    }
+    .followup-empty-state {
+        text-align: center;
+        padding: 40px 20px;
+    }
+    .followup-empty-icon {
+        font-size: 64px;
+        color: #94a3b8;
+        margin-bottom: 16px;
+    }
+    .followup-empty-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0 0 6px 0;
+    }
+    .followup-empty-text {
+        font-size: 13px;
+        color: #64748b;
+        margin: 0;
+    }
 </style>
 
 <section class="content">
@@ -597,6 +816,44 @@
         </div>
     <?php } ?>
 
+    <?php
+    $allowedEmails = ['ad1234@yopmail.com', 'mukeshkr3221@gmail.com'];
+    $showFollowupsModal = (!empty($usersdetail['users_email']) && in_array($usersdetail['users_email'], $allowedEmails));
+    ?>
+
+    <!-- Today's Follow-ups Modal (For specific admin users) -->
+    <?php if ($showFollowupsModal) { ?>
+        <div id="todayFollowupsModal" class="dashboard-modal-backdrop">
+            <div class="close-backdrop" style="position: absolute; top:0; left:0; width:100%; height:100%;"></div>
+            <div class="dashboard-modal" style="max-width: 680px; width: 90%;">
+                <div class="dashboard-modal-header followup-modal-header">
+                    <i class="material-icons" style="font-size: 28px;">assignment_turned_in</i>
+                    <div>
+                        <h3><?= __('Today\'s Follow-ups') ?></h3>
+                        <p><?= date('d M Y') ?></p>
+                    </div>
+                </div>
+                <div class="dashboard-modal-body" id="followupModalBody" style="background-color: #f8fafc; padding: 0;">
+                    <div class="text-center" style="padding: 50px 20px;">
+                        <div class="preloader pl-size-xs" style="display: inline-block;">
+                            <div class="spinner-layer pl-amber">
+                                <div class="circle-clipper left"><div class="circle"></div></div>
+                                <div class="circle-clipper right"><div class="circle"></div></div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 10px; color: #64748b; font-size: 13px; font-weight: 500;"><?= __('Loading today\'s follow-ups...') ?></p>
+                    </div>
+                </div>
+                <div class="dashboard-modal-footer">
+                    <button class="dashboard-modal-btn btn-close-modal"><?= __('Close') ?></button>
+                    <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index', '?' => ['date_type' => 'followup']]) ?>" class="dashboard-modal-btn btn-action-modal" style="background-color: #4f46e5 !important;">
+                        <i class="material-icons" style="font-size: 16px;">list</i> <?= __('View All') ?>
+                    </a>
+                </div>
+            </div>
+        </div>
+    <?php } ?>
+
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -639,6 +896,153 @@
 
             // Start modal sequence
             setTimeout(showNextModal, 600);
+
+            var todayFollowupsModal = $('#todayFollowupsModal');
+            if (todayFollowupsModal.length > 0) {
+                // Fetch follow-ups completed today via AJAX
+                $.ajax({
+                    url: '<?= $this->Url->build(['controller' => 'Users', 'action' => 'getTodayFollowups']) ?>',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            var html = '';
+                            if (response.data.length === 0) {
+                                // Empty state
+                                html = `
+                                    <div class="followup-empty-state" style="padding: 50px 20px;">
+                                        <div class="followup-empty-icon">
+                                            <i class="material-icons" style="font-size: 64px; color: #94a3b8;">check_circle_outline</i>
+                                        </div>
+                                        <h4 class="followup-empty-title"><?= __('All Caught Up!') ?></h4>
+                                        <p class="followup-empty-text"><?= __('No follow-ups logged today.') ?></p>
+                                    </div>
+                                `;
+                                $('#followupModalBody').html(html);
+                            } else {
+                                // We have follow-ups, build the split-pane container
+                                var containerHtml = '<div class="followup-modal-container">';
+                                
+                                // Build sidebar
+                                var sidebarHtml = '<div class="followup-sidebar">';
+                                $.each(response.data, function(index, item) {
+                                    var timeStr = item.followup_date.split(' ')[1] || '';
+                                    var activeClass = (index === 0) ? 'active' : '';
+                                    sidebarHtml += `
+                                        <div class="followup-sidebar-item ${activeClass}" data-index="${index}">
+                                            <div class="followup-sidebar-avatar">
+                                                ${item.customer_name.substring(0, 1).toUpperCase()}
+                                            </div>
+                                            <div class="followup-sidebar-info">
+                                                <div class="followup-sidebar-name">${item.customer_name}</div>
+                                                <div class="followup-sidebar-time">${timeStr}</div>
+                                            </div>
+                                        </div>
+                                    `;
+                                });
+                                sidebarHtml += '</div>';
+                                
+                                // Build detail pane
+                                var detailHtml = '<div class="followup-detail-pane" id="followupDetailPane">';
+                                detailHtml += '</div>';
+                                
+                                containerHtml += sidebarHtml + detailHtml + '</div>';
+                                $('#followupModalBody').html(containerHtml);
+                                
+                                // Helper function to render a single follow-up detail card
+                                function renderFollowupDetail(index) {
+                                    var item = response.data[index];
+                                    var statusClass = '';
+                                    var statusIcon = '';
+                                    if (item.status === 'Active') {
+                                        statusClass = 'status-active';
+                                        statusIcon = '🟢';
+                                    } else if (item.status === 'Enquiry') {
+                                        statusClass = 'status-enquiry';
+                                        statusIcon = '🟡';
+                                    } else {
+                                        statusClass = 'status-inactive';
+                                        statusIcon = '🔴';
+                                    }
+
+                                    var emailHtml = item.email ? `
+                                        <a href="mailto:${item.email}" title="${item.email}">
+                                            <i class="material-icons" style="font-size: 14px; vertical-align: middle;">email</i> ${item.email}
+                                        </a>
+                                    ` : '';
+
+                                    var nextFollowupHtml = item.next_followup_date ? `
+                                        <div class="followup-meta-item" style="margin-top: 4px; font-weight: 600; color: #4f46e5;">
+                                            <i class="material-icons" style="color: #4f46e5; font-size: 16px;">event_repeat</i>
+                                            <span><?= __('Next Follow-up:') ?> ${item.next_followup_date}</span>
+                                        </div>
+                                    ` : '';
+
+                                    var detailCard = `
+                                        <div class="followup-card">
+                                            <div class="followup-card-header">
+                                                <div class="followup-user-info">
+                                                    <div class="followup-user-avatar">
+                                                        ${item.customer_name.substring(0, 1).toUpperCase()}
+                                                    </div>
+                                                    <div class="followup-user-details">
+                                                        <h4>${item.customer_name}</h4>
+                                                        <p>
+                                                            <a href="tel:${item.mobile_no}">
+                                                                <i class="material-icons" style="font-size: 14px; vertical-align: middle;">phone</i> ${item.mobile_no}
+                                                            </a>
+                                                            ${emailHtml ? ' | ' + emailHtml : ''}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <span class="followup-status-badge ${statusClass}">
+                                                    ${statusIcon} ${item.status}
+                                                </span>
+                                            </div>
+                                            <div class="followup-card-body">
+                                                <div class="followup-meta-item">
+                                                    <i class="material-icons">account_circle</i>
+                                                    <span><strong><?= __('Staff:') ?></strong> ${item.staff_name}</span>
+                                                </div>
+                                                <div class="followup-meta-item">
+                                                    <i class="material-icons">schedule</i>
+                                                    <span><strong><?= __('Completed:') ?></strong> ${item.followup_date}</span>
+                                                </div>
+                                                <div class="followup-remark-box">
+                                                    ${item.remark}
+                                                </div>
+                                                ${nextFollowupHtml}
+                                            </div>
+                                        </div>
+                                    `;
+                                    $('#followupDetailPane').html(detailCard);
+                                }
+                                
+                                // Render the first item by default
+                                renderFollowupDetail(0);
+                                
+                                // Handle click on sidebar item
+                                $(document).on('click', '.followup-sidebar-item', function() {
+                                    $('.followup-sidebar-item').removeClass('active');
+                                    $(this).addClass('active');
+                                    var idx = $(this).data('index');
+                                    renderFollowupDetail(idx);
+                                });
+                            }
+                            
+                            // Insert today's followups modal into the queue
+                            modalQueue.push(todayFollowupsModal);
+                            // If no modal is currently active, start/resume the sequence
+                            if ($('.dashboard-modal-backdrop.active').length === 0) {
+                                showNextModal();
+                            }
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Failed to load today followups:', error);
+                    }
+                });
+            }
 
             // Render Collection Trend Chart
             var chartEl = document.getElementById('collectionTrendChart');

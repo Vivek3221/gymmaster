@@ -471,6 +471,10 @@ $user_type = $this->Common->getType();
                         </div>
                         
                         <div class="filter-actions">
+                            <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'exportContacts']); ?>" class="btn btn-success waves-effect" style="background-color: #2e7d32 !important; border-color: #2e7d32 !important; color: #fff !important;">
+                                <i class="material-icons" style="font-size: 18px; vertical-align: middle;">download</i>
+                                <?= __('Export Client Contacts') ?>
+                            </a>
                             <?= $this->Form->button('<i class="material-icons" style="font-size: 18px; vertical-align: middle;">search</i> ' . __('Search'), ['class' => 'btn btn-primary waves-effect', 'escapeTitle' => false]) ?>
                             <?= $this->Html->link('<i class="material-icons" style="font-size: 18px; vertical-align: middle;">clear_all</i> ' . __('Clear'), ['controller' => 'Users'], ['class' => 'btn btn-danger waves-effect', 'escape' => false]) ?>
                         </div>

@@ -33,7 +33,7 @@ class UsersController extends AppController
     {
         parent::beforeFilter($event);
         // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index', 'add', 'view', 'edit', 'login', 'status', 'adminLogin', 'verifiedUpdate', 'logout', 'payment', 'forgetPassword', 'forgotPassword', 'resetPassword', 'siteMap', 'about', 'contact', 'sendContact', 'userProfile', 'saveRemark', 'getRemarks', 'softDelete']);
+        $this->Auth->allow(['index', 'add', 'view', 'edit', 'login', 'status', 'adminLogin', 'verifiedUpdate', 'logout', 'payment', 'forgetPassword', 'forgotPassword', 'resetPassword', 'siteMap', 'about', 'contact', 'sendContact', 'userProfile', 'saveRemark', 'getRemarks', 'softDelete', 'exportContacts']);
     }
 
     public function about()
@@ -1325,6 +1325,9 @@ class UsersController extends AppController
         if (!empty($data['followup_date'])) {
             $data['followup_date'] = date('Y-m-d H:i:s', strtotime($data['followup_date']));
         }
+        if (!empty($this->usersdetail['users_id'])) {
+            $data['created_by'] = $this->usersdetail['users_id'];
+        }
 
         $remarkEntity = $this->UserRemarks->patchEntity($remarkEntity, $data);
         if ($this->UserRemarks->save($remarkEntity)) {
@@ -1539,6 +1542,152 @@ require \'composer.phar\';';
         }
         
         exit();
+    }
+
+    public function getTodayFollowups()
+    {
+        $this->autoRender = false;
+        $this->request->allowMethod(['get']);
+
+        // 1. Security Check: verify logged-in user email
+        $allowedEmails = ['ad1234@yopmail.com', 'mukeshkr3221@gmail.com'];
+        if (empty($this->usersdetail['users_email']) || !in_array($this->usersdetail['users_email'], $allowedEmails)) {
+            $this->response->statusCode(403);
+            echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+            exit;
+        }
+
+        $session = $this->request->session();
+        
+        // 2. Check if already shown in this login session
+        if ($session->read('DashboardFollowupsAlertShown')) {
+            echo json_encode(['status' => 'already_shown', 'data' => []]);
+            exit;
+        }
+
+        // Set session flag so it won't show again in this login session
+        $session->write('DashboardFollowupsAlertShown', true);
+
+        // 3. Fetch all follow-ups completed today
+        $userRemarksTable = \Cake\ORM\TableRegistry::get('UserRemarks');
+        $usersTable = \Cake\ORM\TableRegistry::get('Users');
+
+        $today = date('Y-m-d');
+        $remarks = $userRemarksTable->find('all')
+            ->contain(['Users'])
+            ->where([
+                'DATE(UserRemarks.created) =' => $today,
+                'Users.active !=' => 3 // ignore soft-deleted users
+            ])
+            ->order(['UserRemarks.created' => 'DESC'])
+            ->toArray();
+
+        // Gather all staff user IDs (both created_by and trainer_userid) to fetch their names in one query
+        $staffIds = [];
+        foreach ($remarks as $remark) {
+            if ($remark->created_by) {
+                $staffIds[] = $remark->created_by;
+            }
+            if ($remark->user && $remark->user->trainer_userid) {
+                $staffIds[] = $remark->user->trainer_userid;
+            }
+        }
+
+        $staffNames = [];
+        if (!empty($staffIds)) {
+            $staffs = $usersTable->find('all')
+                ->select(['id', 'name'])
+                ->where(['id IN' => array_unique($staffIds)])
+                ->toArray();
+            foreach ($staffs as $s) {
+                $staffNames[$s->id] = $s->name;
+            }
+        }
+
+        // Format data
+        $formatted = [];
+        foreach ($remarks as $remark) {
+            $cust = $remark->user;
+            if (!$cust) continue;
+
+            $statusText = 'Inactive';
+            if ($cust->active == 1) {
+                $statusText = 'Active';
+            } elseif ($cust->active == 2) {
+                $statusText = 'Enquiry';
+            }
+
+            $staffName = 'Not Assigned';
+            if (!empty($remark->created_by) && isset($staffNames[$remark->created_by])) {
+                $staffName = $staffNames[$remark->created_by];
+            } elseif (!empty($cust->trainer_userid) && isset($staffNames[$cust->trainer_userid])) {
+                $staffName = $staffNames[$cust->trainer_userid];
+            }
+
+            $formatted[] = [
+                'customer_name' => h(ucfirst($cust->name)),
+                'mobile_no' => h($cust->mobile_no),
+                'email' => !empty($cust->email) ? h($cust->email) : null,
+                'staff_name' => h(ucfirst($staffName)),
+                'followup_date' => $remark->created ? $remark->created->format('d M Y • h:i A') : 'N/A', // completed date/time
+                'status' => $statusText,
+                'remark' => h($remark->remark),
+                'next_followup_date' => $remark->followup_date ? $remark->followup_date->format('d M Y') : null
+            ];
+        }
+
+        echo json_encode(['status' => 'success', 'data' => $formatted]);
+        exit;
+    }
+
+    public function exportContacts()
+    {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+
+        $this->autoRender = false;
+        
+        $conditions = [
+            'Users.user_type' => 3,
+            'Users.active !=' => 3
+        ];
+        
+        // Filter by partner_id if the logged-in user is type 2 (partner)
+        if ($this->usersdetail['users_type'] == 2) {
+            $conditions['Users.partner_id'] = $this->usersdetail['users_id'];
+        }
+
+        $clients = $this->Users->find('all')
+            ->select(['name', 'mobile_no', 'email'])
+            ->where($conditions)
+            ->order(['Users.name' => 'ASC'])
+            ->toArray();
+
+        // Send headers for CSV download
+        $filename = 'contacts_export_' . date('Ymd_His') . '.csv';
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        
+        $output = fopen('php://output', 'w');
+        
+        // Add UTF-8 BOM for proper rendering in MS Excel
+        fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+        
+        // CSV Header
+        fputcsv($output, ['Name', 'Mobile', 'Email']);
+        
+        // CSV Data
+        foreach ($clients as $client) {
+            fputcsv($output, [
+                $client->name,
+                $client->mobile_no,
+                $client->email
+            ]);
+        }
+        
+        fclose($output);
+        exit;
     }
 
     public function beforeRender(\Cake\Event\Event $event)
