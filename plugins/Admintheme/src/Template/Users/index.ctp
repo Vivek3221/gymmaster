@@ -277,6 +277,11 @@ $user_type = $this->Common->getType();
                 color: #ff8f00 !important;
                 border-color: #ffe082;
             }
+            .action-icon-btn.delete-btn:hover {
+                background: #ffebee;
+                color: #c62828 !important;
+                border-color: #ffcdd2;
+            }
             .action-icon-btn.cart-btn:hover {
                 background: #e8f5e9;
                 color: #2e7d32 !important;
@@ -619,6 +624,18 @@ $user_type = $this->Common->getType();
                                                         <a href="javascript:void(0);" class="action-icon-btn view-remark-btn btn-view-remarks" data-user-id="<?= $user->id ?>" data-user-name="<?= h($user->name) ?>" title="View Remarks">
                                                             <i class="material-icons">comment</i>
                                                         </a>
+                                                        <?php if (in_array($usersdetail['users_email'], ['ad1234@yopmail.com', 'mukeshkr3221@gmail.com'])) { ?>
+                                                            <?= $this->Form->postLink(
+                                                                '<i class="material-icons">delete_sweep</i>',
+                                                                ['action' => 'softDelete', $user['id']],
+                                                                [
+                                                                    'escape' => false,
+                                                                    'class' => 'action-icon-btn delete-btn btn-delete-confirm',
+                                                                    'title' => __('Soft Delete'),
+                                                                    'data-name' => h(ucfirst($user['name']))
+                                                                ]
+                                                            ) ?>
+                                                        <?php } ?>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -720,8 +737,41 @@ $user_type = $this->Common->getType();
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript" language="javascript">
     $(document).ready(function() {
+        // Intercept delete confirmation
+        $('.btn-delete-confirm').each(function() {
+            var onclickAction = $(this).attr('onclick');
+            if (onclickAction) {
+                $(this).data('onclick-action', onclickAction);
+                $(this).removeAttr('onclick');
+            }
+        });
+
+        $(document).on('click', '.btn-delete-confirm', function(e) {
+            e.preventDefault();
+            var link = $(this);
+            var name = link.data('name') || 'this record';
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to delete " + name + "?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var action = link.data('onclick-action');
+                    if (action) {
+                        new Function(action)();
+                    }
+                }
+            });
+        });
         // Initialize datepickers
         $('.datepicker-filter').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD', time: false });
         $('#followup-datetime').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD HH:mm', minDate : new Date() });
@@ -808,41 +858,36 @@ $user_type = $this->Common->getType();
     });
 
     function updateVerified(clicked_id, verified) {
-
-
         var id = clicked_id;
         $('#' + id + '').prop('disabled', true);
         var verified = verified;
-
         var urls = '<?= $this->Url->build(['controller' => 'Users', 'action' => 'verifiedUpdate']) ?>';
-
         var data = '&id=' + escape(id) + '&verified=' + escape(verified);
 
-        //           alert(data);
-
-        if (confirm("Are you sure to verify user ?")) {
-            $.ajax({
-
-                type: "POST",
-
-                cache: false,
-
-                data: data,
-
-                url: urls,
-
-                success: function(html) {
-                    // alert(html);
-
-                    $('#verified' + id + '').html(html); // here we pass danamic id and fill color
-
-                }
-            });
-            return false;
-        } else {
-            return false;
-        }
-
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Are you sure to verify user?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#ff9800',
+            cancelButtonColor: '#888',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    cache: false,
+                    data: data,
+                    url: urls,
+                    success: function(html) {
+                        $('#verified' + id + '').html(html);
+                    }
+                });
+            } else {
+                $('#' + id + '').prop('disabled', false);
+            }
+        });
     }
 
     function updateStatus(Id, Status) {
@@ -850,20 +895,27 @@ $user_type = $this->Common->getType();
         var id = Id;
         var status = Status;
         urllink = urllink + '/' + id + '/' + status;
-        //alert(urllink);
-        // alert(urllink);
-        if (confirm("<?= __('Are you sure! you want to change user status?') ?>")) {
-            $.ajax({
-                url: urllink,
-                type: 'GET',
-                success: function(data) {
 
-                    $('#status' + id).html(data);
-                },
-                error: function() {}
-            });
-        } else {
-            return false;
-        }
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "<?= __('Are you sure you want to change user status?') ?>",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#ff9800',
+            cancelButtonColor: '#888',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: urllink,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#status' + id).html(data);
+                    },
+                    error: function() {}
+                });
+            }
+        });
     }
 </script>

@@ -307,8 +307,8 @@ select#planSelectDropdown {
                 </div>
 
                 <div class="form-field">
-                    <label><?= __('Email') ?></label>
-                    <?= $this->Form->control('email', ['label' => false, 'placeholder' => 'Email address']) ?>
+                    <label><?= __('Email') ?> <span style="color:red">*</span></label>
+                    <?= $this->Form->control('email', ['label' => false, 'placeholder' => 'Email address', 'required' => true]) ?>
                 </div>
 
                 <div class="form-field">

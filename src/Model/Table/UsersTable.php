@@ -79,9 +79,7 @@ class UsersTable extends Table
 
         $validator
             ->email('email')
-            ->requirePresence('email', 'create')
-            ->notEmpty('email')
-            ->add('email', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->allowEmpty('email');
 
 //        $validator
 //            ->scalar('password')
@@ -136,6 +134,21 @@ class UsersTable extends Table
     }
 
     /**
+     * Validation rules for payment.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationPayment(Validator $validator)
+    {
+        $validator = $this->validationDefault($validator);
+        $validator
+            ->requirePresence('email', true, __('Email address is required.'))
+            ->notEmpty('email', __('Email address is required.'));
+        return $validator;
+    }
+
+    /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
@@ -144,8 +157,41 @@ class UsersTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->isUnique(['username']));
-        $rules->add($rules->isUnique(['email']));
+        $rules->add(function ($entity, $options) {
+            if (empty($entity->username)) {
+                return true;
+            }
+            $query = $options['repository']->find()
+                ->where([
+                    'username' => $entity->username,
+                    'active !=' => '3'
+                ]);
+            if (!$entity->isNew()) {
+                $query->where(['id !=' => $entity->id]);
+            }
+            return $query->count() === 0;
+        }, 'uniqueUsername', [
+            'errorField' => 'username',
+            'message' => __('This username is already in use.')
+        ]);
+
+        $rules->add(function ($entity, $options) {
+            if (empty($entity->email)) {
+                return true;
+            }
+            $query = $options['repository']->find()
+                ->where([
+                    'email' => $entity->email,
+                    'active !=' => '3'
+                ]);
+            if (!$entity->isNew()) {
+                $query->where(['id !=' => $entity->id]);
+            }
+            return $query->count() === 0;
+        }, 'uniqueEmail', [
+            'errorField' => 'email',
+            'message' => __('This email is already in use.')
+        ]);
 
         return $rules;
     }

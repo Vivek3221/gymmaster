@@ -33,7 +33,7 @@ class UsersController extends AppController
     {
         parent::beforeFilter($event);
         // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index', 'add', 'view', 'edit', 'login', 'status', 'adminLogin', 'verifiedUpdate', 'logout', 'payment', 'forgetPassword', 'forgotPassword', 'resetPassword', 'siteMap', 'about', 'contact', 'sendContact', 'userProfile', 'saveRemark', 'getRemarks']);
+        $this->Auth->allow(['index', 'add', 'view', 'edit', 'login', 'status', 'adminLogin', 'verifiedUpdate', 'logout', 'payment', 'forgetPassword', 'forgotPassword', 'resetPassword', 'siteMap', 'about', 'contact', 'sendContact', 'userProfile', 'saveRemark', 'getRemarks', 'softDelete']);
     }
 
     public function about()
@@ -446,7 +446,7 @@ class UsersController extends AppController
             if (!empty($data['trainer_userid'])) {
                 $user->trainer_userid = $data['trainer_userid'];
             }
-            $user                 = $this->Users->patchEntity($user, $data);
+            $user                 = $this->Users->patchEntity($user, $data, ['validate' => 'payment']);
             $useradd              = $this->Users->save($user);
             if ($useradd) {
 
@@ -454,7 +454,7 @@ class UsersController extends AppController
                 $plandata['user_id']         = $user->id;
                 $plandata['partner_id']      = $this->usersdetail['users_id'];
                 $plandata['plan_name']       = $data['plan_name'];
-                $plandata['fee']             = $data['fee'];
+                $plandata['fee']             = !empty($data['fee']) ? $data['fee'] : 0;
                 $plandata['currency']        = 'INR';
                 $plandata['plan_expire_date'] = date('Y-m-d H:i:s', strtotime($data['plan_expire_date']));
                 $plandata['payment_due_date'] = !empty($data['payment_due_date']) ? date('Y-m-d H:i:s', strtotime($data['payment_due_date'])) : null;
@@ -471,10 +471,10 @@ class UsersController extends AppController
                 $paymentdata['user_id']             = $user->id;
                 $paymentdata['partner_id']          = $this->usersdetail['users_id'];
                 $paymentdata['plan_subscriber_id']  = $planSubscribers->id;
-                $paymentdata['amount']              = $data['amount'];
+                $paymentdata['amount']              = !empty($data['amount']) ? $data['amount'] : 0;
                 $paymentdata['currency']            = 'INR';
                 $payments    = $this->Payments->patchEntity($payments, $paymentdata);
-                $payments->mode_ofpay = $data['mode_ofpay'];
+                $payments->mode_ofpay = !empty($data['mode_ofpay']) ? $data['mode_ofpay'] : null;
                 $paymentssAdd = $this->Payments->save($payments);
                 if (!empty($data['password'])) {
                     $userDataArr['name']      = $data['name'];
@@ -554,9 +554,17 @@ class UsersController extends AppController
         $user = $this->Users->get($id, [
             'contain' => []
         ]);
+        
+        $allowedEmails = ['ad1234@yopmail.com', 'mukeshkr3221@gmail.com'];
+        $isAllowedToEditEmail = in_array($this->usersdetail['users_email'], $allowedEmails);
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->data;
             // $data['guestid'] = '11';
+
+            if (!$isAllowedToEditEmail) {
+                unset($data['email']);
+            }
 
             if (isset($this->request->data['images']['name']) && $data['images']['name'] != "") {
                 $flname = time() . str_replace(" ", "", $data['images']['name']);
@@ -606,6 +614,44 @@ class UsersController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function softDelete($id = null)
+    {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        
+        $allowedEmails = ['ad1234@yopmail.com', 'mukeshkr3221@gmail.com'];
+        if (!in_array($this->usersdetail['users_email'], $allowedEmails)) {
+            $this->Flash->error(__('You are not authorized to perform this action.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        $this->request->allowMethod(['post', 'delete']);
+        $user = $this->Users->get($id);
+        $user->active = '3';
+
+        $timestamp = time();
+        if (!empty($user->email)) {
+            $user->email = $user->email . '.deleted.' . $timestamp;
+        }
+        if (!empty($user->username)) {
+            $user->username = $user->username . '.deleted.' . $timestamp;
+        }
+        if (!empty($user->mobile_no)) {
+            $user->mobile_no = $user->mobile_no . '.deleted.' . $timestamp;
+        }
+
+        $redirectAction = ($user->user_type == 4) ? 'trainerList' : 'index';
+
+        if ($this->Users->save($user)) {
+            $this->Flash->success(__('The user has been soft-deleted.'));
+        } else {
+            $this->Flash->error(__('The user could not be soft-deleted. Please, try again.'));
+        }
+
+        return $this->redirect(['action' => $redirectAction]);
     }
 
 

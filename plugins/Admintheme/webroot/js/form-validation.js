@@ -7,7 +7,7 @@ function reloadCaptcha()
 
 $(function () {
     $.validator.addMethod("regex", function (value, element, regexpr) {
-        return regexpr.test(value);
+        return this.optional(element) || regexpr.test(value);
     });
     jQuery.validator.addMethod("isValidPhoneNo", function (value, element) {
         return $("#phoneno").intlTelInput("isValidNumber"); // return true if field is ok or should be ignored
@@ -98,7 +98,7 @@ $(document).ready(function () {
             },
 
             email: {
-                required: true,
+                required: false,
                regex: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$|^[0-9]{5,15}$/
                 },
 
@@ -300,7 +300,7 @@ $(document).ready(function () {
             },
 
             email: {
-                required: true,
+                required: false,
                regex: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$|^[0-9]{5,15}$/
                 },
 

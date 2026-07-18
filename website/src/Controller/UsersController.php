@@ -446,7 +446,7 @@ class UsersController extends AppController
             if (!empty($data['trainer_userid'])) {
                 $user->trainer_userid = $data['trainer_userid'];
             }
-            $user                 = $this->Users->patchEntity($user, $data);
+            $user                 = $this->Users->patchEntity($user, $data, ['validate' => 'payment']);
             $useradd              = $this->Users->save($user);
             if ($useradd) {
 
@@ -454,10 +454,10 @@ class UsersController extends AppController
                 $plandata['user_id']         = $user->id;
                 $plandata['partner_id']      = $this->usersdetail['users_id'];
                 $plandata['plan_name']       = $data['plan_name'];
-                $plandata['fee']             = $data['fee'];
+                $plandata['fee']             = !empty($data['fee']) ? $data['fee'] : 0;
                 $plandata['currency']        = 'INR';
                 $plandata['plan_expire_date'] = date('Y-m-d H:i:s', strtotime($data['plan_expire_date']));
-                $plandata['payment_due_date'] = date('Y-m-d H:i:s', strtotime($data['payment_due_date']));
+                $plandata['payment_due_date'] = !empty($data['payment_due_date']) ? date('Y-m-d H:i:s', strtotime($data['payment_due_date'])) : null;
                 $planSubscribers             = $this->PlanSubscribers->patchEntity($planSubscribers, $plandata);
                 $planSubscribersAdd = $this->PlanSubscribers->save($planSubscribers);
 
@@ -465,10 +465,10 @@ class UsersController extends AppController
                 $paymentdata['user_id']             = $user->id;
                 $paymentdata['partner_id']          = $this->usersdetail['users_id'];
                 $paymentdata['plan_subscriber_id']  = $planSubscribers->id;
-                $paymentdata['amount']              = $data['amount'];
+                $paymentdata['amount']              = !empty($data['amount']) ? $data['amount'] : 0;
                 $paymentdata['currency']            = 'INR';
                 $payments    = $this->Payments->patchEntity($payments, $paymentdata);
-                $payments->mode_ofpay = $data['mode_ofpay'];
+                $payments->mode_ofpay = !empty($data['mode_ofpay']) ? $data['mode_ofpay'] : null;
                 $paymentssAdd = $this->Payments->save($payments);
                 if (!empty($data['password'])) {
                     $userDataArr['name']      = $data['name'];

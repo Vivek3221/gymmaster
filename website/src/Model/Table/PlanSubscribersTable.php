@@ -90,8 +90,7 @@ class PlanSubscribersTable extends Table
 
         $validator
             ->dateTime('payment_due_date')
-            ->requirePresence('payment_due_date', 'create')
-            ->notEmpty('payment_due_date');
+            ->allowEmpty('payment_due_date');
 
         return $validator;
     }
