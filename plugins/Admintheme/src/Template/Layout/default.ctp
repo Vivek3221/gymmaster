@@ -43,6 +43,7 @@
      <?= $this->Html->css('bootstrap-select.min.css') ?>
 <!--  table css -->
  <?= $this->Html->css('dataTables.bootstrap.css') ?>
+ <?= $this->Html->css('datatables_custom_modern.css') ?>
     <!-- Albuzzer Themes. You can choose a theme from css/themes instead of get all themes -->
      <?= $this->Html->css('themes/all-themes.css') ?>
      <?php echo $this->Html->css('datePicker.css') ?>

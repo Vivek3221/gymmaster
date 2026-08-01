@@ -127,16 +127,31 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
         transition: all 0.2s ease !important;
     }
     
-    /* Active State Style */
-    .sidebar .menu .list li.active {
+    /* Active State Style for single menu items */
+    .sidebar .menu .list > li.active:not(:has(.ml-menu)) {
         background: #fff3e0 !important;
     }
     
-    .sidebar .menu .list li.active a {
+    .sidebar .menu .list > li.active:not(:has(.ml-menu)) > a {
         color: #e65100 !important;
     }
     
-    .sidebar .menu .list li.active a i.material-icons {
+    .sidebar .menu .list > li.active:not(:has(.ml-menu)) > a i.material-icons {
+        color: #ff9800 !important;
+    }
+
+    /* Parent Dropdown Menu when active/open */
+    .sidebar .menu .list > li.active:has(.ml-menu) {
+        background: #fafafa !important;
+    }
+
+    .sidebar .menu .list > li.active:has(.ml-menu) > a.menu-toggle {
+        background: #f7fafc !important;
+        color: #1a202c !important;
+        font-weight: 700 !important;
+    }
+
+    .sidebar .menu .list > li.active:has(.ml-menu) > a.menu-toggle i.material-icons {
         color: #ff9800 !important;
     }
     
@@ -155,24 +170,45 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
     
     /* Submenus (ml-menu) */
     .sidebar .menu .list li .ml-menu {
-        background: #fafafa !important;
-        padding: 1px 0 !important;
+        background: #ffffff !important;
+        padding: 4px 0 !important;
         border-radius: 0 0 6px 6px !important;
         list-style: none !important;
     }
     
     .sidebar .menu .list li .ml-menu li {
         margin: 1px 8px !important;
+        border-radius: 6px !important;
+        background: transparent !important;
     }
     
     .sidebar .menu .list li .ml-menu li a {
-        padding: 5px 12px 5px 30px !important;
-        font-size: 12px !important;
+        padding: 6px 12px 6px 26px !important;
+        font-size: 12.5px !important;
         font-weight: 500 !important;
+        color: #4a5568 !important;
+        border-radius: 6px !important;
+    }
+
+    .sidebar .menu .list li .ml-menu li a:hover {
+        background: #f7fafc !important;
+        color: #1a202c !important;
     }
     
     .sidebar .menu .list li .ml-menu li.active {
-        background: #ffe0b2 !important;
+        background: #fff3e0 !important;
+    }
+
+    .sidebar .menu .list li .ml-menu li.active a {
+        color: #e65100 !important;
+        font-weight: 700 !important;
+    }
+    .sidebar .menu .list li .ml-menu li.active a::before {
+        content: '› ';
+        font-size: 14px;
+        font-weight: 800;
+        margin-right: 4px;
+        color: #ff9800;
     }
     
     /* Legal Footer Section */
@@ -275,7 +311,7 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
                 </li>
                  <?php } ?>
                 <?php
-                // PT Payroll: show to partners, admins, and special emails
+                // PT Master Plans & PT Payroll: show to partners, admins, and special emails
                 $showPtPayroll = false;
                 if (!empty($usersdetail['users_email'])) {
                     $currentEmail = strtolower(trim($usersdetail['users_email']));
@@ -286,11 +322,31 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
                     }
                 }
                 if ($showPtPayroll) { ?>
-                <li class="<?php if ($controller == 'PtPayrolls'){echo "active";}?>" style="background:<?= $controller=='PtPayrolls'?'#efebe9':''; ?>">
-                    <a href="<?= $this->Url->build(['controller' => 'PtPayrolls', 'action' => 'index']); ?>" style="<?= $controller=='PtPayrolls'?'color:#4e342e!important;':''; ?>">
-                        <i class="material-icons" style="<?= $controller=='PtPayrolls'?'color:#5d4037!important;':''; ?>">monetization_on</i>
-                        <span><?= __('PT Payroll') ?></span>
+                <li class="<?php if ($controller == 'PtPlans' || $controller == 'PtPayrolls'){echo "active";}?>">
+                    <a href="javascript:void(0);" class="menu-toggle">
+                        <i class="material-icons">fitness_center</i>
+                        <span><?= __('PT Plans & Payroll') ?></span>
                     </a>
+                    <ul class="ml-menu">
+                        <li class="<?php if ($controller == 'PtPlans' && $action == 'index'){echo "active";}?>">
+                            <a href="<?= $this->Url->build(['controller' => 'PtPlans', 'action' => 'index']); ?>"><?= __('PT Master Plans') ?></a>
+                        </li>
+                        <li class="<?php if ($controller == 'PtPlans' && $action == 'assign'){echo "active";}?>">
+                            <a href="<?= $this->Url->build(['controller' => 'PtPlans', 'action' => 'assign']); ?>"><?= __('Assign PT Plan') ?></a>
+                        </li>
+                        <li class="<?php if ($controller == 'PtPlans' && $action == 'subscriptions'){echo "active";}?>">
+                            <a href="<?= $this->Url->build(['controller' => 'PtPlans', 'action' => 'subscriptions']); ?>"><?= __('Client PT Subscriptions') ?></a>
+                        </li>
+                        <li class="<?php if ($controller == 'PtPayrolls' && $action == 'addClassEntry'){echo "active";}?>">
+                            <a href="<?= $this->Url->build(['controller' => 'PtPayrolls', 'action' => 'addClassEntry']); ?>"><?= __('Log PT Class Entry') ?></a>
+                        </li>
+                        <li class="<?php if ($controller == 'PtPayrolls' && $action == 'index'){echo "active";}?>">
+                            <a href="<?= $this->Url->build(['controller' => 'PtPayrolls', 'action' => 'index']); ?>"><?= __('Trainer Payroll List') ?></a>
+                        </li>
+                        <li class="<?php if ($controller == 'PtPayrolls' && $action == 'clientReport'){echo "active";}?>">
+                            <a href="<?= $this->Url->build(['controller' => 'PtPayrolls', 'action' => 'clientReport']); ?>"><?= __('Client PT Revenue Report') ?></a>
+                        </li>
+                    </ul>
                 </li>
                 <?php } ?>
                 <?php if($usersdetail['users_type'] == 1 || $usersdetail['users_type'] == 2){; ?>

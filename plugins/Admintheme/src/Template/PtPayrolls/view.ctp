@@ -207,20 +207,26 @@
 
                 <div class="details-body">
                     <div class="details-grid">
-                        <!-- Card 1: Trainer & Partner Details -->
+                        <!-- Card 1: Member, Trainer & Partner Details -->
                         <div class="info-section-card">
                             <div class="info-section-header">
                                 <i class="material-icons" style="font-size: 16px;">info</i>
-                                <?= __('1. Trainer & Partner details') ?>
+                                <?= __('1. Member, Trainer & Partner details') ?>
                             </div>
                             <div class="info-section-body">
                                 <div class="info-item">
+                                    <span class="info-label"><?= __('Client / Member Name') ?></span>
+                                    <span class="info-value" style="font-weight: 700; color: #1e293b;">
+                                        <?= h(($payroll->pt_class_entry && $payroll->pt_class_entry->user) ? $payroll->pt_class_entry->user->name : 'N/A') ?>
+                                    </span>
+                                </div>
+                                <div class="info-item">
                                     <span class="info-label"><?= __('Trainer Name') ?></span>
-                                    <span class="info-value"><?= h($payroll->trainer->name) ?></span>
+                                    <span class="info-value"><?= h($payroll->trainer ? $payroll->trainer->name : 'N/A') ?></span>
                                 </div>
                                 <div class="info-item">
                                     <span class="info-label"><?= __('Partner Name') ?></span>
-                                    <span class="info-value"><?= h($payroll->partner->name) ?></span>
+                                    <span class="info-value"><?= h($payroll->partner ? $payroll->partner->name : 'N/A') ?></span>
                                 </div>
                                 <div class="info-item">
                                     <span class="info-label"><?= __('Period') ?></span>

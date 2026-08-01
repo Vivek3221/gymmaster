@@ -487,9 +487,10 @@
             <div class="body">
                 <?php if ($history->count() > 0) { ?>
                     <div class="table-responsive">
-                        <table class="modern-table">
+                        <table class="table table-bordered table-striped table-hover dataTable responsive" id="ptHistoryTable" style="width:100%;">
                             <thead>
                                 <tr>
+                                    <th><?= __('Client / Member') ?></th>
                                     <th><?= __('Month / Year') ?></th>
                                     <th><?= __('Classes Completed') ?></th>
                                     <th><?= __('Rate Per Class') ?></th>
@@ -501,10 +502,16 @@
                             </thead>
                             <tbody>
                                 <?php foreach ($history as $payroll) { 
-                                    $monthName = date('F', mktime(0, 0, 0, $payroll->pt_class_entry->month, 10));
+                                    $monthName = date('F', mktime(0, 0, 0, $payroll->pt_class_entry ? $payroll->pt_class_entry->month : date('n'), 10));
+                                    $yearVal = $payroll->pt_class_entry ? $payroll->pt_class_entry->year : date('Y');
+                                    $clientName = ($payroll->pt_class_entry && $payroll->pt_class_entry->user) ? $payroll->pt_class_entry->user->name : 'N/A';
                                 ?>
                                     <tr>
-                                        <td><?= h($monthName . ' ' . $payroll->pt_class_entry->year) ?></td>
+                                        <td style="font-weight: 700; color: #1e293b;">
+                                            <i class="material-icons" style="font-size:16px; color:#6366f1; vertical-align:middle; margin-right:4px;">person</i>
+                                            <?= h($clientName) ?>
+                                        </td>
+                                        <td><?= h($monthName . ' ' . $yearVal) ?></td>
                                         <td><?= h($payroll->total_classes) ?></td>
                                         <td>₹<?= number_format($payroll->rate_per_class, 2) ?></td>
                                         <td><strong>₹<?= number_format($payroll->total_amount, 2) ?></strong></td>
@@ -530,18 +537,6 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <div class="paginator">
-                        <ul class="pagination">
-                            <?= $this->Paginator->first('<<') ?>
-                            <?= $this->Paginator->prev('<') ?>
-                            <?= $this->Paginator->numbers() ?>
-                            <?= $this->Paginator->next('>') ?>
-                            <?= $this->Paginator->last('>>') ?>
-                        </ul>
-                        <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
-                    </div>
-
                 <?php } else { ?>
                     <!-- Empty State -->
                     <div class="empty-state-container">
@@ -563,5 +558,18 @@ $(document).ready(function() {
     $('.select2').select2({
         width: '100%'
     });
+
+    if ($('#ptHistoryTable').length) {
+        $('#ptHistoryTable').DataTable({
+            responsive: true,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search...",
+                lengthMenu: "_MENU_"
+            }
+        });
+    }
 });
 </script>

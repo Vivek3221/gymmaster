@@ -33,7 +33,7 @@ class UsersController extends AppController
     {
         parent::beforeFilter($event);
         // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index', 'add', 'view', 'edit', 'login', 'status', 'adminLogin', 'verifiedUpdate', 'logout', 'payment', 'forgetPassword', 'forgotPassword', 'resetPassword', 'siteMap', 'about', 'contact', 'sendContact', 'userProfile', 'saveRemark', 'getRemarks', 'softDelete', 'exportContacts']);
+        $this->Auth->allow(['index', 'add', 'view', 'edit', 'login', 'status', 'adminLogin', 'verifiedUpdate', 'logout', 'payment', 'forgetPassword', 'forgotPassword', 'resetPassword', 'siteMap', 'about', 'contact', 'sendContact', 'userProfile', 'saveRemark', 'getRemarks', 'softDelete', 'exportContacts', 'clearCache']);
     }
 
     public function about()
@@ -185,7 +185,9 @@ class UsersController extends AppController
         if (isset($this->request->query['status'])) {
             $status = $this->request->query['status'];
             if (trim($status) !== "") {
-                $search['Users.active'] = $status;
+                if ($status !== 'expired' && $status !== '3') {
+                    $search['Users.active'] = $status;
+                }
             }
         } else {
             $status = '';
@@ -248,6 +250,19 @@ class UsersController extends AppController
 
         $count = $count->where(['Users.active !=' => '3', 'Users.user_type !=' => '1']);
 
+        if ($status === 'expired' || $status === '3') {
+            $planSubscribersTable = TableRegistry::get('PlanSubscribers');
+            $expiredSubquery = $planSubscribersTable->find()
+                ->select(['user_id'])
+                ->where([
+                    'PlanSubscribers.user_id = Users.id',
+                    'PlanSubscribers.plan_expire_date <' => date('Y-m-d')
+                ]);
+            $count = $count->where(function ($exp) use ($expiredSubquery) {
+                return $exp->exists($expiredSubquery);
+            });
+        }
+
         if ($date_type === 'followup') {
             if (!empty($start_date) || !empty($end_date)) {
                 $count = $count->where(function ($exp) use ($start_date, $end_date) {
@@ -273,7 +288,7 @@ class UsersController extends AppController
             ->where(['user_type' => 2])
             ->toArray();
 
-        // --- Tab counts: All, Active, Inactive, Enquiry ---
+        // --- Tab counts: All, Active, Inactive, Enquiry, Expired ---
         $baseCountConditions = ['Users.user_type NOT IN' => ['1', '4'], 'Users.active !=' => '3'];
         if (isset($users_type) && ($users_type == 2)) {
             $baseCountConditions['Users.partner_id'] = $users_id;
@@ -282,6 +297,19 @@ class UsersController extends AppController
         $tabCountActive   = $this->Users->find('all')->where($baseCountConditions)->where(['Users.active' => '1'])->count();
         $tabCountInactive = $this->Users->find('all')->where($baseCountConditions)->where(['Users.active' => '0'])->count();
         $tabCountEnquiry  = $this->Users->find('all')->where($baseCountConditions)->where(['Users.active' => '2'])->count();
+
+        $planSubscribersTable = TableRegistry::get('PlanSubscribers');
+        $expiredSubquery = $planSubscribersTable->find()
+            ->select(['user_id'])
+            ->where([
+                'PlanSubscribers.user_id = Users.id',
+                'PlanSubscribers.plan_expire_date <' => date('Y-m-d')
+            ]);
+        $tabCountExpired  = $this->Users->find('all')
+            ->where($baseCountConditions)
+            ->where(function ($exp) use ($expiredSubquery) {
+                return $exp->exists($expiredSubquery);
+            })->count();
         // --------------------------------------------------
 
         $this->paginate = ['limit' => $norec, 'order' => ['Users.id' => 'DESC']];
@@ -290,7 +318,7 @@ class UsersController extends AppController
         $trainers = $this->Users->find('list')
             ->where(['Users.user_type' => 4, 'Users.partner_id' => $users_id]);
 
-        $this->set(compact('users', 'name', 'status', 'norec', 'email', 'user_type', 'users_type', 'partners', 'partner', 'trainers', 'trainer', 'start_date', 'end_date', 'date_type', 'tabCountAll', 'tabCountActive', 'tabCountInactive', 'tabCountEnquiry'));
+        $this->set(compact('users', 'name', 'status', 'norec', 'email', 'user_type', 'users_type', 'partners', 'partner', 'trainers', 'trainer', 'start_date', 'end_date', 'date_type', 'tabCountAll', 'tabCountActive', 'tabCountInactive', 'tabCountEnquiry', 'tabCountExpired'));
         $this->set('_serialize', ['users']);
     }
 
@@ -1624,42 +1652,55 @@ require \'composer.phar\';';
         $this->autoRender = false;
         $this->request->allowMethod(['get']);
 
-        // 1. Security Check: verify logged-in user email
-        $allowedEmails = ['ad1234@yopmail.com', 'mukeshkr3221@gmail.com'];
-        if (empty($this->usersdetail['users_email']) || !in_array($this->usersdetail['users_email'], $allowedEmails)) {
+        if (empty($this->usersdetail['users_id'])) {
             $this->response->statusCode(403);
             echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
             exit;
         }
 
-        $session = $this->request->session();
-        
-        // 2. Check if already shown in this login session
-        if ($session->read('DashboardFollowupsAlertShown')) {
-            echo json_encode(['status' => 'already_shown', 'data' => []]);
-            exit;
+        $users_type = $this->usersdetail['users_type'];
+        $users_id   = $this->usersdetail['users_id'];
+
+        $partnerCondition = [];
+        if ($users_type == 2) {
+            $partnerCondition['Users.partner_id'] = $users_id;
+        } elseif ($users_type == 4) {
+            $partnerId = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : 0;
+            $partnerCondition['Users.partner_id'] = $partnerId;
         }
 
-        // Set session flag so it won't show again in this login session
-        $session->write('DashboardFollowupsAlertShown', true);
-
-        // 3. Fetch all follow-ups completed today
-        $userRemarksTable = \Cake\ORM\TableRegistry::get('UserRemarks');
-        $usersTable = \Cake\ORM\TableRegistry::get('Users');
+        $userRemarksTable = TableRegistry::get('UserRemarks');
+        $usersTable = TableRegistry::get('Users');
 
         $today = date('Y-m-d');
-        $remarks = $userRemarksTable->find('all')
+
+        // 1. Taken Today (Followup recorded/completed today)
+        $takenQuery = $userRemarksTable->find('all')
             ->contain(['Users'])
             ->where([
                 'DATE(UserRemarks.created) =' => $today,
-                'Users.active !=' => 3 // ignore soft-deleted users
-            ])
-            ->order(['UserRemarks.created' => 'DESC'])
-            ->toArray();
+                'Users.active !=' => 3
+            ]);
+        if (!empty($partnerCondition)) {
+            $takenQuery->where($partnerCondition);
+        }
+        $takenRemarks = $takenQuery->order(['UserRemarks.created' => 'DESC'])->toArray();
 
-        // Gather all staff user IDs (both created_by and trainer_userid) to fetch their names in one query
+        // 2. Scheduled Today (Followup date is scheduled for today)
+        $scheduledQuery = $userRemarksTable->find('all')
+            ->contain(['Users'])
+            ->where([
+                'DATE(UserRemarks.followup_date) =' => $today,
+                'Users.active !=' => 3
+            ]);
+        if (!empty($partnerCondition)) {
+            $scheduledQuery->where($partnerCondition);
+        }
+        $scheduledRemarks = $scheduledQuery->order(['UserRemarks.followup_date' => 'ASC', 'UserRemarks.id' => 'DESC'])->toArray();
+
+        // Gather all staff user IDs
         $staffIds = [];
-        foreach ($remarks as $remark) {
+        foreach (array_merge($takenRemarks, $scheduledRemarks) as $remark) {
             if ($remark->created_by) {
                 $staffIds[] = $remark->created_by;
             }
@@ -1679,39 +1720,62 @@ require \'composer.phar\';';
             }
         }
 
-        // Format data
-        $formatted = [];
-        foreach ($remarks as $remark) {
-            $cust = $remark->user;
-            if (!$cust) continue;
+        $formatRemarks = function ($remarksList) use ($staffNames) {
+            $formatted = [];
+            foreach ($remarksList as $remark) {
+                $cust = $remark->user;
+                if (!$cust) continue;
 
-            $statusText = 'Inactive';
-            if ($cust->active == 1) {
-                $statusText = 'Active';
-            } elseif ($cust->active == 2) {
-                $statusText = 'Enquiry';
+                $statusText = 'Inactive';
+                if ($cust->active == 1) {
+                    $statusText = 'Active';
+                } elseif ($cust->active == 2) {
+                    $statusText = 'Enquiry';
+                }
+
+                $staffName = 'Not Assigned';
+                if (!empty($remark->created_by) && isset($staffNames[$remark->created_by])) {
+                    $staffName = $staffNames[$remark->created_by];
+                } elseif (!empty($cust->trainer_userid) && isset($staffNames[$cust->trainer_userid])) {
+                    $staffName = $staffNames[$cust->trainer_userid];
+                }
+
+                $scheduledDateStr = 'N/A';
+                $nextFollowupDateStr = null;
+                if ($remark->followup_date) {
+                    if ($remark->followup_date->format('H:i:s') !== '00:00:00') {
+                        $scheduledDateStr = $remark->followup_date->format('d M Y • h:i A');
+                        $nextFollowupDateStr = $remark->followup_date->format('d M Y • h:i A');
+                    } else {
+                        $scheduledDateStr = $remark->followup_date->format('d M Y');
+                        $nextFollowupDateStr = $remark->followup_date->format('d M Y');
+                    }
+                }
+
+                $formatted[] = [
+                    'customer_name' => h(ucfirst($cust->name)),
+                    'mobile_no' => h($cust->mobile_no),
+                    'email' => !empty($cust->email) ? h($cust->email) : null,
+                    'staff_name' => h(ucfirst($staffName)),
+                    'followup_date' => $remark->created ? $remark->created->format('d M Y • h:i A') : 'N/A',
+                    'scheduled_date' => $scheduledDateStr,
+                    'status' => $statusText,
+                    'remark' => h($remark->remark),
+                    'next_followup_date' => $nextFollowupDateStr
+                ];
             }
+            return $formatted;
+        };
 
-            $staffName = 'Not Assigned';
-            if (!empty($remark->created_by) && isset($staffNames[$remark->created_by])) {
-                $staffName = $staffNames[$remark->created_by];
-            } elseif (!empty($cust->trainer_userid) && isset($staffNames[$cust->trainer_userid])) {
-                $staffName = $staffNames[$cust->trainer_userid];
-            }
+        $takenFormatted = $formatRemarks($takenRemarks);
+        $scheduledFormatted = $formatRemarks($scheduledRemarks);
 
-            $formatted[] = [
-                'customer_name' => h(ucfirst($cust->name)),
-                'mobile_no' => h($cust->mobile_no),
-                'email' => !empty($cust->email) ? h($cust->email) : null,
-                'staff_name' => h(ucfirst($staffName)),
-                'followup_date' => $remark->created ? $remark->created->format('d M Y • h:i A') : 'N/A', // completed date/time
-                'status' => $statusText,
-                'remark' => h($remark->remark),
-                'next_followup_date' => $remark->followup_date ? $remark->followup_date->format('d M Y') : null
-            ];
-        }
-
-        echo json_encode(['status' => 'success', 'data' => $formatted]);
+        echo json_encode([
+            'status' => 'success',
+            'taken_today' => $takenFormatted,
+            'scheduled_today' => $scheduledFormatted,
+            'data' => $takenFormatted
+        ]);
         exit;
     }
 
@@ -1763,6 +1827,48 @@ require \'composer.phar\';';
         
         fclose($output);
         exit;
+    }
+
+    /**
+     * Clear all CakePHP caches (Models, Schema, Persistent, Core)
+     */
+    public function clearCache()
+    {
+        $this->autoRender = false;
+
+        $clearedConfigs = [];
+        try {
+            $configs = \Cake\Cache\Cache::configured();
+            foreach ($configs as $config) {
+                \Cake\Cache\Cache::clear(false, $config);
+                $clearedConfigs[] = $config;
+            }
+        } catch (\Exception $e) {
+            // ignore
+        }
+
+        $deletedCount = 0;
+        try {
+            $dir = new \Cake\Filesystem\Folder(TMP . 'cache');
+            $files = $dir->findRecursive('.*');
+            foreach ($files as $file) {
+                if (is_file($file) && !in_array(basename($file), ['empty', '.gitkeep', 'index.php'])) {
+                    if (@unlink($file)) {
+                        $deletedCount++;
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // ignore
+        }
+
+        echo "<div style='font-family: Arial, sans-serif; padding: 30px; line-height: 1.6; max-width: 600px; margin: 40px auto; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 8px; color: #1b5e20;'>";
+        echo "<h2 style='margin-top:0; color:#2e7d32;'>✓ CakePHP Cache Cleared Successfully!</h2>";
+        echo "<p><strong>Cleared Cache Configs:</strong> " . implode(', ', $clearedConfigs) . "</p>";
+        echo "<p><strong>Deleted Cache Files:</strong> $deletedCount file(s) removed from <code>tmp/cache/</code>.</p>";
+        echo "<p style='margin-bottom:0; color:#333;'>Database model schema and query cache have been refreshed. Please try adding Manual Collection now!</p>";
+        echo "</div>";
+        exit();
     }
 
     public function beforeRender(\Cake\Event\Event $event)

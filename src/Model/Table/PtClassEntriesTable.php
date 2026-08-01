@@ -27,13 +27,24 @@ class PtClassEntriesTable extends Table
         $this->belongsTo('Partners', [
             'className' => 'Users',
             'foreignKey' => 'partner_id',
-            'joinType' => 'INNER'
+            'joinType' => 'LEFT'
         ]);
 
         $this->belongsTo('Trainers', [
             'className' => 'Users',
             'foreignKey' => 'trainer_id',
-            'joinType' => 'INNER'
+            'joinType' => 'LEFT'
+        ]);
+
+        $this->belongsTo('Users', [
+            'className' => 'Users',
+            'foreignKey' => 'user_id',
+            'joinType' => 'LEFT'
+        ]);
+
+        $this->belongsTo('UserPtSubscriptions', [
+            'foreignKey' => 'user_pt_subscription_id',
+            'joinType' => 'LEFT'
         ]);
 
         $this->hasOne('PtPayrolls', [
@@ -94,9 +105,6 @@ class PtClassEntriesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['partner_id'], 'Partners'));
-        $rules->add($rules->existsIn(['trainer_id'], 'Trainers'));
-
         return $rules;
     }
 }

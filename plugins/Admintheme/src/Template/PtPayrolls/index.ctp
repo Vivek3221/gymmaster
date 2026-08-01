@@ -696,9 +696,10 @@ if (empty($csrfToken) && isset($_COOKIE['csrfToken'])) {
             <div class="body">
                 <?php if ($payrolls->count() > 0) { ?>
                     <div class="table-responsive">
-                        <table class="modern-table">
+                        <table class="table table-bordered table-striped table-hover dataTable responsive" id="ptPayrollTable" style="width:100%;">
                             <thead>
                                 <tr>
+                                    <th><?= __('Client / Member') ?></th>
                                     <th><?= __('Trainer Name') ?></th>
                                     <th><?= __('Partner Name') ?></th>
                                     <th><?= __('Month / Year') ?></th>
@@ -711,13 +712,19 @@ if (empty($csrfToken) && isset($_COOKIE['csrfToken'])) {
                             </thead>
                             <tbody>
                                 <?php foreach ($payrolls as $payroll) { 
-                                    $monthName = date('F', mktime(0, 0, 0, $payroll->pt_class_entry->month, 10));
+                                    $monthName = date('F', mktime(0, 0, 0, $payroll->pt_class_entry ? $payroll->pt_class_entry->month : date('n'), 10));
+                                    $yearVal = $payroll->pt_class_entry ? $payroll->pt_class_entry->year : date('Y');
                                     $isPaid = ($payroll->status === 'Paid');
+                                    $clientName = ($payroll->pt_class_entry && $payroll->pt_class_entry->user) ? $payroll->pt_class_entry->user->name : 'N/A';
                                 ?>
                                     <tr>
-                                        <td><?= h($payroll->trainer->name) ?></td>
-                                        <td><?= h($payroll->partner->name) ?></td>
-                                        <td><?= h($monthName . ' ' . $payroll->pt_class_entry->year) ?></td>
+                                        <td style="font-weight: 700; color: #1e293b;">
+                                            <i class="material-icons" style="font-size:16px; color:#6366f1; vertical-align:middle; margin-right:4px;">person</i>
+                                            <?= h($clientName) ?>
+                                        </td>
+                                        <td><?= h($payroll->trainer ? $payroll->trainer->name : 'N/A') ?></td>
+                                        <td><?= h($payroll->partner ? $payroll->partner->name : 'N/A') ?></td>
+                                        <td><?= h($monthName . ' ' . $yearVal) ?></td>
                                         
                                         <!-- Classes Completed Input -->
                                         <td>
@@ -771,7 +778,7 @@ if (empty($csrfToken) && isset($_COOKIE['csrfToken'])) {
                                                 <a href="<?= $this->Url->build(['action' => 'view', $payroll->id]) ?>" class="action-icon-btn view-btn" title="<?= __('View Details') ?>">
                                                     <i class="material-icons">visibility</i>
                                                 </a>
-                                                <?php if ($payroll->status === 'Pending') { ?>
+                                                <?php if ($payroll->status === 'Pending' && $payroll->pt_class_entry) { ?>
                                                     <a href="<?= $this->Url->build(['action' => 'editClassEntry', $payroll->pt_class_entry->id]) ?>" class="action-icon-btn edit-btn" title="<?= __('Edit Class count') ?>">
                                                         <i class="material-icons">edit</i>
                                                     </a>
@@ -794,17 +801,6 @@ if (empty($csrfToken) && isset($_COOKIE['csrfToken'])) {
                                 <?php } ?>
                             </tbody>
                         </table>
-                    </div>
-
-                    <div class="paginator">
-                        <ul class="pagination">
-                            <?= $this->Paginator->first('<<') ?>
-                            <?= $this->Paginator->prev('<') ?>
-                            <?= $this->Paginator->numbers() ?>
-                            <?= $this->Paginator->next('>') ?>
-                            <?= $this->Paginator->last('>>') ?>
-                        </ul>
-                        <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
                     </div>
 
                 <?php } else { ?>
@@ -1030,5 +1026,18 @@ $(document).ready(function() {
             }
         });
     });
+
+    if ($('#ptPayrollTable').length) {
+        $('#ptPayrollTable').DataTable({
+            responsive: true,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search...",
+                lengthMenu: "_MENU_"
+            }
+        });
+    }
 });
 </script>

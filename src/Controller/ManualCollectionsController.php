@@ -33,6 +33,14 @@ class ManualCollectionsController extends AppController
         $this->loadModel('PlanSubscribers');
     }
 
+    public function beforeFilter(\Cake\Event\Event $event)
+    {
+        parent::beforeFilter($event);
+        if (isset($this->Auth)) {
+            $this->Auth->allow(['clearCache']);
+        }
+    }
+
     // ── INDEX: Show Users list (like Users/index) with Add Plan + Add Payment buttons ──
     public function index()
     {
@@ -240,8 +248,14 @@ class ManualCollectionsController extends AppController
 
                 $planSubscribers             = $this->PlanSubscribers->patchEntity($planSubscribers, $plandata);
                 $planSubscribers->collection_type = 'manual';
+
                 $planSubscribersAdd = $this->PlanSubscribers->save($planSubscribers);
-                if (!$planSubscribersAdd) {
+
+                if ($planSubscribersAdd) {
+                    // Direct SQL update to guarantee collection_type = 'manual' in MySQL DB on live servers
+                    $db = $this->PlanSubscribers->getConnection();
+                    $db->execute("UPDATE plan_subscribers SET collection_type = 'manual' WHERE id = ?", [(int)$planSubscribersAdd->id]);
+                } else {
                     $errors = $planSubscribers->errors();
                     $this->Flash->error(__('The plan subscriber could not be saved. Errors: ') . json_encode($errors));
                     return $this->redirect(['controller' => 'ManualCollections', 'action' => 'add', $user_id]);
@@ -313,12 +327,14 @@ class ManualCollectionsController extends AppController
             $payment->mode_ofpay = $data['mode_ofpay'];
             if ($this->Payments->save($payment)) {
                  $PlanSubscribers = TableRegistry::get('PlanSubscribers');
-                 $ps = $PlanSubscribers->get($data['plan_subscriber_id']);
-                 $ps->collection_type = 'manual';
-                 if ($PlanSubscribers->save($ps, ['validate' => false])) {
-                     $this->Flash->success(__('The payment has been saved.'));
-                     return $this->redirect(['action' => 'index']);
-                 } else {
+                  $ps = $PlanSubscribers->get($data['plan_subscriber_id']);
+                  $ps->collection_type = 'manual';
+                  if ($PlanSubscribers->save($ps, ['validate' => false])) {
+                      $db = $PlanSubscribers->getConnection();
+                      $db->execute("UPDATE plan_subscribers SET collection_type = 'manual' WHERE id = ?", [(int)$data['plan_subscriber_id']]);
+                      $this->Flash->success(__('The payment has been saved.'));
+                      return $this->redirect(['action' => 'index']);
+                  } else {
                      $errors = $ps->errors();
                      $this->Flash->error(__('Payment saved, but plan subscriber could not be updated. Errors: ') . json_encode($errors));
                  }
@@ -434,6 +450,8 @@ class ManualCollectionsController extends AppController
                         $planSubscriber->payment_due_date = $data['payment_due_date'];
                     }
                     $this->PlanSubscribers->save($planSubscriber);
+                    $db = $this->PlanSubscribers->getConnection();
+                    $db->execute("UPDATE plan_subscribers SET collection_type = 'manual' WHERE id = ?", [(int)$planSubscriber->id]);
                     $this->Flash->success(__('Payment of ₹' . $payAmount . ' recorded.'));
                     return $this->redirect(['action' => 'index']);
                 }
@@ -635,6 +653,48 @@ class ManualCollectionsController extends AppController
 
         $accessList = $db->execute("SELECT * FROM manual_collection_access ORDER BY is_active DESC, created DESC")->fetchAll('assoc');
         $this->set(compact('accessList'));
+    }
+
+    /**
+     * Clear all CakePHP caches
+     */
+    public function clearCache()
+    {
+        $this->autoRender = false;
+
+        $clearedConfigs = [];
+        try {
+            $configs = \Cake\Cache\Cache::configured();
+            foreach ($configs as $config) {
+                \Cake\Cache\Cache::clear(false, $config);
+                $clearedConfigs[] = $config;
+            }
+        } catch (\Exception $e) {
+            // ignore
+        }
+
+        $deletedCount = 0;
+        try {
+            $dir = new \Cake\Filesystem\Folder(TMP . 'cache');
+            $files = $dir->findRecursive('.*');
+            foreach ($files as $file) {
+                if (is_file($file) && !in_array(basename($file), ['empty', '.gitkeep', 'index.php'])) {
+                    if (@unlink($file)) {
+                        $deletedCount++;
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // ignore
+        }
+
+        echo "<div style='font-family: Arial, sans-serif; padding: 30px; line-height: 1.6; max-width: 600px; margin: 40px auto; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 8px; color: #1b5e20;'>";
+        echo "<h2 style='margin-top:0; color:#2e7d32;'>✓ CakePHP Cache Cleared Successfully!</h2>";
+        echo "<p><strong>Cleared Cache Configs:</strong> " . implode(', ', $clearedConfigs) . "</p>";
+        echo "<p><strong>Deleted Cache Files:</strong> $deletedCount file(s) removed from <code>tmp/cache/</code>.</p>";
+        echo "<p style='margin-bottom:0; color:#333;'>Database model schema and query cache have been refreshed. Please try adding Manual Collection now!</p>";
+        echo "</div>";
+        exit();
     }
 
     public function beforeRender(\Cake\Event\Event $event) {

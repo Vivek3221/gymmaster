@@ -229,7 +229,7 @@
             <div class="body">
                 <?php if ($rates->count() > 0) { ?>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover">
+                        <table class="table table-bordered table-striped table-hover dataTable responsive" id="ptRatesTable" style="width:100%;">
                             <thead>
                                 <tr>
                                     <th><?= __('Trainer Name') ?></th>
@@ -243,8 +243,8 @@
                             <tbody>
                                 <?php foreach ($rates as $rate) { ?>
                                     <tr>
-                                        <td><?= h($rate->trainer->name) ?></td>
-                                        <td><?= h($rate->partner->name) ?></td>
+                                        <td><?= h($rate->trainer ? $rate->trainer->name : 'N/A') ?></td>
+                                        <td><?= h($rate->partner ? $rate->partner->name : 'N/A') ?></td>
                                         <td><strong>₹<?= number_format($rate->rate_per_class, 2) ?></strong></td>
                                         <td><?= $rate->effective_from ? $rate->effective_from->format('d-m-Y') : 'N/A' ?></td>
                                         <td>
@@ -276,18 +276,6 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <div class="paginator">
-                        <ul class="pagination">
-                            <?= $this->Paginator->first('<< ' . __('first')) ?>
-                            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-                            <?= $this->Paginator->numbers() ?>
-                            <?= $this->Paginator->next(__('next') . ' >') ?>
-                            <?= $this->Paginator->last(__('last') . ' >>') ?>
-                        </ul>
-                        <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
-                    </div>
-
                 <?php } else { ?>
                     <div class="text-center" style="padding: 40px 0;">
                         <i class="material-icons" style="font-size: 48px; color: #ccc;">info_outline</i>
@@ -304,5 +292,18 @@ $(document).ready(function() {
     $('.select2').select2({
         width: '100%'
     });
+
+    if ($('#ptRatesTable').length) {
+        $('#ptRatesTable').DataTable({
+            responsive: true,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search...",
+                lengthMenu: "_MENU_"
+            }
+        });
+    }
 });
 </script>

@@ -58,6 +58,16 @@ class PtPayrollsController extends AppController
         $allowedEmails = ['ad1234@yopmail.com', 'mukeshkr3221@gmail.com'];
         $isGlobal = ($userType == 1 || in_array($email, $allowedEmails));
 
+        // Auto-sync any orphaned class entries into pt_payrolls
+        $orphanedClassEntries = $this->PtClassEntries->find()
+            ->leftJoinWith('PtPayrolls')
+            ->where(['PtPayrolls.id IS' => null])
+            ->all();
+
+        foreach ($orphanedClassEntries as $ce) {
+            $this->calculateAndSavePayroll($ce);
+        }
+
         $search = [];
         if (!$isGlobal) {
             $search['PtPayrolls.partner_id'] = $userId;
@@ -127,14 +137,14 @@ class PtPayrollsController extends AppController
 
         // Paginated List
         $query = $this->PtPayrolls->find()
-            ->contain(['Trainers', 'Partners', 'PtClassEntries'])
+            ->contain([
+                'Trainers', 
+                'Partners', 
+                'PtClassEntries' => ['Users', 'UserPtSubscriptions']
+            ])
             ->where($search);
 
-        $this->paginate = [
-            'limit' => 20,
-            'order' => ['PtPayrolls.id' => 'DESC']
-        ];
-        $payrolls = $this->paginate($query);
+        $payrolls = $query->order(['PtPayrolls.id' => 'DESC'])->all();
 
         // Fetch select list variables
         $partners = [];
@@ -173,7 +183,7 @@ class PtPayrollsController extends AppController
         $isGlobal = ($userType == 1 || in_array($email, $allowedEmails));
 
         $payroll = $this->PtPayrolls->get($id, [
-            'contain' => ['Trainers', 'Partners', 'PtClassEntries']
+            'contain' => ['Trainers', 'Partners', 'PtClassEntries' => ['Users']]
         ]);
 
         if (!$isGlobal && $payroll->partner_id != $userId) {
@@ -279,17 +289,52 @@ class PtPayrollsController extends AppController
                 $data['partner_id'] = $trainer->partner_id;
             }
 
+            $this->loadModel('UserPtSubscriptions');
+
+            // Auto-detect active subscription if user_pt_subscription_id is missing
+            if (!empty($data['user_id']) && empty($data['user_pt_subscription_id'])) {
+                $activeSub = $this->UserPtSubscriptions->find()
+                    ->where(['user_id' => $data['user_id']])
+                    ->order(['id' => 'DESC'])
+                    ->first();
+                if ($activeSub) {
+                    $data['user_pt_subscription_id'] = $activeSub->id;
+                }
+            }
+
+            if (!empty($data['user_pt_subscription_id'])) {
+                $sub = $this->UserPtSubscriptions->get($data['user_pt_subscription_id']);
+                $data['user_id'] = $sub->user_id;
+                $data['client_per_class_rate'] = $sub->client_per_class_rate;
+                $clientRevenue = (int)$data['total_classes'] * (float)$sub->client_per_class_rate;
+                $trainerPay = (int)$data['total_classes'] * (float)$data['rate_per_class'];
+                $data['gym_profit'] = $clientRevenue - $trainerPay;
+            } elseif (!empty($data['user_id'])) {
+                $trainerPay = (int)$data['total_classes'] * (float)$data['rate_per_class'];
+                $data['client_per_class_rate'] = 0.00;
+                $data['gym_profit'] = 0 - $trainerPay;
+            }
+
             $classEntry = $this->PtClassEntries->patchEntity($classEntry, $data);
             $classEntry->created_by = $userId;
             $classEntry->updated_by = $userId;
 
             if ($this->PtClassEntries->save($classEntry)) {
+                if (!empty($sub)) {
+                    $db = $this->PtClassEntries->getConnection();
+                    $newClasses = (int)$sub->completed_classes + (int)$data['total_classes'];
+                    $newStatus = ($newClasses >= (int)$sub->total_classes) ? 'Completed' : 'Active';
+                    $db->execute(
+                        "UPDATE user_pt_subscriptions SET completed_classes = ?, status = ? WHERE id = ?",
+                        [$newClasses, $newStatus, (int)$sub->id]
+                    );
+                }
+
                 // Check if this trainer has ANY active rate in PtRates
                 $activeRate = $this->PtRates->find()
                     ->where(['trainer_id' => $classEntry->trainer_id, 'status' => 1])
                     ->first();
                 if (!$activeRate) {
-                    // Create a default active rate in PtRates for this trainer
                     $newRate = $this->PtRates->newEntity();
                     $rateData = [
                         'trainer_id' => $classEntry->trainer_id,
@@ -307,7 +352,12 @@ class PtPayrollsController extends AppController
                 $this->Flash->success(__('PT Class entry saved and payroll successfully calculated.'));
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('Failed to save PT Class entry. Please check the forms for errors.'));
+            $errStr = [];
+            foreach ($classEntry->getErrors() as $field => $errs) {
+                $errStr[] = ucfirst($field) . ': ' . implode(', ', (array)$errs);
+            }
+            $errMsg = !empty($errStr) ? implode(' | ', $errStr) : __('Please check all required fields.');
+            $this->Flash->error(__('Failed to save PT Class entry. ') . $errMsg);
         }
 
         $partners = [];
@@ -318,14 +368,19 @@ class PtPayrollsController extends AppController
         }
 
         $trainerConditions = ['Users.user_type' => 4, 'Users.active !=' => '3'];
+        $userConditions = ['Users.user_type' => 3, 'Users.active !=' => '3'];
         if (!$isGlobal) {
             $trainerConditions['Users.partner_id'] = $userId;
+            $userConditions['Users.partner_id'] = $userId;
         }
         $trainers = $this->Users->find('list', ['keyField' => 'id', 'valueField' => 'name'])
             ->where($trainerConditions)
             ->toArray();
+        $usersList = $this->Users->find('list', ['keyField' => 'id', 'valueField' => 'name'])
+            ->where($userConditions)
+            ->toArray();
 
-        $this->set(compact('classEntry', 'trainers', 'partners', 'isGlobal'));
+        $this->set(compact('classEntry', 'trainers', 'usersList', 'partners', 'isGlobal'));
     }
 
     /**
@@ -424,11 +479,7 @@ class PtPayrollsController extends AppController
             ->contain(['Trainers', 'Partners'])
             ->where($search);
 
-        $this->paginate = [
-            'limit' => 20,
-            'order' => ['PtRates.id' => 'DESC']
-        ];
-        $rates = $this->paginate($query);
+        $rates = $query->order(['PtRates.id' => 'DESC'])->all();
 
         $partners = [];
         if ($isGlobal) {
@@ -628,14 +679,13 @@ class PtPayrollsController extends AppController
         }
 
         $query = $this->PtPayrolls->find()
-            ->contain(['PtClassEntries'])
+            ->contain([
+                'PtClassEntries' => ['Users', 'UserPtSubscriptions'], 
+                'Partners'
+            ])
             ->where($search);
 
-        $this->paginate = [
-            'limit' => 20,
-            'order' => ['PtClassEntries.year' => 'DESC', 'PtClassEntries.month' => 'DESC']
-        ];
-        $history = $this->paginate($query);
+        $history = $query->order(['PtClassEntries.year' => 'DESC', 'PtClassEntries.month' => 'DESC'])->all();
 
         // Fetch stats across all records for this trainer
         $allPayrolls = $this->PtPayrolls->find()
@@ -1067,6 +1117,106 @@ class PtPayrollsController extends AppController
             'totalPayrollAmount' => number_format($totalPayrollAmount, 2),
             'pendingPayroll' => number_format($pendingPayroll, 2)
         ];
+    }
+
+    /**
+     * Client PT Revenue & Trainer Share Report
+     */
+    public function clientReport()
+    {
+        $redirect = $this->checkAccess();
+        if ($redirect) return $redirect;
+
+        $email = strtolower(trim($this->usersdetail['users_email']));
+        $userType = $this->usersdetail['users_type'];
+        $userId = $this->usersdetail['users_id'];
+        $allowedEmails = ['ad1234@yopmail.com', 'mukeshkr3221@gmail.com'];
+        $isGlobal = ($userType == 1 || in_array($email, $allowedEmails));
+
+        $this->loadModel('UserPtSubscriptions');
+
+        // Auto-repair any pt_class_entries that have NULL user_pt_subscription_id or NULL user_id
+        $db = $this->PtClassEntries->getConnection();
+        $db->execute("
+            UPDATE pt_class_entries ce
+            JOIN user_pt_subscriptions sub ON sub.trainer_id = ce.trainer_id
+            SET ce.user_id = sub.user_id, ce.user_pt_subscription_id = sub.id, ce.client_per_class_rate = sub.client_per_class_rate, ce.gym_profit = (ce.total_classes * sub.client_per_class_rate) - (ce.total_classes * ce.rate_per_class)
+            WHERE ce.user_id IS NULL OR ce.user_pt_subscription_id IS NULL
+        ");
+
+        $search = [];
+        if (!$isGlobal) {
+            $search['UserPtSubscriptions.partner_id'] = $userId;
+        }
+
+        $trainerId = $this->request->getQuery('trainer_id');
+        $userIdFilter = $this->request->getQuery('user_id');
+
+        if (!empty($trainerId)) {
+            $search['UserPtSubscriptions.trainer_id'] = $trainerId;
+        }
+        if (!empty($userIdFilter)) {
+            $search['UserPtSubscriptions.user_id'] = $userIdFilter;
+        }
+
+        $subscriptions = $this->UserPtSubscriptions->find()
+            ->contain(['Users', 'Trainers', 'Partners', 'PtPlans'])
+            ->where($search)
+            ->order(['UserPtSubscriptions.id' => 'DESC'])
+            ->all();
+
+        $reportData = [];
+        $totalClientRevenue = 0;
+        $totalTrainerPayout = 0;
+        $totalGymProfit = 0;
+
+        foreach ($subscriptions as $sub) {
+            $entries = $this->PtClassEntries->find()
+                ->where(['OR' => [
+                    ['user_pt_subscription_id' => $sub->id],
+                    ['user_id' => $sub->user_id]
+                ]])
+                ->all();
+
+            $conductedClasses = 0;
+            $trainerPayout = 0;
+            $clientRevenue = 0;
+
+            foreach ($entries as $entry) {
+                $conductedClasses += (int)$entry->total_classes;
+                $trainerPayout += ((int)$entry->total_classes * (float)$entry->rate_per_class);
+                $cRate = (float)($entry->client_per_class_rate > 0 ? $entry->client_per_class_rate : $sub->client_per_class_rate);
+                $clientRevenue += ((int)$entry->total_classes * $cRate);
+            }
+
+            $gymProfit = $clientRevenue - $trainerPayout;
+            $remainingClasses = max(0, (int)$sub->total_classes - $conductedClasses);
+
+            $totalClientRevenue += $clientRevenue;
+            $totalTrainerPayout += $trainerPayout;
+            $totalGymProfit += $gymProfit;
+
+            $reportData[] = [
+                'subscription' => $sub,
+                'conducted_classes' => $conductedClasses,
+                'client_revenue' => $clientRevenue,
+                'trainer_payout' => $trainerPayout,
+                'gym_profit' => $gymProfit,
+                'remaining_classes' => $remainingClasses
+            ];
+        }
+
+        $trainerConditions = ['Users.user_type' => 4, 'Users.active !=' => '3'];
+        $userConditions = ['Users.user_type' => 3, 'Users.active !=' => '3'];
+        if (!$isGlobal) {
+            $trainerConditions['Users.partner_id'] = $userId;
+            $userConditions['Users.partner_id'] = $userId;
+        }
+
+        $trainers = $this->Users->find('list', ['keyField' => 'id', 'valueField' => 'name'])->where($trainerConditions)->toArray();
+        $usersList = $this->Users->find('list', ['keyField' => 'id', 'valueField' => 'name'])->where($userConditions)->toArray();
+
+        $this->set(compact('reportData', 'trainers', 'usersList', 'isGlobal', 'trainerId', 'userIdFilter', 'totalClientRevenue', 'totalTrainerPayout', 'totalGymProfit'));
     }
 
     public function beforeRender(Event $event) {

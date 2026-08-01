@@ -817,20 +817,32 @@
     <?php } ?>
 
     <?php
-    $allowedEmails = ['ad1234@yopmail.com', 'mukeshkr3221@gmail.com'];
-    $showFollowupsModal = (!empty($usersdetail['users_email']) && in_array($usersdetail['users_email'], $allowedEmails));
+    $showFollowupsModal = (!empty($usersdetail['users_type']) && in_array($usersdetail['users_type'], ['1', '2', '4']));
     ?>
 
-    <!-- Today's Follow-ups Modal (For specific admin users) -->
+    <!-- Today's Follow-ups Modal (For Admin, Partner, Trainer) -->
     <?php if ($showFollowupsModal) { ?>
         <div id="todayFollowupsModal" class="dashboard-modal-backdrop">
             <div class="close-backdrop" style="position: absolute; top:0; left:0; width:100%; height:100%;"></div>
             <div class="dashboard-modal" style="max-width: 680px; width: 90%;">
-                <div class="dashboard-modal-header followup-modal-header">
-                    <i class="material-icons" style="font-size: 28px;">assignment_turned_in</i>
-                    <div>
-                        <h3><?= __('Today\'s Follow-ups') ?></h3>
-                        <p><?= date('d M Y') ?></p>
+                <div class="dashboard-modal-header followup-modal-header" style="padding-bottom: 12px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="material-icons" style="font-size: 28px;">assignment_turned_in</i>
+                            <div>
+                                <h3 style="margin: 0; font-size: 18px;"><?= __('Today\'s Follow-ups') ?></h3>
+                                <p style="margin: 0; opacity: 0.85; font-size: 12px;"><?= date('d M Y') ?></p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 2-Tab Navigation Bar -->
+                    <div class="followup-modal-tabs" style="display: flex; gap: 8px; margin-top: 12px;">
+                        <button class="followup-modal-tab active" id="tabTakenToday" data-tab="taken" style="padding: 6px 14px; border-radius: 20px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; background: #ffffff; color: #4f46e5; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <i class="material-icons" style="font-size: 15px;">call</i> <?= __('Taken Today') ?> <span id="takenCountBadge" class="badge" style="background: #4f46e5; color: #fff; border-radius: 10px; padding: 2px 6px; font-size: 11px;">0</span>
+                        </button>
+                        <button class="followup-modal-tab" id="tabScheduledToday" data-tab="scheduled" style="padding: 6px 14px; border-radius: 20px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; background: rgba(255,255,255,0.25); color: #ffffff; display: flex; align-items: center; gap: 6px;">
+                            <i class="material-icons" style="font-size: 15px;">event</i> <?= __('Scheduled Today') ?> <span id="scheduledCountBadge" class="badge" style="background: rgba(255,255,255,0.4); color: #fff; border-radius: 10px; padding: 2px 6px; font-size: 11px;">0</span>
+                        </button>
                     </div>
                 </div>
                 <div class="dashboard-modal-body" id="followupModalBody" style="background-color: #f8fafc; padding: 0;">
@@ -846,7 +858,13 @@
                 </div>
                 <div class="dashboard-modal-footer">
                     <button class="dashboard-modal-btn btn-close-modal"><?= __('Close') ?></button>
-                    <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index', '?' => ['date_type' => 'followup']]) ?>" class="dashboard-modal-btn btn-action-modal" style="background-color: #4f46e5 !important;">
+                    <?php
+                    $viewAllUrlParams = ['date_type' => 'followup', 'start_date' => date('Y-m-d'), 'end_date' => date('Y-m-d')];
+                    if (!empty($usersdetail['users_type']) && $usersdetail['users_type'] == 2) {
+                        $viewAllUrlParams['partners'] = $usersdetail['users_id'];
+                    }
+                    ?>
+                    <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index', '?' => $viewAllUrlParams]) ?>" class="dashboard-modal-btn btn-action-modal" style="background-color: #4f46e5 !important;">
                         <i class="material-icons" style="font-size: 16px;">list</i> <?= __('View All') ?>
                     </a>
                 </div>
@@ -906,78 +924,152 @@
                     dataType: 'json',
                     success: function(response) {
                         if (response.status === 'success') {
-                            var html = '';
-                            if (response.data.length === 0) {
-                                // Empty state
-                                html = `
-                                    <div class="followup-empty-state" style="padding: 50px 20px;">
-                                        <div class="followup-empty-icon">
-                                            <i class="material-icons" style="font-size: 64px; color: #94a3b8;">check_circle_outline</i>
-                                        </div>
-                                        <h4 class="followup-empty-title"><?= __('All Caught Up!') ?></h4>
-                                        <p class="followup-empty-text"><?= __('No follow-ups logged today.') ?></p>
-                                    </div>
-                                `;
-                                $('#followupModalBody').html(html);
-                            } else {
-                                // We have follow-ups, build the split-pane container
-                                var containerHtml = '<div class="followup-modal-container">';
-                                
-                                // Build sidebar
-                                var sidebarHtml = '<div class="followup-sidebar">';
-                                $.each(response.data, function(index, item) {
-                                    var timeStr = item.followup_date.split(' ')[1] || '';
-                                    var activeClass = (index === 0) ? 'active' : '';
-                                    sidebarHtml += `
-                                        <div class="followup-sidebar-item ${activeClass}" data-index="${index}">
-                                            <div class="followup-sidebar-avatar">
-                                                ${item.customer_name.substring(0, 1).toUpperCase()}
+                            var takenData = response.taken_today || [];
+                            var scheduledData = response.scheduled_today || [];
+
+                            $('#takenCountBadge').text(takenData.length);
+                            $('#scheduledCountBadge').text(scheduledData.length);
+
+                            var defaultTab = (takenData.length === 0 && scheduledData.length > 0) ? 'scheduled' : 'taken';
+
+                            function setTabHeaderStyle(activeTabName) {
+                                $('.followup-modal-tab').css({ 'background': 'rgba(255,255,255,0.25)', 'color': '#ffffff', 'box-shadow': 'none' });
+                                if (activeTabName === 'taken') {
+                                    $('#tabTakenToday').css({ 'background': '#ffffff', 'color': '#4f46e5', 'box-shadow': '0 2px 4px rgba(0,0,0,0.1)' });
+                                } else {
+                                    $('#tabScheduledToday').css({ 'background': '#ffffff', 'color': '#4f46e5', 'box-shadow': '0 2px 4px rgba(0,0,0,0.1)' });
+                                }
+                            }
+
+                            function renderTabContent(tabName) {
+                                currentTab = tabName;
+                                var list = (tabName === 'taken') ? takenData : scheduledData;
+
+                                if (list.length === 0) {
+                                    var emptyMsg = (tabName === 'taken') ? '<?= __('No follow-ups logged today.') ?>' : '<?= __('No follow-ups scheduled for today.') ?>';
+                                    var html = `
+                                        <div class="followup-empty-state" style="padding: 50px 20px; text-align: center;">
+                                            <div class="followup-empty-icon">
+                                                <i class="material-icons" style="font-size: 64px; color: #94a3b8;">check_circle_outline</i>
                                             </div>
-                                            <div class="followup-sidebar-info">
-                                                <div class="followup-sidebar-name">${item.customer_name}</div>
-                                                <div class="followup-sidebar-time">${timeStr}</div>
-                                            </div>
+                                            <h4 class="followup-empty-title" style="margin-top: 10px; color: #334155; font-size: 16px; font-weight: 600;"><?= __('All Caught Up!') ?></h4>
+                                            <p class="followup-empty-text" style="color: #64748b; font-size: 13px;">${emptyMsg}</p>
                                         </div>
                                     `;
-                                });
-                                sidebarHtml += '</div>';
-                                
-                                // Build detail pane
-                                var detailHtml = '<div class="followup-detail-pane" id="followupDetailPane">';
-                                detailHtml += '</div>';
-                                
-                                containerHtml += sidebarHtml + detailHtml + '</div>';
-                                $('#followupModalBody').html(containerHtml);
-                                
-                                // Helper function to render a single follow-up detail card
-                                function renderFollowupDetail(index) {
-                                    var item = response.data[index];
-                                    var statusClass = '';
-                                    var statusIcon = '';
-                                    if (item.status === 'Active') {
-                                        statusClass = 'status-active';
-                                        statusIcon = '🟢';
-                                    } else if (item.status === 'Enquiry') {
-                                        statusClass = 'status-enquiry';
-                                        statusIcon = '🟡';
-                                    } else {
-                                        statusClass = 'status-inactive';
-                                        statusIcon = '🔴';
+                                    $('#followupModalBody').html(html);
+                                } else {
+                                    var containerHtml = '<div class="followup-modal-container">';
+                                    
+                                    var sidebarHtml = '<div class="followup-sidebar">';
+                                    $.each(list, function(index, item) {
+                                        var timeStr = (tabName === 'taken') ? (item.followup_date.split('•')[1] || item.followup_date) : (item.scheduled_date.indexOf('•') !== -1 ? item.scheduled_date.split('•')[1] : item.scheduled_date);
+                                        var activeClass = (index === 0) ? 'active' : '';
+                                        sidebarHtml += `
+                                            <div class="followup-sidebar-item ${activeClass}" data-index="${index}">
+                                                <div class="followup-sidebar-avatar">
+                                                    ${item.customer_name.substring(0, 1).toUpperCase()}
+                                                </div>
+                                                <div class="followup-sidebar-info">
+                                                    <div class="followup-sidebar-name">${item.customer_name}</div>
+                                                    <div class="followup-sidebar-time">${timeStr}</div>
+                                                </div>
+                                            </div>
+                                        `;
+                                    });
+                                    sidebarHtml += '</div>';
+                                    
+                                    var detailHtml = '<div class="followup-detail-pane" id="followupDetailPane"></div>';
+                                    containerHtml += sidebarHtml + detailHtml + '</div>';
+                                    $('#followupModalBody').html(containerHtml);
+
+                                    function renderFollowupDetail(index) {
+                                        var item = list[index];
+                                        if (!item) return;
+                                        var statusClass = (item.status === 'Active') ? 'status-active' : ((item.status === 'Enquiry') ? 'status-enquiry' : 'status-inactive');
+                                        var statusIcon = (item.status === 'Active') ? '🟢' : ((item.status === 'Enquiry') ? '🟡' : '🔴');
+                                        
+                                        var emailHtml = item.email ? `
+                                            <a href="mailto:${item.email}" title="${item.email}">
+                                                <i class="material-icons" style="font-size: 14px; vertical-align: middle;">email</i> ${item.email}
+                                            </a>
+                                        ` : '';
+
+                                        var dateLabel = (tabName === 'taken') ? '<?= __('Logged At:') ?>' : '<?= __('Scheduled For:') ?>';
+                                        var displayDate = (tabName === 'taken') ? item.followup_date : item.scheduled_date;
+
+                                        var nextFollowupHtml = item.next_followup_date ? `
+                                            <div class="followup-meta-item" style="margin-top: 4px; font-weight: 600; color: #4f46e5;">
+                                                <i class="material-icons" style="color: #4f46e5; font-size: 16px;">event_repeat</i>
+                                                <span><?= __('Next Follow-up:') ?> ${item.next_followup_date}</span>
+                                            </div>
+                                        ` : '';
+
+                                        var detailCard = `
+                                            <div class="followup-card">
+                                                <div class="followup-card-header">
+                                                    <div class="followup-user-info">
+                                                        <div class="followup-user-avatar">
+                                                            ${item.customer_name.substring(0, 1).toUpperCase()}
+                                                        </div>
+                                                        <div class="followup-user-details">
+                                                            <h4>${item.customer_name}</h4>
+                                                            <p>
+                                                                <a href="tel:${item.mobile_no}">
+                                                                    <i class="material-icons" style="font-size: 14px; vertical-align: middle;">phone</i> ${item.mobile_no}
+                                                                </a>
+                                                                ${emailHtml ? ' | ' + emailHtml : ''}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <span class="followup-status-badge ${statusClass}">
+                                                        ${statusIcon} ${item.status}
+                                                    </span>
+                                                </div>
+                                                <div class="followup-card-body">
+                                                    <div class="followup-meta-item">
+                                                        <i class="material-icons">account_circle</i>
+                                                        <span><strong><?= __('Staff:') ?></strong> ${item.staff_name}</span>
+                                                    </div>
+                                                    <div class="followup-meta-item">
+                                                        <i class="material-icons">schedule</i>
+                                                        <span><strong>${dateLabel}</strong> ${displayDate}</span>
+                                                    </div>
+                                                    <div class="followup-remark-box">
+                                                        ${item.remark}
+                                                    </div>
+                                                    ${nextFollowupHtml}
+                                                </div>
+                                            </div>
+                                        `;
+                                        $('#followupDetailPane').html(detailCard);
                                     }
 
-                                    var emailHtml = item.email ? `
-                                        <a href="mailto:${item.email}" title="${item.email}">
-                                            <i class="material-icons" style="font-size: 14px; vertical-align: middle;">email</i> ${item.email}
-                                        </a>
-                                    ` : '';
+                                    renderFollowupDetail(0);
+                                }
+                            }
 
-                                    var nextFollowupHtml = item.next_followup_date ? `
-                                        <div class="followup-meta-item" style="margin-top: 4px; font-weight: 600; color: #4f46e5;">
-                                            <i class="material-icons" style="color: #4f46e5; font-size: 16px;">event_repeat</i>
-                                            <span><?= __('Next Follow-up:') ?> ${item.next_followup_date}</span>
-                                        </div>
-                                    ` : '';
+                            setTabHeaderStyle(defaultTab);
+                            renderTabContent(defaultTab);
 
+                            $(document).off('click', '.followup-modal-tab').on('click', '.followup-modal-tab', function() {
+                                var tab = $(this).data('tab');
+                                setTabHeaderStyle(tab);
+                                renderTabContent(tab);
+                            });
+
+                            $(document).off('click', '.followup-sidebar-item').on('click', '.followup-sidebar-item', function() {
+                                $('.followup-sidebar-item').removeClass('active');
+                                $(this).addClass('active');
+                                var idx = $(this).data('index');
+                                var list = (currentTab === 'taken') ? takenData : scheduledData;
+                                if (list[idx]) {
+                                    var item = list[idx];
+                                    var statusClass = (item.status === 'Active') ? 'status-active' : ((item.status === 'Enquiry') ? 'status-enquiry' : 'status-inactive');
+                                    var statusIcon = (item.status === 'Active') ? '🟢' : ((item.status === 'Enquiry') ? '🟡' : '🔴');
+                                    var emailHtml = item.email ? `<a href="mailto:${item.email}" title="${item.email}"><i class="material-icons" style="font-size: 14px; vertical-align: middle;">email</i> ${item.email}</a>` : '';
+                                    var dateLabel = (currentTab === 'taken') ? '<?= __('Logged At:') ?>' : '<?= __('Scheduled For:') ?>';
+                                    var displayDate = (currentTab === 'taken') ? item.followup_date : item.scheduled_date;
+                                    var nextFollowupHtml = item.next_followup_date ? `<div class="followup-meta-item" style="margin-top: 4px; font-weight: 600; color: #4f46e5;"><i class="material-icons" style="color: #4f46e5; font-size: 16px;">event_repeat</i><span><?= __('Next Follow-up:') ?> ${item.next_followup_date}</span></div>` : '';
                                     var detailCard = `
                                         <div class="followup-card">
                                             <div class="followup-card-header">
@@ -1006,7 +1098,7 @@
                                                 </div>
                                                 <div class="followup-meta-item">
                                                     <i class="material-icons">schedule</i>
-                                                    <span><strong><?= __('Completed:') ?></strong> ${item.followup_date}</span>
+                                                    <span><strong>${dateLabel}</strong> ${displayDate}</span>
                                                 </div>
                                                 <div class="followup-remark-box">
                                                     ${item.remark}
@@ -1017,25 +1109,12 @@
                                     `;
                                     $('#followupDetailPane').html(detailCard);
                                 }
-                                
-                                // Render the first item by default
-                                renderFollowupDetail(0);
-                                
-                                // Handle click on sidebar item
-                                $(document).on('click', '.followup-sidebar-item', function() {
-                                    $('.followup-sidebar-item').removeClass('active');
-                                    $(this).addClass('active');
-                                    var idx = $(this).data('index');
-                                    renderFollowupDetail(idx);
-                                });
-                            }
-                            
-                            // Insert today's followups modal into the queue
-                            modalQueue.push(todayFollowupsModal);
-                            // If no modal is currently active, start/resume the sequence
-                            if ($('.dashboard-modal-backdrop.active').length === 0) {
-                                showNextModal();
-                            }
+                            });
+                        }
+
+                        modalQueue.push(todayFollowupsModal);
+                        if ($('.dashboard-modal-backdrop.active').length === 0) {
+                            showNextModal();
                         }
                     },
                     error: function(xhr, status, error) {

@@ -240,6 +240,9 @@ $user_type = $this->Common->getType();
             .status-tab-btn.tab-enquiry-s       { background:#fff3e0; color:#ef6c00; border-color:#ffe0b2; }
             .status-tab-btn.tab-enquiry-s:hover { background:#ffe0b2; }
             .status-tab-btn.tab-enquiry-s.tab-active-now { background:#ef6c00; color:#fff; border-color:#ef6c00; }
+            .status-tab-btn.tab-expired-s       { background:#fce4ec; color:#c2185b; border-color:#f8bbd0; }
+            .status-tab-btn.tab-expired-s:hover { background:#f8bbd0; }
+            .status-tab-btn.tab-expired-s.tab-active-now { background:#c2185b; color:#fff; border-color:#c2185b; }
 
             /* Action Icons modern style */
             .action-btn-container {
@@ -520,6 +523,12 @@ $user_type = $this->Common->getType();
                                 <i class="material-icons" style="font-size:16px;vertical-align:middle;">help_outline</i>
                                 <?= __('Enquiry') ?>
                                 <span class="tab-count"><?= $tabCountEnquiry ?></span>
+                            </a>
+                            <a href="<?= buildTabUrl($baseUrl, $tabParams, 'expired') ?>" 
+                               class="status-tab-btn tab-expired-s <?= ($status === 'expired' || $status === '3') ? 'tab-active-now' : '' ?>">
+                                <i class="material-icons" style="font-size:16px;vertical-align:middle;">timer_off</i>
+                                <?= __('Expired') ?>
+                                <span class="tab-count"><?= $tabCountExpired ?></span>
                             </a>
                         </div>
                     </div>

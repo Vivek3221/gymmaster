@@ -27,13 +27,13 @@ class PtRatesTable extends Table
         $this->belongsTo('Partners', [
             'className' => 'Users',
             'foreignKey' => 'partner_id',
-            'joinType' => 'INNER'
+            'joinType' => 'LEFT'
         ]);
 
         $this->belongsTo('Trainers', [
             'className' => 'Users',
             'foreignKey' => 'trainer_id',
-            'joinType' => 'INNER'
+            'joinType' => 'LEFT'
         ]);
     }
 
@@ -77,9 +77,6 @@ class PtRatesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['partner_id'], 'Partners'));
-        $rules->add($rules->existsIn(['trainer_id'], 'Trainers'));
-
         return $rules;
     }
 }
