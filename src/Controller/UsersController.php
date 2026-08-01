@@ -363,6 +363,41 @@ class UsersController extends AppController
         $user       = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $data = $this->request->data;
+
+            // Check if email already belongs to an active user (active != 3)
+            if (!empty($data['email'])) {
+                $existingUser = $this->Users->find('all')
+                    ->where([
+                        'email' => trim($data['email']),
+                        'active !=' => '3'
+                    ])->first();
+
+                if (!empty($existingUser)) {
+                    $partnerName = '';
+                    if ($existingUser->user_type == 2) {
+                        $partnerName = $existingUser->name;
+                    } elseif (!empty($existingUser->partner_id)) {
+                        $partnerObj = $this->Users->find('all')
+                            ->select(['name'])
+                            ->where(['id' => $existingUser->partner_id])
+                            ->first();
+                        if (!empty($partnerObj) && !empty($partnerObj->name)) {
+                            $partnerName = $partnerObj->name;
+                        }
+                    }
+                    if (empty($partnerName)) {
+                        $partnerName = !empty($existingUser->name) ? $existingUser->name : 'Admin / System';
+                    }
+
+                    $errorMsg = __('This email address is already registered under partner: "{0}".', $partnerName);
+                    $user = $this->Users->patchEntity($user, $data);
+                    $user->errors('email', [$errorMsg]);
+                    $this->Flash->error($errorMsg);
+                    $this->set(compact('user', 'users_type'));
+                    return;
+                }
+            }
+
             $t    = time();
             $name = $data['name'] . $t;
             if (isset($users_type) && ($users_type == 2)) {
@@ -376,7 +411,42 @@ class UsersController extends AppController
             // pr($data);exit;
 
             $user = $this->Users->patchEntity($user, $data);
-            $useradd = $this->Users->save($user);
+            
+            try {
+                $useradd = $this->Users->save($user);
+            } catch (\Exception $e) {
+                $partnerName = '';
+                if (!empty($data['email'])) {
+                    $existingUser = $this->Users->find('all')
+                        ->where(['email' => trim($data['email'])])
+                        ->first();
+                    if (!empty($existingUser)) {
+                        if ($existingUser->user_type == 2) {
+                            $partnerName = $existingUser->name;
+                        } elseif (!empty($existingUser->partner_id)) {
+                            $partnerObj = $this->Users->find('all')
+                                ->select(['name'])
+                                ->where(['id' => $existingUser->partner_id])
+                                ->first();
+                            if (!empty($partnerObj) && !empty($partnerObj->name)) {
+                                $partnerName = $partnerObj->name;
+                            }
+                        }
+                        if (empty($partnerName)) {
+                            $partnerName = !empty($existingUser->name) ? $existingUser->name : 'Admin / System';
+                        }
+                    }
+                }
+                if (empty($partnerName)) {
+                    $partnerName = 'Admin / System';
+                }
+                $errorMsg = __('This email address is already registered under partner: "{0}".', $partnerName);
+                $user->errors('email', [$errorMsg]);
+                $this->Flash->error($errorMsg);
+                $this->set(compact('user', 'users_type'));
+                return;
+            }
+
             if ($useradd) {
 
                 $userDataArr['name']  = $data['name'];
@@ -447,7 +517,12 @@ class UsersController extends AppController
                 $user->trainer_userid = $data['trainer_userid'];
             }
             $user                 = $this->Users->patchEntity($user, $data, ['validate' => 'payment']);
-            $useradd              = $this->Users->save($user);
+            try {
+                $useradd          = $this->Users->save($user);
+            } catch (\Exception $e) {
+                $this->Flash->error(__('This email address is already in use. Please use a different email address.'));
+                return $this->redirect(['action' => 'payment', $id]);
+            }
             if ($useradd) {
 
                 // insert into plan_subscribers

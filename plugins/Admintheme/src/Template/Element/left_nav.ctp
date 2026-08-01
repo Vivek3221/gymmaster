@@ -274,6 +274,25 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
                     </a>
                 </li>
                  <?php } ?>
+                <?php
+                // PT Payroll: show to partners, admins, and special emails
+                $showPtPayroll = false;
+                if (!empty($usersdetail['users_email'])) {
+                    $currentEmail = strtolower(trim($usersdetail['users_email']));
+                    $userType = $usersdetail['users_type'];
+                    $allowedEmails = ['ad1234@yopmail.com', 'mukeshkr3221@gmail.com'];
+                    if ($userType == 1 || $userType == 2 || in_array($currentEmail, $allowedEmails)) {
+                        $showPtPayroll = true;
+                    }
+                }
+                if ($showPtPayroll) { ?>
+                <li class="<?php if ($controller == 'PtPayrolls'){echo "active";}?>" style="background:<?= $controller=='PtPayrolls'?'#efebe9':''; ?>">
+                    <a href="<?= $this->Url->build(['controller' => 'PtPayrolls', 'action' => 'index']); ?>" style="<?= $controller=='PtPayrolls'?'color:#4e342e!important;':''; ?>">
+                        <i class="material-icons" style="<?= $controller=='PtPayrolls'?'color:#5d4037!important;':''; ?>">monetization_on</i>
+                        <span><?= __('PT Payroll') ?></span>
+                    </a>
+                </li>
+                <?php } ?>
                 <?php if($usersdetail['users_type'] == 1 || $usersdetail['users_type'] == 2){; ?>
                 <li class="<?php if (($controller == 'ExrciseDirectories' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'logoutqq' || $action == 'payment'))){echo "active";}?>">
                 <a href="<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'index']); ?>">
