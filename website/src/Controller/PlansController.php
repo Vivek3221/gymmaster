@@ -1,81 +1,22 @@
 <?php
-
 namespace App\Controller;
 
 use App\Controller\AppController;
-use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
 /**
  * Plans Controller
- *
- * @property \App\Model\Table\PlansTable $Plans
  */
 class PlansController extends AppController
 {
-    public function initialize()
-    {
-        parent::initialize();
-        $this->loadComponent('Flash');
-        $this->loadComponent('Common');
-    }
-
-    public function beforeFilter(Event $event)
-    {
-        parent::beforeFilter($event);
-        $this->Auth->allow(['index', 'add', 'edit', 'view']);
-    }
-
-    public function beforeRender(Event $event)
+    public function beforeRender(\Cake\Event\Event $event)
     {
         parent::beforeRender($event);
         $this->viewBuilder()->theme('Admintheme');
     }
 
     /**
-     * GET /plans/get-days — AJAX: returns days for a given duration_months
-     */
-    public function getDays()
-    {
-        $this->autoRender = false;
-        $months = (int)($this->request->query('months') ?? 0);
-        $days = ($months == 12) ? 365 : ($months * 30);
-        echo json_encode(['days' => $days]);
-        exit;
-    }
-
-    /**
-     * GET /plans/get-plan-details — AJAX: returns plan details by plan title for payment form
-     */
-    public function getPlanDetails()
-    {
-        $this->autoRender = false;
-        $planId = (int)($this->request->query('plan_id') ?? 0);
-
-        if (!$planId) {
-            echo json_encode(['success' => false]);
-            exit;
-        }
-
-        $Plans = TableRegistry::get('Plans');
-        $plan  = $Plans->find()->where(['Plans.id' => $planId, 'Plans.active' => 1])->first();
-
-        if (empty($plan)) {
-            echo json_encode(['success' => false]);
-            exit;
-        }
-
-        echo json_encode([
-            'success' => true,
-            'title'   => $plan->title,
-            'days'    => (int)$plan->days,
-            'price'   => (float)$plan->price,
-        ]);
-        exit;
-    }
-
-    /**
-     * Index — Plans list with full CRUD (no delete)
+     * Index method
      */
     public function index()
     {

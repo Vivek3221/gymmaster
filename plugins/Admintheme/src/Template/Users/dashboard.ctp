@@ -551,161 +551,493 @@
         color: #64748b;
         margin: 0;
     }
+
+    /* Front Desk Dashboard Styling */
+    .frontdesk-dashboard-container {
+        margin-bottom: 30px;
+    }
+    .fd-hero-card {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border-radius: 18px;
+        padding: 28px 32px;
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .fd-badge {
+        display: inline-block;
+        background: rgba(255, 152, 0, 0.2);
+        color: #ff9800;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 6px 14px;
+        border-radius: 30px;
+        border: 1px solid rgba(255, 152, 0, 0.4);
+        margin-bottom: 12px;
+    }
+    .fd-hero-content h2 {
+        font-size: 24px;
+        font-weight: 800;
+        margin: 0 0 8px 0;
+        color: #fff;
+    }
+    .fd-hero-content p {
+        font-size: 14px;
+        color: #94a3b8;
+        margin: 0;
+        max-width: 600px;
+    }
+    .fd-hero-date {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 10px 18px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #cbd5e1;
+    }
+    .fd-hero-date i {
+        color: #ff9800;
+    }
+    .fd-section-title {
+        font-size: 15px;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .fd-section-title i {
+        color: #ff9800;
+    }
+    .fd-shortcut-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 14px;
+        text-decoration: none !important;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        transition: all 0.3s ease;
+        position: relative;
+        margin-bottom: 20px;
+    }
+    .fd-shortcut-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+    }
+    .fd-shortcut-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+    .fd-card-blue .fd-shortcut-icon { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+    .fd-card-green .fd-shortcut-icon { background: linear-gradient(135deg, #11998e, #38ef7d); }
+    .fd-card-orange .fd-shortcut-icon { background: linear-gradient(135deg, #ff9800, #f57c00); }
+    .fd-card-purple .fd-shortcut-icon { background: linear-gradient(135deg, #7F00FF, #E100FF); }
+    .fd-shortcut-info h4 {
+        margin: 0 0 3px 0;
+        font-size: 15px;
+        font-weight: 700;
+        color: #1e293b;
+    }
+    .fd-shortcut-info p {
+        margin: 0;
+        font-size: 12px;
+        color: #64748b;
+    }
+    .fd-arrow {
+        margin-left: auto;
+        color: #cbd5e1;
+        transition: all 0.3s ease;
+    }
+    .fd-shortcut-card:hover .fd-arrow {
+        color: #1e293b;
+        transform: translateX(4px);
+    }
+    .fd-matrix-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        height: 100%;
+    }
+    .fd-card-allowed { border-top: 4px solid #10b981; }
+    .fd-card-restricted { border-top: 4px solid #ef4444; }
+    .fd-matrix-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .fd-card-allowed .fd-matrix-header i { color: #10b981; font-size: 24px; }
+    .fd-card-restricted .fd-matrix-header i { color: #ef4444; font-size: 24px; }
+    .fd-matrix-header h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 800;
+        color: #1e293b;
+    }
+    .fd-matrix-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .fd-matrix-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .fd-card-allowed .fd-matrix-list li i { color: #10b981; font-size: 18px; margin-top: 2px; }
+    .fd-card-restricted .fd-matrix-list li i { color: #ef4444; font-size: 18px; margin-top: 2px; }
+    .fd-matrix-list li strong {
+        display: block;
+        font-size: 14px;
+        color: #1e293b;
+        margin-bottom: 2px;
+    }
+    .fd-matrix-list li span {
+        font-size: 12px;
+        color: #64748b;
+        line-height: 1.4;
+    }
 </style>
 
 <section class="content">
     <div class="container-fluid">
-        <!-- Modern Header -->
-        <div class="dashboard-header">
-            <div class="dashboard-header-left">
-                <h1><?= __('Dashboard') ?></h1>
-                <p><?= __('Welcome back,') ?> <span style="color: #ff9800; font-weight: 700;"><?= h($usersdetail['users_name']) ?></span>! <?= __('Here is a summary of your gym administration.') ?></p>
-            </div>
-            <div class="dashboard-header-right">
-                <i class="material-icons">query_builder</i>
-                <span><?= date('l, d M Y') ?></span>
-            </div>
-        </div>
 
-        <!-- Widgets Row -->
-        <div class="row clearfix">
-            
-            <!-- Users Card -->
-            <?php if (($usersdetail['users_type'] != 3) && ($usersdetail['users_type'] != 4)) { ?>
-                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                    <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>" class="modern-card-link">
-                        <div class="modern-dashboard-card color-users">
-                            <div class="card-icon-wrapper">
-                                <i class="material-icons">people</i>
-                            </div>
-                            <div class="card-details">
-                                <div class="card-label"><?= __('Users') ?></div>
-                                <div class="card-val count-to" data-from="0" data-to="<?= $users_count ?>" data-speed="1000" data-fresh-interval="20"><?= $users_count ?></div>
-                            </div>
+        <?php if (isset($usersdetail['users_type']) && $usersdetail['users_type'] == 5): ?>
+            <!-- Front Desk Custom Command Center Dashboard Portal -->
+            <div class="frontdesk-dashboard-container" style="margin-bottom: 30px;">
+                <!-- Hero Welcome Header -->
+                <div class="fd-hero-card" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 18px; padding: 28px 32px; color: #fff; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15); margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+                    <div class="fd-hero-content">
+                        <div class="fd-badge" style="display: inline-block; background: rgba(255, 152, 0, 0.2); color: #ff9800; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding: 6px 14px; border-radius: 30px; border: 1px solid rgba(255, 152, 0, 0.4); margin-bottom: 12px;">
+                            <i class="material-icons" style="font-size: 14px; vertical-align: middle;">badge</i> <?= __('Front Desk Portal') ?>
                         </div>
-                    </a>
+                        <h2 style="font-size: 24px; font-weight: 800; margin: 0 0 8px 0; color: #fff;"><?= __('Welcome Back,') ?> <?= h($usersdetail['users_name']) ?>! 👋</h2>
+                        <p style="font-size: 14px; color: #94a3b8; margin: 0; max-width: 600px;"><?= __('Manage member inquiries, add new walk-in leads, process gym plan payments, and view membership records.') ?></p>
+                    </div>
+                    <div class="fd-hero-date" style="background: rgba(255, 255, 255, 0.08); padding: 10px 18px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #cbd5e1;">
+                        <i class="material-icons" style="color: #ff9800;">event</i>
+                        <span><?= date('l, d F Y') ?></span>
+                    </div>
                 </div>
-            <?php } ?>
 
-            <!-- Exercise Directory Card -->
-            <?php if (($usersdetail['users_type'] != 3) && ($usersdetail['users_type'] != 4)) { ?>
-                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                    <a href="<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'index']); ?>" class="modern-card-link">
-                        <div class="modern-dashboard-card color-exercise">
-                            <div class="card-icon-wrapper">
-                                <i class="material-icons">fitness_center</i>
-                            </div>
-                            <div class="card-details">
-                                <div class="card-label"><?= __('Exercises') ?></div>
-                                <div class="card-val"><?= __('View Directory') ?></div>
-                            </div>
-                        </div>
-                    </a>
+                <!-- Quick Access Shortcuts Grid -->
+                <div class="fd-section-title" style="font-size: 15px; font-weight: 800; color: #1e293b; margin-bottom: 15px; display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                    <i class="material-icons" style="color: #ff9800;">bolt</i> <?= __('Quick Action Shortcuts') ?>
                 </div>
-            <?php } ?>
+                <div class="row clearfix fd-actions-grid">
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                        <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']) ?>" class="fd-shortcut-card fd-card-blue" style="display: flex; align-items: center; gap: 16px; background: #fff; padding: 20px; border-radius: 14px; text-decoration: none !important; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 20px; transition: all 0.3s ease;">
+                            <div class="fd-shortcut-icon" style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; flex-shrink: 0; background: linear-gradient(135deg, #00c6ff, #0072ff);"><i class="material-icons" style="color:#fff;">people</i></div>
+                            <div class="fd-shortcut-info">
+                                <h4 style="margin: 0 0 3px 0; font-size: 15px; font-weight: 700; color: #1e293b;"><?= __('Users List') ?></h4>
+                                <p style="margin: 0; font-size: 12px; color: #64748b;"><?= __('Search & view members list') ?></p>
+                            </div>
+                            <i class="material-icons fd-arrow" style="margin-left: auto; color: #cbd5e1;">arrow_forward</i>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                        <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'add']) ?>" class="fd-shortcut-card fd-card-green" style="display: flex; align-items: center; gap: 16px; background: #fff; padding: 20px; border-radius: 14px; text-decoration: none !important; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 20px; transition: all 0.3s ease;">
+                            <div class="fd-shortcut-icon" style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; flex-shrink: 0; background: linear-gradient(135deg, #11998e, #38ef7d);"><i class="material-icons" style="color:#fff;">person_add</i></div>
+                            <div class="fd-shortcut-info">
+                                <h4 style="margin: 0 0 3px 0; font-size: 15px; font-weight: 700; color: #1e293b;"><?= __('Add Enquiry') ?></h4>
+                                <p style="margin: 0; font-size: 12px; color: #64748b;"><?= __('Register new lead or client') ?></p>
+                            </div>
+                            <i class="material-icons fd-arrow" style="margin-left: auto; color: #cbd5e1;">arrow_forward</i>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                        <a href="<?= $this->Url->build(['controller' => 'PlanSubscribers', 'action' => 'index']) ?>" class="fd-shortcut-card fd-card-orange" style="display: flex; align-items: center; gap: 16px; background: #fff; padding: 20px; border-radius: 14px; text-decoration: none !important; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 20px; transition: all 0.3s ease;">
+                            <div class="fd-shortcut-icon" style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; flex-shrink: 0; background: linear-gradient(135deg, #ff9800, #f57c00);"><i class="material-icons" style="color:#fff;">loyalty</i></div>
+                            <div class="fd-shortcut-info">
+                                <h4 style="margin: 0 0 3px 0; font-size: 15px; font-weight: 700; color: #1e293b;"><?= __('Plan Subscribe') ?></h4>
+                                <p style="margin: 0; font-size: 12px; color: #64748b;"><?= __('View active member plans') ?></p>
+                            </div>
+                            <i class="material-icons fd-arrow" style="margin-left: auto; color: #cbd5e1;">arrow_forward</i>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                        <a href="<?= $this->Url->build(['controller' => 'Payments', 'action' => 'index']) ?>" class="fd-shortcut-card fd-card-purple" style="display: flex; align-items: center; gap: 16px; background: #fff; padding: 20px; border-radius: 14px; text-decoration: none !important; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 20px; transition: all 0.3s ease;">
+                            <div class="fd-shortcut-icon" style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; flex-shrink: 0; background: linear-gradient(135deg, #7F00FF, #E100FF);"><i class="material-icons" style="color:#fff;">payment</i></div>
+                            <div class="fd-shortcut-info">
+                                <h4 style="margin: 0 0 3px 0; font-size: 15px; font-weight: 700; color: #1e293b;"><?= __('Payments List') ?></h4>
+                                <p style="margin: 0; font-size: 12px; color: #64748b;"><?= __('View payment transactions') ?></p>
+                            </div>
+                            <i class="material-icons fd-arrow" style="margin-left: auto; color: #cbd5e1;">arrow_forward</i>
+                        </a>
+                    </div>
+                </div>
 
-            <!-- Body Measurement Card -->
-            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                <a href="<?= $this->Url->build(['controller' => 'FitnessMeserments', 'action' => 'index']); ?>" class="modern-card-link">
-                    <div class="modern-dashboard-card color-body">
-                        <div class="card-icon-wrapper">
-                            <i class="material-icons">accessibility</i>
-                        </div>
-                        <div class="card-details">
-                            <div class="card-label"><?= __('Measurements') ?></div>
-                            <div class="card-val"><?= __('Body Stats') ?></div>
+                <!-- Role Overview & Capability Matrix -->
+                <div class="row clearfix fd-matrix-row" style="margin-top: 15px;">
+                    <!-- Permitted Operations -->
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="fd-matrix-card fd-card-allowed" style="background: #fff; border-radius: 16px; padding: 24px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 4px solid #10b981; height: 100%;">
+                            <div class="fd-matrix-header" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+                                <i class="material-icons" style="color: #10b981; font-size: 24px;">check_circle</i>
+                                <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: #1e293b;"><?= __('Permitted Front Desk Actions') ?></h3>
+                            </div>
+                            <ul class="fd-matrix-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 16px;">
+                                <li style="display: flex; align-items: flex-start; gap: 12px;">
+                                    <i class="material-icons" style="color: #10b981; font-size: 18px; margin-top: 2px;">done</i>
+                                    <div>
+                                        <strong style="display: block; font-size: 14px; color: #1e293b; margin-bottom: 2px;"><?= __('Search & View Members List') ?></strong>
+                                        <span style="font-size: 12px; color: #64748b; line-height: 1.4;"><?= __('Look up existing members, search by name/mobile, and check profile information.') ?></span>
+                                    </div>
+                                </li>
+                                <li style="display: flex; align-items: flex-start; gap: 12px;">
+                                    <i class="material-icons" style="color: #10b981; font-size: 18px; margin-top: 2px;">done</i>
+                                    <div>
+                                        <strong style="display: block; font-size: 14px; color: #1e293b; margin-bottom: 2px;"><?= __('Register New Walk-in Enquiries') ?></strong>
+                                        <span style="font-size: 12px; color: #64748b; line-height: 1.4;"><?= __('Capture new lead registrations and walk-in client details (`Users/add`).') ?></span>
+                                    </div>
+                                </li>
+                                <li style="display: flex; align-items: flex-start; gap: 12px;">
+                                    <i class="material-icons" style="color: #10b981; font-size: 18px; margin-top: 2px;">done</i>
+                                    <div>
+                                        <strong style="display: block; font-size: 14px; color: #1e293b; margin-bottom: 2px;"><?= __('Add Payment & Assign Plans') ?></strong>
+                                        <span style="font-size: 12px; color: #64748b; line-height: 1.4;"><?= __('Process payments (`Users/payment/{id}`) and subscribe members to active gym plans.') ?></span>
+                                    </div>
+                                </li>
+                                <li style="display: flex; align-items: flex-start; gap: 12px;">
+                                    <i class="material-icons" style="color: #10b981; font-size: 18px; margin-top: 2px;">done</i>
+                                    <div>
+                                        <strong style="display: block; font-size: 14px; color: #1e293b; margin-bottom: 2px;"><?= __('View Payment & Subscription Logs') ?></strong>
+                                        <span style="font-size: 12px; color: #64748b; line-height: 1.4;"><?= __('Access read-only lists for plan subscribers and past payment records.') ?></span>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                </a>
-            </div>
 
-            <!-- Fitness Test Card -->
-            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                <a href="<?= $this->Url->build(['controller' => 'FitnessTests', 'action' => 'index']); ?>" class="modern-card-link">
-                    <div class="modern-dashboard-card color-fitness">
-                        <div class="card-icon-wrapper">
-                            <i class="material-icons">assignment</i>
-                        </div>
-                        <div class="card-details">
-                            <div class="card-label"><?= __('Fitness Tests') ?></div>
-                            <div class="card-val"><?= __('Track Performance') ?></div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-
-            <!-- Session Card -->
-            <?php if ($usersdetail['users_type'] != 3) { ?>
-                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                    <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index']); ?>" class="modern-card-link">
-                        <div class="modern-dashboard-card color-session">
-                            <div class="card-icon-wrapper">
-                                <i class="material-icons">schedule</i>
+                    <!-- Restricted Operations -->
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="fd-matrix-card fd-card-restricted" style="background: #fff; border-radius: 16px; padding: 24px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 4px solid #ef4444; height: 100%;">
+                            <div class="fd-matrix-header" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+                                <i class="material-icons" style="color: #ef4444; font-size: 24px;">lock</i>
+                                <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: #1e293b;"><?= __('Restricted Actions (Protected)') ?></h3>
                             </div>
-                            <div class="card-details">
-                                <div class="card-label"><?= __('Sessions') ?></div>
-                                <div class="card-val"><?= __('Manage Sessions') ?></div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            <?php } ?>
-
-            <!-- Report Session Card (for User Type 3) -->
-            <?php if ($usersdetail['users_type'] == 3) { ?>
-                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                    <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index']); ?>" class="modern-card-link">
-                        <div class="modern-dashboard-card color-session">
-                            <div class="card-icon-wrapper">
-                                <i class="material-icons">assessment</i>
-                            </div>
-                            <div class="card-details">
-                                <div class="card-label"><?= __('Report Session') ?></div>
-                                <div class="card-val"><?= __('View Reports') ?></div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            <?php } ?>
-
-            <!-- Trainers Card (for User Type 2) -->
-            <?php if ($usersdetail['users_type'] == 2) { ?>
-                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                    <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'trainerList']); ?>" class="modern-card-link">
-                        <div class="modern-dashboard-card color-trainers">
-                            <div class="card-icon-wrapper">
-                                <i class="material-icons">supervisor_account</i>
-                            </div>
-                            <div class="card-details">
-                                <div class="card-label"><?= __('Trainers') ?></div>
-                                <div class="card-val"><?= __('View List') ?></div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            <?php } ?>
-
-        </div>
-
-        <!-- Collection Graph Row (only for Admin, Partner, Trainer) -->
-        <?php if (in_array($usersdetail['users_type'], ['1', '2', '4'])): ?>
-            <div class="row clearfix" style="margin-top: 10px; margin-bottom: 24px;">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="card modern-card" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); border: 1px solid #eaeaea; overflow: hidden; background: #fff;">
-                        <div class="header" style="background: #fafafa; border-bottom: 1px solid #eaeaea; padding: 20px 24px; display: flex; align-items: center; gap: 10px;">
-                            <i class="material-icons" style="color: #ff9800;">insert_chart</i>
-                            <h2 style="font-size: 16px; font-weight: 700; color: #333; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
-                                <?= __('Monthly Collections Trend (Last 6 Months)') ?>
-                            </h2>
-                        </div>
-                        <div class="body" style="padding: 24px;">
-                            <div style="position: relative; height: 320px; width: 100%;">
-                                <canvas id="collectionTrendChart"></canvas>
-                            </div>
+                            <ul class="fd-matrix-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 16px;">
+                                <li style="display: flex; align-items: flex-start; gap: 12px;">
+                                    <i class="material-icons" style="color: #ef4444; font-size: 18px; margin-top: 2px;">block</i>
+                                    <div>
+                                        <strong style="display: block; font-size: 14px; color: #1e293b; margin-bottom: 2px;"><?= __('No Edit or Delete Permissions') ?></strong>
+                                        <span style="font-size: 12px; color: #64748b; line-height: 1.4;"><?= __('Front desk users cannot edit or delete user accounts, payment history, or plan records.') ?></span>
+                                    </div>
+                                </li>
+                                <li style="display: flex; align-items: flex-start; gap: 12px;">
+                                    <i class="material-icons" style="color: #ef4444; font-size: 18px; margin-top: 2px;">block</i>
+                                    <div>
+                                        <strong style="display: block; font-size: 14px; color: #1e293b; margin-bottom: 2px;"><?= __('No Data Exports & Financial Reports') ?></strong>
+                                        <span style="font-size: 12px; color: #64748b; line-height: 1.4;"><?= __('Exporting client contacts, CSV data, and financial reporting views are hidden & blocked.') ?></span>
+                                    </div>
+                                </li>
+                                <li style="display: flex; align-items: flex-start; gap: 12px;">
+                                    <i class="material-icons" style="color: #ef4444; font-size: 18px; margin-top: 2px;">block</i>
+                                    <div>
+                                        <strong style="display: block; font-size: 14px; color: #1e293b; margin-bottom: 2px;"><?= __('No Plan Creation or Pricing Edits') ?></strong>
+                                        <span style="font-size: 12px; color: #64748b; line-height: 1.4;"><?= __('Adding or modifying gym membership plans, pricing, or durations is locked.') ?></span>
+                                    </div>
+                                </li>
+                                <li style="display: flex; align-items: flex-start; gap: 12px;">
+                                    <i class="material-icons" style="color: #ef4444; font-size: 18px; margin-top: 2px;">block</i>
+                                    <div>
+                                        <strong style="display: block; font-size: 14px; color: #1e293b; margin-bottom: 2px;"><?= __('No Trainer & Workout Management') ?></strong>
+                                        <span style="font-size: 12px; color: #64748b; line-height: 1.4;"><?= __('Access to trainer lists, workout directories, body measurements, and sessions is restricted.') ?></span>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
+        <?php else: ?>
+            <!-- Modern Header for Admin / Partner / Trainer / Client -->
+            <div class="dashboard-header">
+                <div class="dashboard-header-left">
+                    <h1><?= __('Dashboard') ?></h1>
+                    <p><?= __('Welcome back,') ?> <span style="color: #ff9800; font-weight: 700;"><?= h($usersdetail['users_name']) ?></span>! <?= __('Here is a summary of your gym administration.') ?></p>
+                </div>
+                <div class="dashboard-header-right">
+                    <i class="material-icons">query_builder</i>
+                    <span><?= date('l, d M Y') ?></span>
+                </div>
+            </div>
+
+            <!-- Widgets Row -->
+            <div class="row clearfix">
+                
+                <!-- Users Card -->
+                <?php if (($usersdetail['users_type'] != 3) && ($usersdetail['users_type'] != 4)) { ?>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>" class="modern-card-link">
+                            <div class="modern-dashboard-card color-users">
+                                <div class="card-icon-wrapper">
+                                    <i class="material-icons">people</i>
+                                </div>
+                                <div class="card-details">
+                                    <div class="card-label"><?= __('Users') ?></div>
+                                    <div class="card-val count-to" data-from="0" data-to="<?= $users_count ?>" data-speed="1000" data-fresh-interval="20"><?= $users_count ?></div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                <?php } ?>
+
+                <!-- Exercise Directory Card -->
+                <?php if (!in_array($usersdetail['users_type'], [3, 4, 5])) { ?>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <a href="<?= $this->Url->build(['controller' => 'ExrciseDirectories', 'action' => 'index']); ?>" class="modern-card-link">
+                            <div class="modern-dashboard-card color-exercise">
+                                <div class="card-icon-wrapper">
+                                    <i class="material-icons">fitness_center</i>
+                                </div>
+                                <div class="card-details">
+                                    <div class="card-label"><?= __('Exercises') ?></div>
+                                    <div class="card-val"><?= __('View Directory') ?></div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                <?php } ?>
+
+                <!-- Body Measurement Card -->
+                <?php if (!in_array($usersdetail['users_type'], [5])) { ?>
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                    <a href="<?= $this->Url->build(['controller' => 'FitnessMeserments', 'action' => 'index']); ?>" class="modern-card-link">
+                        <div class="modern-dashboard-card color-body">
+                            <div class="card-icon-wrapper">
+                                <i class="material-icons">accessibility</i>
+                            </div>
+                            <div class="card-details">
+                                <div class="card-label"><?= __('Measurements') ?></div>
+                                <div class="card-val"><?= __('Body Stats') ?></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <?php } ?>
+
+                <!-- Fitness Test Card -->
+                <?php if (!in_array($usersdetail['users_type'], [5])) { ?>
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                    <a href="<?= $this->Url->build(['controller' => 'FitnessTests', 'action' => 'index']); ?>" class="modern-card-link">
+                        <div class="modern-dashboard-card color-fitness">
+                            <div class="card-icon-wrapper">
+                                <i class="material-icons">assignment</i>
+                            </div>
+                            <div class="card-details">
+                                <div class="card-label"><?= __('Fitness Tests') ?></div>
+                                <div class="card-val"><?= __('Track Performance') ?></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <?php } ?>
+
+                <!-- Session Card -->
+                <?php if (!in_array($usersdetail['users_type'], [3, 5])) { ?>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index']); ?>" class="modern-card-link">
+                            <div class="modern-dashboard-card color-session">
+                                <div class="card-icon-wrapper">
+                                    <i class="material-icons">schedule</i>
+                                </div>
+                                <div class="card-details">
+                                    <div class="card-label"><?= __('Sessions') ?></div>
+                                    <div class="card-val"><?= __('Manage Sessions') ?></div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                <?php } ?>
+
+                <!-- Report Session Card (for User Type 3) -->
+                <?php if ($usersdetail['users_type'] == 3) { ?>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index']); ?>" class="modern-card-link">
+                            <div class="modern-dashboard-card color-session">
+                                <div class="card-icon-wrapper">
+                                    <i class="material-icons">assessment</i>
+                                </div>
+                                <div class="card-details">
+                                    <div class="card-label"><?= __('Report Session') ?></div>
+                                    <div class="card-val"><?= __('View Reports') ?></div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                <?php } ?>
+
+                <!-- Trainers Card (for User Type 2) -->
+                <?php if ($usersdetail['users_type'] == 2) { ?>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'trainerList']); ?>" class="modern-card-link">
+                            <div class="modern-dashboard-card color-trainers">
+                                <div class="card-icon-wrapper">
+                                    <i class="material-icons">supervisor_account</i>
+                                </div>
+                                <div class="card-details">
+                                    <div class="card-label"><?= __('Trainers') ?></div>
+                                    <div class="card-val"><?= __('View List') ?></div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                <?php } ?>
+
+            </div>
+
+            <!-- Collection Graph Row (only for Admin, Partner, Trainer) -->
+            <?php if (in_array($usersdetail['users_type'], ['1', '2', '4'])): ?>
+                <div class="row clearfix" style="margin-top: 10px; margin-bottom: 24px;">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card modern-card" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); border: 1px solid #eaeaea; overflow: hidden; background: #fff;">
+                            <div class="header" style="background: #fafafa; border-bottom: 1px solid #eaeaea; padding: 20px 24px; display: flex; align-items: center; gap: 10px;">
+                                <i class="material-icons" style="color: #ff9800;">insert_chart</i>
+                                <h2 style="font-size: 16px; font-weight: 700; color: #333; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                                    <?= __('Monthly Collections Trend (Last 6 Months)') ?>
+                                </h2>
+                            </div>
+                            <div class="body" style="padding: 24px;">
+                                <div style="position: relative; height: 320px; width: 100%;">
+                                    <canvas id="collectionTrendChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 

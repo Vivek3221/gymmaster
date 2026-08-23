@@ -14,6 +14,10 @@ class ManualCollectionsController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
+        if (!empty($this->usersdetail['users_type']) && $this->usersdetail['users_type'] == 3) {
+            $this->Flash->error(__('Access Denied. Trainers are not allowed to access Manual Collections.'));
+            return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
+        }
         $email = strtolower(trim($this->usersdetail['users_email']));
         $db = $this->PlanSubscribers->getConnection();
         $result = $db->execute(
@@ -317,11 +321,13 @@ class ManualCollectionsController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
+        $targetPartnerId = !empty($user->partner_id) ? $user->partner_id : ($users_type == 2 ? $users_id : (isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : $users_id));
+
         $payment = $this->Payments->newEntity();
 
         if ($this->request->is('post')) {
             $data = $this->request->getData();
-            $data['partner_id'] = $this->usersdetail['users_id'];
+            $data['partner_id'] = $targetPartnerId;
             $data['currency'] = 'INR';
             $payment = $this->Payments->patchEntity($payment, $data);
             $payment->mode_ofpay = $data['mode_ofpay'];
@@ -355,7 +361,7 @@ class ManualCollectionsController extends AppController
 
         $partners = $this->Payments->Partners->find('list');
         $planSubscribers = $this->Payments->PlanSubscribers->find('list')
-            ->where(['user_id' => $userid, 'partner_id' => $this->usersdetail['users_id'], 'collection_type' => 'manual']);
+            ->where(['user_id' => $userid, 'collection_type' => 'manual']);
 
         $this->set(compact('payment', 'users', 'partners', 'planSubscribers', 'userid'));
     }

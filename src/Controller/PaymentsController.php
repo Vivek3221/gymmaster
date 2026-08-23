@@ -13,6 +13,24 @@ use Cake\ORM\TableRegistry;
  */
 class PaymentsController extends AppController
 {
+    public function beforeFilter(\Cake\Event\Event $event)
+    {
+        parent::beforeFilter($event);
+        if (!empty($this->usersdetail['users_type'])) {
+            $userType = $this->usersdetail['users_type'];
+            $action = $this->request->getParam('action');
+            // Block Trainers completely from Payments
+            if ($userType == 3) {
+                $this->Flash->error(__('Access Denied. Trainers are not allowed to view or manage payments.'));
+                return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
+            }
+            // Block Front Desk (user_type == 5) from editing or deleting payments
+            if ($userType == 5 && in_array($action, ['edit', 'delete'])) {
+                $this->Flash->error(__('Front Desk role is restricted from editing or deleting payment records.'));
+                return $this->redirect(['controller' => 'Payments', 'action' => 'index']);
+            }
+        }
+    }
 
     /**
      * Index method
@@ -149,6 +167,10 @@ class PaymentsController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
+        if ($this->usersdetail['users_type'] == 5) {
+            $this->Flash->error(__('Front Desk role is restricted from editing payment records.'));
+            return $this->redirect(['action' => 'index']);
+        }
         $search = [];
         $users_type = $this->usersdetail['users_type'];
         $users_id = $this->usersdetail['users_id'];
@@ -193,7 +215,13 @@ class PaymentsController extends AppController
      */
     public function delete($id = null)
     {
-        //$this->request->allowMethod(['post', 'delete']);
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        if ($this->usersdetail['users_type'] == 5) {
+            $this->Flash->error(__('Front Desk role is restricted from deleting payment records.'));
+            return $this->redirect(['action' => 'index']);
+        }
         $payment = $this->Payments->get($id);
         if ($this->Payments->delete($payment)) {
             $this->Flash->success(__('The payment has been deleted.'));

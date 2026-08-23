@@ -13,6 +13,24 @@ use Cake\ORM\TableRegistry;
  */
 class PlanSubscribersController extends AppController
 {
+    public function beforeFilter(\Cake\Event\Event $event)
+    {
+        parent::beforeFilter($event);
+        if (!empty($this->usersdetail['users_type'])) {
+            $userType = $this->usersdetail['users_type'];
+            $action = $this->request->getParam('action');
+            // Block Trainers completely from PlanSubscribers
+            if ($userType == 3) {
+                $this->Flash->error(__('Access Denied. Trainers are not allowed to view or manage plan subscriptions.'));
+                return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
+            }
+            // Block Front Desk (user_type == 5) from editing, deleting, exporting, or viewing reports for plan subscriptions
+            if ($userType == 5 && in_array($action, ['edit', 'delete', 'export', 'report'])) {
+                $this->Flash->error(__('Front Desk role is restricted from editing, exporting, or viewing reports for plan subscriptions.'));
+                return $this->redirect(['controller' => 'PlanSubscribers', 'action' => 'index']);
+            }
+        }
+    }
 
     /**
      * Index method

@@ -258,15 +258,21 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
                         <span><?=__('Dashboard')?></span>
                     </a>
                 </li>
-                <?php if($usersdetail['users_type'] == 2){; ?>
+                <?php if($usersdetail['users_type'] == 2 || $usersdetail['users_type'] == 1){; ?>
                  <li class="<?php if (($controller == 'Users' && ($action == 'trainerList' || $action == 'trainerAdd' || $action == 'trainerEdit' || $action == 'trainerView'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'trainerList']); ?>">
                         <i class="material-icons">list</i>
                         <span><?= __('Trainers') ?></span>
                     </a>
                 </li>
+                <li class="<?php if (($controller == 'Users' && ($action == 'frontDeskList' || $action == 'frontDeskAdd' || $action == 'frontDeskEdit' || $action == 'frontDeskView'))){echo "active";}?>">
+                    <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'frontDeskList']); ?>">
+                        <i class="material-icons">badge</i>
+                        <span><?= __('Front Desk') ?></span>
+                    </a>
+                </li>
                 <?php } ?>    
-                <?php if($usersdetail['users_type'] == 1 || $usersdetail['users_type'] == 2){; ?>
+                <?php if($usersdetail['users_type'] == 1 || $usersdetail['users_type'] == 2 || $usersdetail['users_type'] == 5){; ?>
                  <li class="<?php if (($controller == 'Users' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'addPayment' || $action == 'payment'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>">
                         <i class="material-icons">list</i>
@@ -358,6 +364,7 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
                 </li>
                 <?php } ?>
 
+                <?php if($usersdetail['users_type'] != 5){ ?>
                 <li class="<?php if ($controller == 'FitnessTests' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
                     <a href="<?= $this->Url->build(['controller' => 'FitnessTests', 'action' => 'index']); ?>">
                         <i class="material-icons">home</i>
@@ -384,7 +391,8 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
                        </li>
                     </ul>
                 </li>
-                <?php if($usersdetail['users_type'] != 3){ ;?>
+                <?php } ?>
+                <?php if($usersdetail['users_type'] != 3 && $usersdetail['users_type'] != 5){ ;?>
                 <li class="<?php if (($controller == 'Sessions' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'userEdit' || $action == 'addMore'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index']); ?>">
                         <i class="material-icons">perm_media</i>

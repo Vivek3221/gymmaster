@@ -453,12 +453,14 @@
                         <div class="filter-actions">
                             <?= $this->Form->button('<i class="material-icons" style="font-size: 18px; vertical-align: middle;">search</i> ' . __('Search'), ['class' => 'btn btn-primary waves-effect', 'escapeTitle' => false]) ?>
                             <?= $this->Html->link('<i class="material-icons" style="font-size: 18px; vertical-align: middle;">clear_all</i> ' . __('Clear'), ['controller' => 'PlanSubscribers'], ['class' => 'btn btn-danger waves-effect', 'escape' => false]) ?>
+                            <?php if (isset($users_type) && $users_type != 5) { ?>
                             <a href="<?= $this->Url->build(['action' => 'export'] + $this->request->query) ?>" class="btn btn-success waves-effect">
                                 <i class="material-icons" style="font-size: 18px; vertical-align: middle;">file_download</i> <?= __('Export') ?>
                             </a>
                             <a href="<?= $this->Url->build(['action' => 'report'] + $this->request->query) ?>" target="_blank" class="btn btn-info waves-effect" style="background-color: #00bcd4 !important; border-color: #00bcd4 !important; color: #fff !important;">
                                 <i class="material-icons" style="font-size: 18px; vertical-align: middle;">assessment</i> <?= __('View Report') ?>
                             </a>
+                            <?php } ?>
                         </div>
                     </div>    
                     <?= $this->Form->end() ?>
@@ -514,9 +516,11 @@
                                                     <a href="<?= $this->Url->build(['action' => 'view', $planSubscriber['id']]); ?>" class="action-icon-btn view-btn" title="View">
                                                         <i class="material-icons">visibility</i>
                                                     </a>
+                                                    <?php if (isset($users_type) && $users_type != 5) { ?>
                                                     <a href="<?= $this->Url->build(['action' => 'edit', $planSubscriber['id']]); ?>" class="action-icon-btn edit-btn" title="Edit">
                                                         <i class="material-icons">mode_edit</i>
                                                     </a>
+                                                    <?php } ?>
                                                 </div>
                                             </td>
                                         </tr>

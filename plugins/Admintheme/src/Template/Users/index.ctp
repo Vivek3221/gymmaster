@@ -443,6 +443,9 @@ $user_type = $this->Common->getType();
                         <div class="filter-group">
                             <?php echo $this->Form->input('email', ['label' => __('Email'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Email'), 'value' => $email]); ?>
                         </div>
+                        <div class="filter-group">
+                            <?php echo $this->Form->input('mobile', ['label' => __('Mobile No'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Mobile No'), 'value' => isset($mobile) ? $mobile : '']); ?>
+                        </div>
 
                         <?php if (isset($users_type) && ($users_type == 1)) { ?>
                             <div class="filter-group">
@@ -474,10 +477,12 @@ $user_type = $this->Common->getType();
                         </div>
                         
                         <div class="filter-actions">
+                            <?php if ($usersdetail['users_type'] != 5) { ?>
                             <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'exportContacts']); ?>" class="btn btn-success waves-effect" style="background-color: #2e7d32 !important; border-color: #2e7d32 !important; color: #fff !important;">
                                 <i class="material-icons" style="font-size: 18px; vertical-align: middle;">download</i>
                                 <?= __('Export Client Contacts') ?>
                             </a>
+                            <?php } ?>
                             <?= $this->Form->button('<i class="material-icons" style="font-size: 18px; vertical-align: middle;">search</i> ' . __('Search'), ['class' => 'btn btn-primary waves-effect', 'escapeTitle' => false]) ?>
                             <?= $this->Html->link('<i class="material-icons" style="font-size: 18px; vertical-align: middle;">clear_all</i> ' . __('Clear'), ['controller' => 'Users'], ['class' => 'btn btn-danger waves-effect', 'escape' => false]) ?>
                         </div>
@@ -543,6 +548,7 @@ $user_type = $this->Common->getType();
                                         <tr>
                                             <th><?= __('Name') ?></th>
                                             <th><?= __('Email') ?></th>
+                                            <th><?= __('Mobile No') ?></th>
                                             <?php if (isset($users_type) && ($users_type == 2)) { ?>
                                                 <th><?= __('Trainer') ?></th>
                                             <?php } else { ?>
@@ -557,6 +563,7 @@ $user_type = $this->Common->getType();
                                         <tr>
                                             <th><?= __('Name') ?></th>
                                             <th><?= __('Email') ?></th>
+                                            <th><?= __('Mobile No') ?></th>
                                             <?php if (isset($users_type) && ($users_type == 2)) { ?>
                                                 <th><?= __('Trainer') ?></th>
                                             <?php } else { ?>
@@ -573,6 +580,7 @@ $user_type = $this->Common->getType();
                                             <tr>
                                                 <td><?= ucfirst($user['name']) ?></td>
                                                 <td><?= ($user['email']) ?></td>
+                                                <td><?= h($user['mobile_no']) ?></td>
                                                 <?php if (isset($users_type) && ($users_type == 2)) { ?>
                                                     <td><?= $this->Common->getSimpleName($user['trainer_userid']) ?></td>
                                                 <?php } else { ?>

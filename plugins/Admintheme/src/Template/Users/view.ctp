@@ -73,19 +73,19 @@ $user_type = $this->Common->getType();
                                      <?php $birthdate = ($user['modified']->format('d-M-Y')); ?>
                                     <td><?php if(!empty($user['modified'])) { echo $birthdate; } ?></td>
                                 </tr>
-                                  <?php if(!empty($user->payment)) {    ?>
+                                  <?php if(!empty($user->payment) && (empty($usersdetail['users_type']) || $usersdetail['users_type'] != 3)) {    ?>
                                 <tr>
                                     <th scope="row"><?= __('Payment') ?></th>
                                     <td><?= $user->payment ?></td>
                                 </tr>
                                  <?php } ?>
-                                  <?php if(!empty($user->b_payment)) {    ?>
+                                  <?php if(!empty($user->b_payment) && (empty($usersdetail['users_type']) || $usersdetail['users_type'] != 3)) {    ?>
                                 <tr>
                                     <th scope="row"><?= __('Due Payment') ?></th>
                                     <td><?= $user->b_payment ?></td>
                                 </tr>
                                  <?php } ?>
-                                  <?php if(isset($user->mode_ofpay)) {    ?>
+                                  <?php if(isset($user->mode_ofpay) && (empty($usersdetail['users_type']) || $usersdetail['users_type'] != 3)) {    ?>
                                 <tr>
                                     <th scope="row"><?= __('Mode ofpay') ?></th>
                                     <td><?= $getModPayment[$user->mode_ofpay] ?></td>

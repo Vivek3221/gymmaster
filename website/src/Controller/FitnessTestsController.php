@@ -24,9 +24,11 @@ class FitnessTestsController extends AppController
      */
       public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
-       // $this->Users->userAuth = $this->UserAuth;
         $this->Auth->allow(['index','add','view','delete','edit','status']);
-        
+        if (!empty($this->usersdetail['users_type']) && $this->usersdetail['users_type'] == 5) {
+            $this->Flash->error(__('Access Denied. Front Desk role is restricted from this module.'));
+            return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
+        }
     }
     
     public function index()

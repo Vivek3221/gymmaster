@@ -12,6 +12,14 @@ use App\Controller\AppController;
  */
 class SessionsController extends AppController
 {
+    public function beforeFilter(\Cake\Event\Event $event)
+    {
+        parent::beforeFilter($event);
+        if (!empty($this->usersdetail['users_type']) && $this->usersdetail['users_type'] == 5) {
+            $this->Flash->error(__('Access Denied. Front Desk role is restricted from this module.'));
+            return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
+        }
+    }
 
     /**
      * Index method

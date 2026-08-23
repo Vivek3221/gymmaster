@@ -67,7 +67,7 @@ class CommonHelper extends Helper {
     }
     
       public function getType() {
-        return['2' => 'Partner', '3' => 'User'];
+        return['2' => 'Partner', '3' => 'User', '4' => 'Staff', '5' => 'Front Desk'];
     }
     
    

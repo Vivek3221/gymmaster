@@ -12,6 +12,14 @@ use App\Controller\AppController;
  */
 class SessionsController extends AppController
 {
+    public function beforeFilter(\Cake\Event\Event $event)
+    {
+        parent::beforeFilter($event);
+        if (!empty($this->usersdetail['users_type']) && $this->usersdetail['users_type'] == 5) {
+            $this->Flash->error(__('Access Denied. Front Desk role is restricted from this module.'));
+            return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
+        }
+    }
 
     /**
      * Index method
@@ -83,45 +91,209 @@ class SessionsController extends AppController
         if (isset($user_type) && ($user_type == 4)) {
           $search['Users.trainer_userid'] = $users_id;
           }  
-        if (!empty($search)) {
-            $count = $this->Sessions->find('all')
-                    ->where([$search])
-                     ->order(['date' => 'DESC']);
-        } else {
-            $count = $this->Sessions->find('all');
-        }
-            if (isset($user_type) && ($user_type == 3)) {
-            $count = $count->where(['Sessions.status ' => '1' ,'Sessions.date <=' => date('Y-m-d')]);
-            } else {
-                 $count = $count->where(['Sessions.status !=' => '2']);
-            }
-        if(isset($sessions_value) && !empty($sessions_value))
-        {
-           $count = $count->where(['date <' => date('Y-m-d') ,'user_detail Is Null']);  
-        }
-        if(isset($stat) && !empty($stat))
-        {
-           $count = $count->where(['user_detail Is Null']);  
-        }
-    //debug($count);die();
-        $this->paginate = [
-            'contain' => ['Users'],
-            'limit' => $norec, 
-            'order' => ['Sessions.id' => 'DESC'],
-            
-        ];
+        // Calculate counts for today's statistics
+        $today = date('Y-m-d');
+        $usersTable = \Cake\ORM\TableRegistry::get('Users');
         
-       
-        $sessions = $this->paginate($count);
-        if($user_type == 4){
-         $users = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.trainer_userid'=> $users_id,'user_type' =>3]);
-            }else{
-           $users = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.partner_id'=> $users_id,'user_type' =>3]);
+        $userConditions = ['Users.active' => '1', 'Users.user_type' => '3'];
+        if (isset($user_type) && ($user_type == 2)) {
+            $userConditions['Users.partner_id'] = $users_id;
+        } elseif (isset($user_type) && ($user_type == 4)) {
+            $userConditions['Users.trainer_userid'] = $users_id;
+        } elseif (isset($user_type) && ($user_type == 3)) {
+            $userConditions['Users.id'] = $users_id;
         }
-       
+        
+        $totalUsersQuery = $usersTable->find('all')->where($userConditions);
+        $totalUsersCount = $totalUsersQuery->count();
+        $activeUserIds = $totalUsersQuery->select(['id'])->extract('id')->toArray();
+        
+        $createdCount = 0;
+        $notCreatedCount = 0;
+        $notAttendedCount = 0;
+        
+        if (!empty($activeUserIds)) {
+            $sessionsTable = \Cake\ORM\TableRegistry::get('Sessions');
+            $todaySessions = $sessionsTable->find('all')
+                ->where([
+                    'Sessions.date' => $today,
+                    'Sessions.status !=' => '2',
+                    'Sessions.user_id IN' => $activeUserIds
+                ])
+                ->toArray();
+                
+            $createdUserIds = [];
+            foreach ($todaySessions as $s) {
+                $createdUserIds[] = $s->user_id;
+                if (empty($s->user_detail)) {
+                    $notAttendedCount++;
+                }
+            }
+            $createdUserIds = array_unique($createdUserIds);
+            $createdCount = count($createdUserIds);
+            $notCreatedCount = max(0, $totalUsersCount - $createdCount);
+        }
 
-       // $partners = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.partner_id'=> $users_id,'user_type' =>2]);
-        $this->set(compact('sessions','name','status','norec','users','user_type','sdate','edate','partner','stat','s_type'));
+        $todayFilter = $this->request->query['today_filter'] ?? '';
+        $sessions = [];
+        $isVirtualList = false;
+
+        if ($todayFilter !== '') {
+            $search = []; // Clear other search parameters to prioritize today filter
+            if ($todayFilter === 'created') {
+                $count = $this->Sessions->find('all')
+                    ->where([
+                        'Sessions.date' => $today,
+                        'Sessions.status !=' => '2',
+                        'Sessions.user_id IN' => $activeUserIds
+                    ]);
+            } elseif ($todayFilter === 'not_attended') {
+                $count = $this->Sessions->find('all')
+                    ->where([
+                        'Sessions.date' => $today,
+                        'Sessions.status !=' => '2',
+                        'Sessions.user_id IN' => $activeUserIds,
+                        'Sessions.user_detail IS NULL'
+                    ]);
+            } elseif ($todayFilter === 'not_created') {
+                $isVirtualList = true;
+                $usersWithSessionToday = [];
+                if (!empty($activeUserIds)) {
+                    $usersWithSessionToday = \Cake\ORM\TableRegistry::get('Sessions')->find()
+                        ->select(['user_id'])
+                        ->where([
+                            'date' => $today,
+                            'status !=' => '2',
+                            'user_id IN' => $activeUserIds
+                        ])
+                        ->extract('user_id')
+                        ->toArray();
+                }
+                
+                $usersWithoutSessionConditions = $userConditions;
+                if (!empty($usersWithSessionToday)) {
+                    $usersWithoutSessionConditions['Users.id NOT IN'] = $usersWithSessionToday;
+                }
+                
+                $usersWithoutSession = $usersTable->find('all')
+                    ->where($usersWithoutSessionConditions)
+                    ->toArray();
+                    
+                $virtualSessions = [];
+                foreach ($usersWithoutSession as $u) {
+                    $virtualSessions[] = new \App\Model\Entity\Session([
+                        'id' => null,
+                        'user' => $u,
+                        'user_id' => $u->id,
+                        'body_weight' => '',
+                        'notes' => 'No session created for today',
+                        'date' => new \Cake\I18n\Time($today),
+                        'session_type' => 'N/A',
+                        'status' => '0',
+                        'user_detail' => null,
+                        'is_virtual' => true
+                    ]);
+                }
+                $sessions = $virtualSessions;
+            } elseif ($todayFilter === 'total') {
+                $isVirtualList = true;
+                $createdToday = $this->Sessions->find('all')
+                    ->contain(['Users'])
+                    ->where([
+                        'Sessions.date' => $today,
+                        'Sessions.status !=' => '2',
+                        'Sessions.user_id IN' => $activeUserIds
+                    ])
+                    ->toArray();
+                
+                $createdUserIds = array_column($createdToday, 'user_id');
+                
+                $usersWithoutSessionConditions = $userConditions;
+                if (!empty($createdUserIds)) {
+                    $usersWithoutSessionConditions['Users.id NOT IN'] = $createdUserIds;
+                }
+                
+                $usersWithoutSession = $usersTable->find('all')
+                    ->where($usersWithoutSessionConditions)
+                    ->toArray();
+                    
+                $virtualSessions = [];
+                foreach ($usersWithoutSession as $u) {
+                    $virtualSessions[] = new \App\Model\Entity\Session([
+                        'id' => null,
+                        'user' => $u,
+                        'user_id' => $u->id,
+                        'body_weight' => '',
+                        'notes' => 'No session created for today',
+                        'date' => new \Cake\I18n\Time($today),
+                        'session_type' => 'N/A',
+                        'status' => '0',
+                        'user_detail' => null,
+                        'is_virtual' => true
+                    ]);
+                }
+                $sessions = array_merge($createdToday, $virtualSessions);
+            }
+        }
+
+        if (!$isVirtualList) {
+            if ($todayFilter === '') {
+                if (!empty($search)) {
+                    $count = $this->Sessions->find('all')
+                            ->contain(['Users'])
+                            ->where([$search])
+                            ->order(['date' => 'DESC']);
+                } else {
+                    $count = $this->Sessions->find('all')->contain(['Users']);
+                }
+                
+                if (isset($user_type) && ($user_type == 3)) {
+                    $count = $count->where(['Sessions.status ' => '1' ,'Sessions.date <=' => date('Y-m-d')]);
+                } else {
+                    $count = $count->where(['Sessions.status !=' => '2']);
+                }
+                if (isset($sessions_value) && !empty($sessions_value)) {
+                    $count = $count->where(['date <' => date('Y-m-d') ,'user_detail Is Null']);  
+                }
+                if (isset($stat) && !empty($stat)) {
+                    $count = $count->where(['user_detail Is Null']);  
+                }
+            }
+            
+            $this->paginate = [
+                'contain' => ['Users'],
+                'limit' => $norec, 
+                'order' => ['Sessions.id' => 'DESC'],
+            ];
+            $sessions = $this->paginate($count);
+        } else {
+            // Setup pagination metadata manually for virtual arrays to keep PaginatorHelper happy
+            $totalCount = count($sessions);
+            $this->request->params['paging']['Sessions'] = [
+                'finder' => 'all',
+                'page' => 1,
+                'current' => $totalCount,
+                'count' => $totalCount,
+                'perPage' => $norec,
+                'prevPage' => false,
+                'nextPage' => false,
+                'pageCount' => 1,
+                'sort' => null,
+                'direction' => null,
+                'limit' => $norec,
+                'sortDefault' => [],
+                'directionDefault' => [],
+                'scope' => null
+            ];
+        }
+
+        if ($user_type == 4) {
+            $users = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.trainer_userid'=> $users_id,'user_type' =>3]);
+        } else {
+            $users = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.partner_id'=> $users_id,'user_type' =>3]);
+        }
+        
+        $this->set(compact('sessions','name','status','norec','users','user_type','sdate','edate','partner','stat','s_type', 'totalUsersCount', 'createdCount', 'notCreatedCount', 'notAttendedCount', 'todayFilter'));
         $this->set('_serialize', ['sessions']);
     }
 
@@ -201,6 +373,9 @@ class SessionsController extends AppController
               }
             }
          return $this->redirect(['action' => 'index']);
+        }
+        if ($this->request->query('user_id')) {
+            $session->user_id = [$this->request->query('user_id')];
         }
         $AdminofTrainner = $this->Sessions->Users->find()
                                        ->select(['partner_id'])

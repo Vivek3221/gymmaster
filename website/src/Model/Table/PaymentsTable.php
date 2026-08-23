@@ -68,7 +68,7 @@ class PaymentsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->integer('amount')
+            ->numeric('amount', __('Please enter a valid numeric amount.'))
             ->requirePresence('amount', 'create')
             ->notEmpty('amount');
 
