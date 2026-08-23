@@ -531,7 +531,7 @@ $(document).ready(function() {
         weekStart: 1
     });
 
-    $(document).on('change', '#subscriptionStartDate', function() {
+    $(document).on('change input blur', '#subscriptionStartDate', function() {
         recalcDates();
     });
 

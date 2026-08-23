@@ -164,7 +164,7 @@ class UsersTable extends Table
             $query = $options['repository']->find()
                 ->where([
                     'username' => $entity->username,
-                    'active !=' => '3'
+                    'active' => '1'
                 ]);
             if (!$entity->isNew()) {
                 $query->where(['id !=' => $entity->id]);
@@ -172,7 +172,7 @@ class UsersTable extends Table
             return $query->count() === 0;
         }, 'uniqueUsername', [
             'errorField' => 'username',
-            'message' => __('This username is already in use.')
+            'message' => __('This username is already in use by an active user.')
         ]);
 
         $rules->add(function ($entity, $options) {
@@ -182,7 +182,7 @@ class UsersTable extends Table
             $query = $options['repository']->find()
                 ->where([
                     'email' => $entity->email,
-                    'active !=' => '3'
+                    'active' => '1'
                 ]);
             if (!$entity->isNew()) {
                 $query->where(['id !=' => $entity->id]);
@@ -190,7 +190,7 @@ class UsersTable extends Table
             return $query->count() === 0;
         }, 'uniqueEmail', [
             'errorField' => 'email',
-            'message' => __('This email is already in use.')
+            'message' => __('This email is already in use by an active user.')
         ]);
 
         return $rules;

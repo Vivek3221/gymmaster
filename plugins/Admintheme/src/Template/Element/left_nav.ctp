@@ -285,12 +285,14 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
                         <span><?= __('Plans') ?></span>
                     </a>
                 </li>
+                <?php if (!isset($usersdetail['users_type']) || $usersdetail['users_type'] != 5) { ?>
                 <li class="<?php if (($controller == 'PlanSubscribers' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'PlanSubscribers', 'action' => 'index']); ?>">
                         <i class="material-icons">pageview</i>
                         <span><?= __('Plan Subscribe') ?></span>
                     </a>
                 </li>
+                <?php } ?>
                 <?php
                 // Manual Collection: show only to permitted emails
                 if (!empty($usersdetail['users_email'])) {
@@ -317,15 +319,12 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
                 </li>
                  <?php } ?>
                 <?php
-                // PT Master Plans & PT Payroll: show to partners, admins, and special emails
+                // PT Master Plans & PT Payroll: show to partners, admins, permitted front desk, and special emails
                 $showPtPayroll = false;
-                if (!empty($usersdetail['users_email'])) {
-                    $currentEmail = strtolower(trim($usersdetail['users_email']));
-                    $userType = $usersdetail['users_type'];
-                    $allowedEmails = ['ad1234@yopmail.com', 'mukeshkr3221@gmail.com'];
-                    if ($userType == 1 || $userType == 2 || in_array($currentEmail, $allowedEmails)) {
-                        $showPtPayroll = true;
-                    }
+                if (!empty($usersdetail)) {
+                    $userType = isset($usersdetail['users_type']) ? $usersdetail['users_type'] : 0;
+                    $userEmail = isset($usersdetail['users_email']) ? $usersdetail['users_email'] : '';
+                    $showPtPayroll = $this->Common->canAccessPtModule($userType, $userEmail);
                 }
                 if ($showPtPayroll) { ?>
                 <li class="<?php if ($controller == 'PtPlans' || $controller == 'PtPayrolls'){echo "active";}?>">

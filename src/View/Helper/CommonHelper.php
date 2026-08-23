@@ -299,7 +299,33 @@ class CommonHelper extends Helper {
         return $get_dietirectories_lists;
     }
 
+    /**
+     * Centralized toggle for Front Desk (users_type == 5) PT module access.
+     * Return true to allow Front Desk access to PT Master Plans, Assign PT, Subscriptions & Payroll.
+     * Change to return false if you wish to revoke Front Desk PT access in the future.
+     */
+    public function allowFrontDeskPtAccess() {
+        return true;
+    }
 
-    
-    
+    /**
+     * Check if a given user type and email has access to the PT module.
+     */
+    public function canAccessPtModule($userType, $email = '') {
+        $currentEmail = strtolower(trim($email));
+        $allowedEmails = ['ad1234@yopmail.com', 'mukeshkr3221@gmail.com'];
+        
+        // Admin (1), Partner (2), or Whitelisted Emails
+        if (in_array($userType, [1, 2]) || in_array($currentEmail, $allowedEmails)) {
+            return true;
+        }
+
+        // Front Desk Executive (5) access controlled via helper toggle
+        if ($userType == 5 && $this->allowFrontDeskPtAccess()) {
+            return true;
+        }
+
+        return false;
+    }
 }
+

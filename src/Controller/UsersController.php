@@ -348,9 +348,9 @@ class UsersController extends AppController
             }]
         ]);
 
-        // plans list (Hide financial payment details for Trainers - users_type == 3)
+        // plans list (Hide financial payment details for Trainers - users_type == 3 & Front Desk - users_type == 5)
         $planData = [];
-        if ($this->usersdetail['users_type'] != 3) {
+        if ($this->usersdetail['users_type'] != 3 && $this->usersdetail['users_type'] != 5) {
             $planSubscribers = $this->PlanSubscribers->find('all')
                 ->where(['user_id' => $id])
                 ->order(['id DESC'])
@@ -377,8 +377,17 @@ class UsersController extends AppController
             }
         }
 
+        // Fetch payment transaction history for member view
+        $userPaymentsHistory = [];
+        if ($this->usersdetail['users_type'] != 3) {
+            $userPaymentsHistory = $this->Payments->find('all')
+                ->contain(['PlanSubscribers'])
+                ->where(['Payments.user_id' => $id])
+                ->order(['Payments.id' => 'DESC'])
+                ->toArray();
+        }
 
-        $this->set(compact('planData', 'user'));
+        $this->set(compact('planData', 'user', 'userPaymentsHistory'));
     }
 
     /**
@@ -400,12 +409,12 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $data = $this->request->data;
 
-            // Check if email already belongs to an active user (active != 3)
+            // Check if email already belongs to an active user (active == 1)
             if (!empty($data['email'])) {
                 $existingUser = $this->Users->find('all')
                     ->where([
                         'email' => trim($data['email']),
-                        'active !=' => '3'
+                        'active' => '1'
                     ])->first();
 
                 if (!empty($existingUser)) {

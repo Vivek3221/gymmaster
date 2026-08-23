@@ -73,19 +73,19 @@ $user_type = $this->Common->getType();
                                      <?php $birthdate = ($user['modified']->format('d-M-Y')); ?>
                                     <td><?php if(!empty($user['modified'])) { echo $birthdate; } ?></td>
                                 </tr>
-                                  <?php if(!empty($user->payment) && (empty($usersdetail['users_type']) || $usersdetail['users_type'] != 3)) {    ?>
+                                   <?php if(!empty($user->payment) && (empty($usersdetail['users_type']) || ($usersdetail['users_type'] != 3 && $usersdetail['users_type'] != 5))) {    ?>
                                 <tr>
                                     <th scope="row"><?= __('Payment') ?></th>
                                     <td><?= $user->payment ?></td>
                                 </tr>
                                  <?php } ?>
-                                  <?php if(!empty($user->b_payment) && (empty($usersdetail['users_type']) || $usersdetail['users_type'] != 3)) {    ?>
+                                  <?php if(!empty($user->b_payment) && (empty($usersdetail['users_type']) || ($usersdetail['users_type'] != 3 && $usersdetail['users_type'] != 5))) {    ?>
                                 <tr>
                                     <th scope="row"><?= __('Due Payment') ?></th>
                                     <td><?= $user->b_payment ?></td>
                                 </tr>
                                  <?php } ?>
-                                  <?php if(isset($user->mode_ofpay) && (empty($usersdetail['users_type']) || $usersdetail['users_type'] != 3)) {    ?>
+                                  <?php if(isset($user->mode_ofpay) && (empty($usersdetail['users_type']) || ($usersdetail['users_type'] != 3 && $usersdetail['users_type'] != 5))) {    ?>
                                 <tr>
                                     <th scope="row"><?= __('Mode ofpay') ?></th>
                                     <td><?= $getModPayment[$user->mode_ofpay] ?></td>
@@ -140,6 +140,32 @@ $user_type = $this->Common->getType();
                                     </tr>
                             <?php } ?>
                                 </table>
+                            <?php } ?>
+
+                            <?php if(!empty($userPaymentsHistory)) { ?>
+                                <h3 style="margin-top:25px; font-weight: bold; font-size: 16px; color: #1e293b; border-bottom: 2px solid #6366f1; padding-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;"><?= __('Payment Transaction History') ?></h3>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <thead>
+                                            <tr style="background-color: #f8fafc; color: #475569; font-size: 12px; text-transform: uppercase;">
+                                                <th><?= __('Payment Date') ?></th>
+                                                <th><?= __('Plan Name') ?></th>
+                                                <th><?= __('Amount Received (₹)') ?></th>
+                                                <th><?= __('Payment Mode') ?></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach ($userPaymentsHistory as $ph) { ?>
+                                            <tr>
+                                                <td><?= date('d-M-Y', strtotime($ph->created)) ?></td>
+                                                <td><?= !empty($ph->plan_subscriber) ? h($ph->plan_subscriber->plan_name) : 'N/A' ?></td>
+                                                <td style="font-weight: 700; color: #059669;">₹<?= number_format($ph->amount, 2) ?></td>
+                                                <td><?= isset($getModPayment[$ph->mode_ofpay]) ? $getModPayment[$ph->mode_ofpay] : 'Cash' ?></td>
+                                            </tr>
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
                             <?php } ?>
 
                             <?php if(!empty($user->user_remarks)) { ?>
