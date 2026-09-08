@@ -36,10 +36,6 @@ class FitnessMesermentsController extends AppController
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
         $this->Auth->allow(['index','add','view','edit','login','status','adminLogin','verifiedUpdate','logout','payment','getLastValue']);
-        if (!empty($this->usersdetail['users_type']) && $this->usersdetail['users_type'] == 5) {
-            $this->Flash->error(__('Access Denied. Front Desk role is restricted from this module.'));
-            return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
-        }
     }
     
     
@@ -75,22 +71,22 @@ class FitnessMesermentsController extends AppController
         }
         if (isset($users_type) && ($users_type == 3)) {
           $search['FitnessMeserments.user_id'] = $users_id;
-          }
+        }
         
-          if (isset($users_type) && ($users_type == 2)) {
-            //$search['FitnessTests.partner_id'] = $users_id;
-          $usersData = TableRegistry::get('Users');
-          $users_list[] = $users_id;
-          $usersIds = $usersData->find('list')->select(['id'])->where(['partner_id' => $users_id])->toArray();
-          foreach ($usersIds as $key => $value) {
+        if (isset($users_type) && ($users_type == 2 || $users_type == 5)) {
+            $targetPartnerId = ($users_type == 2) ? $users_id : (isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : $users_id);
+            $usersData = TableRegistry::get('Users');
+            $users_list = [$targetPartnerId];
+            $usersIds = $usersData->find('list')->select(['id'])->where(['partner_id' => $targetPartnerId])->toArray();
+            foreach ($usersIds as $key => $value) {
                 $users_list[$key] = $key;
             }
-          $search['FitnessMeserments.partner_id IN'] = $users_list;
+            $search['FitnessMeserments.partner_id IN'] = $users_list;
         }
 
         if (isset($users_type) && ($users_type == 4)) {
           $search['Users.trainer_userid'] = $users_id;
-          }  
+        }  
          if (isset($search)) {
             $count = $this->FitnessMeserments->find('all')
                     ->where([$search]);
@@ -194,9 +190,9 @@ class FitnessMesermentsController extends AppController
         {
             $data['user_id'] = $this->usersdetail['users_id']; 
             $data['partner_id'] = $this->usersdetail['partner_id'];  
-        }
-             if($user_type != 3)
-        {
+        } elseif ($user_type == 5) {
+            $data['partner_id'] = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : $this->usersdetail['users_id'];
+        } else {
             $data['partner_id'] = $this->usersdetail['users_id'];     
         }
         
@@ -244,7 +240,13 @@ class FitnessMesermentsController extends AppController
             }
             $this->Flash->error(__('The body meserment could not be saved. Please, try again.'));
         }
-        $users = $this->FitnessMeserments->Users->find('list', ['limit' => 200]);
+        $userConditions = ['active !=' => '3'];
+        if ($user_type == 2) {
+            $userConditions['partner_id'] = $this->usersdetail['users_id'];
+        } elseif ($user_type == 5) {
+            $userConditions['partner_id'] = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : 0;
+        }
+        $users = $this->FitnessMeserments->Users->find('list', ['limit' => 500])->where($userConditions);
         $this->set(compact('fitnessMeserment', 'users','user_type'));
         $this->set('_serialize', ['fitnessMeserment']);
     }
@@ -313,7 +315,13 @@ class FitnessMesermentsController extends AppController
             }
             $this->Flash->error(__('The body meserment could not be saved. Please, try again.'));
         }
-        $users = $this->FitnessMeserments->Users->find('list', ['limit' => 200]);
+        $userConditions = ['active !=' => '3'];
+        if ($user_type == 2) {
+            $userConditions['partner_id'] = $this->usersdetail['users_id'];
+        } elseif ($user_type == 5) {
+            $userConditions['partner_id'] = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : 0;
+        }
+        $users = $this->FitnessMeserments->Users->find('list', ['limit' => 500])->where($userConditions);
         $this->set(compact('fitnessMeserment', 'users','user_type'));
         $this->set('_serialize', ['fitnessMeserment']);
     }

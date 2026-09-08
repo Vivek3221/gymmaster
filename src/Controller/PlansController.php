@@ -85,10 +85,11 @@ class PlansController extends AppController
 
         $users_type = $this->usersdetail['users_type'];
         $users_id   = $this->usersdetail['users_id'];
+        $targetPartnerId = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? $this->usersdetail['partner_id'] : $users_id);
 
         $conditions = [];
         if ($users_type != 1) {
-            $conditions['Plans.partner_id'] = $users_id;
+            $conditions['Plans.partner_id'] = $targetPartnerId;
         }
 
         $this->paginate = ['limit' => 20, 'order' => ['Plans.id' => 'DESC']];
@@ -105,13 +106,10 @@ class PlansController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-        if ($this->usersdetail['users_type'] == 5) {
-            $this->Flash->error(__('Front Desk role is restricted from modifying plans.'));
-            return $this->redirect(['action' => 'index']);
-        }
 
         $users_type = $this->usersdetail['users_type'];
         $users_id   = $this->usersdetail['users_id'];
+        $targetPartnerId = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? $this->usersdetail['partner_id'] : $users_id);
 
         $plan = $this->Plans->newEntity();
 
@@ -119,7 +117,7 @@ class PlansController extends AppController
             $data = $this->request->data;
             $months = (int)($data['duration_months'] ?? 0);
             $data['days']       = ($months == 12) ? 365 : ($months * 30);
-            $data['partner_id'] = $users_id;
+            $data['partner_id'] = $targetPartnerId;
             $data['active']     = 1;
 
             $plan = $this->Plans->patchEntity($plan, $data);
@@ -147,20 +145,22 @@ class PlansController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-        if ($this->usersdetail['users_type'] == 5) {
-            $this->Flash->error(__('Front Desk role is restricted from modifying plans.'));
-            return $this->redirect(['action' => 'index']);
-        }
 
         $users_type = $this->usersdetail['users_type'];
         $users_id   = $this->usersdetail['users_id'];
+        $targetPartnerId = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? $this->usersdetail['partner_id'] : $users_id);
         $plan       = $this->Plans->get($id);
+
+        if ($users_type != 1 && $plan->partner_id != $targetPartnerId) {
+            $this->Flash->error(__('You are not authorized to edit this plan.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data   = $this->request->data;
             $months = (int)($data['duration_months'] ?? 0);
             $data['days']       = ($months == 12) ? 365 : ($months * 30);
-            $data['partner_id'] = $users_id;
+            $data['partner_id'] = $targetPartnerId;
 
             $plan = $this->Plans->patchEntity($plan, $data);
             if ($this->Plans->save($plan)) {
@@ -198,12 +198,21 @@ class PlansController extends AppController
     public function toggleStatus($id = null)
     {
         $this->autoRender = false;
-        if (empty($this->usersdetail['users_name']) || $this->usersdetail['users_type'] == 5) {
+        if (empty($this->usersdetail['users_name'])) {
             echo json_encode(['success' => false]);
             exit;
         }
 
+        $users_type = $this->usersdetail['users_type'];
+        $users_id   = $this->usersdetail['users_id'];
+        $targetPartnerId = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? $this->usersdetail['partner_id'] : $users_id);
+
         $plan = $this->Plans->get($id);
+        if ($users_type != 1 && $plan->partner_id != $targetPartnerId) {
+            echo json_encode(['success' => false]);
+            exit;
+        }
+
         $plan->active = ($plan->active == 1) ? 0 : 1;
         $this->Plans->save($plan);
 

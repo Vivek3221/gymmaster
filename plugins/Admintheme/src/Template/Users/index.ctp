@@ -555,6 +555,7 @@ $user_type = $this->Common->getType();
                                                 <th><?= __('User Type') ?></th>
                                             <?php } ?>
                                             <th><?= __('Gender') ?></th>
+                                            <th><?= __('Expiry Date') ?></th>
                                             <th><?= __('Status') ?></th>
                                             <th><?= __('Action') ?></th>
                                         </tr>
@@ -570,6 +571,7 @@ $user_type = $this->Common->getType();
                                                 <th><?= __('User Type') ?></th>
                                             <?php } ?>
                                             <th><?= __('Gender') ?></th>
+                                            <th><?= __('Expiry Date') ?></th>
                                             <th><?= __('Status') ?></th>
                                             <th><?= __('Action') ?></th>
                                         </tr>
@@ -591,6 +593,21 @@ $user_type = $this->Common->getType();
                                                     } else {
                                                         echo 'Female';
                                                     } ?></td>
+                                                <td>
+                                                    <?php 
+                                                    if (isset($latestPlans[$user['id']]) && !empty($latestPlans[$user['id']]->plan_expire_date)) {
+                                                        $expDate = $latestPlans[$user['id']]->plan_expire_date;
+                                                        $isExpired = ($expDate->format('Y-m-d') < date('Y-m-d'));
+                                                        if ($isExpired) {
+                                                            echo '<span class="status-badge inactive-badge" style="background:#ffebee;color:#c62828;border:1px solid #ffcdd2;font-weight:600;" title="' . __('Expired on ') . $expDate->format('d M Y') . '">' . $expDate->format('d M Y') . '</span>';
+                                                        } else {
+                                                            echo '<span class="status-badge active-badge" style="background:#e8f5e9;color:#2e7d32;border:1px solid #c8e6c9;font-weight:600;" title="' . __('Active until ') . $expDate->format('d M Y') . '">' . $expDate->format('d M Y') . '</span>';
+                                                        }
+                                                    } else {
+                                                        echo '<span style="color:#94a3b8;font-size:12px;font-style:italic;">' . __('No Plan') . '</span>';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <!--                                        <td id='verified<?= $user->id ?>'>
                                             <?php
                                             if (isset($user->verified)  && $user->verified == '1') {

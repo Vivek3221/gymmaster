@@ -243,6 +243,9 @@ class UsersController extends AppController
 
         if (isset($users_type) && ($users_type == 2)) {
             $search['Users.partner_id'] = $users_id;
+        } elseif (isset($users_type) && ($users_type == 5)) {
+            $partnerId = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : 0;
+            $search['Users.partner_id'] = $partnerId;
         }
         //   pr($search);exit;
         $search['Users.user_type NOT IN'] = [4, 5];
@@ -256,16 +259,26 @@ class UsersController extends AppController
 
         $count = $count->where(['Users.active !=' => '3', 'Users.user_type !=' => '1', 'Users.user_type NOT IN' => [4, 5]]);
 
+        $planSubscribersTable = TableRegistry::get('PlanSubscribers');
+        $activeSubquery = $planSubscribersTable->find()
+            ->select(['user_id'])
+            ->where([
+                'PlanSubscribers.user_id = Users.id',
+                'PlanSubscribers.plan_expire_date >=' => date('Y-m-d')
+            ]);
+        $expiredSubquery = $planSubscribersTable->find()
+            ->select(['user_id'])
+            ->where([
+                'PlanSubscribers.user_id = Users.id',
+                'PlanSubscribers.plan_expire_date <' => date('Y-m-d')
+            ]);
+
         if ($status === 'expired' || $status === '3') {
-            $planSubscribersTable = TableRegistry::get('PlanSubscribers');
-            $expiredSubquery = $planSubscribersTable->find()
-                ->select(['user_id'])
-                ->where([
-                    'PlanSubscribers.user_id = Users.id',
-                    'PlanSubscribers.plan_expire_date <' => date('Y-m-d')
+            $count = $count->where(function ($exp) use ($expiredSubquery, $activeSubquery) {
+                return $exp->and_([
+                    $exp->exists($expiredSubquery),
+                    $exp->notExists($activeSubquery)
                 ]);
-            $count = $count->where(function ($exp) use ($expiredSubquery) {
-                return $exp->exists($expiredSubquery);
             });
         }
 
@@ -295,36 +308,54 @@ class UsersController extends AppController
             ->toArray();
 
         // --- Tab counts: All, Active, Inactive, Enquiry, Expired ---
-        $baseCountConditions = ['Users.user_type NOT IN' => ['1', '4'], 'Users.active !=' => '3'];
+        $baseCountConditions = ['Users.user_type NOT IN' => ['1', '4', '5'], 'Users.active !=' => '3'];
         if (isset($users_type) && ($users_type == 2)) {
             $baseCountConditions['Users.partner_id'] = $users_id;
+        } elseif (isset($users_type) && ($users_type == 5)) {
+            $partnerId = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : 0;
+            $baseCountConditions['Users.partner_id'] = $partnerId;
         }
         $tabCountAll      = $this->Users->find('all')->where($baseCountConditions)->count();
         $tabCountActive   = $this->Users->find('all')->where($baseCountConditions)->where(['Users.active' => '1'])->count();
         $tabCountInactive = $this->Users->find('all')->where($baseCountConditions)->where(['Users.active' => '0'])->count();
         $tabCountEnquiry  = $this->Users->find('all')->where($baseCountConditions)->where(['Users.active' => '2'])->count();
 
-        $planSubscribersTable = TableRegistry::get('PlanSubscribers');
-        $expiredSubquery = $planSubscribersTable->find()
-            ->select(['user_id'])
-            ->where([
-                'PlanSubscribers.user_id = Users.id',
-                'PlanSubscribers.plan_expire_date <' => date('Y-m-d')
-            ]);
         $tabCountExpired  = $this->Users->find('all')
             ->where($baseCountConditions)
-            ->where(function ($exp) use ($expiredSubquery) {
-                return $exp->exists($expiredSubquery);
+            ->where(function ($exp) use ($expiredSubquery, $activeSubquery) {
+                return $exp->and_([
+                    $exp->exists($expiredSubquery),
+                    $exp->notExists($activeSubquery)
+                ]);
             })->count();
         // --------------------------------------------------
 
         $this->paginate = ['limit' => $norec, 'order' => ['Users.id' => 'DESC']];
 
         $users = $this->paginate($count)->toArray();
-        $trainers = $this->Users->find('list')
-            ->where(['Users.user_type' => 4, 'Users.partner_id' => $users_id]);
 
-        $this->set(compact('users', 'name', 'status', 'norec', 'email', 'mobile', 'user_type', 'users_type', 'partners', 'partner', 'trainers', 'trainer', 'start_date', 'end_date', 'date_type', 'tabCountAll', 'tabCountActive', 'tabCountInactive', 'tabCountEnquiry', 'tabCountExpired'));
+        $userIds = [];
+        foreach ($users as $u) {
+            $userIds[] = $u->id;
+        }
+        $latestPlans = [];
+        if (!empty($userIds)) {
+            $allUserSubs = $planSubscribersTable->find('all')
+                ->where(['user_id IN' => $userIds])
+                ->order(['id' => 'DESC'])
+                ->toArray();
+            foreach ($allUserSubs as $sub) {
+                if (!isset($latestPlans[$sub->user_id])) {
+                    $latestPlans[$sub->user_id] = $sub;
+                }
+            }
+        }
+
+        $trainerPartnerId = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? $this->usersdetail['partner_id'] : $users_id);
+        $trainers = $this->Users->find('list')
+            ->where(['Users.user_type' => 4, 'Users.partner_id' => $trainerPartnerId]);
+
+        $this->set(compact('users', 'name', 'status', 'norec', 'email', 'mobile', 'user_type', 'users_type', 'partners', 'partner', 'trainers', 'trainer', 'start_date', 'end_date', 'date_type', 'tabCountAll', 'tabCountActive', 'tabCountInactive', 'tabCountEnquiry', 'tabCountExpired', 'latestPlans'));
         $this->set('_serialize', ['users']);
     }
 
@@ -445,10 +476,14 @@ class UsersController extends AppController
 
             $t    = time();
             $name = $data['name'] . $t;
-            if (isset($users_type) && ($users_type == 2)) {
+            if (isset($users_type) && ($users_type == 2 || $users_type == 5)) {
                 $data['user_type'] = '3';
             }
-            $data['partner_id'] = $users_id;
+            if ($users_type == 5) {
+                $data['partner_id'] = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : $users_id;
+            } else {
+                $data['partner_id'] = $users_id;
+            }
             $data['username']   = $this->slugify($name);
             $data['guestid']    = $this->Cookie->read('guest_id');
             $data['verified']   = '1';
@@ -663,13 +698,14 @@ class UsersController extends AppController
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
         $user_id = $id;
+        $trainerPartnerId = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? $this->usersdetail['partner_id'] : $users_id);
         $trainers = $this->Users->find('list')
-            ->where(['Users.user_type' => 4, 'Users.partner_id' => $users_id]);
+            ->where(['Users.user_type' => 4, 'Users.partner_id' => $trainerPartnerId]);
 
         $plansTable = TableRegistry::get('Plans');
         $planConditions = ['Plans.active' => 1];
         if ($users_type != 1) {
-            $planConditions['Plans.partner_id'] = $users_id;
+            $planConditions['Plans.partner_id'] = $trainerPartnerId;
         }
         $availablePlans = $plansTable->find('list', [
             'keyField' => 'id',

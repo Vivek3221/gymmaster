@@ -24,10 +24,10 @@ class PaymentsController extends AppController
                 $this->Flash->error(__('Access Denied. Trainers are not allowed to view or manage payments.'));
                 return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
             }
-            // Block Front Desk (user_type == 5) from viewing details, editing or deleting payments
-            if ($userType == 5 && in_array($action, ['view', 'edit', 'delete'])) {
-                $this->Flash->error(__('Front Desk role is restricted from this payment action.'));
-                return $this->redirect(['controller' => 'Payments', 'action' => 'index']);
+            // Block Front Desk (user_type == 5) completely from Payments
+            if ($userType == 5) {
+                $this->Flash->error(__('Access Denied. Front Desk role is restricted from Payments module.'));
+                return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
             }
         }
     }
