@@ -440,32 +440,18 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $data = $this->request->data;
 
-            // Check if email already belongs to an active user (active == 1)
+            // Check if email already belongs to an active Admin or Partner
             if (!empty($data['email'])) {
-                $existingUser = $this->Users->find('all')
+                $existingAdminPartner = $this->Users->find('all')
                     ->where([
                         'email' => trim($data['email']),
+                        'user_type IN' => [1, 2],
                         'active' => '1'
                     ])->first();
 
-                if (!empty($existingUser)) {
-                    $partnerName = '';
-                    if ($existingUser->user_type == 2) {
-                        $partnerName = $existingUser->name;
-                    } elseif (!empty($existingUser->partner_id)) {
-                        $partnerObj = $this->Users->find('all')
-                            ->select(['name'])
-                            ->where(['id' => $existingUser->partner_id])
-                            ->first();
-                        if (!empty($partnerObj) && !empty($partnerObj->name)) {
-                            $partnerName = $partnerObj->name;
-                        }
-                    }
-                    if (empty($partnerName)) {
-                        $partnerName = !empty($existingUser->name) ? $existingUser->name : 'Admin / System';
-                    }
-
-                    $errorMsg = __('This email address is already registered under partner: "{0}".', $partnerName);
+                if (!empty($existingAdminPartner)) {
+                    $roleLabel = ($existingAdminPartner->user_type == 1) ? __('an Admin') : __('a Partner');
+                    $errorMsg = __('This email address belongs to {0} account ("{1}"). Please use a different email address.', $roleLabel, $existingAdminPartner->name);
                     $user = $this->Users->patchEntity($user, $data);
                     $user->errors('email', [$errorMsg]);
                     $this->Flash->error($errorMsg);
@@ -495,34 +481,7 @@ class UsersController extends AppController
             try {
                 $useradd = $this->Users->save($user);
             } catch (\Exception $e) {
-                $partnerName = '';
-                if (!empty($data['email'])) {
-                    $existingUser = $this->Users->find('all')
-                        ->where(['email' => trim($data['email'])])
-                        ->first();
-                    if (!empty($existingUser)) {
-                        if ($existingUser->user_type == 2) {
-                            $partnerName = $existingUser->name;
-                        } elseif (!empty($existingUser->partner_id)) {
-                            $partnerObj = $this->Users->find('all')
-                                ->select(['name'])
-                                ->where(['id' => $existingUser->partner_id])
-                                ->first();
-                            if (!empty($partnerObj) && !empty($partnerObj->name)) {
-                                $partnerName = $partnerObj->name;
-                            }
-                        }
-                        if (empty($partnerName)) {
-                            $partnerName = !empty($existingUser->name) ? $existingUser->name : 'Admin / System';
-                        }
-                    }
-                }
-                if (empty($partnerName)) {
-                    $partnerName = 'Admin / System';
-                }
-                $errorMsg = __('This email address is already registered under partner: "{0}".', $partnerName);
-                $user->errors('email', [$errorMsg]);
-                $this->Flash->error($errorMsg);
+                $this->Flash->error(__('The user could not be saved. Please, try again.'));
                 $this->set(compact('user', 'users_type'));
                 return;
             }
@@ -604,7 +563,7 @@ class UsersController extends AppController
             try {
                 $useradd = $this->Users->save($user);
             } catch (\Exception $e) {
-                $this->Flash->error(__('This email address is already in use. Please use a different email address.'));
+                $this->Flash->error(__('The user could not be saved. Please, try again.'));
                 return $this->redirect(['action' => 'payment', $id]);
             }
             $targetPartnerId = !empty($user->partner_id) ? $user->partner_id : ($users_type == 2 ? $users_id : (isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : $users_id));
@@ -1108,18 +1067,18 @@ class UsersController extends AppController
 
             $count = $this->Users->find()->select(['id'])->where(['email' => $data['email'], 'password' => $data['password'], 'active' => 1])->count();
             //pr($count); die;
-            if ($count == 1) {
+            if ($count >= 1) {
                 $this->Cookie->write('user_email', $data['email']);
                 $this->request->session()->write('Auth.User.email', $data['email']);
 
-                $user_detail = $this->Users->find()->select(['id', 'user_type', 'name', 'email', 'partner_id'])->where(['email' => $data['email'], 'active' => 1])->first();
+                $user_detail = $this->Users->find()
+                    ->select(['id', 'user_type', 'name', 'email', 'partner_id'])
+                    ->where(['email' => $data['email'], 'password' => $data['password'], 'active' => 1])
+                    ->order(['user_type' => 'ASC', 'id' => 'DESC'])
+                    ->first();
                 $this->Cookie->write('users', ['users_id' => $user_detail->id, 'users_name' => $user_detail->name, 'users_email' => $user_detail->email, 'users_type' => $user_detail->user_type, 'partner_id' => $user_detail->partner_id]);
                 $this->request->session()->write('users', ['users_id' => $user_detail->id, 'users_name' => $user_detail->name, 'users_email' => $user_detail->email, 'users_type' => $user_detail->user_type, 'partner_id' => $user_detail->partner_id]);
-                if ($user_detail->user_type == 3) {
-                    return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
-                } else {
-                    return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
-                }
+                return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
             } else {
                 $this->Flash->error(__('This email and password not match'));
                 return $this->redirect(['controller' => 'Users', 'action' => 'adminLogin']);
@@ -1155,13 +1114,15 @@ class UsersController extends AppController
         // check email is registered with us
         //$users_type = $this->usersdetail['users_type'];
         //$users_name = $this->usersdetail['users_name'];
-        $userData = $this->Users->find()->select(['id', 'name', 'partner_id'])->where(['email' => $this->request->data['email']]);
+        $userData = $this->Users->find()
+            ->select(['id', 'name', 'partner_id'])
+            ->where(['email' => $this->request->data['email'], 'active !=' => '3'])
+            ->order(['user_type' => 'ASC', 'id' => 'DESC']);
         $userDatas = $userData->first();
-        $partner = $this->Users->find()->select(['id', 'name', 'user_type'])->where(['id' => $userDatas->partner_id])->first();
-        if ($userData->count()) {
+        if (!empty($userDatas)) {
+            $partner = $this->Users->find()->select(['id', 'name', 'user_type'])->where(['id' => $userDatas->partner_id])->first();
             // token and url generate
-            $userData = $userData->first();
-            $userid = $userData->id;
+            $userid = $userDatas->id;
             $useremail = $this->request->data['email'];
             $tokenString = json_encode(['id' => $userid, 'email' => $useremail, 'uid' => time()]);
             $token = $this->Common->base64url_encode($tokenString);

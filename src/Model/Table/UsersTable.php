@@ -179,6 +179,22 @@ class UsersTable extends Table
             if (empty($entity->email)) {
                 return true;
             }
+            // For Clients (user_type == 3): Allow duplicate emails across clients.
+            // Only disallow using an email registered to an active Admin (1) or Partner (2).
+            if (!empty($entity->user_type) && $entity->user_type == 3) {
+                $query = $options['repository']->find()
+                    ->where([
+                        'email' => $entity->email,
+                        'user_type IN' => [1, 2],
+                        'active' => '1'
+                    ]);
+                if (!$entity->isNew()) {
+                    $query->where(['id !=' => $entity->id]);
+                }
+                return $query->count() === 0;
+            }
+
+            // For non-clients (Admin, Partner, Staff, Front Desk), keep email unique among active users
             $query = $options['repository']->find()
                 ->where([
                     'email' => $entity->email,
