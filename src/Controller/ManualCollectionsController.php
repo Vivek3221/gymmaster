@@ -236,29 +236,51 @@ class ManualCollectionsController extends AppController
                 $plandata['fee']             = $data['fee'];
                 $plandata['currency']        = 'INR';
                 $plandata['collection_type'] = 'manual';
-                $plandata['plan_expire_date'] = date('Y-m-d H:i:s', strtotime($data['plan_expire_date']));
+                $subStartDate = !empty($data['subscription_start_date']) ? date('Y-m-d', strtotime($data['subscription_start_date'])) : date('Y-m-d');
                 $plandata['payment_due_date'] = !empty($data['payment_due_date']) ? date('Y-m-d H:i:s', strtotime($data['payment_due_date'])) : null;
-                if (!empty($data['subscription_start_date'])) {
-                    $plandata['subscription_start_date'] = date('Y-m-d', strtotime($data['subscription_start_date']));
+
+                $plansTable = TableRegistry::get('Plans');
+                $planObj = null;
+                if (!empty($data['plan_name'])) {
+                    $planObj = $plansTable->find()->where(['title' => $data['plan_name']])->first();
                 }
-                if (!empty($data['reminder_date'])) {
-                    $plandata['reminder_date'] = date('Y-m-d', strtotime($data['reminder_date']));
+                if (!$planObj && !empty($data['plan_id'])) {
+                    $planObj = $plansTable->find()->where(['id' => $data['plan_id']])->first();
                 }
+
+                if ($planObj && !empty($planObj->days)) {
+                    $plandata['plan_expire_date'] = date('Y-m-d 00:00:00', strtotime("+{$planObj->days} days", strtotime($subStartDate)));
+                    $remDays = max(1, $planObj->days - 5);
+                    $remDate = date('Y-m-d', strtotime("+{$remDays} days", strtotime($subStartDate)));
+                } else {
+                    $plandata['plan_expire_date'] = !empty($data['plan_expire_date']) ? date('Y-m-d H:i:s', strtotime($data['plan_expire_date'])) : date('Y-m-d H:i:s', strtotime('+30 days', strtotime($subStartDate)));
+                    $remDate = !empty($data['reminder_date']) ? date('Y-m-d', strtotime($data['reminder_date'])) : date('Y-m-d', strtotime('-5 days', strtotime($plandata['plan_expire_date'])));
+                }
+
+                $plandata['subscription_start_date'] = $subStartDate;
+                $plandata['reminder_date']           = $remDate;
 
                 // Track remaining fee for manual collections list & quick-payment
                 $payAmount = (int)($data['amount'] ?? 0);
                 $plandata['paid_fee']   = $payAmount;
                 $plandata['remain_fee'] = (int)$data['fee'] - $payAmount;
 
-                $planSubscribers             = $this->PlanSubscribers->patchEntity($planSubscribers, $plandata);
-                $planSubscribers->collection_type = 'manual';
+                $planSubscribers                     = $this->PlanSubscribers->patchEntity($planSubscribers, $plandata);
+                $planSubscribers->collection_type   = 'manual';
+                $planSubscribers->subscription_start_date = $subStartDate;
+                $planSubscribers->reminder_date      = $remDate;
 
                 $planSubscribersAdd = $this->PlanSubscribers->save($planSubscribers);
 
                 if ($planSubscribersAdd) {
-                    // Direct SQL update to guarantee collection_type = 'manual' in MySQL DB on live servers
+                    // Direct SQL update to guarantee collection_type = 'manual', subscription_start_date and reminder_date in MySQL DB
                     $db = $this->PlanSubscribers->getConnection();
-                    $db->execute("UPDATE plan_subscribers SET collection_type = 'manual' WHERE id = ?", [(int)$planSubscribersAdd->id]);
+                    $db->execute("UPDATE plan_subscribers SET collection_type = 'manual', subscription_start_date = ?, reminder_date = ?, plan_expire_date = ? WHERE id = ?", [
+                        $subStartDate,
+                        $remDate,
+                        $plandata['plan_expire_date'],
+                        (int)$planSubscribersAdd->id
+                    ]);
                 } else {
                     $errors = $planSubscribers->errors();
                     $this->Flash->error(__('The plan subscriber could not be saved. Errors: ') . json_encode($errors));
@@ -644,7 +666,9 @@ class ManualCollectionsController extends AppController
         $groupedSubscribers = [];
         foreach ($planSubscribers as $ps) {
             $fys = [];
-            $joinTime = (!empty($ps->subscription_start_date)) ? strtotime($ps->subscription_start_date->format('Y-m-d')) : ($ps->created ? strtotime($ps->created->format('Y-m-d')) : time());
+            $subStart = !empty($ps->subscription_start_date) ? (is_object($ps->subscription_start_date) ? $ps->subscription_start_date->format('Y-m-d') : date('Y-m-d', strtotime($ps->subscription_start_date))) : null;
+            $createdDate = !empty($ps->created) ? (is_object($ps->created) ? $ps->created->format('Y-m-d') : date('Y-m-d', strtotime($ps->created))) : date('Y-m-d');
+            $joinTime = strtotime($subStart ? $subStart : $createdDate);
             $fys[] = $this->getFinancialYearKey($joinTime);
 
             if (!empty($ps->plan_expire_date)) {
@@ -708,9 +732,11 @@ class ManualCollectionsController extends AppController
             $monthTotals       = array_fill_keys($months, 0);
 
             foreach ($subscribersInYear as $row) {
-                $startDateStr = (!empty($row->subscription_start_date)) ? $row->subscription_start_date->format('Y-m-d') : $row->created->format('Y-m-d');
-                $endDateStr   = $row->plan_expire_date->format('Y-m-d');
-                $totalDays    = max(1, round((strtotime($endDateStr) - strtotime($startDateStr)) / 86400) + 1);
+                $subStart = !empty($row->subscription_start_date) ? (is_object($row->subscription_start_date) ? $row->subscription_start_date->format('Y-m-d') : date('Y-m-d', strtotime($row->subscription_start_date))) : null;
+                $createdDate = !empty($row->created) ? (is_object($row->created) ? $row->created->format('Y-m-d') : date('Y-m-d', strtotime($row->created))) : date('Y-m-d');
+                $startDateStr = $subStart ? $subStart : $createdDate;
+                $endDateStr   = is_object($row->plan_expire_date) ? $row->plan_expire_date->format('Y-m-d') : date('Y-m-d', strtotime($row->plan_expire_date));
+                $totalDays    = max(1, (int)round((strtotime($endDateStr) - strtotime($startDateStr)) / 86400));
                 $dailyRate    = $row->fee / $totalDays;
 
                 $start = new \DateTime($startDateStr);
@@ -730,12 +756,12 @@ class ManualCollectionsController extends AppController
                 if ($expireTime > $today) {
                     $pendingDays = round(($expireTime - $today) / 86400);
                 }
-                $pendingAmount = (float)$row->remain_fee;
+                $pendingAmount = round($pendingDays * $dailyRate, 2);
 
                 $subscriberRow = [
                     'id' => $row->id, 
                     'name' => ucwords($row->user->name),
-                    'joining_date' => (!empty($row->subscription_start_date)) ? $row->subscription_start_date->format('d-m-Y') : $row->created->format('d-m-Y'),
+                    'joining_date' => date('d-m-Y', strtotime($startDateStr)),
                     'membership' => $monthsCount,
                     'total_amount' => $row->fee,
                     'paid_amount'  => $row->paid_fee, 

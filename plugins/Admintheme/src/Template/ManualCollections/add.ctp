@@ -504,12 +504,17 @@ function ImageFilesize() {
 }
 
 function addDaysToDate(dateStr, days) {
-    var d = new Date(dateStr);
-    d.setDate(d.getDate() + days);
-    var yyyy = d.getFullYear();
-    var mm   = String(d.getMonth() + 1).padStart(2, '0');
-    var dd   = String(d.getDate()).padStart(2, '0');
-    return yyyy + '-' + mm + '-' + dd;
+    if (!dateStr) return '';
+    var parts = dateStr.split('-');
+    if (parts.length === 3) {
+        var d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+        d.setDate(d.getDate() + parseInt(days, 10));
+        var yyyy = d.getFullYear();
+        var mm   = String(d.getMonth() + 1).padStart(2, '0');
+        var dd   = String(d.getDate()).padStart(2, '0');
+        return yyyy + '-' + mm + '-' + dd;
+    }
+    return dateStr;
 }
 
 function recalcDates() {
@@ -532,13 +537,25 @@ function recalcDates() {
 }
 
 $(document).ready(function() {
-    $('.plan-datepicker').bootstrapMaterialDatePicker({
-        format: 'YYYY-MM-DD',
-        time: false,
-        weekStart: 1
-    });
+    if (typeof flatpickr !== 'undefined') {
+        flatpickr('#subscriptionStartDate', {
+            dateFormat: 'Y-m-d',
+            allowInput: true,
+            monthSelectorType: 'dropdown',
+            onChange: function(selectedDates, dateStr, instance) {
+                $('#subscriptionStartDate').val(dateStr);
+                recalcDates();
+            }
+        });
 
-    $(document).on('change', '#subscriptionStartDate', function() {
+        flatpickr('#paymentDate, #payment_due_date, .flatpickr-date', {
+            dateFormat: 'Y-m-d',
+            allowInput: true,
+            monthSelectorType: 'dropdown'
+        });
+    }
+
+    $(document).on('change input', '#subscriptionStartDate', function() {
         recalcDates();
     });
 

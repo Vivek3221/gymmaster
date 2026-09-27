@@ -813,12 +813,17 @@ function ImageFilesize() {
 }
 
 function addDaysToDate(dateStr, days) {
-    var d = new Date(dateStr);
-    d.setDate(d.getDate() + days);
-    var yyyy = d.getFullYear();
-    var mm   = String(d.getMonth() + 1).padStart(2, '0');
-    var dd   = String(d.getDate()).padStart(2, '0');
-    return yyyy + '-' + mm + '-' + dd;
+    if (!dateStr) return '';
+    var parts = dateStr.split('-');
+    if (parts.length === 3) {
+        var d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+        d.setDate(d.getDate() + parseInt(days, 10));
+        var yyyy = d.getFullYear();
+        var mm   = String(d.getMonth() + 1).padStart(2, '0');
+        var dd   = String(d.getDate()).padStart(2, '0');
+        return yyyy + '-' + mm + '-' + dd;
+    }
+    return dateStr;
 }
 
 function recalcDates() {
@@ -858,7 +863,17 @@ $(document).ready(function() {
     $('body').find('.dtp').remove();
 
     // 1. Initialize Flatpickr on date inputs
-    flatpickr('#paymentDate, #subscriptionStartDate, #payment-due-date, .plan-datepicker, .flatpickr-date', {
+    flatpickr('#subscriptionStartDate', {
+        dateFormat: 'Y-m-d',
+        allowInput: true,
+        monthSelectorType: 'dropdown',
+        onChange: function(selectedDates, dateStr, instance) {
+            $('#subscriptionStartDate').val(dateStr);
+            recalcDates();
+        }
+    });
+
+    flatpickr('#paymentDate, #payment-due-date, .flatpickr-date', {
         dateFormat: 'Y-m-d',
         allowInput: true,
         monthSelectorType: 'dropdown'

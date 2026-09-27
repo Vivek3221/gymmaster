@@ -657,22 +657,46 @@ class UsersController extends AppController
                     $plandata['plan_name']       = $data['plan_name'];
                     $plandata['fee']             = !empty($data['fee']) ? $data['fee'] : 0;
                     $plandata['currency']        = 'INR';
-                    $plandata['plan_expire_date'] = !empty($data['plan_expire_date']) ? date('Y-m-d H:i:s', strtotime($data['plan_expire_date'])) : date('Y-m-d H:i:s', strtotime('+30 days'));
+                    $subStartDate = !empty($data['subscription_start_date']) ? date('Y-m-d', strtotime($data['subscription_start_date'])) : date('Y-m-d');
                     $plandata['payment_due_date'] = !empty($data['payment_due_date']) ? date('Y-m-d H:i:s', strtotime($data['payment_due_date'])) : null;
-                    if (!empty($data['subscription_start_date'])) {
-                        $plandata['subscription_start_date'] = date('Y-m-d', strtotime($data['subscription_start_date']));
+
+                    $plansTable = TableRegistry::get('Plans');
+                    $planObj = null;
+                    if (!empty($data['plan_name'])) {
+                        $planObj = $plansTable->find()->where(['title' => $data['plan_name']])->first();
                     }
-                    if (!empty($data['reminder_date'])) {
-                        $plandata['reminder_date'] = date('Y-m-d', strtotime($data['reminder_date']));
+                    if (!$planObj && !empty($data['plan_id'])) {
+                        $planObj = $plansTable->find()->where(['id' => $data['plan_id']])->first();
                     }
-                    $planSubscribers             = $this->PlanSubscribers->patchEntity($planSubscribers, $plandata);
-                    $planSubscribers->collection_type = 'normal';
+
+                    if ($planObj && !empty($planObj->days)) {
+                        $plandata['plan_expire_date'] = date('Y-m-d 00:00:00', strtotime("+{$planObj->days} days", strtotime($subStartDate)));
+                        $remDays = max(1, $planObj->days - 5);
+                        $remDate = date('Y-m-d', strtotime("+{$remDays} days", strtotime($subStartDate)));
+                    } else {
+                        $plandata['plan_expire_date'] = !empty($data['plan_expire_date']) ? date('Y-m-d H:i:s', strtotime($data['plan_expire_date'])) : date('Y-m-d H:i:s', strtotime('+30 days', strtotime($subStartDate)));
+                        $remDate = !empty($data['reminder_date']) ? date('Y-m-d', strtotime($data['reminder_date'])) : date('Y-m-d', strtotime('-5 days', strtotime($plandata['plan_expire_date'])));
+                    }
+
+                    $plandata['subscription_start_date'] = $subStartDate;
+                    $plandata['reminder_date']           = $remDate;
+
+                    $planSubscribers                     = $this->PlanSubscribers->patchEntity($planSubscribers, $plandata);
+                    $planSubscribers->collection_type   = 'normal';
+                    $planSubscribers->subscription_start_date = $subStartDate;
+                    $planSubscribers->reminder_date      = $remDate;
+
                     $planSubscribersAdd = $this->PlanSubscribers->save($planSubscribers);
 
                     if ($planSubscribersAdd) {
-                        // Direct DB update to guarantee collection_type is normal
+                        // Direct DB update to guarantee collection_type, subscription_start_date and reminder_date
                         $db = $this->PlanSubscribers->getConnection();
-                        $db->execute("UPDATE plan_subscribers SET collection_type = 'normal' WHERE id = ?", [(int)$planSubscribersAdd->id]);
+                        $db->execute("UPDATE plan_subscribers SET collection_type = 'normal', subscription_start_date = ?, reminder_date = ?, plan_expire_date = ? WHERE id = ?", [
+                            $subStartDate,
+                            $remDate,
+                            $plandata['plan_expire_date'],
+                            (int)$planSubscribersAdd->id
+                        ]);
                         // insert into payments
                         $paymentdata['user_id']             = $user->id;
                         $paymentdata['partner_id']          = $targetPartnerId;

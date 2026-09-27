@@ -336,8 +336,10 @@ class PlanSubscribersController extends AppController
         $groupedSubscribers = [];
         foreach ($planSubscribers as $ps) {
             $fys = [];
-            $startDateStr = !empty($ps->subscription_start_date) ? $ps->subscription_start_date->format('Y-m-d') : $ps->created->format('Y-m-d');
-            $endDateStr = $ps->plan_expire_date->format('Y-m-d');
+            $subStart = !empty($ps->subscription_start_date) ? (is_object($ps->subscription_start_date) ? $ps->subscription_start_date->format('Y-m-d') : date('Y-m-d', strtotime($ps->subscription_start_date))) : null;
+            $createdDate = !empty($ps->created) ? (is_object($ps->created) ? $ps->created->format('Y-m-d') : date('Y-m-d', strtotime($ps->created))) : date('Y-m-d');
+            $startDateStr = $subStart ? $subStart : $createdDate;
+            $endDateStr = is_object($ps->plan_expire_date) ? $ps->plan_expire_date->format('Y-m-d') : date('Y-m-d', strtotime($ps->plan_expire_date));
 
             $startFY = ((int)date('n', strtotime($startDateStr)) >= 4) ? (int)date('Y', strtotime($startDateStr)) : ((int)date('Y', strtotime($startDateStr)) - 1);
             $endFY = ((int)date('n', strtotime($endDateStr)) >= 4) ? (int)date('Y', strtotime($endDateStr)) : ((int)date('Y', strtotime($endDateStr)) - 1);
@@ -427,10 +429,12 @@ class PlanSubscribersController extends AppController
                 $monthTotals = array_fill_keys($months, 0);
 
                 foreach ($subscribersInYear as $row) {
-                    $startDateStr = (!empty($row->subscription_start_date)) ? $row->subscription_start_date->format('Y-m-d') : $row->created->format('Y-m-d');
-                    $endDateStr = $row->plan_expire_date->format('Y-m-d');
+                    $subStart = !empty($row->subscription_start_date) ? (is_object($row->subscription_start_date) ? $row->subscription_start_date->format('Y-m-d') : date('Y-m-d', strtotime($row->subscription_start_date))) : null;
+                    $createdDate = !empty($row->created) ? (is_object($row->created) ? $row->created->format('Y-m-d') : date('Y-m-d', strtotime($row->created))) : date('Y-m-d');
+                    $startDateStr = $subStart ? $subStart : $createdDate;
+                    $endDateStr = is_object($row->plan_expire_date) ? $row->plan_expire_date->format('Y-m-d') : date('Y-m-d', strtotime($row->plan_expire_date));
                     
-                    $totalDays = round((strtotime($endDateStr) - strtotime($startDateStr)) / 86400) + 1;
+                    $totalDays = max(1, (int)round((strtotime($endDateStr) - strtotime($startDateStr)) / 86400));
                     if ($totalDays <= 0) {
                         $totalDays = 1;
                     }
@@ -480,7 +484,7 @@ class PlanSubscribersController extends AppController
                         'id' => $row->id,
                         'name' => ucwords($row->user->name),
                         'added_by' => $addedByName,
-                        'joining_date' => $row->created->format('d-m-Y'),
+                        'joining_date' => date('d-m-Y', strtotime($startDateStr)),
                         'membership' => $monthsCount,
                         'total_amount' => (float)$row->fee,
                         'paid_amount' => $totalPaid,
@@ -833,10 +837,12 @@ class PlanSubscribersController extends AppController
             $monthTotals = array_fill_keys($months, 0);
 
             foreach ($subscribersInYear as $row) {
-                $startDateStr = (!empty($row->subscription_start_date)) ? $row->subscription_start_date->format('Y-m-d') : $row->created->format('Y-m-d');
-                $endDateStr = $row->plan_expire_date->format('Y-m-d');
+                $subStart = !empty($row->subscription_start_date) ? (is_object($row->subscription_start_date) ? $row->subscription_start_date->format('Y-m-d') : date('Y-m-d', strtotime($row->subscription_start_date))) : null;
+                $createdDate = !empty($row->created) ? (is_object($row->created) ? $row->created->format('Y-m-d') : date('Y-m-d', strtotime($row->created))) : date('Y-m-d');
+                $startDateStr = $subStart ? $subStart : $createdDate;
+                $endDateStr = is_object($row->plan_expire_date) ? $row->plan_expire_date->format('Y-m-d') : date('Y-m-d', strtotime($row->plan_expire_date));
                 
-                $totalDays = round((strtotime($endDateStr) - strtotime($startDateStr)) / 86400) + 1;
+                $totalDays = max(1, (int)round((strtotime($endDateStr) - strtotime($startDateStr)) / 86400));
                 if ($totalDays <= 0) {
                     $totalDays = 1;
                 }
@@ -888,7 +894,7 @@ class PlanSubscribersController extends AppController
                     'id' => $row->id,
                     'name' => ucwords($row->user->name),
                     'added_by' => $addedByName,
-                    'joining_date' => $row->created->format('d-m-Y'),
+                    'joining_date' => date('d-m-Y', strtotime($startDateStr)),
                     'membership' => $monthsCount,
                     'total_amount' => (float)$row->fee,
                     'paid_amount' => $totalPaid,

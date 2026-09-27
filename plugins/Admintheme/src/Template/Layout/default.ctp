@@ -292,7 +292,7 @@
     <script>
     $(document).ready(function() {
         if (typeof flatpickr !== 'undefined') {
-            flatpickr('.datetimepicker, .datepicker, .plan-datepicker, .flatpickr-date, .datepicker-filter', {
+            flatpickr('.datetimepicker, .datepicker, .flatpickr-date, .datepicker-filter', {
                 dateFormat: 'Y-m-d',
                 allowInput: true,
                 monthSelectorType: 'dropdown'
