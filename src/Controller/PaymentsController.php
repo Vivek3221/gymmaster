@@ -54,6 +54,8 @@ class PaymentsController extends AppController
         $users_id = $this->usersdetail['users_id'];
         $startDate = date('01/01/Y');
         $endDate = date('d/m/Y');
+        $start_date = isset($this->request->query['start_date']) ? trim($this->request->query['start_date']) : '';
+        $end_date   = isset($this->request->query['end_date'])   ? trim($this->request->query['end_date'])   : '';
         
         if (isset($users_type) && ($users_type == 2)) {
             $search['Users.partner_id'] = $users_id;
@@ -83,7 +85,22 @@ class PaymentsController extends AppController
             $partner = $this->request->query['partners'];
             $search['Payments.partner_id'] = $partner;
         }
-        if (isset($this->request->query['created']) && trim($this->request->query['created']) != "") {
+
+        if (!empty($start_date)) {
+            $startDateFormatted = date('Y-m-d', strtotime($start_date));
+            $search[] = function ($exp) use ($startDateFormatted) {
+                return $exp->add("COALESCE(Payments.payment_date, DATE(Payments.created)) >= '" . $startDateFormatted . "'");
+            };
+        }
+
+        if (!empty($end_date)) {
+            $endDateFormatted = date('Y-m-d', strtotime($end_date));
+            $search[] = function ($exp) use ($endDateFormatted) {
+                return $exp->add("COALESCE(Payments.payment_date, DATE(Payments.created)) <= '" . $endDateFormatted . "'");
+            };
+        }
+
+        if (empty($start_date) && empty($end_date) && isset($this->request->query['created']) && trim($this->request->query['created']) != "") {
             $created = $this->request->query['created'];
             $dateArray = explode(' - ', $created);
             if (count($dateArray) == 2) {
@@ -94,11 +111,10 @@ class PaymentsController extends AppController
                 if (count($startDateArray) == 3 && count($endDateArray) == 3) {
                     $startDate_u = $startDateArray[2] . '-' . $startDateArray[1] . '-' . $startDateArray[0];
                     $endDate_u = $endDateArray[2] . '-' . $endDateArray[1] . '-' . $endDateArray[0];
-                    $search[] = function ($exp, $q) use ($startDate_u, $endDate_u) {
-                        return $exp->and_([
-                            'COALESCE(Payments.payment_date, DATE(Payments.created)) >=' => $startDate_u,
-                            'COALESCE(Payments.payment_date, DATE(Payments.created)) <=' => $endDate_u
-                        ]);
+                    $start_date = $startDate_u;
+                    $end_date   = $endDate_u;
+                    $search[] = function ($exp) use ($startDate_u, $endDate_u) {
+                        return $exp->add("COALESCE(Payments.payment_date, DATE(Payments.created)) BETWEEN '" . $startDate_u . "' AND '" . $endDate_u . "'");
                     };
                 }
             }
@@ -132,7 +148,7 @@ class PaymentsController extends AppController
         $isDeleteRoot = $this->isPaymentDeleteRoot();
 
         $this->set(compact('payments','users', 'name', 'status', 'norec','mode_ofpay','user_type',
-                'users_type','partners','partner','amount','startDate','endDate', 'canDeletePayment', 'isDeleteRoot'));
+                'users_type','partners','partner','amount','startDate','endDate', 'start_date', 'end_date', 'canDeletePayment', 'isDeleteRoot'));
     }
 
     /**

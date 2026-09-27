@@ -422,11 +422,10 @@
   top: -7px !important;
 }
 
-/* Flexbox layout for side-by-side ranges and calendars when picker is open */
+/* Flexbox layout for side-by-side ranges and calendars when calendars are shown */
 @media (min-width: 564px) {
-  .daterangepicker.show-calendar,
-  .daterangepicker.show-ranges {
-    display: inline-flex !important;
+  .daterangepicker.show-calendar {
+    display: flex !important;
     flex-direction: row !important;
     flex-wrap: wrap !important;
     align-items: stretch !important;
@@ -477,7 +476,6 @@
 
 /* Calendars Container */
 .daterangepicker.show-calendar .drp-calendar {
-  display: inline-block !important;
   float: none !important;
   vertical-align: top !important;
   padding: 12px !important;
@@ -511,6 +509,7 @@
   font-size: 13px !important;
   border-radius: 6px !important;
   border: none !important;
+  color: #334155 !important;
   transition: background-color 0.15s ease, color 0.15s ease !important;
 }
 
@@ -605,6 +604,7 @@
 
 /* Footer buttons bar */
 .daterangepicker .drp-buttons {
+  flex: 0 0 100% !important;
   width: 100% !important;
   clear: both !important;
   text-align: right !important;
@@ -616,6 +616,45 @@
   justify-content: flex-end !important;
   gap: 8px !important;
 }
+
+.daterangepicker .drp-selected {
+  font-size: 12px !important;
+  color: #64748b !important;
+  margin-right: auto !important;
+  font-weight: 500 !important;
+}
+
+.daterangepicker .drp-buttons .btn {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  padding: 6px 14px !important;
+  border-radius: 6px !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+}
+
+.daterangepicker .drp-buttons .cancelBtn {
+  background-color: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+.daterangepicker .drp-buttons .cancelBtn:hover {
+  background-color: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+.daterangepicker .drp-buttons .applyBtn {
+  background-color: #1976d2 !important;
+  color: #ffffff !important;
+  border: 1px solid #1976d2 !important;
+}
+
+.daterangepicker .drp-buttons .applyBtn:hover {
+  background-color: #1565c0 !important;
+  border-color: #1565c0 !important;
+}
+
 
 .daterangepicker .drp-selected {
   font-size: 12px !important;

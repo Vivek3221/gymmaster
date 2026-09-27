@@ -207,8 +207,12 @@
                         </div>
                     <?php } ?>
                     <div class="filter-group">
-                        <label><?= __('Select Date Range') ?></label>
-                        <?= $this->Form->input('created', ['type' => 'text', 'class' => 'form-control date-range-picker', 'placeholder' => __('Select Date Range'), 'label'=>false, 'readonly'=>'readonly']); ?>
+                        <label><?= __('Start Date') ?></label>
+                        <input type="text" id="startDate" name="start_date" class="form-control flatpickr-date" value="<?= h($start_date) ?>" placeholder="YYYY-MM-DD" autocomplete="off">
+                    </div>
+                    <div class="filter-group">
+                        <label><?= __('End Date') ?></label>
+                        <input type="text" id="endDate" name="end_date" class="form-control flatpickr-date" value="<?= h($end_date) ?>" placeholder="YYYY-MM-DD" autocomplete="off">
                     </div>
                     <div class="filter-group">
                         <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control select2', 'placeholder' => __('Select Records'), 'options' => $nofrec, 'value' => $norec]); ?>
@@ -344,63 +348,6 @@
 </section>
 <script>
    $(document).ready(function () {
-        $('#date-end').bootstrapMaterialDatePicker({ format : 'YYYY/MM/DD HH:mm', weekStart : 0 , time: 'false'});
-        $('#date-start').bootstrapMaterialDatePicker({format : 'YYYY/MM/DD HH:mm', weekStart : 0 , time: 'false'}).on('change', function(e, date)
-        {
-        $('#date-end').bootstrapMaterialDatePicker('setMinDate', date);
-        });
-        
-         $('.date-range-picker').daterangepicker({
-            "showDropdowns": true,
-            "alwaysShowCalendars": true,
-            "opens": "left",
-            "ranges": {
-                      'Today': [moment(), moment()],
-                      'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                      'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                      'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                      'This Month': [moment().startOf('month'), moment().endOf('month')],
-                      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                    },
-            "locale": {
-                "direction": "ltr",
-                "format": "DD/MM/YYYY",
-                "separator": " - ",
-                "applyLabel": "Apply",
-                "cancelLabel": "Cancel",
-                "fromLabel": "From",
-                "toLabel": "To",
-                "customRangeLabel": "Custom",
-                "daysOfWeek": [
-                    "Su",
-                    "Mo",
-                    "Tu",
-                    "We",
-                    "Th",
-                    "Fr",
-                    "Sa"
-                ],
-                "monthNames": [
-                    "January",
-                    "February",
-                    "March",
-                    "April",
-                    "May",
-                    "June",
-                    "July",
-                    "August",
-                    "September",
-                    "October",
-                    "November",
-                    "December"
-                ],
-                "firstDay": 1
-            },
-            "startDate": "<?= $startDate ?>",
-            "endDate": "<?= $endDate ?>"
-        }, function(start, end, label) {
-        });
-
         if ($.fn.select2) {
             $('.select2').select2({ width: '100%' });
         }
