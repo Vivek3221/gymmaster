@@ -1,6 +1,11 @@
 <?php
-$years     = array_keys($reportData);
-$activeYear = !empty($years) ? reset($years) : null;
+$years = array_keys($reportData);
+$currMonth = (int)date('n');
+$currY = (int)date('Y');
+$currentStartYear = ($currMonth >= 4) ? $currY : ($currY - 1);
+$currentFYKey = "FY " . $currentStartYear . "-" . substr(($currentStartYear + 1), -2);
+
+$activeYear = in_array($currentFYKey, $years) ? $currentFYKey : (!empty($years) ? reset($years) : null);
 ?>
 <section class="content">
     <div class="container-fluid">

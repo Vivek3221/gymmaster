@@ -52,6 +52,18 @@ class PlanSubscribersTable extends Table
         $this->hasMany('Payments', [
             'foreignKey' => 'plan_subscriber_id'
         ]);
+
+        $this->getSchema()->addColumn('subscription_start_date', ['type' => 'date']);
+        $this->getSchema()->addColumn('reminder_date', ['type' => 'date']);
+        $this->getSchema()->addColumn('collection_type', ['type' => 'string']);
+    }
+
+    public function _initializeSchema(\Cake\Database\Schema\TableSchema $schema)
+    {
+        $schema->addColumn('subscription_start_date', ['type' => 'date']);
+        $schema->addColumn('reminder_date', ['type' => 'date']);
+        $schema->addColumn('collection_type', ['type' => 'string']);
+        return $schema;
     }
 
     /**

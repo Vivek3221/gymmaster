@@ -688,7 +688,16 @@ class ManualCollectionsController extends AppController
                 $groupedSubscribers[$fy][] = $ps;
             }
         }
-        krsort($groupedSubscribers);
+        $currMonth = (int)date('n');
+        $currY = (int)date('Y');
+        $currentStartYear = ($currMonth >= 4) ? $currY : ($currY - 1);
+        $currentFYKey = "FY " . $currentStartYear . "-" . substr(($currentStartYear + 1), -2);
+
+        uksort($groupedSubscribers, function($a, $b) use ($currentFYKey) {
+            if ($a === $currentFYKey) return -1;
+            if ($b === $currentFYKey) return 1;
+            return strcmp($a, $b);
+        });
 
         $reportData = [];
         foreach ($groupedSubscribers as $fyKey => $subscribersInYear) {
@@ -758,14 +767,26 @@ class ManualCollectionsController extends AppController
                 }
                 $pendingAmount = round($pendingDays * $dailyRate, 2);
 
+                $totalPaid = 0;
+                $totalDiscount = 0;
+                if (!empty($row->payments)) {
+                    foreach ($row->payments as $pm) {
+                        if ($pm->is_deleted == 0) {
+                            $totalPaid += (float)$pm->amount;
+                            $totalDiscount += (float)($pm->discount_amount ?? 0);
+                        }
+                    }
+                }
+                $totalDue = max(0, (float)$row->fee - $totalDiscount - $totalPaid);
+
                 $subscriberRow = [
                     'id' => $row->id, 
                     'name' => ucwords($row->user->name),
                     'joining_date' => date('d-m-Y', strtotime($startDateStr)),
                     'membership' => $monthsCount,
-                    'total_amount' => $row->fee,
-                    'paid_amount'  => $row->paid_fee, 
-                    'due_amount' => $row->remain_fee,
+                    'total_amount' => (float)$row->fee,
+                    'paid_amount'  => $totalPaid, 
+                    'due_amount'   => $totalDue,
                     'end_date'     => date('d-m-Y', strtotime($row->plan_expire_date)),
                     'pending_days' => $pendingDays,
                     'pending_amount' => $pendingAmount,
