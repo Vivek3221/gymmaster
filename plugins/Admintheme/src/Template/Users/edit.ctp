@@ -477,14 +477,13 @@ $getPayDuration = $this->Common->getPayDuration();
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.datetimepicker').bootstrapMaterialDatePicker({
-            format: 'YYYY-MM-DD', 
-            lang: 'fr', 
-            weekStart: 1, 
-            cancelText: 'Cancel',
-            maxDate: new Date(),
-            time: false
-        });
+        if (typeof flatpickr !== 'undefined') {
+            flatpickr('.datetimepicker, .datepicker, .flatpickr-date', {
+                dateFormat: 'Y-m-d',
+                allowInput: true,
+                monthSelectorType: 'dropdown'
+            });
+        }
 
         if ($.fn.select2) {
             $('.select2').select2({ width: '100%' });

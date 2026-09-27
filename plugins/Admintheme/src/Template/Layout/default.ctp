@@ -37,6 +37,7 @@
     <!-- Waves Effect Css -->
     <!-- Animation Css -->
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <!-- Custom Css -->
      <?= $this->Html->css('morris.css') ?>
      <?= $this->Html->css('style.css') ?>
@@ -284,10 +285,37 @@
     <!-- Custom Js -->
     <?= $this->Html->script('pages/tables/jquery-datatable.js') ?>
     <?= $this->Html->script('admin.js') ?>
-     <?= $this->Html->script('basic-form-elements.js') ?>
     <?= $this->Html->script('demo.js') ?>
     <?php echo $this->Html->script('date.js') ?>
     <?php echo $this->Html->script('jquery_002.js') ?>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+    $(document).ready(function() {
+        if (typeof flatpickr !== 'undefined') {
+            flatpickr('.datetimepicker, .datepicker, .plan-datepicker, .flatpickr-date, .datepicker-filter', {
+                dateFormat: 'Y-m-d',
+                allowInput: true,
+                monthSelectorType: 'dropdown'
+            });
+        }
+        $(document).on('click', '.flatpickr-prev-month', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var cal = $(this).closest('.flatpickr-calendar')[0];
+            if (cal && cal._flatpickr) {
+                cal._flatpickr.changeMonth(-1);
+            }
+        });
+        $(document).on('click', '.flatpickr-next-month', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var cal = $(this).closest('.flatpickr-calendar')[0];
+            if (cal && cal._flatpickr) {
+                cal._flatpickr.changeMonth(1);
+            }
+        });
+    });
+    </script>
     <?php //echo $this->Html->script('pages/index.js') ?>
     <!-- Demo Js -->
 <!--    <script src="js/demo.js"></script>-->

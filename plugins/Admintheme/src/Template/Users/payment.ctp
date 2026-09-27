@@ -676,7 +676,7 @@ select#planSelectDropdown {
             <div class="field-grid">
                 <div class="form-field">
                     <label><?= __('Payment Date') ?> <span style="color:red">*</span></label>
-                    <input type="date" id="paymentDate" name="payment_date" class="form-control" value="<?= date('Y-m-d') ?>" autocomplete="off" required>
+                    <input type="text" id="paymentDate" name="payment_date" class="form-control flatpickr-date" placeholder="YYYY-MM-DD" value="<?= date('Y-m-d') ?>" autocomplete="off" required>
                 </div>
 
                 <div class="form-field">
@@ -860,7 +860,8 @@ $(document).ready(function() {
     // 1. Initialize Flatpickr on date inputs
     flatpickr('#paymentDate, #subscriptionStartDate, #payment-due-date, .plan-datepicker, .flatpickr-date', {
         dateFormat: 'Y-m-d',
-        allowInput: true
+        allowInput: true,
+        monthSelectorType: 'dropdown'
     });
 
     if ($.fn.select2) {

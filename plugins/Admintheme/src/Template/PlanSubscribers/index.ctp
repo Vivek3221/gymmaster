@@ -556,6 +556,12 @@
 
 <script type="text/javascript" language="javascript">
     $(document).ready(function() {
-        $('.datepicker-filter').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD', time: false });
+        if (typeof flatpickr !== 'undefined') {
+            flatpickr('.datepicker-filter', {
+                dateFormat: 'Y-m-d',
+                allowInput: true,
+                monthSelectorType: 'dropdown'
+            });
+        }
     });
 </script>

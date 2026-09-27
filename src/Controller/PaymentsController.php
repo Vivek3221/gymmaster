@@ -52,7 +52,7 @@ class PaymentsController extends AppController
         $search = [];
         $users_type = $this->usersdetail['users_type'];
         $users_id = $this->usersdetail['users_id'];
-        $startDate = '01-01-2017';
+        $startDate = date('01/01/Y');
         $endDate = date('d/m/Y');
         
         if (isset($users_type) && ($users_type == 2)) {
@@ -85,15 +85,23 @@ class PaymentsController extends AppController
         }
         if (isset($this->request->query['created']) && trim($this->request->query['created']) != "") {
             $created = $this->request->query['created'];
-            $dateArray = explode(' - ',$created);
-            $startDate = $dateArray[0];
-            $endDate = $dateArray[1];
-            $startDateArray = explode('/',$startDate);
-            $startDate_u = $startDateArray[2].'-'.$startDateArray[1].'-'.$startDateArray[0];
-            $endDateArray = explode('/',$endDate);
-            $endDate_u = $endDateArray[2].'-'.$endDateArray[1].'-'.$endDateArray[0];
-            $search['COALESCE(Payments.payment_date, DATE(Payments.created)) >='] = $startDate_u;
-            $search['COALESCE(Payments.payment_date, DATE(Payments.created)) <='] = $endDate_u;
+            $dateArray = explode(' - ', $created);
+            if (count($dateArray) == 2) {
+                $startDate = $dateArray[0];
+                $endDate = $dateArray[1];
+                $startDateArray = explode('/', $startDate);
+                $endDateArray = explode('/', $endDate);
+                if (count($startDateArray) == 3 && count($endDateArray) == 3) {
+                    $startDate_u = $startDateArray[2] . '-' . $startDateArray[1] . '-' . $startDateArray[0];
+                    $endDate_u = $endDateArray[2] . '-' . $endDateArray[1] . '-' . $endDateArray[0];
+                    $search[] = function ($exp, $q) use ($startDate_u, $endDate_u) {
+                        return $exp->and_([
+                            'COALESCE(Payments.payment_date, DATE(Payments.created)) >=' => $startDate_u,
+                            'COALESCE(Payments.payment_date, DATE(Payments.created)) <=' => $endDate_u
+                        ]);
+                    };
+                }
+            }
         }
         if (!empty($search)) {
             $this->Amount = $this->Payments->find()

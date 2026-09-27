@@ -835,8 +835,13 @@ $user_type = $this->Common->getType();
         }
 
         // Initialize datepickers
-        $('.datepicker-filter').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD', time: false });
-        $('#followup-datetime').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD HH:mm', minDate : new Date() });
+        if (typeof flatpickr !== 'undefined') {
+            flatpickr('.datepicker-filter, #followup-datetime', {
+                dateFormat: 'Y-m-d',
+                allowInput: true,
+                monthSelectorType: 'dropdown'
+            });
+        }
 
         // Open Add Remark Modal
         $(document).on('click', '.btn-add-remark', function(e) {

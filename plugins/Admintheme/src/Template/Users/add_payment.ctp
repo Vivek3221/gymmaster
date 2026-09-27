@@ -475,10 +475,11 @@ $getPayDuration = $this->Common->getPayDuration();
                 <div class="apm-field">
                     <label><?= __('Payment Date') ?> <span>*</span></label>
                     <div class="date-input-wrap">
-                        <input type="date"
+                        <input type="text"
                                id="payment_date"
                                name="payment_date"
-                               class="form-control"
+                               class="form-control flatpickr-date"
+                               placeholder="YYYY-MM-DD"
                                value="<?= !empty($payment->payment_date) ? $payment->payment_date->format('Y-m-d') : date('Y-m-d') ?>"
                                required
                                autocomplete="off">
@@ -553,12 +554,12 @@ $(document).ready(function() {
         .removeAttr('data-dtp')
         .off('.dtp');
 
-    // Init Flatpickr only on #payment_date
+    // Init Flatpickr on #payment_date
     flatpickr('#payment_date', {
         dateFormat: 'Y-m-d',
         defaultDate: '<?= !empty($payment->payment_date) ? $payment->payment_date->format('Y-m-d') : date('Y-m-d') ?>',
-        allowInput: false,
-        disableMobile: true
+        allowInput: true,
+        monthSelectorType: 'dropdown'
     });
 
     // Init Select2

@@ -389,12 +389,12 @@ $nofrec = $this->Common->getNoOfRec();
 
                     <div class="filter-field">
                         <label><?= __('Expiry Start Date') ?></label>
-                        <input type="text" id="startDate" name="start_date" class="form-control flatpickr-input" value="<?= h($start_date) ?>" placeholder="YYYY-MM-DD" autocomplete="off">
+                        <input type="text" id="startDate" name="start_date" class="form-control flatpickr-date" value="<?= h($start_date) ?>" placeholder="YYYY-MM-DD" autocomplete="off">
                     </div>
 
                     <div class="filter-field">
                         <label><?= __('Expiry End Date') ?></label>
-                        <input type="text" id="endDate" name="end_date" class="form-control flatpickr-input" value="<?= h($end_date) ?>" placeholder="YYYY-MM-DD" autocomplete="off">
+                        <input type="text" id="endDate" name="end_date" class="form-control flatpickr-date" value="<?= h($end_date) ?>" placeholder="YYYY-MM-DD" autocomplete="off">
                     </div>
 
                     <?php if (isset($users_type) && ($users_type == 1 || $users_type == 2)) { ?>
@@ -559,9 +559,15 @@ $nofrec = $this->Common->getNoOfRec();
 <script>
 $(document).ready(function() {
     if (typeof flatpickr !== 'undefined') {
-        flatpickr("#startDate, #endDate", {
+        flatpickr("#startDate", {
             dateFormat: "Y-m-d",
-            allowInput: true
+            allowInput: true,
+            monthSelectorType: "dropdown"
+        });
+        flatpickr("#endDate", {
+            dateFormat: "Y-m-d",
+            allowInput: true,
+            monthSelectorType: "dropdown"
         });
     }
 });

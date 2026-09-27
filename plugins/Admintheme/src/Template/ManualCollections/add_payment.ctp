@@ -249,7 +249,7 @@ $getModPayment = $this->Common->getModPayment();
                             <div class="form-group">
                                 <label><?= __('Collection / Payment Date') ?> <span style="color:red">*</span></label>
                                 <div class="form-line">
-                                    <input type="date" name="payment_date" id="paymentDate" class="form-control" value="<?= date('Y-m-d') ?>" required>
+                                    <input type="text" name="payment_date" id="paymentDate" class="form-control flatpickr-date" placeholder="YYYY-MM-DD" value="<?= date('Y-m-d') ?>" required>
                                 </div>
                             </div>
 

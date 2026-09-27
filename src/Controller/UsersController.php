@@ -1078,6 +1078,7 @@ class UsersController extends AppController
         }
 
         $todayStr = date('Y-m-d');
+        $oneMonthLaterStr = date('Y-m-d', strtotime('+30 days'));
 
         // Fetch matching users with details
         $usersList = $this->Users->find('all')
@@ -1112,7 +1113,7 @@ class UsersController extends AppController
 
             $expDateStr = $plan->plan_expire_date->format('Y-m-d');
             $isExpired = ($expDateStr < $todayStr);
-            $isExpiringSoon = ($expDateStr >= $todayStr);
+            $isExpiringSoon = ($expDateStr >= $todayStr && $expDateStr <= $oneMonthLaterStr);
 
             if ($isExpired) {
                 $totalExpiredCount++;
