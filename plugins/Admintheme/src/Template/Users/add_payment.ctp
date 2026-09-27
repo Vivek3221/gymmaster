@@ -238,9 +238,89 @@ $getPayDuration = $this->Common->getPayDuration();
 }
 .btn-apm-cancel:hover { background: #e2e8f0 !important; color: #1e293b !important; }
 
+/* ── Modern Discount Block ── */
+.discount-toggle-card {
+    background: #f8fafc;
+    border: 1.5px dashed #cbd5e1;
+    border-radius: 10px;
+    padding: 14px 18px;
+    transition: all 0.25s ease;
+    margin-bottom: 4px;
+}
+.discount-toggle-card.is-active {
+    background: #f0f9ff;
+    border-color: #0284c7;
+    border-style: solid;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.08);
+}
+.discount-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 !important;
+    cursor: pointer;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+}
+.discount-checkbox-label input[type="checkbox"] {
+    width: 18px !important;
+    height: 18px !important;
+    accent-color: #0284c7;
+    cursor: pointer;
+    margin: 0 !important;
+}
+.discount-details-body {
+    display: none;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+}
+.discount-type-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.discount-type-option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    transition: all 0.2s ease;
+}
+.discount-type-option input[type="radio"] {
+    margin: 0 !important;
+    width: 14px !important;
+    height: 14px !important;
+    accent-color: #0284c7;
+}
+.discount-type-option.active {
+    background: #e0f2fe;
+    border-color: #0284c7;
+    color: #0369a1;
+    font-weight: 700;
+}
+.discount-inputs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
 @media (max-width: 768px) {
     .apm-grid { grid-template-columns: 1fr; }
     .apm-grid .full-col { grid-column: 1; }
+    .discount-inputs-grid { grid-template-columns: 1fr; }
 }
 </style>
 
@@ -315,6 +395,49 @@ $getPayDuration = $this->Common->getPayDuration();
                 <!-- Plan Detail Strip (full width, hidden until plan selected) -->
                 <div class="full-col" id="planDetailDiv"></div>
 
+                <!-- Apply Discount Toggle Card -->
+                <!-- <div class="full-col">
+                    <div class="discount-toggle-card" id="discountToggleCard">
+                        <label class="discount-checkbox-label" for="applyDiscountToggle">
+                            <input type="checkbox" id="applyDiscountToggle" name="apply_discount" value="1">
+                            <span><?= __('Apply Discount on this Payment?') ?></span>
+                        </label>
+
+                        <div class="discount-details-body" id="discountDetailsBody">
+                            <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; margin-bottom:8px;">
+                                <?= __('Choose Discount Type') ?>:
+                            </div>
+
+                            <div class="discount-type-selector">
+                                <label class="discount-type-option active" id="typeOptionPercent">
+                                    <input type="radio" name="discount_type" value="percent" checked>
+                                    <span><?= __('Percentage (%)') ?></span>
+                                </label>
+                                <label class="discount-type-option" id="typeOptionFixed">
+                                    <input type="radio" name="discount_type" value="fixed">
+                                    <span><?= __('Fixed Amount (₹)') ?></span>
+                                </label>
+                            </div>
+
+                            <div class="discount-inputs-grid">
+                                <div class="apm-field">
+                                    <label><?= __('Discount (%)') ?></label>
+                                    <input type="text" inputmode="decimal" pattern="[0-9]*\.?[0-9]*" id="discountPercent" name="discount_percent" class="form-control" placeholder="0.00" autocomplete="off">
+                                </div>
+                                <div class="apm-field">
+                                    <label><?= __('Discount Amount (₹)') ?></label>
+                                    <input type="text" inputmode="decimal" pattern="[0-9]*\.?[0-9]*" id="discountAmount" name="discount_amount" class="form-control" placeholder="0.00" autocomplete="off">
+                                </div>
+                            </div>
+
+                            <div class="apm-field" style="margin-top:10px;">
+                                <label><?= __('Discount Reason / Remark') ?> <span style="color:red">*</span></label>
+                                <textarea id="discountReason" name="discount_reason" rows="2" class="form-control" placeholder="<?= __('Mandatory remark when discount is applied (e.g. promo coupon, referral, special approval)') ?>" style="border-radius:6px;border:1.5px solid #cbd5e1;padding:8px 12px;font-size:13px;width:100%;box-sizing:border-box;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
                 <!-- Amount Being Paid -->
                 <div class="apm-field full-col">
                     <label><?= __('Amount Being Paid (₹)') ?> <span>*</span></label>
@@ -329,7 +452,7 @@ $getPayDuration = $this->Common->getPayDuration();
                            autocomplete="off">
                     <div class="amount-helper">
                         <i class="material-icons" style="font-size:14px; color:#94a3b8;">info</i>
-                        <span>Plan fee: <strong id="planFeeLabel">—</strong> &nbsp;|&nbsp; Remaining: <strong id="remainingLabel" style="color:#e65100;">—</strong></span>
+                        <span>Plan fee: <strong id="planFeeLabel">—</strong> &nbsp;|&nbsp; Remaining: <strong id="remainingLabel" style="color:#e65100;">—</strong> <span id="helperDiscountWrap" style="display:none;">| Discount: <strong id="helperDiscount" style="color:#0284c7;">₹0</strong></span></span>
                         <button type="button" class="chip orange" id="fillRemainingBtn" style="display:none;" onclick="fillRemainingAmount()">Fill Remaining</button>
                         <button type="button" class="chip" id="fillFullBtn" style="display:none;" onclick="fillFullAmount()">Fill Full Plan Fee</button>
                     </div>
@@ -341,10 +464,10 @@ $getPayDuration = $this->Common->getPayDuration();
                     <?= $this->Form->control('mode_ofpay', [
                         'class'    => 'form-control select2',
                         'type'     => 'select',
-                        'empty'    => __('Select payment mode...'),
                         'required' => true,
                         'label'    => false,
-                        'options'  => $getModPayment
+                        'options'  => $getModPayment,
+                        'default'  => '0'
                     ]) ?>
                 </div>
 
@@ -383,6 +506,28 @@ $getPayDuration = $this->Common->getPayDuration();
 </section>
 
 <script>
+var isUserCustomAmount = false;
+var planTotalFee = 0;
+var planRemainingFee = 0;
+
+function updatePaymentSummary() {
+    var baseRem = planRemainingFee;
+    var dAmt = 0;
+    if ($('#applyDiscountToggle').is(':checked')) {
+        dAmt = parseFloat($('#discountAmount').val()) || 0;
+    }
+    var netPayable = Math.max(0, Math.round((baseRem - dAmt) * 100) / 100);
+    var paid = parseFloat($('#amountPaid').val()) || 0;
+    var finalRem = Math.max(0, Math.round((netPayable - paid) * 100) / 100);
+
+    if (dAmt > 0) {
+        $('#helperDiscountWrap').show();
+        $('#helperDiscount').text('-₹' + dAmt.toLocaleString('en-IN'));
+    } else {
+        $('#helperDiscountWrap').hide();
+    }
+}
+
 $(document).ready(function() {
     // Safely remove any existing bootstrapMaterialDatePicker bindings without instantiating new ones
     if ($.fn.bootstrapMaterialDatePicker) {
@@ -400,7 +545,7 @@ $(document).ready(function() {
     $('.dtp').remove();
 
     // Ensure #amountPaid is completely editable and never blocked
-    $('#amountPaid')
+    $('#amountPaid, #discountPercent, #discountAmount')
         .prop('readonly', false)
         .prop('disabled', false)
         .removeAttr('readonly')
@@ -421,6 +566,137 @@ $(document).ready(function() {
         $('.select2').select2({ width: '100%' });
     }
 
+    // When user manually edits amount paid
+    $('#amountPaid').on('input change keyup', function() {
+        isUserCustomAmount = true;
+        updatePaymentSummary();
+    });
+
+    // Discount Toggle Logic
+    $('#applyDiscountToggle').on('change', function() {
+        var isChecked = $(this).is(':checked');
+        if (isChecked) {
+            $('#discountToggleCard').addClass('is-active');
+            $('#discountDetailsBody').slideDown(200);
+            $('#discountReason').prop('required', true);
+            applyDiscountType();
+        } else {
+            $('#discountToggleCard').removeClass('is-active');
+            $('#discountDetailsBody').slideUp(200);
+            $('#discountReason').prop('required', false).val('');
+            $('#discountPercent').val('');
+            $('#discountAmount').val('');
+            
+            if (!isUserCustomAmount && planRemainingFee > 0) {
+                $('#amountPaid').val(planRemainingFee);
+            }
+            updatePaymentSummary();
+        }
+    });
+
+    $(document).on('click', '.discount-type-option', function(e) {
+        $('.discount-type-option').removeClass('active');
+        $(this).addClass('active');
+        var radio = $(this).find('input[type="radio"]');
+        radio.prop('checked', true);
+        applyDiscountType();
+    });
+
+    $('input[name="discount_type"]').on('change', function() {
+        applyDiscountType();
+    });
+
+    function applyDiscountType() {
+        var type = $('input[name="discount_type"]:checked').val() || 'percent';
+        if (type === 'percent') {
+            $('#typeOptionPercent').addClass('active');
+            $('#typeOptionFixed').removeClass('active');
+            $('#discountPercent').focus();
+        } else {
+            $('#typeOptionFixed').addClass('active');
+            $('#typeOptionPercent').removeClass('active');
+            $('#discountAmount').focus();
+        }
+    }
+
+    function calcFromPercent() {
+        var baseFee = planRemainingFee > 0 ? planRemainingFee : planTotalFee;
+        var rawVal = $('#discountPercent').val();
+        if (rawVal === '') {
+            $('#discountAmount').val('');
+            if (!isUserCustomAmount && baseFee > 0) {
+                $('#amountPaid').val(baseFee);
+            }
+            updatePaymentSummary();
+            return;
+        }
+        var pct = parseFloat(rawVal);
+        if (isNaN(pct)) return;
+        if (pct > 100) { pct = 100; $('#discountPercent').val(100); }
+        if (pct < 0) { pct = 0; $('#discountPercent').val(0); }
+
+        if (baseFee > 0) {
+            var dAmt = Math.round((baseFee * pct / 100) * 100) / 100;
+            $('#discountAmount').val(dAmt > 0 ? dAmt : '');
+            if (!isUserCustomAmount) {
+                var finalPay = Math.max(0, Math.round((baseFee - dAmt) * 100) / 100);
+                $('#amountPaid').val(finalPay);
+            }
+        }
+        updatePaymentSummary();
+    }
+
+    function calcFromAmount() {
+        var baseFee = planRemainingFee > 0 ? planRemainingFee : planTotalFee;
+        var rawVal = $('#discountAmount').val();
+        if (rawVal === '') {
+            $('#discountPercent').val('');
+            if (!isUserCustomAmount && baseFee > 0) {
+                $('#amountPaid').val(baseFee);
+            }
+            updatePaymentSummary();
+            return;
+        }
+        var dAmt = parseFloat(rawVal);
+        if (isNaN(dAmt)) return;
+        if (baseFee > 0 && dAmt > baseFee) { dAmt = baseFee; $('#discountAmount').val(baseFee); }
+        if (dAmt < 0) { dAmt = 0; $('#discountAmount').val(0); }
+
+        if (baseFee > 0) {
+            var pct = Math.round((dAmt / baseFee * 100) * 100) / 100;
+            $('#discountPercent').val(pct > 0 ? pct : '');
+            if (!isUserCustomAmount) {
+                var finalPay = Math.max(0, Math.round((baseFee - dAmt) * 100) / 100);
+                $('#amountPaid').val(finalPay);
+            }
+        }
+        updatePaymentSummary();
+    }
+
+    $('#discountPercent').on('input keyup change', function() {
+        calcFromPercent();
+    });
+
+    $('#discountAmount').on('input keyup change', function() {
+        calcFromAmount();
+    });
+
+    // Form submit validation
+    $('#paymentForm').on('submit', function(e) {
+        if ($('#applyDiscountToggle').is(':checked')) {
+            var dPct = parseFloat($('#discountPercent').val()) || 0;
+            var dAmt = parseFloat($('#discountAmount').val()) || 0;
+            var reason = $.trim($('#discountReason').val());
+
+            if ((dPct > 0 || dAmt > 0) && reason === '') {
+                e.preventDefault();
+                alert('Please enter a mandatory discount reason/remark before submitting.');
+                $('#discountReason').focus();
+                return false;
+            }
+        }
+    });
+
     // If plan is already chosen, auto-load its details right away
     var initialPlanId = $('#plan-subscriber-id').val();
     if (initialPlanId) {
@@ -428,13 +704,14 @@ $(document).ready(function() {
     }
 });
 
-/* Track plan totals */
-var planTotalFee = 0;
-var planRemainingFee = 0;
-
 function fillRemainingAmount() {
-    if (planRemainingFee > 0) {
-        $('#amountPaid').val(planRemainingFee).trigger('input').focus();
+    var dAmt = 0;
+    if ($('#applyDiscountToggle').is(':checked')) {
+        dAmt = parseFloat($('#discountAmount').val()) || 0;
+    }
+    var netRem = Math.max(0, planRemainingFee - dAmt);
+    if (netRem > 0) {
+        $('#amountPaid').val(netRem).trigger('input').focus();
     }
 }
 function fillFullAmount() {
@@ -492,8 +769,13 @@ function showPlanDetails(planid) {
                 updateAmountHelper(planTotalFee, planRemainingFee);
 
                 // Pre-fill amount with remaining fee if any
-                if (remFee > 0) {
-                    $('#amountPaid').val(remFee);
+                var dAmt = 0;
+                if ($('#applyDiscountToggle').is(':checked')) {
+                    dAmt = parseFloat($('#discountAmount').val()) || 0;
+                }
+                var fillVal = Math.max(0, remFee - dAmt);
+                if (fillVal > 0) {
+                    $('#amountPaid').val(fillVal);
                 }
             }
         });

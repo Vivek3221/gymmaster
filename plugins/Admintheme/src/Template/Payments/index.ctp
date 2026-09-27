@@ -277,7 +277,7 @@
                                  <span style="color:#aaa;">—</span>
                               <?php endif; ?>
                            </td>
-                           <td><?= $getModPayment[$payment->mode_ofpay] ?></td>
+                           <td><?= h($getModPayment[$payment->mode_ofpay ?? '0'] ?? 'By Cash') ?></td>
                            <td>
                                <?php
                                if (!empty($payment->payment_date)) {

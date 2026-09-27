@@ -44,12 +44,22 @@ class PaymentsTable extends Table
 
         try {
             $schema = $this->getSchema();
-            if ($schema && !$schema->column('payment_date')) {
-                $schema->addColumn('payment_date', [
-                    'type' => 'date',
-                    'null' => true,
-                    'default' => null,
-                ]);
+            if ($schema) {
+                if (!$schema->column('payment_date')) {
+                    $schema->addColumn('payment_date', ['type' => 'date', 'null' => true, 'default' => null]);
+                }
+                if (!$schema->column('mode_ofpay')) {
+                    $schema->addColumn('mode_ofpay', ['type' => 'integer', 'null' => true, 'default' => 0]);
+                }
+                if (!$schema->column('discount_amount')) {
+                    $schema->addColumn('discount_amount', ['type' => 'decimal', 'null' => true, 'default' => 0.00]);
+                }
+                if (!$schema->column('discount_percent')) {
+                    $schema->addColumn('discount_percent', ['type' => 'decimal', 'null' => true, 'default' => 0.00]);
+                }
+                if (!$schema->column('discount_reason')) {
+                    $schema->addColumn('discount_reason', ['type' => 'text', 'null' => true, 'default' => null]);
+                }
             }
         } catch (\Exception $e) {
         }
@@ -71,6 +81,9 @@ class PaymentsTable extends Table
     {
         if (empty($entity->payment_date)) {
             $entity->payment_date = date('Y-m-d');
+        }
+        if (!isset($entity->mode_ofpay) || $entity->mode_ofpay === null || $entity->mode_ofpay === '') {
+            $entity->mode_ofpay = 0;
         }
     }
 

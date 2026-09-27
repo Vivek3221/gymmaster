@@ -684,13 +684,25 @@ class UsersController extends AppController
                         $paymentdata['discount_amount']     = !empty($data['discount_amount']) ? (float)$data['discount_amount'] : 0.00;
                         $paymentdata['discount_reason']     = !empty($data['discount_reason']) ? $data['discount_reason'] : null;
 
+                        $paymentdata['mode_ofpay']          = (isset($data['mode_ofpay']) && $data['mode_ofpay'] !== '') ? (int)$data['mode_ofpay'] : 0;
                         $payments    = $this->Payments->patchEntity($payments, $paymentdata);
                         $payments->payment_date = $paymentdata['payment_date'];
-                        $payments->mode_ofpay = !empty($data['mode_ofpay']) ? $data['mode_ofpay'] : null;
+                        $payments->mode_ofpay = $paymentdata['mode_ofpay'];
+                        $payments->discount_amount = $paymentdata['discount_amount'];
+                        $payments->discount_percent = $paymentdata['discount_percent'];
+                        $payments->discount_reason = $paymentdata['discount_reason'];
+
                         $paymentssAdd = $this->Payments->save($payments);
-                        if ($paymentssAdd && !empty($paymentdata['payment_date'])) {
+                        if ($paymentssAdd && !empty($paymentssAdd->id)) {
                             $db = $this->Payments->getConnection();
-                            $db->execute("UPDATE payments SET payment_date = ? WHERE id = ?", [$paymentdata['payment_date'], (int)$paymentssAdd->id]);
+                            $db->execute("UPDATE payments SET payment_date = ?, mode_ofpay = ?, discount_amount = ?, discount_percent = ?, discount_reason = ? WHERE id = ?", [
+                                $paymentdata['payment_date'],
+                                $paymentdata['mode_ofpay'],
+                                $paymentdata['discount_amount'],
+                                $paymentdata['discount_percent'],
+                                $paymentdata['discount_reason'],
+                                (int)$paymentssAdd->id
+                            ]);
                         }
 
                         // Update active status for Enquiry users based on payment completion
@@ -1617,20 +1629,36 @@ class UsersController extends AppController
             $data = !empty($this->request->getData()) ? $this->request->getData() : $this->request->data;
             $parsedDate = $this->parsePaymentDate($data['payment_date'] ?? '');
 
-            if (!empty($data['discount_percent']) && (float)$data['discount_percent'] > 0 && empty(trim($data['discount_reason'] ?? ''))) {
+            if ((!empty($data['discount_percent']) && (float)$data['discount_percent'] > 0 || !empty($data['discount_amount']) && (float)$data['discount_amount'] > 0) && empty(trim($data['discount_reason'] ?? ''))) {
                 $this->Flash->error(__('A Discount Remark / Reason is mandatory when a discount is applied.'));
                 return $this->redirect(['action' => 'addPayment', $userid]);
             }
-            $data['payment_date'] = $parsedDate;
-            $data['partner_id'] = $targetPartnerId;
-            $data['currency'] = 'INR';
+            $data['payment_date']     = $parsedDate;
+            $data['partner_id']       = $targetPartnerId;
+            $data['currency']         = 'INR';
+            $data['discount_percent'] = !empty($data['discount_percent']) ? (float)$data['discount_percent'] : 0.00;
+            $data['discount_amount']  = !empty($data['discount_amount']) ? (float)$data['discount_amount'] : 0.00;
+            $data['discount_reason']  = !empty($data['discount_reason']) ? $data['discount_reason'] : null;
+            $data['mode_ofpay']       = (isset($data['mode_ofpay']) && $data['mode_ofpay'] !== '') ? (int)$data['mode_ofpay'] : 0;
+
             $payment = $this->Payments->patchEntity($payment, $data);
             $payment->payment_date = $parsedDate;
             $payment->mode_ofpay = $data['mode_ofpay'];
-            if ($this->Payments->save($payment)) {
-                if (!empty($parsedDate) && !empty($payment->id)) {
+            $payment->discount_percent = $data['discount_percent'];
+            $payment->discount_amount = $data['discount_amount'];
+            $payment->discount_reason = $data['discount_reason'];
+
+            if ($savedPayment = $this->Payments->save($payment)) {
+                if (!empty($savedPayment->id)) {
                     $db = $this->Payments->getConnection();
-                    $db->execute("UPDATE payments SET payment_date = ? WHERE id = ?", [$parsedDate, (int)$payment->id]);
+                    $db->execute("UPDATE payments SET payment_date = ?, mode_ofpay = ?, discount_amount = ?, discount_percent = ?, discount_reason = ? WHERE id = ?", [
+                        $parsedDate,
+                        $data['mode_ofpay'],
+                        $data['discount_amount'],
+                        $data['discount_percent'],
+                        $data['discount_reason'],
+                        (int)$savedPayment->id
+                    ]);
                 }
                 if (!empty($data['plan_subscriber_id'])) {
                     $PlanSubscribersTbl = TableRegistry::get('PlanSubscribers');

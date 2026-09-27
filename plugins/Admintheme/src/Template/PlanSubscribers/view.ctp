@@ -339,7 +339,7 @@ $user_type = $this->Common->getType();
                                                 </thead>
                                                 <tbody>
                                                     <?php foreach ($planSubscriber->payments as $payment) { 
-                                                        $modeText = h($getModPayment[$payment->mode_ofpay] ?? 'Other');
+                                                        $modeText = h($getModPayment[$payment->mode_ofpay ?? '0'] ?? 'By Cash');
                                                         $badgeClass = 'badge-other';
                                                         if (stripos($modeText, 'cash') !== false) {
                                                             $badgeClass = 'badge-cash';

@@ -744,10 +744,10 @@ select#planSelectDropdown {
                     <label><?= __('Mode of Payment') ?></label>
                     <?= $this->Form->control('mode_ofpay', [
                         'type'    => 'select',
-                        'empty'   => 'Select Mode',
                         'label'   => false,
                         'class'   => 'select2',
-                        'options' => $getModPayment
+                        'options' => $getModPayment,
+                        'default' => '0'
                     ]) ?>
                 </div>
 

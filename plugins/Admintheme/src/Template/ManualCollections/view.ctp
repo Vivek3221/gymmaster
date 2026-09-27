@@ -129,7 +129,7 @@ $remaining = $planSubscriber->fee - $totalPaid;
                                                 </thead>
                                                 <tbody>
                                                     <?php foreach ($planSubscriber->payments as $payment) {
-                                                        $modeText   = h($getModPayment[$payment->mode_ofpay] ?? 'Other');
+                                                        $modeText   = h($getModPayment[$payment->mode_ofpay ?? '0'] ?? 'By Cash');
                                                         $badgeClass = stripos($modeText,'cash') !== false ? 'badge-cash' : 'badge-other';
                                                     ?>
                                                         <tr>
