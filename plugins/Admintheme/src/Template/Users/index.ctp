@@ -130,6 +130,8 @@ $user_type = $this->Common->getType();
             .table-responsive.list-page {
                 border: none;
                 margin-top: 15px;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
             }
             #userstable {
                 border-collapse: separate;
@@ -144,14 +146,21 @@ $user_type = $this->Common->getType();
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
                 border-bottom: 2px solid #eaeaea !important;
-                padding: 14px 16px !important;
+                padding: 10px 8px !important;
+                white-space: nowrap;
             }
             #userstable td {
-                padding: 14px 16px !important;
+                padding: 10px 8px !important;
                 vertical-align: middle !important;
                 border-bottom: 1px solid #eaeaea !important;
                 color: #555;
-                font-size: 14px;
+                font-size: 13px;
+                white-space: nowrap;
+            }
+            #userstable th:last-child, #userstable td:last-child {
+                min-width: 235px;
+                width: 235px;
+                white-space: nowrap;
             }
             #userstable tbody tr:hover td {
                 background-color: #fbfbfb;
@@ -246,29 +255,31 @@ $user_type = $this->Common->getType();
 
             /* Action Icons modern style */
             .action-btn-container {
-                display: flex;
+                display: inline-flex;
                 align-items: center;
-                gap: 8px;
+                gap: 4px;
+                flex-wrap: nowrap;
             }
             .action-icon-btn {
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                width: 32px;
-                height: 32px;
-                border-radius: 8px;
+                width: 28px;
+                height: 28px;
+                border-radius: 6px;
                 background: #f5f5f5;
                 color: #555 !important;
                 text-decoration: none !important;
                 transition: all 0.2s ease;
                 border: 1px solid #e0e0e0;
+                flex-shrink: 0;
             }
             .action-icon-btn:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                box-shadow: 0 3px 6px rgba(0,0,0,0.12);
             }
             .action-icon-btn i {
-                font-size: 18px !important;
+                font-size: 16px !important;
             }
             .action-icon-btn.view-btn:hover {
                 background: #e0f7fa;
