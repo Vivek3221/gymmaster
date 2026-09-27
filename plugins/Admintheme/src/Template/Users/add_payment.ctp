@@ -352,15 +352,13 @@ $getPayDuration = $this->Common->getPayDuration();
                 <div class="apm-field">
                     <label><?= __('Payment Date') ?> <span>*</span></label>
                     <div class="date-input-wrap">
-                        <input type="text"
+                        <input type="date"
                                id="payment_date"
                                name="payment_date"
                                class="form-control"
                                value="<?= !empty($payment->payment_date) ? $payment->payment_date->format('Y-m-d') : date('Y-m-d') ?>"
-                               placeholder="YYYY-MM-DD"
                                required
-                               autocomplete="off"
-                               readonly>
+                               autocomplete="off">
                         <i class="material-icons">calendar_month</i>
                     </div>
                 </div>

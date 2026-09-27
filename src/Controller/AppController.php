@@ -136,6 +136,33 @@ class AppController extends Controller
         }
         return $text;
     }
+
+    /**
+     * Safely parse date string into Y-m-d format regardless of separator or locale format
+     */
+    public function parsePaymentDate($dateStr)
+    {
+        if (empty($dateStr) || trim($dateStr) === '') {
+            return date('Y-m-d');
+        }
+        $dateStr = trim($dateStr);
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateStr)) {
+            return $dateStr;
+        }
+        $normalized = str_replace('/', '-', $dateStr);
+        $ts = strtotime($normalized);
+        if ($ts !== false && $ts > 0) {
+            return date('Y-m-d', $ts);
+        }
+        foreach (['Y-m-d', 'd-m-Y', 'd/m/Y', 'm/d/Y', 'Y/m/d'] as $fmt) {
+            $dt = \DateTime::createFromFormat($fmt, $dateStr);
+            if ($dt !== false) {
+                return $dt->format('Y-m-d');
+            }
+        }
+        return date('Y-m-d');
+    }
+
     public function beforeRender(Event $event)
     {
         // Note: These defaults are just to get started quickly with development

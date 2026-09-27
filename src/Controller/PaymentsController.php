@@ -161,11 +161,7 @@ class PaymentsController extends AppController
             if ($discountPercent > 0 && empty(trim($data['discount_reason'] ?? ''))) {
                 $this->Flash->error(__('A Discount Remark / Reason is mandatory when a discount is applied.'));
             } else {
-                if (!empty($data['payment_date'])) {
-                    $data['payment_date'] = date('Y-m-d', strtotime($data['payment_date']));
-                } else {
-                    $data['payment_date'] = date('Y-m-d');
-                }
+                $data['payment_date'] = $this->parsePaymentDate($data['payment_date'] ?? '');
                 
                 $payment = $this->Payments->patchEntity($payment, $data);
                 if ($this->Payments->save($payment)) {
@@ -211,9 +207,7 @@ class PaymentsController extends AppController
             if ($discountPercent > 0 && empty(trim($data['discount_reason'] ?? ''))) {
                 $this->Flash->error(__('A Discount Remark / Reason is mandatory when a discount is applied.'));
             } else {
-                if (!empty($data['payment_date'])) {
-                    $data['payment_date'] = date('Y-m-d', strtotime($data['payment_date']));
-                }
+                $data['payment_date'] = $this->parsePaymentDate($data['payment_date'] ?? '');
 
                 // If plan is changed and recalculate is requested
                 if (!empty($data['recalculate_amount']) && !empty($data['plan_subscriber_id'])) {

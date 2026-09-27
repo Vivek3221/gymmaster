@@ -402,7 +402,7 @@ $getModPayment       = $this->Common->getModPayment();
                     <div class="field-grid">
                         <div class="form-field">
                             <label><?= __('Collection / Payment Date') ?> <span style="color:red">*</span></label>
-                            <input type="text" id="paymentDate" name="payment_date" class="plan-datepicker" value="<?= date('Y-m-d') ?>" placeholder="YYYY-MM-DD" autocomplete="off" required>
+                            <input type="date" id="paymentDate" name="payment_date" class="form-control" value="<?= date('Y-m-d') ?>" autocomplete="off" required>
                         </div>
 
                         <div class="form-field">

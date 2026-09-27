@@ -33,7 +33,7 @@ class UsersController extends AppController
     {
         parent::beforeFilter($event);
         // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index', 'add', 'view', 'edit', 'login', 'status', 'adminLogin', 'verifiedUpdate', 'logout', 'payment', 'forgetPassword', 'forgotPassword', 'resetPassword', 'siteMap', 'about', 'contact', 'sendContact', 'userProfile', 'saveRemark', 'getRemarks', 'softDelete', 'exportContacts', 'clearCache']);
+        $this->Auth->allow(['index', 'add', 'view', 'edit', 'login', 'status', 'adminLogin', 'verifiedUpdate', 'logout', 'payment', 'forgetPassword', 'forgotPassword', 'resetPassword', 'siteMap', 'about', 'contact', 'sendContact', 'userProfile', 'saveRemark', 'getRemarks', 'softDelete', 'exportContacts', 'clearCache', 'expiredUsers']);
     }
 
     public function about()
@@ -674,7 +674,7 @@ class UsersController extends AppController
                         $paymentdata['plan_subscriber_id']  = $planSubscribersAdd->id;
                         $paymentdata['amount']              = !empty($data['amount']) ? $data['amount'] : 0;
                         $paymentdata['currency']            = 'INR';
-                        $paymentdata['payment_date']        = !empty($data['payment_date']) ? date('Y-m-d', strtotime($data['payment_date'])) : date('Y-m-d');
+                        $paymentdata['payment_date']        = !empty($data['payment_date']) ? $this->parsePaymentDate($data['payment_date']) : date('Y-m-d');
                         $paymentdata['discount_percent']    = !empty($data['discount_percent']) ? (float)$data['discount_percent'] : 0.00;
                         $paymentdata['discount_amount']     = !empty($data['discount_amount']) ? (float)$data['discount_amount'] : 0.00;
                         $paymentdata['discount_reason']     = !empty($data['discount_reason']) ? $data['discount_reason'] : null;
@@ -1001,6 +1001,149 @@ class UsersController extends AppController
         // not when browsing the homepage while already logged in.
         // The homepage IS the adminLogin page, so we just render it normally.
     }
+
+    /**
+     * Expired Users page with date range filter and status filters
+     */
+    public function expiredUsers()
+    {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        $users_type = $this->usersdetail['users_type'];
+        $users_id = $this->usersdetail['users_id'];
+
+        $name = $this->request->query('name') ?? '';
+        $email = $this->request->query('email') ?? '';
+        $mobile = $this->request->query('mobile') ?? '';
+        $front_desk_id = $this->request->query('front_desk_id') ?? '';
+        $filter_type = $this->request->query('filter_type') ?? 'all'; // all, expired, expiring_soon
+        $start_date = $this->request->query('start_date') ?? '';
+        $end_date = $this->request->query('end_date') ?? '';
+        $norec = (int)($this->request->query('norec') ?? 20);
+        if ($norec <= 0) { $norec = 20; }
+
+        $planSubscribersTable = TableRegistry::get('PlanSubscribers');
+
+        // Base user search conditions
+        $userSearch = ['Users.active !=' => 3, 'Users.user_type !=' => 1, 'Users.user_type NOT IN' => [4, 5]];
+
+        if (!empty($name)) {
+            $userSearch['Users.name REGEXP'] = trim($name);
+        }
+        if (!empty($email)) {
+            $userSearch['Users.email REGEXP'] = trim($email);
+        }
+        if (!empty($mobile)) {
+            $userSearch['Users.mobile_no REGEXP'] = trim($mobile);
+        }
+        if (!empty($front_desk_id)) {
+            $userSearch['Users.added_by'] = $front_desk_id;
+        }
+
+        if ($users_type == 2) {
+            $userSearch['Users.partner_id'] = $users_id;
+        } elseif ($users_type == 4) {
+            $ptUserIds = TableRegistry::get('UserPtSubscriptions')->find()->select(['user_id'])->where(['trainer_id' => $users_id]);
+            $userSearch['OR'] = [
+                'Users.trainer_userid' => $users_id,
+                'Users.id IN' => $ptUserIds
+            ];
+        } elseif ($users_type == 5) {
+            $partnerId = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : 0;
+            $userSearch['Users.partner_id'] = $partnerId;
+            $userSearch['Users.added_by'] = $users_id;
+        }
+
+        $todayStr = date('Y-m-d');
+
+        // Fetch matching users with details
+        $usersList = $this->Users->find('all')
+            ->where($userSearch)
+            ->contain(['AddedByUsers', 'Partners'])
+            ->toArray();
+
+        $userIds = array_map(function($u) { return $u->id; }, $usersList);
+
+        $latestPlans = [];
+        if (!empty($userIds)) {
+            $allSubs = $planSubscribersTable->find('all')
+                ->where(['user_id IN' => $userIds])
+                ->order(['id' => 'DESC'])
+                ->toArray();
+            foreach ($allSubs as $sub) {
+                if (!isset($latestPlans[$sub->user_id])) {
+                    $latestPlans[$sub->user_id] = $sub;
+                }
+            }
+        }
+
+        $filteredUsers = [];
+        $totalExpiredCount = 0;
+        $totalExpiringSoonCount = 0;
+
+        foreach ($usersList as $u) {
+            $plan = $latestPlans[$u->id] ?? null;
+            if (!$plan || empty($plan->plan_expire_date)) {
+                continue;
+            }
+
+            $expDateStr = $plan->plan_expire_date->format('Y-m-d');
+            $isExpired = ($expDateStr < $todayStr);
+            $isExpiringSoon = ($expDateStr >= $todayStr);
+
+            if ($isExpired) {
+                $totalExpiredCount++;
+            } else {
+                $totalExpiringSoonCount++;
+            }
+
+            // Status Filter logic
+            if ($filter_type === 'expired' && !$isExpired) {
+                continue;
+            }
+            if ($filter_type === 'expiring_soon' && !$isExpiringSoon) {
+                continue;
+            }
+
+            // Date Range Filter logic
+            if (!empty($start_date) && $expDateStr < $start_date) {
+                continue;
+            }
+            if (!empty($end_date) && $expDateStr > $end_date) {
+                continue;
+            }
+
+            $u->latest_plan = $plan;
+            $u->is_expired = $isExpired;
+            $filteredUsers[] = $u;
+        }
+
+        // Pagination for filtered array
+        $page = (int)($this->request->query('page') ?? 1);
+        if ($page <= 0) { $page = 1; }
+        $totalRecords = count($filteredUsers);
+        $totalPages = ceil($totalRecords / $norec);
+        if ($totalPages <= 0) { $totalPages = 1; }
+        $offset = ($page - 1) * $norec;
+        $pagedUsers = array_slice($filteredUsers, $offset, $norec);
+
+        $fdConditions = ['Users.user_type' => 5, 'Users.active' => '1'];
+        if ($users_type == 2) {
+            $fdConditions['Users.partner_id'] = $users_id;
+        }
+        $frontDeskUsers = $this->Users->find('list', [
+            'keyField' => 'id',
+            'valueField' => 'name'
+        ])->where($fdConditions)->toArray();
+
+        $this->set(compact(
+            'pagedUsers', 'name', 'email', 'mobile', 'front_desk_id',
+            'filter_type', 'start_date', 'end_date', 'norec', 'page',
+            'totalRecords', 'totalPages', 'totalExpiredCount', 'totalExpiringSoonCount',
+            'frontDeskUsers', 'users_type'
+        ));
+    }
     public function dashboard()
     {
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
@@ -1293,11 +1436,21 @@ class UsersController extends AppController
                 $this->Cookie->write('user_email', $data['email']);
                 $this->request->session()->write('Auth.User.email', $data['email']);
 
-                $user_detail = $this->Users->find()
+                $matchingUsers = $this->Users->find()
                     ->select(['id', 'user_type', 'name', 'email', 'partner_id'])
                     ->where(['email' => $data['email'], 'password' => $data['password'], 'active' => 1])
-                    ->order(['user_type' => 'ASC', 'id' => 'DESC'])
-                    ->first();
+                    ->toArray();
+
+                usort($matchingUsers, function($a, $b) {
+                    $priority = [5 => 1, 2 => 2, 1 => 3, 4 => 4, 3 => 5];
+                    $pA = $priority[(int)$a->user_type] ?? 99;
+                    $pB = $priority[(int)$b->user_type] ?? 99;
+                    if ($pA === $pB) {
+                        return $b->id <=> $a->id;
+                    }
+                    return $pA <=> $pB;
+                });
+                $user_detail = $matchingUsers[0];
                 $this->Cookie->write('users', ['users_id' => $user_detail->id, 'users_name' => $user_detail->name, 'users_email' => $user_detail->email, 'users_type' => $user_detail->user_type, 'partner_id' => $user_detail->partner_id]);
                 $this->request->session()->write('users', ['users_id' => $user_detail->id, 'users_name' => $user_detail->name, 'users_email' => $user_detail->email, 'users_type' => $user_detail->user_type, 'partner_id' => $user_detail->partner_id]);
                 return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
@@ -1456,11 +1609,7 @@ class UsersController extends AppController
                 $this->Flash->error(__('A Discount Remark / Reason is mandatory when a discount is applied.'));
                 return $this->redirect(['action' => 'addPayment', $userid]);
             }
-            if (!empty($data['payment_date'])) {
-                $data['payment_date'] = date('Y-m-d', strtotime($data['payment_date']));
-            } else {
-                $data['payment_date'] = date('Y-m-d');
-            }
+            $data['payment_date'] = $this->parsePaymentDate($data['payment_date'] ?? '');
             $data['partner_id'] = $targetPartnerId;
             $data['currency'] = 'INR';
             $payment = $this->Payments->patchEntity($payment, $data);

@@ -272,7 +272,7 @@ class ManualCollectionsController extends AppController
                     $paymentdata['plan_subscriber_id']  = $planSubscribers->id;
                     $paymentdata['amount']              = $payAmount;
                     $paymentdata['currency']            = 'INR';
-                    $paymentdata['payment_date']        = !empty($data['payment_date']) ? date('Y-m-d', strtotime($data['payment_date'])) : date('Y-m-d');
+                    $paymentdata['payment_date']        = !empty($data['payment_date']) ? $this->parsePaymentDate($data['payment_date']) : date('Y-m-d');
                     $paymentdata['discount_percent']     = !empty($data['discount_percent']) ? (float)$data['discount_percent'] : null;
                     $paymentdata['discount_amount']      = !empty($data['discount_amount']) ? (float)$data['discount_amount'] : null;
                     $paymentdata['discount_reason']      = !empty($data['discount_reason']) ? trim($data['discount_reason']) : null;
@@ -347,11 +347,7 @@ class ManualCollectionsController extends AppController
             }
             $data['partner_id'] = $targetPartnerId;
             $data['currency'] = 'INR';
-            if (!empty($data['payment_date'])) {
-                $data['payment_date'] = date('Y-m-d', strtotime($data['payment_date']));
-            } else {
-                $data['payment_date'] = date('Y-m-d');
-            }
+            $data['payment_date'] = $this->parsePaymentDate($data['payment_date'] ?? '');
             $payment = $this->Payments->patchEntity($payment, $data);
             $payment->mode_ofpay = $data['mode_ofpay'];
             if ($this->Payments->save($payment)) {
@@ -534,7 +530,7 @@ class ManualCollectionsController extends AppController
                 $payment->amount             = $payAmount;
                 $payment->currency           = $planSubscriber->currency ?? 'INR';
                 $payment->mode_ofpay         = $data['mode_ofpay'] ?? 0;
-                $payment->payment_date       = !empty($data['payment_date']) ? date('Y-m-d', strtotime($data['payment_date'])) : date('Y-m-d');
+                $payment->payment_date       = !empty($data['payment_date']) ? $this->parsePaymentDate($data['payment_date']) : date('Y-m-d');
                 if (!empty($data['discount_percent'])) {
                     $payment->discount_percent = (float)$data['discount_percent'];
                 }

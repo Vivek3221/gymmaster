@@ -535,7 +535,7 @@ $user_type = $this->Common->getType();
                                 <?= __('Enquiry') ?>
                                 <span class="tab-count"><?= $tabCountEnquiry ?></span>
                             </a>
-                            <a href="<?= buildTabUrl($baseUrl, $tabParams, 'expired') ?>" 
+                            <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'expiredUsers']) ?>" 
                                class="status-tab-btn tab-expired-s <?= ($status === 'expired' || $status === '3') ? 'tab-active-now' : '' ?>">
                                 <i class="material-icons" style="font-size:16px;vertical-align:middle;">timer_off</i>
                                 <?= __('Expired') ?>
