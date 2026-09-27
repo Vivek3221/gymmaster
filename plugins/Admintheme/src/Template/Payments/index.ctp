@@ -278,7 +278,23 @@
                               <?php endif; ?>
                            </td>
                            <td><?= $getModPayment[$payment->mode_ofpay] ?></td>
-                           <td><?= $payment->payment_date ? date("d-m-Y", strtotime($payment->payment_date)) : date("d-m-Y", strtotime($payment->created)) ?></td>
+                           <td>
+                               <?php
+                               if (!empty($payment->payment_date)) {
+                                   if ($payment->payment_date instanceof \Cake\I18n\FrozenDate || $payment->payment_date instanceof \Cake\I18n\FrozenTime) {
+                                       echo $payment->payment_date->format('d-m-Y');
+                                   } else {
+                                       echo date('d-m-Y', strtotime($payment->payment_date));
+                                   }
+                               } else {
+                                   echo !empty($payment->created) ? (
+                                       $payment->created instanceof \Cake\I18n\FrozenDate || $payment->created instanceof \Cake\I18n\FrozenTime
+                                           ? $payment->created->format('d-m-Y')
+                                           : date('d-m-Y', strtotime($payment->created))
+                                   ) : 'N/A';
+                               }
+                               ?>
+                           </td>
                            <td style="text-align:center; vertical-align:middle;">
                                 <div style="display:inline-flex; align-items:center; justify-content:center; gap:8px;">
                                     <?php if (isset($users_type) && $users_type != 5) { ?>

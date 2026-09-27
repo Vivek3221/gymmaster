@@ -42,6 +42,18 @@ class PaymentsTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        try {
+            $schema = $this->getSchema();
+            if ($schema && !$schema->column('payment_date')) {
+                $schema->addColumn('payment_date', [
+                    'type' => 'date',
+                    'null' => true,
+                    'default' => null,
+                ]);
+            }
+        } catch (\Exception $e) {
+        }
+
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
             'joinType' => 'INNER'
@@ -53,6 +65,13 @@ class PaymentsTable extends Table
             'foreignKey' => 'plan_subscriber_id',
             'joinType' => 'INNER'
         ]);
+    }
+
+    public function beforeSave(\Cake\Event\Event $event, \Cake\Datasource\EntityInterface $entity, \ArrayObject $options)
+    {
+        if (empty($entity->payment_date)) {
+            $entity->payment_date = date('Y-m-d');
+        }
     }
 
     /**

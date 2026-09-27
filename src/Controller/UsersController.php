@@ -526,9 +526,14 @@ class UsersController extends AppController
             // pr($data);exit;
 
             $user = $this->Users->patchEntity($user, $data);
+            $user->added_by = $users_id;
             
             try {
                 $useradd = $this->Users->save($user);
+                if ($useradd && !empty($users_id)) {
+                    $db = $this->Users->getConnection();
+                    $db->execute("UPDATE users SET added_by = ? WHERE id = ?", [(int)$users_id, (int)$useradd->id]);
+                }
             } catch (\Exception $e) {
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
                 $this->set(compact('user', 'users_type', 'trainers'));
@@ -680,8 +685,13 @@ class UsersController extends AppController
                         $paymentdata['discount_reason']     = !empty($data['discount_reason']) ? $data['discount_reason'] : null;
 
                         $payments    = $this->Payments->patchEntity($payments, $paymentdata);
+                        $payments->payment_date = $paymentdata['payment_date'];
                         $payments->mode_ofpay = !empty($data['mode_ofpay']) ? $data['mode_ofpay'] : null;
                         $paymentssAdd = $this->Payments->save($payments);
+                        if ($paymentssAdd && !empty($paymentdata['payment_date'])) {
+                            $db = $this->Payments->getConnection();
+                            $db->execute("UPDATE payments SET payment_date = ? WHERE id = ?", [$paymentdata['payment_date'], (int)$paymentssAdd->id]);
+                        }
 
                         // Update active status for Enquiry users based on payment completion
                         if (!empty($user->active) && $user->active == 2) {
@@ -1604,17 +1614,24 @@ class UsersController extends AppController
 
         $payment = $this->Payments->newEntity();
         if ($this->request->is('post')) {
-            $data = $this->request->getData();
+            $data = !empty($this->request->getData()) ? $this->request->getData() : $this->request->data;
+            $parsedDate = $this->parsePaymentDate($data['payment_date'] ?? '');
+
             if (!empty($data['discount_percent']) && (float)$data['discount_percent'] > 0 && empty(trim($data['discount_reason'] ?? ''))) {
                 $this->Flash->error(__('A Discount Remark / Reason is mandatory when a discount is applied.'));
                 return $this->redirect(['action' => 'addPayment', $userid]);
             }
-            $data['payment_date'] = $this->parsePaymentDate($data['payment_date'] ?? '');
+            $data['payment_date'] = $parsedDate;
             $data['partner_id'] = $targetPartnerId;
             $data['currency'] = 'INR';
             $payment = $this->Payments->patchEntity($payment, $data);
+            $payment->payment_date = $parsedDate;
             $payment->mode_ofpay = $data['mode_ofpay'];
             if ($this->Payments->save($payment)) {
+                if (!empty($parsedDate) && !empty($payment->id)) {
+                    $db = $this->Payments->getConnection();
+                    $db->execute("UPDATE payments SET payment_date = ? WHERE id = ?", [$parsedDate, (int)$payment->id]);
+                }
                 if (!empty($data['plan_subscriber_id'])) {
                     $PlanSubscribersTbl = TableRegistry::get('PlanSubscribers');
                     $db = $PlanSubscribersTbl->getConnection();
