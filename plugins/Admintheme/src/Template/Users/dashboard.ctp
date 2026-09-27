@@ -914,6 +914,23 @@
                     </div>
                 <?php } ?>
 
+                <!-- Trainer My Clients Card -->
+                <?php if ($usersdetail['users_type'] == 4) { ?>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>" class="modern-card-link">
+                            <div class="modern-dashboard-card color-users">
+                                <div class="card-icon-wrapper">
+                                    <i class="material-icons">people</i>
+                                </div>
+                                <div class="card-details">
+                                    <div class="card-label"><?= __('My Clients') ?></div>
+                                    <div class="card-val count-to" data-from="0" data-to="<?= $users_count ?>" data-speed="1000" data-fresh-interval="20"><?= $users_count ?></div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                <?php } ?>
+
                 <!-- Exercise Directory Card -->
                 <?php if (!in_array($usersdetail['users_type'], [3, 4, 5])) { ?>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -1018,8 +1035,8 @@
 
             </div>
 
-            <!-- Collection Graph Row (only for Admin, Partner, Trainer) -->
-            <?php if (in_array($usersdetail['users_type'], ['1', '2', '4'])): ?>
+            <!-- Collection Graph Row (only for Root Admins and Partners) -->
+            <?php if (!empty($showCollectionsTrend)): ?>
                 <div class="row clearfix" style="margin-top: 10px; margin-bottom: 24px;">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card modern-card" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); border: 1px solid #eaeaea; overflow: hidden; background: #fff;">
@@ -1033,6 +1050,154 @@
                                 <div style="position: relative; height: 320px; width: 100%;">
                                     <canvas id="collectionTrendChart"></canvas>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- Trainer Specific Widgets: Assigned Client Expiries & Birthdays -->
+            <?php if ($usersdetail['users_type'] == 4): ?>
+                <style>
+                    .dash-pagination {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 4px;
+                        margin: 0;
+                        padding: 0;
+                        list-style: none;
+                    }
+                    .dash-pagination li span.dash-page-btn {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        min-width: 28px;
+                        height: 28px;
+                        padding: 0 6px;
+                        font-size: 11px;
+                        font-weight: 600;
+                        border-radius: 6px;
+                        border: 1px solid #e2e8f0;
+                        background: #ffffff;
+                        color: #475569;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                        user-select: none;
+                    }
+                    .dash-pagination li span.dash-page-btn:hover:not(.disabled):not(.active) {
+                        background: #f1f5f9;
+                        border-color: #cbd5e1;
+                        color: #0f172a;
+                    }
+                    .dash-pagination li span.dash-page-btn.active {
+                        background: #ff7600;
+                        border-color: #ff7600;
+                        color: #ffffff;
+                        box-shadow: 0 2px 4px rgba(255, 118, 0, 0.25);
+                    }
+                    .dash-pagination li span.dash-page-btn.disabled {
+                        opacity: 0.35;
+                        cursor: not-allowed;
+                        pointer-events: none;
+                    }
+                </style>
+
+                <div class="row clearfix" style="margin-top: 10px; margin-bottom: 24px;">
+                    <!-- Assigned Clients Plan Expiries -->
+                    <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                        <div class="card modern-card" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); border: 1px solid #eaeaea; overflow: hidden; background: #fff; height: 100%; display: flex; flex-direction: column;">
+                            <div class="header" style="background: #fafafa; border-bottom: 1px solid #eaeaea; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <i class="material-icons" style="color: #ef4444;">event_busy</i>
+                                    <h2 style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        <?= __('My Clients - Plan Expiries') ?>
+                                    </h2>
+                                </div>
+                                <span class="badge bg-red"><?= count($trainerUpcomingExpiries) ?></span>
+                            </div>
+                            <div class="body" style="padding: 20px 24px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                                <?php if (!empty($trainerUpcomingExpiries)): ?>
+                                    <div class="table-responsive" style="margin-bottom: 12px;">
+                                        <table class="table table-hover" id="trainerClientsTable" style="margin-bottom: 0;">
+                                            <thead>
+                                                <tr>
+                                                    <th><?= __('Client Name') ?></th>
+                                                    <th><?= __('Plan Name') ?></th>
+                                                    <th><?= __('Expiry Date') ?></th>
+                                                    <th><?= __('Status') ?></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="trainerClientsTbody">
+                                                <?php foreach ($trainerUpcomingExpiries as $exp): ?>
+                                                    <tr class="trainer-client-row">
+                                                        <td style="font-weight: 700; color: #1e293b;"><?= h($exp['user_name']) ?></td>
+                                                        <td><?= h($exp['plan_name']) ?></td>
+                                                        <td><strong><?= h($exp['expire_date']) ?></strong></td>
+                                                        <td>
+                                                            <?php if ($exp['status'] === 'expired'): ?>
+                                                                <span class="label label-danger" style="font-size: 11px; padding: 4px 8px; border-radius: 4px; background-color: #ef4444; font-weight: 600;"><?= __('Expired') ?></span>
+                                                            <?php elseif ($exp['status'] === 'expiring_soon'): ?>
+                                                                <span class="label label-warning" style="font-size: 11px; padding: 4px 8px; border-radius: 4px; background-color: #f59e0b; font-weight: 600;"><?= __('Expiring Soon') ?></span>
+                                                            <?php else: ?>
+                                                                <span class="label label-success" style="font-size: 11px; padding: 4px 8px; border-radius: 4px; background-color: #10b981; font-weight: 600;"><?= __('Active') ?></span>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div id="trainerClientsPaginationWrapper" style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #f1f5f9; padding-top: 12px; margin-top: auto;">
+                                        <div id="trainerClientsPageInfo" style="font-size: 12px; color: #64748b; font-weight: 500;"></div>
+                                        <ul class="dash-pagination" id="trainerClientsPagination"></ul>
+                                    </div>
+                                <?php else: ?>
+                                    <div style="text-align: center; padding: 30px; color: #64748b;">
+                                        <i class="material-icons" style="font-size: 40px; color: #10b981; margin-bottom: 8px;">check_circle</i>
+                                        <p style="margin: 0; font-size: 14px; font-weight: 600;"><?= __('All your assigned clients have active plans!') ?></p>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Assigned Clients Birthdays Today -->
+                    <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                        <div class="card modern-card" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); border: 1px solid #eaeaea; overflow: hidden; background: #fff; height: 100%; display: flex; flex-direction: column;">
+                            <div class="header" style="background: #fafafa; border-bottom: 1px solid #eaeaea; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <i class="material-icons" style="color: #ec4899;">cake</i>
+                                    <h2 style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        <?= __('My Clients - Birthdays Today') ?>
+                                    </h2>
+                                </div>
+                                <span class="badge bg-pink"><?= count($trainerTodayBirthdays) ?></span>
+                            </div>
+                            <div class="body" style="padding: 20px 24px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                                <?php if (!empty($trainerTodayBirthdays)): ?>
+                                    <div id="trainerBirthdaysContainer" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px;">
+                                        <?php foreach ($trainerTodayBirthdays as $tbUser): ?>
+                                            <div class="trainer-birthday-item" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #fdf2f8; border-radius: 10px; border: 1px solid #fbcfe8;">
+                                                <div>
+                                                    <strong style="color: #1e293b; font-size: 14px; display: block;"><?= h($tbUser->name) ?></strong>
+                                                    <span style="font-size: 12px; color: #64748b;"><?= h($tbUser->mobile_no) ?></span>
+                                                </div>
+                                                <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $tbUser->mobile_no) ?>?text=Happy%20Birthday%20<?= urlencode($tbUser->name) ?>!%20Have%20a%20great%20workout%20and%20an%20awesome%20year%20ahead!%20-%20From%20your%20Trainer" target="_blank" class="btn btn-xs btn-success waves-effect" style="background-color: #25D366 !important; border-radius: 6px; padding: 4px 10px; font-weight: 700; font-size: 11px;">
+                                                    WhatsApp
+                                                </a>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <div id="trainerBirthdaysPaginationWrapper" style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #f1f5f9; padding-top: 12px; margin-top: auto;">
+                                        <div id="trainerBirthdaysPageInfo" style="font-size: 12px; color: #64748b; font-weight: 500;"></div>
+                                        <ul class="dash-pagination" id="trainerBirthdaysPagination"></ul>
+                                    </div>
+                                <?php else: ?>
+                                    <div style="text-align: center; padding: 30px; color: #64748b;">
+                                        <i class="material-icons" style="font-size: 40px; color: #cbd5e1; margin-bottom: 8px;">sentiment_satisfied</i>
+                                        <p style="margin: 0; font-size: 14px; font-weight: 600;"><?= __('No assigned client birthdays today.') ?></p>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -1455,6 +1620,7 @@
                 });
             }
 
+            <?php if (!empty($showCollectionsTrend)): ?>
             // Render Collection Trend Chart
             var chartEl = document.getElementById('collectionTrendChart');
             if (chartEl) {
@@ -1527,6 +1693,89 @@
                     }
                 });
             }
+            <?php endif; ?>
+
+            // Trainer Dashboard Widgets Pagination (Clients Expiries & Birthdays)
+            function initTrainerWidgetPagination(opts) {
+                var $container = $(opts.container);
+                if (!$container.length) return;
+                
+                var $items = $container.find(opts.itemSelector);
+                var total = $items.length;
+                var perPage = opts.perPage || 5;
+                var totalPages = Math.ceil(total / perPage) || 1;
+                var $pagination = $(opts.pagination);
+                var $info = $(opts.info);
+                var itemName = opts.itemName || 'records';
+                
+                function goToPage(page) {
+                    if (page < 1) page = 1;
+                    if (page > totalPages) page = totalPages;
+                    
+                    var start = (page - 1) * perPage;
+                    var end = start + perPage;
+                    
+                    $items.hide();
+                    $items.slice(start, end).show();
+                    
+                    if (total === 0) {
+                        $info.text('No ' + itemName + ' found');
+                        $pagination.empty();
+                        return;
+                    }
+                    
+                    var displayStart = start + 1;
+                    var displayEnd = Math.min(end, total);
+                    $info.text('Showing ' + displayStart + ' to ' + displayEnd + ' of ' + total + ' ' + itemName);
+                    
+                    $pagination.empty();
+                    
+                    // Prev button
+                    var $prev = $('<li><span class="dash-page-btn' + (page === 1 ? ' disabled' : '') + '">&laquo;</span></li>');
+                    if (page > 1) {
+                        $prev.find('.dash-page-btn').on('click', function() { goToPage(page - 1); });
+                    }
+                    $pagination.append($prev);
+                    
+                    // Page numbers
+                    for (var i = 1; i <= totalPages; i++) {
+                        (function(p) {
+                            var $pg = $('<li><span class="dash-page-btn' + (p === page ? ' active' : '') + '">' + p + '</span></li>');
+                            if (p !== page) {
+                                $pg.find('.dash-page-btn').on('click', function() { goToPage(p); });
+                            }
+                            $pagination.append($pg);
+                        })(i);
+                    }
+                    
+                    // Next button
+                    var $next = $('<li><span class="dash-page-btn' + (page === totalPages ? ' disabled' : '') + '">&raquo;</span></li>');
+                    if (page < totalPages) {
+                        $next.find('.dash-page-btn').on('click', function() { goToPage(page + 1); });
+                    }
+                    $pagination.append($next);
+                }
+                
+                goToPage(1);
+            }
+
+            initTrainerWidgetPagination({
+                container: '#trainerClientsTbody',
+                itemSelector: '.trainer-client-row',
+                perPage: 5,
+                pagination: '#trainerClientsPagination',
+                info: '#trainerClientsPageInfo',
+                itemName: 'clients'
+            });
+
+            initTrainerWidgetPagination({
+                container: '#trainerBirthdaysContainer',
+                itemSelector: '.trainer-birthday-item',
+                perPage: 4,
+                pagination: '#trainerBirthdaysPagination',
+                info: '#trainerBirthdaysPageInfo',
+                itemName: 'birthdays'
+            });
         });
     </script>
 </section>

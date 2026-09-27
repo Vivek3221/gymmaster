@@ -337,18 +337,18 @@ $getPayDuration = $this->Common->getPayDuration();
                                     <?= $this->Form->input('active', [
                                         'empty' => __('Select status'), 
                                         'options' => $status, 
-                                        'class' => 'form-control',
+                                        'class' => 'form-control select2',
                                         'label' => false
                                     ]); ?>
                                 </div>
                             </div>
 
-                            <?php if ($users_type == 2) { ?>
+                            <?php if (in_array($users_type, [1, 2])) { ?>
                                 <div class="modern-field-group">
                                     <label class="field-label"><?= __('Select Trainer') ?></label>
                                     <div class="form-line">
                                         <?= $this->Form->control('trainer_userid', [
-                                            'class' => 'form-control select2', 
+                                            'class' => 'form-control select2-trainer', 
                                             'type' => 'select',
                                             'options' => $trainers,
                                             'default' => $user->trainer_userid, 
@@ -485,6 +485,15 @@ $getPayDuration = $this->Common->getPayDuration();
             maxDate: new Date(),
             time: false
         });
+
+        if ($.fn.select2) {
+            $('.select2').select2({ width: '100%' });
+            $('.select2-trainer').select2({
+                placeholder: "Search & select a trainer...",
+                allowClear: true,
+                width: '100%'
+            });
+        }
     });
     
     function previewAndValidateImage() {

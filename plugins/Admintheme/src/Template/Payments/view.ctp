@@ -56,8 +56,12 @@
                         <td  colspan="2" style="width:250px; border-left: 1px solid #d2d2d2;">
                             <p style="border: 0px; background: #fff; margin-left: 10px;">
                                 <b><u>Payment Detail</u></b><br>
-                                Payment Date:  <b><?= date('d M Y',strtotime($payment->created)) ?></b><br>
+                                Payment Date:  <b><?= date('d M Y', strtotime($payment->payment_date ? $payment->payment_date : $payment->created)) ?></b><br>
                                 Payment Mode:  <b><?= $getModPayment[$payment->mode_ofpay] ?></b><br>
+                                <?php if (!empty($payment->discount_percent) && $payment->discount_percent > 0): ?>
+                                    Discount: <b><?= $payment->discount_percent ?>% (INR <?= $this->Number->format($payment->discount_amount) ?>)</b><br>
+                                    Discount Remark: <b><?= h($payment->discount_reason) ?></b><br>
+                                <?php endif; ?>
                                 Payment Amount:  <b>INR <?= $this->Number->format($payment->amount) ?></b><br>
                             </p>
                         </td>

@@ -5,127 +5,229 @@ $getModPayment = $this->Common->getModPayment();
 $getPayDuration = $this->Common->getPayDuration();
 ?>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <style>
-.add-payment-container {
-    max-width: 800px;
-    margin: 25px auto;
-    padding: 0 15px;
+/* Suppress old bootstrap date picker */
+.dtp, .dtp * {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    z-index: -9999 !important;
 }
-.add-payment-card {
+
+/* ── Full-Page Payment Form ── */
+.apm-section {
+    padding: 18px 22px;
+}
+.apm-card {
     background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    border: 1px solid #eaeaea;
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    border: 1px solid #e2e8f0;
     overflow: hidden;
 }
-.add-payment-card .card-header-modern {
-    background: #fafafa;
-    border-bottom: 1px solid #edf2f7;
-    padding: 20px 24px;
+.apm-header {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    padding: 20px 28px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
 }
-.add-payment-card .card-header-modern h2 {
+.apm-header h2 {
+    margin: 0;
     font-size: 18px;
     font-weight: 700;
-    color: #1a202c;
-    margin: 0;
+    color: #fff;
     display: flex;
     align-items: center;
     gap: 10px;
 }
-.add-payment-card .card-header-modern h2 i {
-    color: #ff9800;
-    font-size: 22px;
-}
-.add-payment-card .card-body-modern {
-    padding: 28px;
-}
-.form-grid-modern {
+.apm-header h2 i { color: #ff9800; font-size: 22px; }
+.apm-body { padding: 28px 28px 20px; }
+
+/* 2-column responsive grid */
+.apm-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 24px;
 }
-.form-group-modern {
-    display: flex;
-    flex-direction: column;
-}
-.form-group-modern label {
-    font-size: 13px;
-    font-weight: 600;
-    color: #4a5568;
-    margin-bottom: 7px;
-}
-.form-group-modern select,
-.form-group-modern input {
-    border: 1px solid #cbd5e0 !important;
-    border-radius: 8px !important;
-    padding: 9px 14px !important;
-    height: 42px !important;
-    font-size: 14px !important;
-    color: #2d3748 !important;
-    background-color: #fafafa !important;
-    transition: all 0.2s ease !important;
-    box-shadow: none !important;
-    width: 100%;
-}
-.form-group-modern select:focus,
-.form-group-modern input:focus {
-    border-color: #ff9800 !important;
-    background-color: #ffffff !important;
-    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.15) !important;
-    outline: none !important;
-}
-.plan-detail-card-strip {
-    background: #fff8e1;
-    border: 1px solid #ffe082;
-    border-radius: 8px;
-    padding: 15px 18px;
-    margin-top: 10px;
-}
-.plan-detail-card-strip .detail-box {
+.apm-grid .full-col { grid-column: 1 / -1; }
+
+/* Field styles */
+.apm-field { display: flex; flex-direction: column; }
+.apm-field label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    font-size: 13px;
-    font-weight: 600;
-    color: #b45309;
+    gap: 4px;
 }
-.form-actions-modern {
+.apm-field label span { color: #ef4444; font-size: 14px; text-transform: none; }
+.apm-field input,
+.apm-field select,
+.apm-field textarea {
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 9px !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+    color: #1e293b !important;
+    background: #f8fafc !important;
+    box-shadow: none !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative !important;
+    z-index: 2 !important;
+    pointer-events: all !important;
+    cursor: text !important;
+    height: 44px !important;
+}
+.apm-field input:focus,
+.apm-field select:focus {
+    border-color: #ff9800 !important;
+    background: #fff !important;
+    box-shadow: 0 0 0 3px rgba(255,152,0,0.14) !important;
+    outline: none !important;
+}
+/* Kill AdminBSB overlay */
+.apm-field .form-line { border-bottom: none !important; }
+.apm-field .form-line:after { display: none !important; }
+.apm-field .form-label { display: none !important; pointer-events: none !important; }
+
+#amountPaid {
+    position: relative !important;
+    z-index: 10 !important;
+    pointer-events: auto !important;
+    cursor: text !important;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    background: #ffffff !important;
+}
+
+/* ── Plan detail strip ── */
+.plan-info-strip {
+    background: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
+    border: 1px solid #ffe082;
+    border-radius: 10px;
+    padding: 14px 20px;
+    display: none;
+}
+.plan-info-strip.visible { display: block; }
+.plan-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px 20px;
+}
+.plan-info-item { display: flex; flex-direction: column; gap: 2px; }
+.plan-info-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #92400e;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.plan-info-value {
+    font-size: 14px;
+    font-weight: 800;
+    color: #1e293b;
+}
+.plan-info-value.remaining { color: #e65100; }
+.plan-info-value.paid { color: #15803d; }
+
+/* ── Amount helper ── */
+.amount-helper {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.amount-helper .chip {
+    background: #e0f2fe;
+    color: #0369a1;
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s;
+}
+.amount-helper .chip:hover { background: #bae6fd; }
+.amount-helper .chip.orange { background: #fff3e0; color: #e65100; }
+.amount-helper .chip.orange:hover { background: #ffe0b2; }
+
+/* ── Payment date with icon ── */
+.date-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.date-input-wrap input { padding-right: 44px !important; cursor: pointer !important; background: #fff !important; }
+.date-input-wrap i {
+    position: absolute;
+    right: 14px;
+    color: #64748b;
+    font-size: 20px;
+    pointer-events: none;
+}
+
+/* ── Validation error ── */
+.apm-error-box {
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+    color: #c53030;
+    padding: 12px 16px;
+    border-radius: 9px;
+    margin-bottom: 18px;
+    font-size: 13px;
+}
+.apm-error-box ul { margin: 6px 0 0 18px; padding: 0; }
+
+/* ── Actions ── */
+.apm-actions {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 12px;
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid #edf2f7;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid #f1f5f9;
 }
-.btn-submit-payment {
-    background: #ff9800 !important;
-    color: #ffffff !important;
+.btn-apm-submit {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%) !important;
+    color: #fff !important;
     border: none !important;
-    border-radius: 8px !important;
-    padding: 10px 22px !important;
-    font-size: 14px !important;
+    border-radius: 9px !important;
+    padding: 12px 28px !important;
+    font-size: 14.5px !important;
     font-weight: 700 !important;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(255,152,0,0.28) !important;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.25) !important;
 }
-.btn-submit-payment:hover {
-    background: #e68a00 !important;
-    box-shadow: 0 6px 16px rgba(255, 152, 0, 0.35) !important;
+.btn-apm-submit:hover {
+    background: linear-gradient(135deg, #f57c00 0%, #e65100 100%) !important;
+    box-shadow: 0 6px 20px rgba(255,152,0,0.38) !important;
+    transform: translateY(-1px);
 }
-.btn-cancel-payment {
-    background: #edf2f7 !important;
-    color: #4a5568 !important;
-    border: 1px solid #cbd5e0 !important;
-    border-radius: 8px !important;
-    padding: 10px 18px !important;
+.btn-apm-cancel {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 9px !important;
+    padding: 12px 20px !important;
     font-size: 14px !important;
     font-weight: 600 !important;
     text-decoration: none !important;
@@ -134,35 +236,32 @@ $getPayDuration = $this->Common->getPayDuration();
     gap: 6px;
     transition: all 0.2s ease;
 }
-.btn-cancel-payment:hover {
-    background: #e2e8f0 !important;
-    color: #1a202c !important;
-}
-.alert-validation-error {
-    background-color: #fff5f5;
-    border: 1px solid #feb2b2;
-    color: #c53030;
-    padding: 14px 18px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-.alert-validation-error ul {
-    margin: 6px 0 0 18px;
-    padding: 0;
+.btn-apm-cancel:hover { background: #e2e8f0 !important; color: #1e293b !important; }
+
+@media (max-width: 768px) {
+    .apm-grid { grid-template-columns: 1fr; }
+    .apm-grid .full-col { grid-column: 1; }
 }
 </style>
 
-<section class="content">
-    <div class="container-fluid">
-        <div class="add-payment-container">
+<section class="content apm-section">
+    <div class="apm-card">
+        <!-- Header -->
+        <div class="apm-header">
+            <h2>
+                <i class="material-icons">payments</i>
+                <?= __('Collect Payment') ?>
+            </h2>
+        </div>
+
+        <div class="apm-body">
             <?= $this->Flash->render() ?>
 
-            <!-- Validation Error Alert Banner -->
             <?php if (!empty($payment) && $payment->getErrors()): ?>
-                <div class="alert-validation-error">
-                    <div style="font-weight: 700; display: flex; align-items: center; gap: 6px;">
-                        <i class="material-icons" style="font-size:20px;">error_outline</i>
-                        <?= __('Please fix the following validation errors:') ?>
+                <div class="apm-error-box">
+                    <div style="font-weight:700; display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                        <i class="material-icons" style="font-size:18px;">error_outline</i>
+                        <?= __('Please fix the following errors:') ?>
                     </div>
                     <ul>
                         <?php foreach ($payment->getErrors() as $field => $errs): ?>
@@ -174,133 +273,255 @@ $getPayDuration = $this->Common->getPayDuration();
                 </div>
             <?php endif; ?>
 
-            <div class="add-payment-card">
-                <div class="card-header-modern">
-                    <h2>
-                        <i class="material-icons">payment</i>
-                        <?= __('Add Payments for Exercise Plan of User') ?>
-                    </h2>
-                </div>
-                <div class="card-body-modern">
-                    <?= $this->Form->create($payment, [
-                        'enctype'   => 'multipart/form-data',
-                        'id'        => 'payment',
-                        'templates' => ['inputContainer' => '{{content}}']
+            <?= $this->Form->create($payment, [
+                'enctype'   => 'multipart/form-data',
+                'id'        => 'paymentForm',
+                'templates'  => ['inputContainer' => '{{content}}']
+            ]) ?>
+
+            <div class="apm-grid">
+
+                <!-- Select User -->
+                <div class="apm-field">
+                    <label><?= __('Member / User') ?> <span>*</span></label>
+                    <?= $this->Form->control('user_id', [
+                        'class'    => 'form-control select2',
+                        'type'     => 'select',
+                        'options'  => $users,
+                        'empty'    => __('Search & select member...'),
+                        'required' => true,
+                        'label'    => false,
+                        'default'  => $userid,
+                        'onchange' => 'showPlanList(this.value)'
                     ]) ?>
-
-                    <div class="form-grid-modern">
-                        <div class="form-group-modern">
-                            <label><?= __('Select User') ?> <span style="color:red">*</span></label>
-                            <?= $this->Form->control('user_id', [
-                                'class'    => 'form-control',
-                                'type'     => 'select',
-                                'options'  => $users,
-                                'empty'    => __('Select User'),
-                                'required' => true,
-                                'label'    => false,
-                                'default'  => $userid,
-                                'onchange' => 'showPlanList(this.value)'
-                            ]) ?>
-                        </div>
-
-                        <div class="form-group-modern">
-                            <label><?= __('Select Plan') ?> <span style="color:red">*</span></label>
-                            <div id="planDiv">
-                                <?= $this->Form->control('plan_subscriber_id', [
-                                    'class'    => 'form-control',
-                                    'type'     => 'select',
-                                    'options'  => $planSubscribers,
-                                    'empty'    => __('Select Plan'),
-                                    'required' => true,
-                                    'label'    => false,
-                                    'onchange' => 'showPlanDetails(this.value)'
-                                ]) ?>
-                            </div>
-                        </div>
-
-                        <div id="planDetailDiv"></div>
-
-                        <div class="form-group-modern">
-                            <label><?= __('Amount Paid (₹)') ?> <span style="color:red">*</span></label>
-                            <?= $this->Form->control('amount', [
-                                'class'       => 'form-control',
-                                'type'        => 'number',
-                                'min'         => 0,
-                                'required'    => true,
-                                'label'       => false,
-                                'placeholder' => 'Enter payment amount'
-                            ]) ?>
-                        </div>
-
-                        <div class="form-group-modern">
-                            <label><?= __('Mode of Payment') ?> <span style="color:red">*</span></label>
-                            <?= $this->Form->control('mode_ofpay', [
-                                'class'    => 'form-control',
-                                'type'     => 'select',
-                                'empty'    => __('Select Mode Of Payment'),
-                                'required' => true,
-                                'label'    => false,
-                                'options'  => $getModPayment
-                            ]) ?>
-                        </div>
-                    </div>
-
-                    <div class="form-actions-modern">
-                        <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']) ?>" class="btn-cancel-payment">
-                            <i class="material-icons" style="font-size:18px;">arrow_back</i>
-                            <?= __('Payment Later') ?>
-                        </a>
-                        <button type="submit" class="btn-submit-payment">
-                            <i class="material-icons" style="font-size:18px;">check_circle</i>
-                            <?= __('Add Payment') ?>
-                        </button>
-                    </div>
-
-                    <?= $this->Form->end() ?>
                 </div>
+
+                <!-- Select Plan -->
+                <div class="apm-field">
+                    <label><?= __('Subscription Plan') ?> <span>*</span></label>
+                    <div id="planDiv">
+                        <?= $this->Form->control('plan_subscriber_id', [
+                            'class'    => 'form-control select2',
+                            'type'     => 'select',
+                            'options'  => $planSubscribers,
+                            'empty'    => __('Select plan...'),
+                            'required' => true,
+                            'label'    => false,
+                            'onchange' => 'showPlanDetails(this.value)'
+                        ]) ?>
+                    </div>
+                </div>
+
+                <!-- Plan Detail Strip (full width, hidden until plan selected) -->
+                <div class="full-col" id="planDetailDiv"></div>
+
+                <!-- Amount Being Paid -->
+                <div class="apm-field full-col">
+                    <label><?= __('Amount Being Paid (₹)') ?> <span>*</span></label>
+                    <input type="number"
+                           step="any"
+                           min="0"
+                           id="amountPaid"
+                           name="amount"
+                           class="form-control"
+                           placeholder="Enter amount (partial or full payment allowed)"
+                           required
+                           autocomplete="off">
+                    <div class="amount-helper">
+                        <i class="material-icons" style="font-size:14px; color:#94a3b8;">info</i>
+                        <span>Plan fee: <strong id="planFeeLabel">—</strong> &nbsp;|&nbsp; Remaining: <strong id="remainingLabel" style="color:#e65100;">—</strong></span>
+                        <button type="button" class="chip orange" id="fillRemainingBtn" style="display:none;" onclick="fillRemainingAmount()">Fill Remaining</button>
+                        <button type="button" class="chip" id="fillFullBtn" style="display:none;" onclick="fillFullAmount()">Fill Full Plan Fee</button>
+                    </div>
+                </div>
+
+                <!-- Mode of Payment -->
+                <div class="apm-field">
+                    <label><?= __('Mode of Payment') ?> <span>*</span></label>
+                    <?= $this->Form->control('mode_ofpay', [
+                        'class'    => 'form-control select2',
+                        'type'     => 'select',
+                        'empty'    => __('Select payment mode...'),
+                        'required' => true,
+                        'label'    => false,
+                        'options'  => $getModPayment
+                    ]) ?>
+                </div>
+
+                <!-- Payment Date — full width at bottom -->
+                <div class="apm-field">
+                    <label><?= __('Payment Date') ?> <span>*</span></label>
+                    <div class="date-input-wrap">
+                        <input type="text"
+                               id="payment_date"
+                               name="payment_date"
+                               class="form-control"
+                               value="<?= !empty($payment->payment_date) ? $payment->payment_date->format('Y-m-d') : date('Y-m-d') ?>"
+                               placeholder="YYYY-MM-DD"
+                               required
+                               autocomplete="off"
+                               readonly>
+                        <i class="material-icons">calendar_month</i>
+                    </div>
+                </div>
+
+            </div><!-- /apm-grid -->
+
+            <!-- Actions -->
+            <div class="apm-actions">
+                <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']) ?>" class="btn-apm-cancel">
+                    <i class="material-icons" style="font-size:18px;">arrow_back</i>
+                    <?= __('Back') ?>
+                </a>
+                <button type="submit" class="btn-apm-submit">
+                    <i class="material-icons" style="font-size:18px;">check_circle</i>
+                    <?= __('Record Payment') ?>
+                </button>
             </div>
-        </div>
-    </div>
+
+            <?= $this->Form->end() ?>
+        </div><!-- /apm-body -->
+    </div><!-- /apm-card -->
 </section>
 
-<script type="text/javascript">
-    /*
-     * get users plan list
-     */
-    function showPlanList(userid) {
-        if (userid !== '') {
-            var urls = '<?= $this->Url->build(['controller' => 'Users', 'action' => 'showPlanList']) ?>';
-            var urls = urls + '/' + escape(userid);
-            $.ajax({
-                type: "POST",
-                cache: false,
-                url: urls,
-                success: function (html) {
-                    $('#planDiv').html(html);
-                }
-            });
-        }
-        return false;
+<script>
+$(document).ready(function() {
+    // Safely remove any existing bootstrapMaterialDatePicker bindings without instantiating new ones
+    if ($.fn.bootstrapMaterialDatePicker) {
+        $('input').each(function() {
+            if ($.data(this, 'plugin_bootstrapMaterialDatePicker')) {
+                try {
+                    var p = $.data(this, 'plugin_bootstrapMaterialDatePicker');
+                    if (p && typeof p.destroy === 'function') { p.destroy(); }
+                } catch(e) {}
+                delete $.data(this, 'plugin_bootstrapMaterialDatePicker');
+            }
+            $(this).off('.dtp').removeAttr('data-dtp');
+        });
     }
-    
-    /*
-     * get selected plan details
-     */
-    function showPlanDetails(planid) {
-        if (planid !== '') {
-            var urls = '<?= $this->Url->build(['controller' => 'Users', 'action' => 'showPlanDetails']) ?>';
-            var urls = urls + '/' + escape(planid);
-            $.ajax({
-                type: "POST",
-                cache: false,
-                url: urls,
-                success: function (html) {
-                    $('#planDetailDiv').html(html);
+    $('.dtp').remove();
+
+    // Ensure #amountPaid is completely editable and never blocked
+    $('#amountPaid')
+        .prop('readonly', false)
+        .prop('disabled', false)
+        .removeAttr('readonly')
+        .removeAttr('disabled')
+        .removeAttr('data-dtp')
+        .off('.dtp');
+
+    // Init Flatpickr only on #payment_date
+    flatpickr('#payment_date', {
+        dateFormat: 'Y-m-d',
+        defaultDate: '<?= !empty($payment->payment_date) ? $payment->payment_date->format('Y-m-d') : date('Y-m-d') ?>',
+        allowInput: false,
+        disableMobile: true
+    });
+
+    // Init Select2
+    if ($.fn.select2) {
+        $('.select2').select2({ width: '100%' });
+    }
+
+    // If plan is already chosen, auto-load its details right away
+    var initialPlanId = $('#plan-subscriber-id').val();
+    if (initialPlanId) {
+        showPlanDetails(initialPlanId);
+    }
+});
+
+/* Track plan totals */
+var planTotalFee = 0;
+var planRemainingFee = 0;
+
+function fillRemainingAmount() {
+    if (planRemainingFee > 0) {
+        $('#amountPaid').val(planRemainingFee).trigger('input').focus();
+    }
+}
+function fillFullAmount() {
+    if (planTotalFee > 0) {
+        $('#amountPaid').val(planTotalFee).trigger('input').focus();
+    }
+}
+
+/* Get user's plan list */
+function showPlanList(userid) {
+    if (userid !== '') {
+        var url = '<?= $this->Url->build(['controller' => 'Users', 'action' => 'showPlanList']) ?>/' + escape(userid);
+        $.ajax({
+            type: 'POST',
+            cache: false,
+            url: url,
+            success: function(html) {
+                $('#planDiv').html(html);
+                if ($.fn.select2) {
+                    $('#planDiv select').select2({ width: '100%' });
                 }
-            });
+                // Bind change on new select
+                $('#planDiv select').on('change', function() {
+                    showPlanDetails(this.value);
+                });
+                // Reset info
+                $('#planDetailDiv').html('');
+                $('#amountPaid').val('');
+                updateAmountHelper(0, 0);
+            }
+        });
+    }
+    return false;
+}
+
+/* Get selected plan details — renders the strip AND updates helper */
+function showPlanDetails(planid) {
+    if (planid !== '') {
+        var url = '<?= $this->Url->build(['controller' => 'Users', 'action' => 'showPlanDetails']) ?>/' + escape(planid);
+        $.ajax({
+            type: 'POST',
+            cache: false,
+            url: url,
+            success: function(html) {
+                $('#planDetailDiv').html(html);
+
+                // Read values from hidden inputs rendered by showPlanDetails
+                var totalFee   = parseFloat($('#total_fee').val()) || 0;
+                var paidAmt    = parseFloat($('#paid_amount').val()) || 0;
+                var remFee     = parseFloat($('#fee').val()) || 0; // remaining = fee hidden field
+
+                planTotalFee     = totalFee > 0 ? totalFee : remFee;
+                planRemainingFee = remFee;
+
+                updateAmountHelper(planTotalFee, planRemainingFee);
+
+                // Pre-fill amount with remaining fee if any
+                if (remFee > 0) {
+                    $('#amountPaid').val(remFee);
+                }
+            }
+        });
+    } else {
+        $('#planDetailDiv').html('');
+        $('#amountPaid').val('');
+        updateAmountHelper(0, 0);
+    }
+    return false;
+}
+
+function updateAmountHelper(totalFee, remainingFee) {
+    if (totalFee > 0) {
+        $('#planFeeLabel').text('₹' + Number(totalFee).toLocaleString('en-IN'));
+        $('#remainingLabel').text('₹' + Number(remainingFee).toLocaleString('en-IN'));
+        if (remainingFee > 0) {
+            $('#fillRemainingBtn').show();
         } else {
-            $('#planDetailDiv').html('');
+            $('#fillRemainingBtn').hide();
         }
-        return false;
+        $('#fillFullBtn').show();
+    } else {
+        $('#planFeeLabel').text('—');
+        $('#remainingLabel').text('—');
+        $('#fillRemainingBtn').hide();
+        $('#fillFullBtn').hide();
     }
+}
 </script>

@@ -218,6 +218,7 @@ $user_type = $this->Common->getType();
         $totalPaid = 0;
         if (!empty($planSubscriber->payments)) {
             foreach ($planSubscriber->payments as $payment) {
+                if (!empty($payment->is_deleted)) continue;
                 $totalPaid += $payment->amount;
             }
         }

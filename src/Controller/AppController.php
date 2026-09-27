@@ -70,12 +70,29 @@ class AppController extends Controller
      
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
-         //  $usersdetail          =      $this->Cookie->read('users');
-         //  $this->usersdetail    =      $this->Cookie->read('users');
-           
-           $usersdetail          = $this->request->session()->read('users');
-//           pr($usersdetail);exit;
-           $this->usersdetail    = $this->request->session()->read('users');
+        if ($this->Cookie->read('users')) {
+            $this->request->session()->write('users', $this->Cookie->read('users'));
+        }
+        $usersdetail       = $this->request->session()->read('users');
+        $this->usersdetail = $usersdetail;
+        if (empty($this->usersdetail) && $this->Cookie->read('users')) {
+            $this->usersdetail = $this->Cookie->read('users');
+            $usersdetail = $this->usersdetail;
+        }
+
+        // Fallback to Auth component if session users is still empty
+        if (empty($this->usersdetail) && !empty($this->Auth->user())) {
+            $authUser = $this->Auth->user();
+            $this->usersdetail = [
+                'users_id' => $authUser['id'] ?? null,
+                'users_name' => $authUser['name'] ?? '',
+                'users_email' => $authUser['email'] ?? '',
+                'users_type' => $authUser['user_type'] ?? null,
+                'partner_id' => $authUser['partner_id'] ?? null,
+            ];
+            $usersdetail = $this->usersdetail;
+            $this->request->session()->write('users', $this->usersdetail);
+        }
         
         //Guest User ID
         $session_id      = session_id();
@@ -90,9 +107,6 @@ class AppController extends Controller
         if($this->Cookie->read('user_email')){
             $this->request->session()->write('Auth.User.email', $this->Cookie->read('user_email'));
         }          
-        if($this->Cookie->read('users')){
-            $this->request->session()->write('users',$this->Cookie->read('users'));
-        }
         $this->set(compact('usersdetail','username'));
         $this->set('_serialize', ['cookie_value']);
     }
@@ -132,5 +146,82 @@ class AppController extends Controller
         ) {
             $this->set('_serialize', true);
         }
+    }
+
+    /**
+     * Privileged root emails for sensitive operations
+     */
+    public function getPrivilegedRootEmails()
+    {
+        return ['mukeshkr3221@gmail.com', 'ad1234@yopmail.com'];
+    }
+
+    /**
+     * Check if current user is one of the permanent privileged root emails or super admin
+     */
+    public function isPaymentDeleteRoot($email = null)
+    {
+        if ($email === null) {
+            $email = $this->usersdetail['users_email'] ?? '';
+        }
+        $email = strtolower(trim($email));
+        $isRoot = in_array($email, $this->getPrivilegedRootEmails());
+        if (!$isRoot && !empty($this->usersdetail['users_type']) && (int)$this->usersdetail['users_type'] === 1) {
+            $isRoot = true;
+        }
+        return $isRoot;
+    }
+
+    /**
+     * Check if current user can delete payments or payouts (either privileged root or active delegated permission)
+     */
+    public function canDeletePayment($email = null)
+    {
+        if ($email === null) {
+            $email = $this->usersdetail['users_email'] ?? '';
+        }
+        $email = strtolower(trim($email));
+
+        if ($this->isPaymentDeleteRoot($email)) {
+            return true;
+        }
+
+        if (!empty($this->usersdetail['users_type']) && (int)$this->usersdetail['users_type'] === 1) {
+            return true;
+        }
+
+        if (empty($email)) {
+            return false;
+        }
+
+        try {
+            $db = \Cake\Datasource\ConnectionManager::get('default');
+            $row = $db->execute(
+                "SELECT id FROM payment_delete_permissions WHERE LOWER(email) = ? AND is_active = 1 LIMIT 1",
+                [$email]
+            )->fetch('assoc');
+            return !empty($row);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Check if user can duplicate sessions (Partner users or privileged root emails)
+     */
+    public function canDuplicateSession($userType = null, $email = null)
+    {
+        if ($userType === null) {
+            $userType = $this->usersdetail['users_type'] ?? 0;
+        }
+        if ($email === null) {
+            $email = $this->usersdetail['users_email'] ?? '';
+        }
+        $email = strtolower(trim($email));
+
+        if ($userType == 2 || in_array($email, $this->getPrivilegedRootEmails())) {
+            return true;
+        }
+        return false;
     }
 }

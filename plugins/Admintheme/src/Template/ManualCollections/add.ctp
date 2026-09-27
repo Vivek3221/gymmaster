@@ -401,13 +401,33 @@ $getModPayment       = $this->Common->getModPayment();
                     </div>
                     <div class="field-grid">
                         <div class="form-field">
+                            <label><?= __('Collection / Payment Date') ?> <span style="color:red">*</span></label>
+                            <input type="text" id="paymentDate" name="payment_date" class="plan-datepicker" value="<?= date('Y-m-d') ?>" placeholder="YYYY-MM-DD" autocomplete="off" required>
+                        </div>
+
+                        <div class="form-field">
                             <label><?= __('Plan Total Fee (₹)') ?></label>
                             <?= $this->Form->control('fee', ['type' => 'number', 'label' => false, 'id' => 'fee', 'placeholder' => '0', 'min' => 0]) ?>
                         </div>
 
                         <div class="form-field">
+                            <label><?= __('Discount (%)') ?></label>
+                            <input type="number" step="0.01" min="0" max="100" id="discountPercent" name="discount_percent" class="form-control" placeholder="0%">
+                        </div>
+
+                        <div class="form-field">
+                            <label><?= __('Discount Amount (₹)') ?></label>
+                            <input type="number" step="0.01" id="discountAmount" name="discount_amount" class="form-control" placeholder="₹0.00">
+                        </div>
+
+                        <div class="form-field" style="grid-column: 1 / -1;">
+                            <label><?= __('Discount Remark / Reason') ?> <span id="reasonReqMark" style="color:red;display:none;">*</span></label>
+                            <textarea id="discountReason" name="discount_reason" rows="2" class="form-control" placeholder="<?= __('Mandatory remark when discount is applied (e.g. promo, referral, special approval)') ?>" style="border-radius:8px;border:1.5px solid #e2e8f0;padding:8px 12px;font-size:13.5px;width:100%;box-sizing:border-box;background:#f8fafc;"></textarea>
+                        </div>
+
+                        <div class="form-field">
                             <label><?= __('Amount Paid (₹)') ?></label>
-                            <?= $this->Form->control('amount', ['type' => 'number', 'label' => false, 'placeholder' => '0', 'min' => 0]) ?>
+                            <?= $this->Form->control('amount', ['type' => 'number', 'label' => false, 'id' => 'amountPaid', 'placeholder' => '0', 'min' => 0]) ?>
                         </div>
 
                         <div class="form-field">
@@ -551,9 +571,63 @@ $(document).ready(function() {
                     $('#hiddenPlanName').val(res.title);
                     $('#fee').val(res.price);
                     recalcDates();
+                    recalcDiscount();
                 }
             }
         });
+    });
+
+    function recalcDiscount() {
+        var baseFee = parseFloat($('#fee').val()) || 0;
+        var dPct = parseFloat($('#discountPercent').val()) || 0;
+        var dAmt = parseFloat($('#discountAmount').val()) || 0;
+
+        if (dPct > 0 || dAmt > 0) {
+            $('#reasonReqMark').show();
+            $('#discountReason').prop('required', true);
+        } else {
+            $('#reasonReqMark').hide();
+            $('#discountReason').prop('required', false);
+        }
+    }
+
+    $('#discountPercent').on('input', function() {
+        var baseFee = parseFloat($('#fee').val()) || 0;
+        var pct = parseFloat($(this).val()) || 0;
+        if (pct > 100) { pct = 100; $(this).val(100); }
+        if (pct < 0) { pct = 0; $(this).val(0); }
+        if (baseFee > 0) {
+            var dAmt = Math.round((baseFee * pct / 100) * 100) / 100;
+            $('#discountAmount').val(dAmt > 0 ? dAmt : '');
+            var finalPay = Math.max(0, Math.round((baseFee - dAmt) * 100) / 100);
+            $('#amountPaid').val(finalPay);
+        }
+        recalcDiscount();
+    });
+
+    $('#discountAmount').on('input', function() {
+        var baseFee = parseFloat($('#fee').val()) || 0;
+        var dAmt = parseFloat($(this).val()) || 0;
+        if (baseFee > 0) {
+            if (dAmt > baseFee) { dAmt = baseFee; $(this).val(baseFee); }
+            var pct = Math.round((dAmt / baseFee * 100) * 100) / 100;
+            $('#discountPercent').val(pct > 0 ? pct : '');
+            var finalPay = Math.max(0, Math.round((baseFee - dAmt) * 100) / 100);
+            $('#amountPaid').val(finalPay);
+        }
+        recalcDiscount();
+    });
+
+    $('form').on('submit', function(e) {
+        var dPct = parseFloat($('#discountPercent').val()) || 0;
+        var dAmt = parseFloat($('#discountAmount').val()) || 0;
+        var reason = $.trim($('#discountReason').val());
+        if ((dPct > 0 || dAmt > 0) && reason === '') {
+            e.preventDefault();
+            alert('Discount remark/reason is mandatory whenever a discount is applied.');
+            $('#discountReason').focus();
+            return false;
+        }
     });
 });
 </script>

@@ -449,7 +449,7 @@ $user_type = $this->Common->getType();
 
                         <?php if (isset($users_type) && ($users_type == 1)) { ?>
                             <div class="filter-group">
-                                <?= $this->Form->input('user_type', ['label' => __('User type'), 'type' => 'select', 'class' => 'form-control', 'empty' => __('Select User type'), 'options' => $user_type, 'value' => $user_type]); ?>
+                                <?= $this->Form->input('user_type', ['label' => __('User type'), 'type' => 'select', 'class' => 'form-control select2', 'empty' => __('Select User type'), 'options' => $user_type, 'value' => $user_type]); ?>
                             </div>
                             <div class="filter-group">
                                 <?= $this->Form->input('partners', ['label' => __('Partners'), 'type' => 'select', 'class' => 'form-control select2', 'empty' => __('Select Partners'), 'options' => $partners, 'value' => $partner]); ?>
@@ -460,8 +460,14 @@ $user_type = $this->Common->getType();
                             </div>
                         <?php } ?>
 
+                        <?php if (isset($users_type) && ($users_type == 1 || $users_type == 2)) { ?>
+                            <div class="filter-group">
+                                <?= $this->Form->input('front_desk_id', ['label' => __('Front Desk'), 'type' => 'select', 'class' => 'form-control select2', 'empty' => __('All Front Desk'), 'options' => $frontDeskUsers ?? [], 'value' => $front_desk_id ?? '']); ?>
+                            </div>
+                        <?php } ?>
+
                         <div class="filter-group">
-                            <?= $this->Form->input('date_type', ['label' => __('Date Type'), 'type' => 'select', 'class' => 'form-control', 'options' => ['reg' => __('Reg. Date'), 'followup' => __('Follow Up Date')], 'value' => $date_type]); ?>
+                            <?= $this->Form->input('date_type', ['label' => __('Date Type'), 'type' => 'select', 'class' => 'form-control select2', 'options' => ['reg' => __('Reg. Date'), 'followup' => __('Follow Up Date'), 'expiry' => __('Plan Expiry Date')], 'value' => $date_type]); ?>
                         </div>
                         <div class="filter-group">
                             <?php echo $this->Form->input('start_date', ['label' => __('Start Date'), 'class' => 'form-control datepicker-filter', 'type' => 'text', 'placeholder' => 'YYYY-MM-DD', 'value' => $start_date, 'autocomplete' => 'off']); ?>
@@ -470,10 +476,10 @@ $user_type = $this->Common->getType();
                             <?php echo $this->Form->input('end_date', ['label' => __('End Date'), 'class' => 'form-control datepicker-filter', 'type' => 'text', 'placeholder' => 'YYYY-MM-DD', 'value' => $end_date, 'autocomplete' => 'off']); ?>
                         </div>
                         <div class="filter-group">
-                            <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('select record'), 'options' => $nofrec, 'value' => $norec]); ?>
+                            <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control select2', 'placeholder' => __('select record'), 'options' => $nofrec, 'value' => $norec]); ?>
                         </div>
                         <div class="filter-group">
-                            <?php echo $this->Form->input('status', ['label' => __('Status'), 'class' => 'form-control', 'empty' => __('Select Status'), 'options' => $statu, 'value' => $status]); ?>
+                            <?php echo $this->Form->input('status', ['label' => __('Status'), 'class' => 'form-control select2', 'empty' => __('Select Status'), 'options' => $statu, 'value' => $status]); ?>
                         </div>
                         
                         <div class="filter-actions">
@@ -554,6 +560,7 @@ $user_type = $this->Common->getType();
                                             <?php } else { ?>
                                                 <th><?= __('User Type') ?></th>
                                             <?php } ?>
+                                            <th><?= __('Added By') ?></th>
                                             <th><?= __('Gender') ?></th>
                                             <th><?= __('Expiry Date') ?></th>
                                             <th><?= __('Status') ?></th>
@@ -570,6 +577,7 @@ $user_type = $this->Common->getType();
                                             <?php } else { ?>
                                                 <th><?= __('User Type') ?></th>
                                             <?php } ?>
+                                            <th><?= __('Added By') ?></th>
                                             <th><?= __('Gender') ?></th>
                                             <th><?= __('Expiry Date') ?></th>
                                             <th><?= __('Status') ?></th>
@@ -588,6 +596,17 @@ $user_type = $this->Common->getType();
                                                 <?php } else { ?>
                                                     <td><?= $user_type[($user['user_type'])] ?></td>
                                                 <?php } ?>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($user->added_by_user)) {
+                                                        echo h($user->added_by_user->name);
+                                                    } elseif (!empty($user['added_by'])) {
+                                                        echo h($this->Common->getSimpleName($user['added_by']));
+                                                    } else {
+                                                        echo '<span style="color:#94a3b8;font-size:12px;font-style:italic;">Admin/Partner</span>';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <td><?php if ($user['gender'] == 1) {
                                                         echo 'Male';
                                                     } else {
@@ -810,6 +829,11 @@ $user_type = $this->Common->getType();
                 }
             });
         });
+
+        if ($.fn.select2) {
+            $('.select2').select2({ width: '100%' });
+        }
+
         // Initialize datepickers
         $('.datepicker-filter').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD', time: false });
         $('#followup-datetime').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD HH:mm', minDate : new Date() });

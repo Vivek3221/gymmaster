@@ -5,8 +5,10 @@
  */
 
 $years = array_keys($reportData);
-$currentYear = date('Y');
-$activeYear = in_array($currentYear, $years) ? $currentYear : (!empty($years) ? end($years) : null);
+$currMonth = (int)date('n');
+$currY = (int)date('Y');
+$currentFY = ($currMonth >= 4) ? $currY : ($currY - 1);
+$activeYear = in_array($currentFY, $years) ? $currentFY : (!empty($years) ? end($years) : null);
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -42,7 +44,7 @@ $activeYear = in_array($currentYear, $years) ? $currentYear : (!empty($years) ? 
                                 <?php foreach (array_keys($reportData) as $year): ?>
                                     <li role="presentation" class="<?= $year == $activeYear ? 'active' : '' ?>">
                                         <a href="#report-year-<?= $year ?>" data-toggle="tab" aria-expanded="<?= $year == $activeYear ? 'true' : 'false' ?>" style="font-weight: 700; font-size: 14px; padding: 12px 24px; border-radius: 6px 6px 0 0; display: block; text-decoration: none; border: 1px solid transparent; transition: all 0.3s ease;">
-                                            <?= $year ?> <?= __('Report') ?>
+                                            <?= $year ?> <?= __('Report') ?> (<?= $year ?>-<?= substr($year + 1, 2) ?>)
                                         </a>
                                     </li>
                                 <?php endforeach; ?>
@@ -93,13 +95,13 @@ $activeYear = in_array($currentYear, $years) ? $currentYear : (!empty($years) ? 
                                             </div>
                                         </div>
 
-                                        <div class="report-table-wrapper" style="width: 100%; overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff;">
-                                            <table class="table table-bordered report-grid" style="margin-bottom: 0; min-width: 1600px; border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                        <div class="report-table-wrapper" style="width: 100%; max-height: 72vh; overflow-y: auto; overflow-x: auto; position: relative; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff;">
+                                            <table class="table table-bordered report-grid" style="margin-bottom: 0; min-width: 1600px; border-collapse: separate !important; border-spacing: 0 !important; width: 100%;">
                                                 <thead>
                                                     <!-- Row 1: Active Members Count -->
                                                     <tr class="active-members-row" style="background-color: #f8fafc;">
-                                                        <td colspan="11" style="font-weight: 700; background: #f1f5f9; text-transform: uppercase; color: #475569; font-size: 12px; vertical-align: middle; border: 1px solid #cbd5e1; padding: 12px;">
-                                                            <strong><?= __('Active Members') ?></strong>
+                                                        <td colspan="12" style="font-weight: 700; background: #f1f5f9; text-transform: uppercase; color: #475569; font-size: 12px; vertical-align: middle; border: 1px solid #cbd5e1; padding: 12px;">
+                                                            <strong style="position: sticky; left: 12px; display: inline-block;"><?= __('Active Members') ?></strong>
                                                         </td>
                                                         <?php foreach ($months as $m): ?>
                                                             <td class="text-center" style="background-color: #e0f2f1; color: #00796b; font-weight: 800; border: 1px solid #cbd5e1; padding: 12px; text-align: center;">
@@ -113,8 +115,8 @@ $activeYear = in_array($currentYear, $years) ? $currentYear : (!empty($years) ? 
 
                                                     <!-- Row 2: Amount / Month Totals -->
                                                     <tr class="amount-month-row" style="background-color: #f8fafc;">
-                                                        <td colspan="11" style="font-weight: 700; background: #f1f5f9; text-transform: uppercase; color: #475569; font-size: 12px; vertical-align: middle; border: 1px solid #cbd5e1; padding: 12px;">
-                                                            <strong><?= __('Amount / Month') ?></strong>
+                                                        <td colspan="12" style="font-weight: 700; background: #f1f5f9; text-transform: uppercase; color: #475569; font-size: 12px; vertical-align: middle; border: 1px solid #cbd5e1; padding: 12px;">
+                                                            <strong style="position: sticky; left: 12px; display: inline-block;"><?= __('Amount / Month') ?></strong>
                                                         </td>
                                                         <?php foreach ($months as $m): ?>
                                                             <td class="text-center" style="background-color: #e8f5e9; color: #2e7d32; font-weight: 800; border: 1px solid #cbd5e1; padding: 12px; text-align: center;">
@@ -129,6 +131,7 @@ $activeYear = in_array($currentYear, $years) ? $currentYear : (!empty($years) ? 
                                                     <!-- Row 3: Grid Headers -->
                                                     <tr class="headers-row" style="background-color: #3f51b5; color: #fff;">
                                                         <th style="background-color: #3f51b5 !important; color: #fff !important; font-weight: 700; padding: 12px; border: 1px solid #303f9f; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;"><?= __('Name') ?></th>
+                                                        <th style="background-color: #3f51b5 !important; color: #fff !important; font-weight: 700; padding: 12px; border: 1px solid #303f9f; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;"><?= __('Added By') ?></th>
                                                         <th style="background-color: #3f51b5 !important; color: #fff !important; font-weight: 700; padding: 12px; border: 1px solid #303f9f; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;"><?= __('Date of Joining') ?></th>
                                                         <th style="background-color: #3f51b5 !important; color: #fff !important; font-weight: 700; padding: 12px; border: 1px solid #303f9f; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center;"><?= __('Membership') ?></th>
                                                         <th style="background-color: #3f51b5 !important; color: #fff !important; font-weight: 700; padding: 12px; border: 1px solid #303f9f; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: right;"><?= __('Total Amount') ?></th>
@@ -155,6 +158,7 @@ $activeYear = in_array($currentYear, $years) ? $currentYear : (!empty($years) ? 
                                                     <?php foreach ($dataRows as $r): ?>
                                                         <tr style="transition: background-color 0.2s ease;">
                                                             <td style="font-weight: 600; padding: 10px 12px; border: 1px solid #e2e8f0; color: #1e293b;"><?= h($r['name']) ?></td>
+                                                            <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #475569; font-weight: 500;"><?= h($r['added_by']) ?></td>
                                                             <td style="padding: 10px 12px; border: 1px solid #e2e8f0; color: #334155;"><?= h($r['joining_date']) ?></td>
                                                             <td style="padding: 10px 12px; border: 1px solid #e2e8f0; text-align: center; color: #334155;"><?= h($r['membership']) ?></td>
                                                             <td style="padding: 10px 12px; border: 1px solid #e2e8f0; text-align: right; font-weight: 700; color: #0f172a;"><?= $this->Number->format($r['total_amount']) ?></td>
@@ -266,12 +270,59 @@ $activeYear = in_array($currentYear, $years) ? $currentYear : (!empty($years) ? 
         background-color: #94a3b8;
     }
 
-    .report-grid th {
+    /* Table Wrapper and Grid Sticky Configuration */
+    .report-table-wrapper {
+        max-height: 72vh !important;
+        overflow-y: auto !important;
+        overflow-x: auto !important;
+        position: relative !important;
+    }
+
+    .report-grid {
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+    }
+
+    .report-grid th, .report-grid td {
+        white-space: nowrap !important;
         vertical-align: middle !important;
     }
-    
-    .report-grid td {
-        vertical-align: middle !important;
+
+    /* Sticky Vertical Headers */
+    .report-grid thead tr:nth-child(1) td {
+        position: sticky;
+        top: 0;
+        z-index: 24;
+    }
+    .report-grid thead tr:nth-child(2) td {
+        position: sticky;
+        top: 43px;
+        z-index: 24;
+    }
+    .report-grid thead tr:nth-child(3) th {
+        position: sticky;
+        top: 86px;
+        z-index: 24;
+    }
+
+    /* Sticky Horizontal Frozen First Column (Client Name) */
+    .report-grid thead tr:nth-child(3) th:first-child {
+        position: sticky;
+        left: 0;
+        top: 86px;
+        z-index: 35 !important;
+        background-color: #3f51b5 !important;
+        box-shadow: 2px 0 6px rgba(0, 0, 0, 0.12);
+    }
+    .report-grid tbody td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 15;
+        background-color: #ffffff;
+        box-shadow: 2px 0 6px rgba(0, 0, 0, 0.08);
+    }
+    .report-grid tbody tr:hover td:first-child {
+        background-color: #fffbf5 !important;
     }
     
     .bg-overlap-active {

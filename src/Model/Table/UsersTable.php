@@ -38,9 +38,15 @@ class UsersTable extends Table
 
         $this->addBehavior('Timestamp');
         
-         $this->belongsTo('Partners', [
+        $this->belongsTo('Partners', [
             'foreignKey' => 'partner_id',
-            'joinType' => 'INNER'
+            'joinType' => 'LEFT'
+        ]);
+
+        $this->belongsTo('AddedByUsers', [
+            'className' => 'Users',
+            'foreignKey' => 'added_by',
+            'joinType' => 'LEFT'
         ]);
 
         $this->hasMany('UserRemarks', [

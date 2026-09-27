@@ -189,7 +189,7 @@
 
                 <!-- Filter Bar -->
                 <form method="get" class="row" style="margin-bottom: 24px;">
-                    <div class="col-md-5 col-sm-12" style="margin-bottom: 10px;">
+                    <div class="col-md-3 col-sm-6" style="margin-bottom: 10px;">
                         <select name="trainer_id" class="form-control select2" onchange="this.form.submit()">
                             <option value=""><?= __('All Trainers') ?></option>
                             <?php foreach ($trainers as $tid => $tname): ?>
@@ -197,11 +197,27 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="col-md-5 col-sm-12" style="margin-bottom: 10px;">
+                    <div class="col-md-3 col-sm-6" style="margin-bottom: 10px;">
                         <select name="user_id" class="form-control select2" onchange="this.form.submit()">
                             <option value=""><?= __('All Clients / Members') ?></option>
                             <?php foreach ($usersList as $uid => $uname): ?>
                                 <option value="<?= $uid ?>" <?= ($userIdFilter == $uid) ? 'selected' : '' ?>><?= h($uname) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-2 col-sm-6" style="margin-bottom: 10px;">
+                        <select name="month" class="form-control select2" onchange="this.form.submit()">
+                            <option value=""><?= __('All Months (1-12)') ?></option>
+                            <?php foreach ($months as $mNum => $mLabel): ?>
+                                <option value="<?= $mNum ?>" <?= ($month == $mNum) ? 'selected' : '' ?>><?= h($mNum . ' - ' . $mLabel) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-2 col-sm-6" style="margin-bottom: 10px;">
+                        <select name="year" class="form-control select2" onchange="this.form.submit()">
+                            <option value=""><?= __('All Years') ?></option>
+                            <?php foreach ($years as $yVal): ?>
+                                <option value="<?= $yVal ?>" <?= ($year == $yVal) ? 'selected' : '' ?>><?= h($yVal) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

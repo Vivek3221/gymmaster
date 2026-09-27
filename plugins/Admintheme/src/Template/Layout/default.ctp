@@ -74,6 +74,158 @@
              border-radius: 100%;
              padding: 14px 17px;
         }
+
+        /* ===== GLOBAL SELECT2 MODERN STYLE — Applied across entire system ===== */
+        .select2-container--default .select2-selection--single {
+            height: 44px !important;
+            border: 1.5px solid #cbd5e1 !important;
+            border-radius: 8px !important;
+            background-color: #f8fafc !important;
+            display: flex !important;
+            align-items: center !important;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 42px !important;
+            padding-left: 14px !important;
+            color: #1e293b !important;
+            font-size: 14px !important;
+            font-weight: 400 !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 42px !important;
+            right: 10px !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__placeholder {
+            color: #94a3b8 !important;
+        }
+        .select2-container--default.select2-container--open .select2-selection--single,
+        .select2-container--default .select2-selection--single:focus,
+        .select2-container--focus .select2-selection--single {
+            border-color: #ff9800 !important;
+            background-color: #ffffff !important;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.15) !important;
+            outline: none !important;
+        }
+        .select2-dropdown {
+            border: 1.5px solid #ff9800 !important;
+            border-radius: 8px !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
+            overflow: hidden !important;
+            z-index: 99999 !important;
+        }
+        .select2-container--default .select2-search--dropdown .select2-search__field {
+            border: 1.5px solid #cbd5e1 !important;
+            border-radius: 6px !important;
+            padding: 8px 12px !important;
+            font-size: 13.5px !important;
+            outline: none !important;
+            width: 100% !important;
+        }
+        .select2-container--default .select2-search--dropdown .select2-search__field:focus {
+            border-color: #ff9800 !important;
+            box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.12) !important;
+        }
+        .select2-container--default .select2-results__option--highlighted[aria-selected],
+        .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+            background-color: #ff9800 !important;
+            color: #ffffff !important;
+        }
+        .select2-container--default .select2-results__option {
+            padding: 9px 14px !important;
+            font-size: 13.5px !important;
+            color: #334155 !important;
+        }
+        .select2-container--default .select2-results__option[aria-selected="true"] {
+            background-color: #fff3e0 !important;
+            color: #e65100 !important;
+            font-weight: 600 !important;
+        }
+        .select2-search--dropdown {
+            padding: 8px !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+        }
+        .select2-results__options {
+            max-height: 220px !important;
+        }
+
+        /* ── Modern Plan Summary Card ── */
+        .plan-summary-card {
+            background: #ffffff !important;
+            border: 1.5px solid #e2e8f0 !important;
+            border-radius: 12px !important;
+            padding: 16px 20px !important;
+            margin: 10px 0 16px !important;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04) !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+        }
+        .psc-top {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            margin-bottom: 14px !important;
+            padding-bottom: 10px !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+            flex-wrap: wrap !important;
+            gap: 8px !important;
+        }
+        .psc-title {
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            font-size: 13.5px !important;
+            font-weight: 700 !important;
+            color: #1e293b !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+        }
+        .psc-badge {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 5px !important;
+            padding: 4px 12px !important;
+            border-radius: 20px !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+        }
+        .psc-badge.paid {
+            background: #dcfce7 !important;
+            color: #15803d !important;
+            border: 1px solid #bbf7d0 !important;
+        }
+        .psc-badge.pending {
+            background: #fff7ed !important;
+            color: #c2410c !important;
+            border: 1px solid #fed7aa !important;
+        }
+        .psc-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+            gap: 12px 18px !important;
+        }
+        .psc-item {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 3px !important;
+        }
+        .psc-label {
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            color: #64748b !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.4px !important;
+        }
+        .psc-val {
+            font-size: 15px !important;
+            font-weight: 800 !important;
+            color: #1e293b !important;
+        }
+        .psc-val.date {
+            font-size: 13.5px !important;
+            font-weight: 600 !important;
+            color: #334155 !important;
+        }
     </style>
   <?= $this->Html->script('jquery.min.js') ?>
   
@@ -142,7 +294,7 @@
     <script>
         $('#payment-due-date').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD HH:mm', minDate : new Date() });
         $('#plan-expire-date').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD HH:mm', minDate : new Date() });
-        $('.select2').select2();
+        $('.select2').select2({ width: '100%' });
         $('#forgetPasswordDiv').hide();    
         $("#showForgetForm").click(function(){
             $('#forgetPasswordDiv').show();

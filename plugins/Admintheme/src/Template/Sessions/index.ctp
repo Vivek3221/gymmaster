@@ -370,6 +370,9 @@ $partners = $this->Common->getpartner();
                         <div class="filter-group">
                             <?php echo $this->Form->input('s_type', ['label' => __('Session Type'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('-- Session Type --'), 'value' => $s_type]); ?>
                         </div>
+                        <div class="filter-group">
+                            <?php echo $this->Form->input('reps', ['label' => __('Reps'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('Search Reps (e.g. 12)'), 'value' => $reps]); ?>
+                        </div>
                         <div class="filter-actions">
                             <?= $this->Form->button('<i class="material-icons" style="font-size:16px; vertical-align:middle;">search</i> ' . __('Search'), ['class' => 'btn btn-primary']) ?>
                             <?= $this->Html->link('<i class="material-icons" style="font-size:16px; vertical-align:middle;">clear</i> ' . __('Clear'), ['controller' => 'Sessions'], ['class' => 'btn btn-danger', 'escape' => false]) ?>
@@ -526,7 +529,7 @@ $partners = $this->Common->getpartner();
                                                             <i class="material-icons" title="<?= __('Delete') ?>"><?= $this->Form->postLink(__('delete'), ['action' => 'delete', $session['id']], ['confirm' => __('Are you sure you want to delete Session ?', $session['id'])]) ?></i>
                                                         <?php } ?>
 
-                                                        <?php if ($user_type != 3) { ?>
+                                                        <?php if (!empty($canDuplicateSession)) { ?>
                                                             <i class="material-icons"><?= $this->Html->link(__('content_copy'), ['action' => 'addMore', $session['id']], ['title' => 'Add Duplicate']) ?></i>
                                                         <?php } ?>
 

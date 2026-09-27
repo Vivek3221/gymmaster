@@ -273,10 +273,16 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
                 </li>
                 <?php } ?>    
                 <?php if($usersdetail['users_type'] == 1 || $usersdetail['users_type'] == 2 || $usersdetail['users_type'] == 5){; ?>
-                 <li class="<?php if (($controller == 'Users' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'addPayment' || $action == 'payment'))){echo "active";}?>">
+                  <li class="<?php if (($controller == 'Users' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'addPayment' || $action == 'payment')) && ($this->request->query('date_type') !== 'followup')){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>">
                         <i class="material-icons">list</i>
                         <span><?= __('Users') ?></span>
+                    </a>
+                </li>
+                <li class="<?php if (($controller == 'Users' && $action == 'index' && $this->request->query('date_type') === 'followup')){echo "active";}?>">
+                    <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index', '?' => ['date_type' => 'followup']]); ?>">
+                        <i class="material-icons">phone_callback</i>
+                        <span><?= __('Follow-up List') ?></span>
                     </a>
                 </li>
                  <li class="<?php if (($controller == 'Plans' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'))){echo "active";}?>">

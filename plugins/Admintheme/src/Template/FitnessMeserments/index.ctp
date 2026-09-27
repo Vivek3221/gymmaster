@@ -20,23 +20,28 @@ $user_name = $this->Common->getUsers();
                         <div class="body">
                               <div class="box-body">
                         <?= $this->Form->create(NULL, ['type' => 'get', 'url' => ['controller' => 'FitnessMeserments', 'action' => 'index']]) ?>
-                                   <?php if($users_type != 3){?>
-                                  <div class="col-md-3">
-                                <?php echo $this->Form->input('user_id', ['label' => __('User Name'), 'class' => 'form-control select2', 'type' => 'select', 'empty' => __('User Name'), 'value' => $user_id,'options'=>$user_name]); ?>
-                            </div>
+                                    <div class="row">
+                                    <?php if($users_type != 3){?>
+                                   <div class="col-md-3">
+                                 <?php echo $this->Form->input('user_id', ['label' => __('User Name'), 'class' => 'form-control select2', 'type' => 'select', 'empty' => __('User Name'), 'value' => $user_id,'options'=>$user_name]); ?>
+                             </div>
                         <?php }  ?>
-                       
-                                  <div class="col-md-3">
-                                      <?php echo $this->Form->input('from_date', ['label' => __('From Date'), 'class' => 'form-control', 'id' => 'date-start', 'type' => 'text', 'placeholder' => __('From Date'), 'value' => $sdate]); ?>
-                                  </div>  
-                                  <div class="col-md-3">
-                                      <?php echo $this->Form->input('to_date', ['label' => __('To Date'), 'class' => 'form-control', 'id' => 'date-end', 'type' => 'text', 'placeholder' => __('To Date'), 'value' => $edate]); ?>
-                                  </div>  
-                                  
-                        <div class="col-md-3 marginTop25">
+                        
+                                   <div class="<?= ($users_type != 3) ? 'col-md-2' : 'col-md-3' ?>">
+                                       <?php echo $this->Form->input('from_date', ['label' => __('From Date'), 'class' => 'form-control', 'id' => 'date-start', 'type' => 'text', 'placeholder' => __('From Date'), 'value' => $sdate]); ?>
+                                   </div>  
+                                   <div class="<?= ($users_type != 3) ? 'col-md-2' : 'col-md-3' ?>">
+                                       <?php echo $this->Form->input('to_date', ['label' => __('To Date'), 'class' => 'form-control', 'id' => 'date-end', 'type' => 'text', 'placeholder' => __('To Date'), 'value' => $edate]); ?>
+                                   </div>  
+                                   <div class="<?= ($users_type != 3) ? 'col-md-2' : 'col-md-3' ?>">
+                                       <?= $this->Form->input('norec', ['label' => __('Entries Per Page'), 'type' => 'select', 'class' => 'form-control', 'options' => ['10' => '10', '25' => '25', '50' => '50', '100' => '100', 'all' => 'All'], 'value' => $norec]); ?>
+                                   </div>
+                                   
+                        <div class="<?= ($users_type != 3) ? 'col-md-3' : 'col-md-3' ?> marginTop25">
                             <?= $this->Form->button(__('Search'), ['class' => 'btn btn-primary']) ?>
                             <?= $this->Html->link(__('Clear'), ['controller' => 'FitnessMeserments'], ['class' => 'btn btn-danger']) ?>
                         </div>
+                                    </div>
                         <?= $this->Form->end() ?>
                     </div> 
                             <?php if ($this->Paginator->counter(['format' => __('{{count}}')]) != 0) { ?>

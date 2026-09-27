@@ -53,7 +53,7 @@ class PlanSubscriber extends Entity
         'collection_type' => true
     ];
 
-    protected $_virtual = ['paid_fee', 'remain_fee'];
+    protected $_virtual = ['paid_fee', 'discount_fee', 'remain_fee'];
 
     protected function _getPaidFee()
     {
@@ -62,13 +62,37 @@ class PlanSubscriber extends Entity
         }
         $paid = 0;
         foreach ($this->payments as $payment) {
-            $paid += $payment->amount;
+            if (empty($payment->is_deleted)) {
+                $paid += (float)$payment->amount;
+            }
         }
         return $paid;
     }
 
+    protected function _getDiscountFee()
+    {
+        if (empty($this->payments)) {
+            return 0;
+        }
+        $discount = 0;
+        foreach ($this->payments as $payment) {
+            if (empty($payment->is_deleted)) {
+                $discount += (float)($payment->discount_amount ?? 0);
+            }
+        }
+        return $discount;
+    }
+
     protected function _getRemainFee()
     {
-        return $this->fee - $this->paid_fee;
+        $discount = 0;
+        if (!empty($this->payments)) {
+            foreach ($this->payments as $payment) {
+                if (empty($payment->is_deleted)) {
+                    $discount += (float)($payment->discount_amount ?? 0);
+                }
+            }
+        }
+        return max(0, (float)$this->fee - $discount - (float)$this->paid_fee);
     }
 }

@@ -124,6 +124,60 @@ $user_type = $this->Common->getType();
         padding-right: 36px !important;
     }
 
+    /* Modern Select2 Styling for Trainer Dropdown */
+    .select2-container--default .select2-selection--single {
+        height: 44px !important;
+        border: 1.5px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        background-color: #fafafa !important;
+        display: flex !important;
+        align-items: center !important;
+        transition: all 0.2s ease !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 42px !important;
+        padding-left: 14px !important;
+        color: #1e293b !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 42px !important;
+        right: 10px !important;
+    }
+    .select2-container--default.select2-container--open .select2-selection--single,
+    .select2-container--default .select2-selection--single:focus {
+        border-color: #ff9800 !important;
+        background-color: #fff !important;
+        box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.15) !important;
+        outline: none !important;
+    }
+    .select2-dropdown {
+        border: 1.5px solid #ff9800 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+        overflow: hidden !important;
+        z-index: 9999 !important;
+    }
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+        border: 1.5px solid #cbd5e1 !important;
+        border-radius: 6px !important;
+        padding: 8px 12px !important;
+        font-size: 13.5px !important;
+        outline: none !important;
+    }
+    .select2-container--default .select2-search--dropdown .select2-search__field:focus {
+        border-color: #ff9800 !important;
+    }
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #ff9800 !important;
+        color: #fff !important;
+    }
+    .select2-container--default .select2-results__option {
+        padding: 8px 14px !important;
+        font-size: 13.5px !important;
+    }
+
     /* Remove bootstrap floating labels overlay that can conflict */
     .modern-add-card .form-line:after, 
     .modern-add-card .form-line:before {
@@ -256,6 +310,22 @@ $user_type = $this->Common->getType();
                                     </div>
                                 </div>
                             <?php } ?>
+
+                            <?php if (!empty($trainers)) { ?>
+                                <div class="modern-field-group">
+                                    <label class="field-label"><?= __('Assign Trainer') ?></label>
+                                    <div class="form-line">
+                                        <?= $this->Form->control('trainer_userid', [
+                                            'class' => 'form-control select2-trainer', 
+                                            'type' => 'select', 
+                                            'empty' => __('Select Trainer (Optional)'), 
+                                            'options' => $trainers,
+                                            'label' => false,
+                                            'required' => false
+                                        ]) ?>          
+                                    </div>
+                                </div>
+                            <?php } ?>
                             
                             <div class="modern-field-group">
                                 <label class="field-label"><?= __('Full Name') ?></label>
@@ -382,5 +452,13 @@ $user_type = $this->Common->getType();
             maxDate: new Date(),
             time: false
         });
+
+        if ($.fn.select2) {
+            $('.select2-trainer').select2({
+                placeholder: "<?= __('Search & select a trainer...') ?>",
+                allowClear: true,
+                width: '100%'
+            });
+        }
     });
 </script>

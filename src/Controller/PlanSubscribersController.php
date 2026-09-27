@@ -102,7 +102,7 @@ class PlanSubscribersController extends AppController
             $paymentsTable = \Cake\ORM\TableRegistry::get('Payments');
             $subquery = $paymentsTable->find();
             $subquery->select($subquery->newExpr('COALESCE(SUM(amount), 0)'))
-                     ->where(['plan_subscriber_id' => new \Cake\Database\Expression\IdentifierExpression('PlanSubscribers.id')]);
+                     ->where(['plan_subscriber_id' => new \Cake\Database\Expression\IdentifierExpression('PlanSubscribers.id'), 'is_deleted' => 0]);
 
             if ($paid_fee_filter === '0') {
                 $search[] = function ($exp, $q) use ($subquery) {
@@ -128,7 +128,7 @@ class PlanSubscribersController extends AppController
             $paymentsTable = \Cake\ORM\TableRegistry::get('Payments');
             $subquery = $paymentsTable->find();
             $subquery->select($subquery->newExpr('COALESCE(SUM(amount), 0)'))
-                     ->where(['plan_subscriber_id' => new \Cake\Database\Expression\IdentifierExpression('PlanSubscribers.id')]);
+                     ->where(['plan_subscriber_id' => new \Cake\Database\Expression\IdentifierExpression('PlanSubscribers.id'), 'is_deleted' => 0]);
 
             if ($remain_fee_filter === '0') {
                 $search[] = function ($exp, $q) use ($subquery) {
@@ -179,11 +179,17 @@ class PlanSubscribersController extends AppController
         $paymentsTable = TableRegistry::get('Payments');
         $totalPaidQuery = $paymentsTable->find()
             ->select(['total' => 'SUM(amount)'])
-            ->where(['plan_subscriber_id IN' => $matchedQuery]);
+            ->where(['plan_subscriber_id IN' => $matchedQuery, 'is_deleted' => 0]);
         $totalPaid = $totalPaidQuery->first()->total ?? 0;
 
+        // Sum of discount
+        $totalDiscQuery = $paymentsTable->find()
+            ->select(['total' => 'SUM(discount_amount)'])
+            ->where(['plan_subscriber_id IN' => $matchedQuery, 'is_deleted' => 0]);
+        $totalDiscount = $totalDiscQuery->first()->total ?? 0;
+
         // Remaining fee
-        $totalRemaining = $amount - $totalPaid;
+        $totalRemaining = max(0, $amount - $totalDiscount - $totalPaid);
 
         $this->PlanSubscribers = $this->PlanSubscribers->find('all')
             ->contain(['Users'])
@@ -192,11 +198,13 @@ class PlanSubscribersController extends AppController
 
         $partners =  $this->Users->find('list')
                                  ->select(['id','name'])
-                                ->where(['user_type'=> 2])
-                                ->toArray();
+                                 ->where(['user_type'=> 2])
+                                 ->toArray();
         $this->paginate = [
             'limit' => $norec,
-            'contain' => ['Users', 'Partners', 'Payments'],
+            'contain' => ['Users', 'Partners', 'Payments' => function ($q) {
+                return $q->where(['Payments.is_deleted' => 0]);
+            }],
             'order' => ['id' => 'DESC']
         ];
         $planSubscribers = $this->paginate($this->PlanSubscribers);
@@ -311,47 +319,51 @@ class PlanSubscribersController extends AppController
             }
         }
 
-        $paymentsTable = \Cake\ORM\TableRegistry::get('Payments');
-        $paymentExistsQuery = $paymentsTable->find()
-            ->where([
-                'Payments.plan_subscriber_id = PlanSubscribers.id',
-                'Payments.created >=' => '2026-04-01 00:00:00'
-            ]);
-
         $planSubscribers = $this->PlanSubscribers->find('all')
             ->contain([
-                'Users', 
+                'Users' => ['Partners', 'AddedByUsers'], 
                 'Partners', 
                 'Payments' => function ($q) {
-                    return $q->where(['Payments.created >=' => '2026-04-01 00:00:00']);
+                    return $q->where(['Payments.is_deleted' => 0]);
                 }
             ])
             ->where($search)
-            ->where(['Users.active !=' => '3','Users.user_type !='=>'1'])
-            ->where(function ($exp) use ($paymentExistsQuery) {
-                return $exp->exists($paymentExistsQuery);
-            })
+            ->where(['Users.active !=' => '3', 'Users.user_type !=' => '1'])
             ->order(['PlanSubscribers.id' => 'DESC'])
             ->all();
 
-        // Group subscribers by their joining year and any year in which they made payments
+        // Group subscribers by Financial Year (FY: 1 April to 31 March)
         $groupedSubscribers = [];
         foreach ($planSubscribers as $ps) {
-            $years = [];
-            if ($ps->created) {
-                $years[] = $ps->created->format('Y');
+            $fys = [];
+            $startDateStr = !empty($ps->subscription_start_date) ? $ps->subscription_start_date->format('Y-m-d') : $ps->created->format('Y-m-d');
+            $endDateStr = $ps->plan_expire_date->format('Y-m-d');
+
+            $startFY = ((int)date('n', strtotime($startDateStr)) >= 4) ? (int)date('Y', strtotime($startDateStr)) : ((int)date('Y', strtotime($startDateStr)) - 1);
+            $endFY = ((int)date('n', strtotime($endDateStr)) >= 4) ? (int)date('Y', strtotime($endDateStr)) : ((int)date('Y', strtotime($endDateStr)) - 1);
+
+            for ($y = $startFY; $y <= $endFY; $y++) {
+                $fys[] = $y;
             }
+
             if (!empty($ps->payments)) {
-                foreach ($ps->payments as $payment) {
-                    if ($payment->created) {
-                        $years[] = $payment->created->format('Y');
+                foreach ($ps->payments as $pm) {
+                    if ($pm->is_deleted == 0) {
+                        $payDateStr = !empty($pm->payment_date) ? $pm->payment_date->format('Y-m-d') : $pm->created->format('Y-m-d');
+                        $payFY = ((int)date('n', strtotime($payDateStr)) >= 4) ? (int)date('Y', strtotime($payDateStr)) : ((int)date('Y', strtotime($payDateStr)) - 1);
+                        $fys[] = $payFY;
                     }
                 }
             }
-            $years = array_unique($years);
-            foreach ($years as $year) {
-                $groupedSubscribers[$year][] = $ps;
+
+            $fys = array_unique($fys);
+            foreach ($fys as $fy) {
+                $groupedSubscribers[$fy][] = $ps;
             }
+        }
+
+        if (!isset($groupedSubscribers[2026])) {
+            $groupedSubscribers[2026] = [];
         }
         
         // Sort years chronologically
@@ -363,71 +375,51 @@ class PlanSubscribersController extends AppController
 
         if (empty($groupedSubscribers)) {
             $sheet = $spreadsheet->createSheet();
-            $sheet->setTitle(date('Y'));
+            $sheet->setTitle((string)date('Y'));
             $sheet->setCellValue('A1', 'No data available');
         } else {
             foreach ($groupedSubscribers as $year => $subscribersInYear) {
                 $sheet = $spreadsheet->createSheet();
                 $sheet->setTitle((string)$year);
 
-                // Collect subscriber IDs for this group
-                $subIds = [];
-                foreach ($subscribersInYear as $ps) {
-                    $subIds[] = $ps->id;
+                $fyStart = "{$year}-04-01";
+                $fyEnd = ($year + 1) . "-03-31";
+
+                // Fixed 12 months for this financial year (April to March)
+                $months = [];
+                for ($m = 4; $m <= 12; $m++) {
+                    $months[] = date('Y-m-t', strtotime("{$year}-{$m}-01"));
+                }
+                $nextYear = $year + 1;
+                for ($m = 1; $m <= 3; $m++) {
+                    $months[] = date('Y-m-t', strtotime("{$nextYear}-{$m}-01"));
                 }
 
-                // Fetch and group payments by subscriber and payment date
+                // Gather payments made within this financial year
                 $subscriberPayments = [];
                 $paymentDates = [];
-                if (!empty($subIds)) {
-                    $paymentsTable = TableRegistry::get('Payments');
-                    $allPayments = $paymentsTable->find('all')
-                        ->select(['created', 'amount', 'plan_subscriber_id'])
-                        ->where(['plan_subscriber_id IN' => $subIds])
-                        ->where(['created >=' => '2026-04-01 00:00:00'])
-                        ->toArray();
-
-                    foreach ($allPayments as $p) {
-                        $dateStr = $p->created->format('d-m-Y');
-                        $paymentDates[$dateStr] = $dateStr;
-                        
-                        $subId = $p->plan_subscriber_id;
-                        if (!isset($subscriberPayments[$subId])) {
-                            $subscriberPayments[$subId] = [];
-                        }
-                        if (!isset($subscriberPayments[$subId][$dateStr])) {
-                            $subscriberPayments[$subId][$dateStr] = 0;
-                        }
-                        $subscriberPayments[$subId][$dateStr] += $p->amount;
-                    }
-                    uksort($paymentDates, function($a, $b) {
-                        return strtotime($a) - strtotime($b);
-                    });
-                }
-
-                // Determine month range for this year's subscribers
-                $earliestJoin = null;
-                $latestExpire = null;
                 foreach ($subscribersInYear as $ps) {
-                    $joinTime = strtotime($ps->created->format('Y-m-d'));
-                    $expireTime = strtotime($ps->plan_expire_date->format('Y-m-d'));
-                    if ($earliestJoin === null || $joinTime < $earliestJoin) {
-                        $earliestJoin = $joinTime;
-                    }
-                    if ($latestExpire === null || $expireTime > $latestExpire) {
-                        $latestExpire = $expireTime;
+                    $subId = $ps->id;
+                    $subscriberPayments[$subId] = [];
+                    if (!empty($ps->payments)) {
+                        foreach ($ps->payments as $p) {
+                            if ($p->is_deleted == 0) {
+                                $pDate = !empty($p->payment_date) ? $p->payment_date->format('Y-m-d') : $p->created->format('Y-m-d');
+                                if ($pDate >= $fyStart && $pDate <= $fyEnd) {
+                                    $dateStr = date('d-m-Y', strtotime($pDate));
+                                    $paymentDates[$dateStr] = $dateStr;
+                                    if (!isset($subscriberPayments[$subId][$dateStr])) {
+                                        $subscriberPayments[$subId][$dateStr] = 0;
+                                    }
+                                    $subscriberPayments[$subId][$dateStr] += (float)$p->amount;
+                                }
+                            }
+                        }
                     }
                 }
-
-                $months = [];
-                if ($earliestJoin !== null && $latestExpire !== null) {
-                    $current = strtotime(date('Y-m-01', $earliestJoin));
-                    $end = strtotime(date('Y-m-01', $latestExpire));
-                    while ($current <= $end) {
-                        $months[] = date('Y-m-t', $current);
-                        $current = strtotime('+1 month', $current);
-                    }
-                }
+                uksort($paymentDates, function($a, $b) {
+                    return strtotime($a) - strtotime($b);
+                });
 
                 // Precalculate data rows and totals
                 $dataRows = [];
@@ -462,14 +454,37 @@ class PlanSubscribersController extends AppController
                         $pendingDays = round(($expireTime - $today) / 86400);
                     }
                     $pendingAmount = round($pendingDays * $dailyRate, 2);
+
+                    // Calculate actual paid fee from payments
+                    $totalPaid = 0;
+                    if (!empty($row->payments)) {
+                        foreach ($row->payments as $pm) {
+                            if ($pm->is_deleted == 0) {
+                                $totalPaid += (float)$pm->amount;
+                            }
+                        }
+                    }
+                    $totalDue = max(0, (float)$row->fee - $totalPaid);
+
+                    // Determine who added this subscriber
+                    $addedByName = 'Admin';
+                    if (!empty($row->user->added_by_user->name)) {
+                        $addedByName = $row->user->added_by_user->name;
+                    } elseif (!empty($row->user->partner->name)) {
+                        $addedByName = $row->user->partner->name;
+                    } elseif (!empty($row->partner->name)) {
+                        $addedByName = $row->partner->name;
+                    }
                     
                     $subscriberRow = [
+                        'id' => $row->id,
                         'name' => ucwords($row->user->name),
+                        'added_by' => $addedByName,
                         'joining_date' => $row->created->format('d-m-Y'),
                         'membership' => $monthsCount,
-                        'total_amount' => $row->fee,
-                        'paid_amount' => $row->paid_fee,
-                        'due_amount' => $row->remain_fee,
+                        'total_amount' => (float)$row->fee,
+                        'paid_amount' => $totalPaid,
+                        'due_amount' => $totalDue,
                         'end_date' => date("d-m-Y", strtotime($row->plan_expire_date)),
                         'pending_days' => $pendingDays,
                         'pending_amount' => $pendingAmount,
@@ -512,7 +527,7 @@ class PlanSubscribersController extends AppController
 
                 // Write ACTIVE MEMBERS Row
                 $sheet->setCellValue('A1', 'ACTIVE MEMBERS');
-                $colIdx = 12;
+                $colIdx = 13;
                 foreach ($months as $m) {
                     $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIdx);
                     $sheet->setCellValueExplicit($colLetter . '1', $monthActiveCounts[$m], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
@@ -521,7 +536,7 @@ class PlanSubscribersController extends AppController
 
                 // Write AMOUNT/MONTH Row
                 $sheet->setCellValue('A2', 'AMOUNT/MONTH');
-                $colIdx = 12;
+                $colIdx = 13;
                 foreach ($months as $m) {
                     $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIdx);
                     $sheet->setCellValueExplicit($colLetter . '2', round($monthTotals[$m], 2), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
@@ -530,7 +545,7 @@ class PlanSubscribersController extends AppController
 
                 // Write Header Row (Row 3)
                 $headers = [
-                    'NAME', 'DATE OF JOINING', 'MEMBERSHIP', 'TOTAL AMOUNT', 'PAID AMOUNT', 
+                    'NAME', 'ADDED BY', 'DATE OF JOINING', 'MEMBERSHIP', 'TOTAL AMOUNT', 'PAID AMOUNT', 
                     'DUE AMOUNT', 'MEMBERSHIP END DATE', 'MEMBERSHIP PENDING IN DAYS', 
                     'MEMBERSHIP PENIDNG IN AMOUNT', 'Days', 'Daily Amt'
                 ];
@@ -555,18 +570,19 @@ class PlanSubscribersController extends AppController
                 $rowIdx = 4;
                 foreach ($dataRows as $r) {
                     $sheet->setCellValue('A' . $rowIdx, $r['name']);
-                    $sheet->setCellValue('B' . $rowIdx, $r['joining_date']);
-                    $sheet->setCellValue('C' . $rowIdx, $r['membership']);
-                    $sheet->setCellValue('D' . $rowIdx, $r['total_amount']);
-                    $sheet->setCellValue('E' . $rowIdx, $r['paid_amount']);
-                    $sheet->setCellValue('F' . $rowIdx, $r['due_amount']);
-                    $sheet->setCellValue('G' . $rowIdx, $r['end_date']);
-                    $sheet->setCellValue('H' . $rowIdx, $r['pending_days']);
-                    $sheet->setCellValue('I' . $rowIdx, $r['pending_amount']);
-                    $sheet->setCellValue('J' . $rowIdx, $r['days']);
-                    $sheet->setCellValue('K' . $rowIdx, $r['daily_amt']);
+                    $sheet->setCellValue('B' . $rowIdx, $r['added_by']);
+                    $sheet->setCellValue('C' . $rowIdx, $r['joining_date']);
+                    $sheet->setCellValue('D' . $rowIdx, $r['membership']);
+                    $sheet->setCellValue('E' . $rowIdx, $r['total_amount']);
+                    $sheet->setCellValue('F' . $rowIdx, $r['paid_amount']);
+                    $sheet->setCellValue('G' . $rowIdx, $r['due_amount']);
+                    $sheet->setCellValue('H' . $rowIdx, $r['end_date']);
+                    $sheet->setCellValue('I' . $rowIdx, $r['pending_days']);
+                    $sheet->setCellValue('J' . $rowIdx, $r['pending_amount']);
+                    $sheet->setCellValue('K' . $rowIdx, $r['days']);
+                    $sheet->setCellValue('L' . $rowIdx, $r['daily_amt']);
                     
-                    $colIdx = 12;
+                    $colIdx = 13;
                     foreach ($months as $m) {
                         $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIdx);
                         $sheet->setCellValue($colLetter . $rowIdx, $r['months'][$m]);
@@ -660,7 +676,7 @@ class PlanSubscribersController extends AppController
             $paymentsTable = \Cake\ORM\TableRegistry::get('Payments');
             $subquery = $paymentsTable->find();
             $subquery->select($subquery->newExpr('COALESCE(SUM(amount), 0)'))
-                     ->where(['plan_subscriber_id' => new \Cake\Database\Expression\IdentifierExpression('PlanSubscribers.id')]);
+                     ->where(['plan_subscriber_id' => new \Cake\Database\Expression\IdentifierExpression('PlanSubscribers.id'), 'is_deleted' => 0]);
 
             if ($paid_fee_filter === '0') {
                 $search[] = function ($exp, $q) use ($subquery) {
@@ -686,7 +702,7 @@ class PlanSubscribersController extends AppController
             $paymentsTable = \Cake\ORM\TableRegistry::get('Payments');
             $subquery = $paymentsTable->find();
             $subquery->select($subquery->newExpr('COALESCE(SUM(amount), 0)'))
-                     ->where(['plan_subscriber_id' => new \Cake\Database\Expression\IdentifierExpression('PlanSubscribers.id')]);
+                     ->where(['plan_subscriber_id' => new \Cake\Database\Expression\IdentifierExpression('PlanSubscribers.id'), 'is_deleted' => 0]);
 
             if ($remain_fee_filter === '0') {
                 $search[] = function ($exp, $q) use ($subquery) {
@@ -720,47 +736,52 @@ class PlanSubscribersController extends AppController
             }
         }
 
-        $paymentsTable = \Cake\ORM\TableRegistry::get('Payments');
-        $paymentExistsQuery = $paymentsTable->find()
-            ->where([
-                'Payments.plan_subscriber_id = PlanSubscribers.id',
-                'Payments.created >=' => '2026-04-01 00:00:00'
-            ]);
-
         $planSubscribers = $this->PlanSubscribers->find('all')
             ->contain([
-                'Users', 
+                'Users' => ['Partners', 'AddedByUsers'], 
                 'Partners', 
                 'Payments' => function ($q) {
-                    return $q->where(['Payments.created >=' => '2026-04-01 00:00:00']);
+                    return $q->where(['Payments.is_deleted' => 0]);
                 }
             ])
             ->where($search)
-            ->where(['Users.active !=' => '3','Users.user_type !='=>'1'])
-            ->where(function ($exp) use ($paymentExistsQuery) {
-                return $exp->exists($paymentExistsQuery);
-            })
+            ->where(['Users.active !=' => '3', 'Users.user_type !=' => '1'])
             ->order(['PlanSubscribers.id' => 'DESC'])
             ->all();
 
-        // Group subscribers by their joining year and any year in which they made payments
+        // Group subscribers by Financial Year (FY: 1 April to 31 March)
         $groupedSubscribers = [];
         foreach ($planSubscribers as $ps) {
-            $years = [];
-            if ($ps->created) {
-                $years[] = $ps->created->format('Y');
+            $fys = [];
+            $startDateStr = !empty($ps->subscription_start_date) ? $ps->subscription_start_date->format('Y-m-d') : $ps->created->format('Y-m-d');
+            $endDateStr = $ps->plan_expire_date->format('Y-m-d');
+
+            $startFY = ((int)date('n', strtotime($startDateStr)) >= 4) ? (int)date('Y', strtotime($startDateStr)) : ((int)date('Y', strtotime($startDateStr)) - 1);
+            $endFY = ((int)date('n', strtotime($endDateStr)) >= 4) ? (int)date('Y', strtotime($endDateStr)) : ((int)date('Y', strtotime($endDateStr)) - 1);
+
+            for ($y = $startFY; $y <= $endFY; $y++) {
+                $fys[] = $y;
             }
+
             if (!empty($ps->payments)) {
-                foreach ($ps->payments as $payment) {
-                    if ($payment->created) {
-                        $years[] = $payment->created->format('Y');
+                foreach ($ps->payments as $pm) {
+                    if ($pm->is_deleted == 0) {
+                        $payDateStr = !empty($pm->payment_date) ? $pm->payment_date->format('Y-m-d') : $pm->created->format('Y-m-d');
+                        $payFY = ((int)date('n', strtotime($payDateStr)) >= 4) ? (int)date('Y', strtotime($payDateStr)) : ((int)date('Y', strtotime($payDateStr)) - 1);
+                        $fys[] = $payFY;
                     }
                 }
             }
-            $years = array_unique($years);
-            foreach ($years as $year) {
-                $groupedSubscribers[$year][] = $ps;
+
+            $fys = array_unique($fys);
+            foreach ($fys as $fy) {
+                $groupedSubscribers[$fy][] = $ps;
             }
+        }
+
+        // Always ensure FY 2026 tab exists
+        if (!isset($groupedSubscribers[2026])) {
+            $groupedSubscribers[2026] = [];
         }
         
         // Sort years chronologically
@@ -768,61 +789,44 @@ class PlanSubscribersController extends AppController
 
         $reportData = [];
         foreach ($groupedSubscribers as $year => $subscribersInYear) {
-            $subIds = [];
-            foreach ($subscribersInYear as $ps) {
-                $subIds[] = $ps->id;
+            $fyStart = "{$year}-04-01";
+            $fyEnd = ($year + 1) . "-03-31";
+
+            // Fixed 12 months for this financial year (April to March)
+            $months = [];
+            for ($m = 4; $m <= 12; $m++) {
+                $months[] = date('Y-m-t', strtotime("{$year}-{$m}-01"));
+            }
+            $nextYear = $year + 1;
+            for ($m = 1; $m <= 3; $m++) {
+                $months[] = date('Y-m-t', strtotime("{$nextYear}-{$m}-01"));
             }
 
+            // Gather payments made within this financial year
             $subscriberPayments = [];
             $paymentDates = [];
-            if (!empty($subIds)) {
-                $paymentsTable = TableRegistry::get('Payments');
-                $allPayments = $paymentsTable->find('all')
-                    ->select(['created', 'amount', 'plan_subscriber_id'])
-                    ->where(['plan_subscriber_id IN' => $subIds])
-                    ->where(['created >=' => '2026-04-01 00:00:00'])
-                    ->toArray();
-
-                foreach ($allPayments as $p) {
-                    $dateStr = $p->created->format('d-m-Y');
-                    $paymentDates[$dateStr] = $dateStr;
-                    
-                    $subId = $p->plan_subscriber_id;
-                    if (!isset($subscriberPayments[$subId])) {
-                        $subscriberPayments[$subId] = [];
-                    }
-                    if (!isset($subscriberPayments[$subId][$dateStr])) {
-                        $subscriberPayments[$subId][$dateStr] = 0;
-                    }
-                    $subscriberPayments[$subId][$dateStr] += $p->amount;
-                }
-                uksort($paymentDates, function($a, $b) {
-                    return strtotime($a) - strtotime($b);
-                });
-            }
-
-            $earliestJoin = null;
-            $latestExpire = null;
             foreach ($subscribersInYear as $ps) {
-                $joinTime = strtotime($ps->created->format('Y-m-d'));
-                $expireTime = strtotime($ps->plan_expire_date->format('Y-m-d'));
-                if ($earliestJoin === null || $joinTime < $earliestJoin) {
-                    $earliestJoin = $joinTime;
-                }
-                if ($latestExpire === null || $expireTime > $latestExpire) {
-                    $latestExpire = $expireTime;
+                $subId = $ps->id;
+                $subscriberPayments[$subId] = [];
+                if (!empty($ps->payments)) {
+                    foreach ($ps->payments as $p) {
+                        if ($p->is_deleted == 0) {
+                            $pDate = !empty($p->payment_date) ? $p->payment_date->format('Y-m-d') : $p->created->format('Y-m-d');
+                            if ($pDate >= $fyStart && $pDate <= $fyEnd) {
+                                $dateStr = date('d-m-Y', strtotime($pDate));
+                                $paymentDates[$dateStr] = $dateStr;
+                                if (!isset($subscriberPayments[$subId][$dateStr])) {
+                                    $subscriberPayments[$subId][$dateStr] = 0;
+                                }
+                                $subscriberPayments[$subId][$dateStr] += (float)$p->amount;
+                            }
+                        }
+                    }
                 }
             }
-
-            $months = [];
-            if ($earliestJoin !== null && $latestExpire !== null) {
-                $current = strtotime(date('Y-m-01', $earliestJoin));
-                $end = strtotime(date('Y-m-01', $latestExpire));
-                while ($current <= $end) {
-                    $months[] = date('Y-m-t', $current);
-                    $current = strtotime('+1 month', $current);
-                }
-            }
+            uksort($paymentDates, function($a, $b) {
+                return strtotime($a) - strtotime($b);
+            });
 
             $dataRows = [];
             $monthActiveCounts = array_fill_keys($months, 0);
@@ -856,15 +860,39 @@ class PlanSubscribersController extends AppController
                     $pendingDays = round(($expireTime - $today) / 86400);
                 }
                 $pendingAmount = round($pendingDays * $dailyRate, 2);
+
+                // Calculate actual paid fee and discount from payments
+                $totalPaid = 0;
+                $totalDiscount = 0;
+                if (!empty($row->payments)) {
+                    foreach ($row->payments as $pm) {
+                        if ($pm->is_deleted == 0) {
+                            $totalPaid += (float)$pm->amount;
+                            $totalDiscount += (float)($pm->discount_amount ?? 0);
+                        }
+                    }
+                }
+                $totalDue = max(0, (float)$row->fee - $totalDiscount - $totalPaid);
+
+                // Determine who added this subscriber
+                $addedByName = 'Admin';
+                if (!empty($row->user->added_by_user->name)) {
+                    $addedByName = $row->user->added_by_user->name;
+                } elseif (!empty($row->user->partner->name)) {
+                    $addedByName = $row->user->partner->name;
+                } elseif (!empty($row->partner->name)) {
+                    $addedByName = $row->partner->name;
+                }
                 
                 $subscriberRow = [
                     'id' => $row->id,
                     'name' => ucwords($row->user->name),
+                    'added_by' => $addedByName,
                     'joining_date' => $row->created->format('d-m-Y'),
                     'membership' => $monthsCount,
-                    'total_amount' => $row->fee,
-                    'paid_amount' => $row->paid_fee,
-                    'due_amount' => $row->remain_fee,
+                    'total_amount' => (float)$row->fee,
+                    'paid_amount' => $totalPaid,
+                    'due_amount' => $totalDue,
                     'end_date' => date("d-m-Y", strtotime($row->plan_expire_date)),
                     'pending_days' => $pendingDays,
                     'pending_amount' => $pendingAmount,
@@ -925,7 +953,13 @@ class PlanSubscribersController extends AppController
     public function view($id = null)
     {
         $planSubscriber = $this->PlanSubscribers->get($id, [
-            'contain' => ['Users', 'Partners', 'Payments']
+            'contain' => [
+                'Users', 
+                'Partners', 
+                'Payments' => function ($q) {
+                    return $q->where(['Payments.is_deleted' => 0]);
+                }
+            ]
         ]);
 
         $this->set('planSubscriber', $planSubscriber);

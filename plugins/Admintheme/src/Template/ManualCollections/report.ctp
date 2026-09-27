@@ -1,7 +1,6 @@
 <?php
-$years      = array_keys($reportData);
-$currentYear = date('Y');
-$activeYear  = in_array($currentYear, $years) ? $currentYear : (!empty($years) ? end($years) : null);
+$years     = array_keys($reportData);
+$activeYear = !empty($years) ? reset($years) : null;
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -15,7 +14,7 @@ $activeYear  = in_array($currentYear, $years) ? $currentYear : (!empty($years) ?
                                 <span><?= __('Manual Collection — Payment Report') ?></span>
                                 <span style="background:#fff3e0;color:#e65100;padding:2px 10px;border-radius:10px;font-size:12px;font-weight:700;">Manual</span>
                             </h2>
-                            <p style="margin:5px 0 0 0;font-size:13px;color:#777;"><?= __('Year-wise breakdown of manual collection subscriber payments.') ?></p>
+                            <p style="margin:5px 0 0 0;font-size:13px;color:#777;"><?= __('Indian Financial Year (April–March) breakdown of manual collection subscriber payments.') ?></p>
                         </div>
                         <div>
                             <a href="javascript:window.print()" class="btn btn-primary waves-effect" style="background-color:#607d8b!important;color:#fff!important;font-weight:600!important;border-radius:6px!important;padding:6px 14px!important;font-size:13px!important;display:inline-flex;align-items:center;gap:6px;">
@@ -36,12 +35,14 @@ $activeYear  = in_array($currentYear, $years) ? $currentYear : (!empty($years) ?
                                 <span style="font-size:16px;font-weight:600;color:#555;"><?= __('No report data available.') ?></span>
                             </div>
                         <?php else: ?>
-                            <!-- Year Tabs -->
+                            <!-- Year Tabs (Financial Year April-March) -->
                             <ul class="nav nav-tabs report-year-tabs" role="tablist" style="margin-bottom:24px;border-bottom:2px solid #eaeaea;display:flex;gap:4px;padding-left:0;list-style:none;">
-                                <?php foreach (array_keys($reportData) as $year): ?>
+                                <?php foreach (array_keys($reportData) as $year):
+                                    $tabSlug = 'report-' . preg_replace('/[^a-zA-Z0-9_-]/', '-', $year);
+                                ?>
                                     <li role="presentation" class="<?= $year == $activeYear ? 'active' : '' ?>">
-                                        <a href="#report-year-<?= $year ?>" data-toggle="tab" aria-expanded="<?= $year == $activeYear ? 'true' : 'false' ?>" style="font-weight:700;font-size:14px;padding:12px 24px;border-radius:6px 6px 0 0;display:block;text-decoration:none;border:1px solid transparent;transition:all .3s ease;">
-                                            <?= $year ?> <?= __('Report') ?>
+                                        <a href="#<?= $tabSlug ?>" data-toggle="tab" aria-expanded="<?= $year == $activeYear ? 'true' : 'false' ?>" style="font-weight:700;font-size:14px;padding:12px 24px;border-radius:6px 6px 0 0;display:block;text-decoration:none;border:1px solid transparent;transition:all .3s ease;">
+                                            <?= h($year) ?> <?= __('Report') ?>
                                         </a>
                                     </li>
                                 <?php endforeach; ?>
@@ -50,13 +51,14 @@ $activeYear  = in_array($currentYear, $years) ? $currentYear : (!empty($years) ?
                             <!-- Tab Panes -->
                             <div class="tab-content">
                                 <?php foreach ($reportData as $year => $data):
+                                    $tabSlug           = 'report-' . preg_replace('/[^a-zA-Z0-9_-]/', '-', $year);
                                     $months            = $data['months'];
                                     $paymentDates      = $data['paymentDates'];
                                     $dataRows          = $data['dataRows'];
                                     $monthActiveCounts = $data['monthActiveCounts'];
                                     $monthTotals       = $data['monthTotals'];
                                 ?>
-                                    <div role="tabpanel" class="tab-pane fade <?= $year == $activeYear ? 'active in' : '' ?>" id="report-year-<?= $year ?>">
+                                    <div role="tabpanel" class="tab-pane fade <?= $year == $activeYear ? 'active in' : '' ?>" id="<?= $tabSlug ?>">
 
                                         <!-- Year stats -->
                                         <div class="row" style="margin-bottom:24px;display:flex;flex-wrap:wrap;gap:15px;">
@@ -129,7 +131,7 @@ $activeYear  = in_array($currentYear, $years) ? $currentYear : (!empty($years) ?
                                                         <?php endforeach; ?>
                                                         <?php foreach ($months as $m): ?>
                                                             <th style="background-color:#e65100!important;color:#fff!important;font-weight:700;padding:12px;border:1px solid #bf360c;font-size:11px;text-transform:uppercase;text-align:center;min-width:95px;">
-                                                                <?= date('d-m-Y', strtotime($m)) ?>
+                                                                <?= date('M Y', strtotime($m)) ?>
                                                             </th>
                                                         <?php endforeach; ?>
                                                         <?php foreach ($paymentDates as $d): ?>
@@ -156,15 +158,15 @@ $activeYear  = in_array($currentYear, $years) ? $currentYear : (!empty($years) ?
                                                             <?php foreach ($months as $m):
                                                                 $val = $r['months'][$m];
                                                             ?>
-                                                                <td style="padding:10px 12px;border:1px solid #e2e8f0;text-align:center;<?= $val > 0 ? 'background-color:#fff3e0;color:#bf360c;font-weight:700;' : 'color:#cbd5e1;' ?>">
-                                                                    <?= $val > 0 ? $this->Number->format($val) : '-' ?>
+                                                                <td style="padding:10px 12px;border:1px solid #e2e8f0;text-align:center;<?= $val > 0 ? 'background-color:#fff3e0;color:#bf360c;font-weight:700;' : 'color:#94a3b8;' ?>">
+                                                                    <?= $val > 0 ? $this->Number->format($val) : '0.00' ?>
                                                                 </td>
                                                             <?php endforeach; ?>
                                                             <?php foreach ($paymentDates as $d):
                                                                 $val = $r['payments'][$d];
                                                             ?>
-                                                                <td style="padding:10px 12px;border:1px solid #e2e8f0;text-align:center;<?= $val > 0 ? 'background-color:#efebe9;color:#4e342e;font-weight:700;' : 'color:#cbd5e1;' ?>">
-                                                                    <?= $val > 0 ? $this->Number->format($val) : '-' ?>
+                                                                <td style="padding:10px 12px;border:1px solid #e2e8f0;text-align:center;<?= $val > 0 ? 'background-color:#efebe9;color:#4e342e;font-weight:700;' : 'color:#94a3b8;' ?>">
+                                                                    <?= $val > 0 ? $this->Number->format($val) : '0.00' ?>
                                                                 </td>
                                                             <?php endforeach; ?>
                                                         </tr>
@@ -184,20 +186,75 @@ $activeYear  = in_array($currentYear, $years) ? $currentYear : (!empty($years) ?
 </section>
 
 <style>
-    .report-grid th,.report-grid td { white-space:nowrap!important;vertical-align:middle!important; }
+    .report-table-wrapper {
+        width: 100%;
+        max-height: 72vh;
+        overflow-x: auto;
+        overflow-y: auto;
+        position: relative;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #fff;
+    }
+    .report-grid {
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+    }
+    .report-grid th, .report-grid td {
+        white-space: nowrap !important;
+        vertical-align: middle !important;
+    }
+
+    /* Sticky Vertical Headers */
+    .report-grid thead tr:nth-child(1) td {
+        position: sticky;
+        top: 0;
+        z-index: 24;
+    }
+    .report-grid thead tr:nth-child(2) td {
+        position: sticky;
+        top: 43px;
+        z-index: 24;
+    }
+    .report-grid thead tr:nth-child(3) th {
+        position: sticky;
+        top: 86px;
+        z-index: 24;
+    }
+
+    /* Sticky Horizontal Frozen First Column (Client Name) */
+    .report-grid thead tr:nth-child(3) th:first-child {
+        position: sticky;
+        left: 0;
+        top: 86px;
+        z-index: 35 !important;
+        background-color: #ff9800 !important;
+        box-shadow: 2px 0 6px rgba(0, 0, 0, 0.12);
+    }
+    .report-grid tbody td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 15;
+        background-color: #ffffff;
+        box-shadow: 2px 0 6px rgba(0, 0, 0, 0.08);
+    }
+    .report-grid tbody tr:hover td:first-child {
+        background-color: #fffbf5 !important;
+    }
+
     .report-year-tabs { border-bottom:2px solid #e2e8f0!important;margin-bottom:24px!important;display:flex;flex-wrap:wrap;padding-left:0;list-style:none; }
     .report-year-tabs>li { margin-bottom:-2px; }
     .report-year-tabs>li>a { color:#64748b!important;background-color:#f8fafc;border:1px solid #e2e8f0;margin-right:4px;font-weight:700!important;padding:10px 18px!important;font-size:13px!important;display:block;border-radius:6px 6px 0 0!important;text-decoration:none!important;transition:all .2s ease-in-out; }
     .report-year-tabs>li>a:hover { background-color:#f1f5f9!important;color:#ff9800!important; }
     .report-year-tabs>li.active>a,.report-year-tabs>li.active>a:focus,.report-year-tabs>li.active>a:hover { background-color:#fff!important;border-top:3px solid #ff9800!important;border-bottom:2px solid transparent!important;color:#ff9800!important; }
-    .report-table-wrapper::-webkit-scrollbar { height:10px;background:#f1f5f9; }
+    .report-table-wrapper::-webkit-scrollbar { width:8px;height:10px;background:#f1f5f9; }
     .report-table-wrapper::-webkit-scrollbar-thumb { border-radius:6px;background:#cbd5e1;border:2px solid #f1f5f9; }
     .report-grid tbody tr:hover td { background-color:#fffbf5!important; }
     @media print {
         header,footer,.navbar,.sidebar,.header-actions,.nav-tabs { display:none!important; }
-        .report-table-wrapper { overflow:visible!important;border:none!important; }
+        .report-table-wrapper { overflow:visible!important;max-height:none!important;border:none!important; }
         .report-grid { min-width:100%!important;font-size:9px!important; }
-        .report-grid th,.report-grid td { padding:4px 6px!important;border:1px solid #000!important;color:#000!important; }
+        .report-grid th,.report-grid td { padding:4px 6px!important;border:1px solid #000!important;color:#000!important;position:static!important; }
         .tab-content>.tab-pane { display:block!important;opacity:1!important;visibility:visible!important;page-break-after:always; }
     }
 </style>

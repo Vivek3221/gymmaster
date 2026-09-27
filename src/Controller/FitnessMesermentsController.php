@@ -51,6 +51,10 @@ class FitnessMesermentsController extends AppController
         $sdate  ='';
         $edate  ='';
         $norec  = 10;
+        if (isset($this->request->query['norec']) && trim($this->request->query['norec']) != "") {
+            $norec = $this->request->query['norec'];
+        }
+        $limit = ($norec === 'all' || $norec === 'All' || (int)$norec > 1000) ? 999999 : (int)$norec;
         $user_id  ='';
         $search = [];
          if (isset($this->request->query['from_date']) && trim($this->request->query['from_date']) != "" 
@@ -95,13 +99,16 @@ class FitnessMesermentsController extends AppController
         }
         //$count = $count->where(['Users.active !=' => '3']);
 
-        $this->paginate = ['order' => ['FitnessMeserments.id' => 'DESC'],
-                                      'limit' => $norec, 
-                                      'contain' => ['Users']];
+        $this->paginate = [
+            'order' => ['FitnessMeserments.id' => 'DESC'],
+            'limit' => $limit,
+            'maxLimit' => 999999,
+            'contain' => ['Users']
+        ];
         $fitnessMeserments = $this->paginate($count)->toArray();
         //pr($fitnessMeserments);
        // $users = $this->paginate($this->Users);
-        $this->set(compact('fitnessMeserments','sdate','edate','user_id','users_type'));
+        $this->set(compact('fitnessMeserments','sdate','edate','user_id','users_type','norec'));
         $this->set('_serialize', ['fitnessMeserments']);
         
         

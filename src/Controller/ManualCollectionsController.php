@@ -272,6 +272,10 @@ class ManualCollectionsController extends AppController
                     $paymentdata['plan_subscriber_id']  = $planSubscribers->id;
                     $paymentdata['amount']              = $payAmount;
                     $paymentdata['currency']            = 'INR';
+                    $paymentdata['payment_date']        = !empty($data['payment_date']) ? date('Y-m-d', strtotime($data['payment_date'])) : date('Y-m-d');
+                    $paymentdata['discount_percent']     = !empty($data['discount_percent']) ? (float)$data['discount_percent'] : null;
+                    $paymentdata['discount_amount']      = !empty($data['discount_amount']) ? (float)$data['discount_amount'] : null;
+                    $paymentdata['discount_reason']      = !empty($data['discount_reason']) ? trim($data['discount_reason']) : null;
                     $payments    = $this->Payments->patchEntity($payments, $paymentdata);
                     $payments->mode_ofpay = $data['mode_ofpay'];
                     if (!$this->Payments->save($payments)) {
@@ -290,7 +294,11 @@ class ManualCollectionsController extends AppController
         }
         $user_id = $id;
         $trainers = $this->Users->find('list')
-            ->where(['Users.user_type' => 4, 'Users.partner_id' => $users_id]);
+            ->where(['Users.user_type' => 4, 'Users.partner_id' => $users_id, 'Users.active !=' => '3']);
+        if ($trainers->count() == 0) {
+            $trainers = $this->Users->find('list')
+                ->where(['Users.user_type' => 4, 'Users.active !=' => '3']);
+        }
 
         $plansTable = TableRegistry::get('Plans');
         $planConditions = ['Plans.active' => 1];
@@ -301,6 +309,12 @@ class ManualCollectionsController extends AppController
             'keyField' => 'id',
             'valueField' => 'title'
         ])->where($planConditions)->toArray();
+        if (empty($availablePlans)) {
+            $availablePlans = $plansTable->find('list', [
+                'keyField' => 'id',
+                'valueField' => 'title'
+            ])->where(['Plans.active' => 1])->toArray();
+        }
 
         $this->set(compact('user_id', 'user', 'trainers', 'users_type', 'availablePlans'));
     }
@@ -327,8 +341,17 @@ class ManualCollectionsController extends AppController
 
         if ($this->request->is('post')) {
             $data = $this->request->getData();
+            if (!empty($data['discount_percent']) && (float)$data['discount_percent'] > 0 && empty(trim($data['discount_reason'] ?? ''))) {
+                $this->Flash->error(__('Discount Remark / Reason is mandatory when discount is applied.'));
+                return $this->redirect(['action' => 'addPayment', $userid]);
+            }
             $data['partner_id'] = $targetPartnerId;
             $data['currency'] = 'INR';
+            if (!empty($data['payment_date'])) {
+                $data['payment_date'] = date('Y-m-d', strtotime($data['payment_date']));
+            } else {
+                $data['payment_date'] = date('Y-m-d');
+            }
             $payment = $this->Payments->patchEntity($payment, $data);
             $payment->mode_ofpay = $data['mode_ofpay'];
             if ($this->Payments->save($payment)) {
@@ -372,13 +395,22 @@ class ManualCollectionsController extends AppController
     public function showPlanList($userid)
     {
         $this->viewBuilder()->layout("ajax");
-        $this->Payments = TableRegistry::get('Payments');
+        $this->PlanSubscribers = TableRegistry::get('PlanSubscribers');
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-        $planSubscribers = $this->Payments->PlanSubscribers->find('list', ['limit' => 200])
-            ->where(['user_id' => $userid, 'partner_id' => $this->usersdetail['users_id'], 'collection_type' => 'manual']);
-        $this->set(compact('planSubscribers', 'userid'));
+        $planSubscribers = $this->PlanSubscribers->find('list')
+            ->where(['user_id' => $userid, 'collection_type' => 'manual']);
+        echo '<label>Select Plan</label>';
+        echo '<div class="form-line">';
+        echo '<select class="form-control show-tick" id="plan-subscriber-id" required="required" onchange="showPlanDetails(this.value)" name="plan_subscriber_id">';
+        echo '<option value="">Select Plan</option>';
+        foreach ($planSubscribers as $key => $value) {
+            echo '<option value="' . $key . '">' . $value . '</option>';
+        }
+        echo '</select>';
+        echo '</div>';
+        exit;
     }
 
     /*
@@ -397,24 +429,78 @@ class ManualCollectionsController extends AppController
             ->where(['id' => $planid])->first();
         $paidAmount = $this->Payments->find('all');
         $paidAmount = $paidAmount->select(['sum' => $paidAmount->func()->sum('amount')])
-            ->where(['plan_subscriber_id' => $planSubscribers->id])->first();
+            ->where(['plan_subscriber_id' => $planSubscribers->id, 'is_deleted' => 0])->first();
         $paid = 0;
         if (!empty($paidAmount->sum)) {
-            $paid = $paidAmount->sum;
+            $paid = (float)$paidAmount->sum;
         }
-        $remaining = $planSubscribers->fee - $paid;
+
+        $discountAmount = $this->Payments->find('all');
+        $discountAmount = $discountAmount->select(['sum' => $discountAmount->func()->sum('discount_amount')])
+            ->where(['plan_subscriber_id' => $planSubscribers->id, 'is_deleted' => 0])->first();
+        $discount = 0;
+        if (!empty($discountAmount->sum)) {
+            $discount = (float)$discountAmount->sum;
+        }
+
+        $remaining = max(0, $planSubscribers->fee - $discount - $paid);
         if (!empty($this->request->query('amount'))) {
             $updateLimit = $remaining + $this->request->query('amount');
             $paid = $paid - $this->request->query('amount');
             $remaining = $remaining + $this->request->query('amount');
         }
-        echo '<div class="col-sm-12"><strong>Selected Plan Details:</strong></div>';
-        echo '<div class="col-sm-4"><strong>Total Fee:</strong> INR ' . $planSubscribers->fee . '</div>';
-        echo '<div class="col-sm-4"><strong>Paid Amount:</strong> INR ' . $paid . '</div>';
-        echo '<div class="col-sm-4"><strong>Remaining Amount:</strong> INR ' . $remaining . '</div>';
-        echo ' <input type="hidden" id="fee" name="fee" value="' . $remaining . '">';
-        echo '<div class="col-sm-4"><strong>Payment Due Date:</strong> ' . date('d-m-Y', strtotime($planSubscribers->payment_due_date)) . '</div>';
-        echo '<div class="col-sm-4"><strong>Plan Expire Date:</strong> ' . date('d-m-Y', strtotime($planSubscribers->plan_expire_date)) . '</div>';
+        $formattedFee = number_format((float)$planSubscribers->fee, 2);
+        $formattedDiscount = number_format((float)$discount, 2);
+        $formattedPaid = number_format((float)$paid, 2);
+        $formattedRem = number_format((float)$remaining, 2);
+        $dueDate = !empty($planSubscribers->payment_due_date) ? date('d M Y', strtotime($planSubscribers->payment_due_date)) : 'N/A';
+        $expireDate = !empty($planSubscribers->plan_expire_date) ? date('d M Y', strtotime($planSubscribers->plan_expire_date)) : 'N/A';
+
+        $statusBadge = ($remaining <= 0)
+            ? '<span class="psc-badge paid"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check_circle</i> Fully Paid</span>'
+            : '<span class="psc-badge pending"><i class="material-icons" style="font-size:13px; vertical-align:middle;">schedule</i> Pending: INR ' . $formattedRem . '</span>';
+
+        echo '<div class="plan-summary-card">';
+        echo '  <div class="psc-top">';
+        echo '    <div class="psc-title">';
+        echo '      <i class="material-icons" style="color:#ff9800; font-size:18px;">card_membership</i>';
+        echo '      <span>Selected Plan Details</span>';
+        echo '    </div>';
+        echo '    <div>' . $statusBadge . '</div>';
+        echo '  </div>';
+        echo '  <div class="psc-grid">';
+        echo '    <div class="psc-item">';
+        echo '      <span class="psc-label">Total Plan Fee</span>';
+        echo '      <span class="psc-val">INR ' . $formattedFee . '</span>';
+        echo '    </div>';
+        if ($discount > 0) {
+            echo '    <div class="psc-item">';
+            echo '      <span class="psc-label">Discount Applied</span>';
+            echo '      <span class="psc-val text-info" style="color:#0284c7; font-weight:700;">- INR ' . $formattedDiscount . '</span>';
+            echo '    </div>';
+        }
+        echo '    <div class="psc-item">';
+        echo '      <span class="psc-label">Paid So Far</span>';
+        echo '      <span class="psc-val text-success" style="color:#16a34a; font-weight:700;">INR ' . $formattedPaid . '</span>';
+        echo '    </div>';
+        echo '    <div class="psc-item">';
+        echo '      <span class="psc-label">Remaining Balance</span>';
+        echo '      <span class="psc-val ' . ($remaining > 0 ? 'text-warning' : 'text-muted') . '" style="' . ($remaining > 0 ? 'color:#ea580c;' : 'color:#94a3b8;') . ' font-weight:700;">INR ' . $formattedRem . '</span>';
+        echo '    </div>';
+        echo '    <div class="psc-item">';
+        echo '      <span class="psc-label">Payment Due Date</span>';
+        echo '      <span class="psc-val date" style="display:inline-flex; align-items:center; gap:4px;"><i class="material-icons" style="font-size:15px; color:#94a3b8;">event</i> ' . $dueDate . '</span>';
+        echo '    </div>';
+        echo '    <div class="psc-item">';
+        echo '      <span class="psc-label">Plan Expire Date</span>';
+        echo '      <span class="psc-val date" style="display:inline-flex; align-items:center; gap:4px;"><i class="material-icons" style="font-size:15px; color:#94a3b8;">event_busy</i> ' . $expireDate . '</span>';
+        echo '    </div>';
+        echo '  </div>';
+        echo '  <input type="hidden" id="fee" name="fee" value="' . $remaining . '">';
+        echo '  <input type="hidden" id="total_fee" value="' . $planSubscribers->fee . '">';
+        echo '  <input type="hidden" id="discount_amount" value="' . $discount . '">';
+        echo '  <input type="hidden" id="paid_amount" value="' . $paid . '">';
+        echo '</div>';
         exit;
     }
 
@@ -448,6 +534,16 @@ class ManualCollectionsController extends AppController
                 $payment->amount             = $payAmount;
                 $payment->currency           = $planSubscriber->currency ?? 'INR';
                 $payment->mode_ofpay         = $data['mode_ofpay'] ?? 0;
+                $payment->payment_date       = !empty($data['payment_date']) ? date('Y-m-d', strtotime($data['payment_date'])) : date('Y-m-d');
+                if (!empty($data['discount_percent'])) {
+                    $payment->discount_percent = (float)$data['discount_percent'];
+                }
+                if (!empty($data['discount_amount'])) {
+                    $payment->discount_amount = (float)$data['discount_amount'];
+                }
+                if (!empty($data['discount_reason'])) {
+                    $payment->discount_reason = trim($data['discount_reason']);
+                }
 
                 if ($Payments->save($payment)) {
                     $planSubscriber->paid_fee  += $payAmount;
@@ -476,7 +572,9 @@ class ManualCollectionsController extends AppController
         if ($redirect) return $redirect;
 
         $planSubscriber = $this->PlanSubscribers->get($id, [
-            'contain' => ['Users', 'Partners', 'Payments']
+            'contain' => ['Users', 'Partners', 'Payments' => function ($q) {
+                return $q->where(['Payments.is_deleted' => 0]);
+            }]
         ]);
         if ($planSubscriber->collection_type !== 'manual') {
             return $this->redirect(['action' => 'index']);
@@ -484,7 +582,38 @@ class ManualCollectionsController extends AppController
         $this->set('planSubscriber', $planSubscriber);
     }
 
-    // ── REPORT ──────────────────────────────────────────────────────────────
+    private function getFinancialYearKey($timestamp)
+    {
+        $year = (int)date('Y', $timestamp);
+        $month = (int)date('n', $timestamp);
+        if ($month >= 4) {
+            $startYear = $year;
+            $endYear = $year + 1;
+        } else {
+            $startYear = $year - 1;
+            $endYear = $year;
+        }
+        return 'FY ' . $startYear . '-' . substr((string)$endYear, -2);
+    }
+
+    private function getFinancialYearMonths($fyKey)
+    {
+        preg_match('/(\d{4})/', $fyKey, $matches);
+        $startYear = !empty($matches[1]) ? (int)$matches[1] : (int)date('Y');
+        $months = [];
+        for ($m = 4; $m <= 12; $m++) {
+            $monthStr = str_pad($m, 2, '0', STR_PAD_LEFT);
+            $months[] = date('Y-m-t', strtotime("$startYear-$monthStr-01"));
+        }
+        $nextYear = $startYear + 1;
+        for ($m = 1; $m <= 3; $m++) {
+            $monthStr = str_pad($m, 2, '0', STR_PAD_LEFT);
+            $months[] = date('Y-m-t', strtotime("$nextYear-$monthStr-01"));
+        }
+        return $months;
+    }
+
+    // ── REPORT (Indian Financial Year: April to March) ──────────────────────
     public function report()
     {
         $redirect = $this->checkAccess();
@@ -504,7 +633,13 @@ class ManualCollectionsController extends AppController
         }
 
         $planSubscribers = $this->PlanSubscribers->find('all')
-            ->contain(['Users', 'Partners', 'Payments'])
+            ->contain([
+                'Users',
+                'Partners',
+                'Payments' => function ($q) {
+                    return $q->where(['Payments.is_deleted' => 0]);
+                }
+            ])
             ->where($search)
             ->where(['Users.active !=' => '3', 'Users.user_type !=' => '1'])
             ->order(['PlanSubscribers.id' => 'DESC'])
@@ -512,53 +647,64 @@ class ManualCollectionsController extends AppController
 
         $groupedSubscribers = [];
         foreach ($planSubscribers as $ps) {
-            $years = [];
-            if ($ps->created) $years[] = $ps->created->format('Y');
+            $fys = [];
+            $joinTime = (!empty($ps->subscription_start_date)) ? strtotime($ps->subscription_start_date->format('Y-m-d')) : ($ps->created ? strtotime($ps->created->format('Y-m-d')) : time());
+            $fys[] = $this->getFinancialYearKey($joinTime);
+
+            if (!empty($ps->plan_expire_date)) {
+                $fys[] = $this->getFinancialYearKey(strtotime($ps->plan_expire_date->format('Y-m-d')));
+            }
+
             if (!empty($ps->payments)) {
                 foreach ($ps->payments as $payment) {
-                    if ($payment->created) $years[] = $payment->created->format('Y');
+                    $pTime = !empty($payment->payment_date) ? strtotime($payment->payment_date->format('Y-m-d')) : ($payment->created ? strtotime($payment->created->format('Y-m-d')) : null);
+                    if ($pTime) {
+                        $fys[] = $this->getFinancialYearKey($pTime);
+                    }
                 }
             }
-            $years = array_unique($years);
-            foreach ($years as $year) $groupedSubscribers[$year][] = $ps;
+            $fys = array_unique($fys);
+            foreach ($fys as $fy) {
+                $groupedSubscribers[$fy][] = $ps;
+            }
         }
-        ksort($groupedSubscribers);
+        krsort($groupedSubscribers);
 
         $reportData = [];
-        foreach ($groupedSubscribers as $year => $subscribersInYear) {
-            $subIds = array_column(array_map(function($ps){ return ['id'=>$ps->id]; }, $subscribersInYear), 'id');
+        foreach ($groupedSubscribers as $fyKey => $subscribersInYear) {
+            preg_match('/(\d{4})/', $fyKey, $matches);
+            $startYear = !empty($matches[1]) ? (int)$matches[1] : (int)date('Y');
+            $endYear = $startYear + 1;
+            $fyStartDate = "$startYear-04-01";
+            $fyEndDate = "$endYear-03-31";
+
+            $months = $this->getFinancialYearMonths($fyKey);
+
+            $subIds = array_column(array_map(function($ps){ return ['id' => $ps->id]; }, $subscribersInYear), 'id');
             $subscriberPayments = [];
             $paymentDates = [];
             if (!empty($subIds)) {
                 $paymentsTable = TableRegistry::get('Payments');
                 $allPayments = $paymentsTable->find('all')
-                    ->select(['created', 'amount', 'plan_subscriber_id'])
-                    ->where(['plan_subscriber_id IN' => $subIds])
+                    ->select(['created', 'payment_date', 'amount', 'plan_subscriber_id'])
+                    ->where([
+                        'plan_subscriber_id IN' => $subIds,
+                        'is_deleted' => 0
+                    ])
                     ->toArray();
+
                 foreach ($allPayments as $p) {
-                    $dateStr = $p->created->format('d-m-Y');
-                    $paymentDates[$dateStr] = $dateStr;
-                    $subId = $p->plan_subscriber_id;
-                    if (!isset($subscriberPayments[$subId])) $subscriberPayments[$subId] = [];
-                    if (!isset($subscriberPayments[$subId][$dateStr])) $subscriberPayments[$subId][$dateStr] = 0;
-                    $subscriberPayments[$subId][$dateStr] += $p->amount;
+                    $pDateStr = !empty($p->payment_date) ? $p->payment_date->format('Y-m-d') : $p->created->format('Y-m-d');
+                    if ($pDateStr >= $fyStartDate && $pDateStr <= $fyEndDate) {
+                        $displayDate = date('d-m-Y', strtotime($pDateStr));
+                        $paymentDates[$displayDate] = $displayDate;
+                        $subId = $p->plan_subscriber_id;
+                        if (!isset($subscriberPayments[$subId])) $subscriberPayments[$subId] = [];
+                        if (!isset($subscriberPayments[$subId][$displayDate])) $subscriberPayments[$subId][$displayDate] = 0;
+                        $subscriberPayments[$subId][$displayDate] += $p->amount;
+                    }
                 }
                 uksort($paymentDates, function($a, $b){ return strtotime($a) - strtotime($b); });
-            }
-
-            $earliestJoin = null; $latestExpire = null;
-            foreach ($subscribersInYear as $ps) {
-                $jt = strtotime($ps->created->format('Y-m-d'));
-                $et = strtotime($ps->plan_expire_date->format('Y-m-d'));
-                if ($earliestJoin === null || $jt < $earliestJoin) $earliestJoin = $jt;
-                if ($latestExpire === null || $et > $latestExpire) $latestExpire = $et;
-            }
-
-            $months = [];
-            if ($earliestJoin !== null && $latestExpire !== null) {
-                $current = strtotime(date('Y-m-01', $earliestJoin));
-                $end     = strtotime(date('Y-m-01', $latestExpire));
-                while ($current <= $end) { $months[] = date('Y-m-t', $current); $current = strtotime('+1 month', $current); }
             }
 
             $dataRows = [];
@@ -588,7 +734,7 @@ class ManualCollectionsController extends AppController
                 if ($expireTime > $today) {
                     $pendingDays = round(($expireTime - $today) / 86400);
                 }
-                $pendingAmount = round($pendingDays * $dailyRate, 2);
+                $pendingAmount = (float)$row->remain_fee;
 
                 $subscriberRow = [
                     'id' => $row->id, 
@@ -606,20 +752,26 @@ class ManualCollectionsController extends AppController
                     'months' => [], 
                     'payments' => []
                 ];
+
                 foreach ($months as $m) {
-                    $mStart = date('Y-m-01', strtotime($m)); $mEnd = $m;
+                    $mStart = date('Y-m-01', strtotime($m));
+                    $mEnd   = $m;
                     $oStart = max(strtotime($startDateStr), strtotime($mStart));
                     $oEnd   = min(strtotime($endDateStr),   strtotime($mEnd));
                     $val = ($oStart <= $oEnd) ? round((round(($oEnd - $oStart) / 86400) + 1) * $dailyRate, 2) : 0;
                     $subscriberRow['months'][$m] = $val;
-                    if ($val > 0) { $monthActiveCounts[$m]++; $monthTotals[$m] += $val; }
+                    if ($val > 0) {
+                        $monthActiveCounts[$m]++;
+                        $monthTotals[$m] += $val;
+                    }
                 }
+
                 foreach ($paymentDates as $d) {
                     $subscriberRow['payments'][$d] = $subscriberPayments[$row->id][$d] ?? 0;
                 }
                 $dataRows[] = $subscriberRow;
             }
-            $reportData[$year] = compact('months', 'paymentDates', 'dataRows', 'monthActiveCounts', 'monthTotals');
+            $reportData[$fyKey] = compact('months', 'paymentDates', 'dataRows', 'monthActiveCounts', 'monthTotals');
         }
         $this->set(compact('reportData'));
     }

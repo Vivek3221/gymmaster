@@ -489,6 +489,11 @@ if (empty($csrfToken) && isset($_COOKIE['csrfToken'])) {
         color: #ea580c !important;
         border-color: #ffedd5;
     }
+    .action-icon-btn.delete-btn:hover {
+        background: #fee2e2 !important;
+        color: #b91c1c !important;
+        border-color: #fca5a5 !important;
+    }
 
     /* Paging styling */
     .paginator {
@@ -715,7 +720,14 @@ if (empty($csrfToken) && isset($_COOKIE['csrfToken'])) {
                                     $monthName = date('F', mktime(0, 0, 0, $payroll->pt_class_entry ? $payroll->pt_class_entry->month : date('n'), 10));
                                     $yearVal = $payroll->pt_class_entry ? $payroll->pt_class_entry->year : date('Y');
                                     $isPaid = ($payroll->status === 'Paid');
-                                    $clientName = ($payroll->pt_class_entry && $payroll->pt_class_entry->user) ? $payroll->pt_class_entry->user->name : 'N/A';
+                                    $clientName = 'N/A';
+                                    if ($payroll->pt_class_entry) {
+                                        if (!empty($payroll->pt_class_entry->user) && !empty($payroll->pt_class_entry->user->name)) {
+                                            $clientName = $payroll->pt_class_entry->user->name;
+                                        } elseif (!empty($payroll->pt_class_entry->user_pt_subscription) && !empty($payroll->pt_class_entry->user_pt_subscription->user) && !empty($payroll->pt_class_entry->user_pt_subscription->user->name)) {
+                                            $clientName = $payroll->pt_class_entry->user_pt_subscription->user->name;
+                                        }
+                                    }
                                 ?>
                                     <tr>
                                         <td style="font-weight: 700; color: #1e293b;">
@@ -795,6 +807,14 @@ if (empty($csrfToken) && isset($_COOKIE['csrfToken'])) {
                                                 <a href="<?= $this->Url->build(['action' => 'history', $payroll->trainer_id]) ?>" class="action-icon-btn history-btn" title="<?= __('Payment History') ?>">
                                                     <i class="material-icons">history</i>
                                                 </a>
+                                                <?php if (!empty($canDeletePayroll)): ?>
+                                                    <button type="button"
+                                                            class="action-icon-btn delete-btn"
+                                                            onclick="openPayrollDeleteModal(<?= $payroll->id ?>, '<?= h(addslashes($payroll->trainer ? $payroll->trainer->name : 'Trainer')) ?>', '<?= h(addslashes($clientName)) ?>', '<?= number_format($payroll->total_amount, 2) ?>');"
+                                                            title="<?= __('Delete Payout Record') ?>">
+                                                        <i class="material-icons" style="font-size:18px;">delete_forever</i>
+                                                    </button>
+                                                <?php endif; ?>
                                             </div>
                                         </td>
                                     </tr>
@@ -953,27 +973,42 @@ $(document).ready(function() {
         });
     });
 
-    // Mark Paid AJAX SweetAlert confirmation
+    // Mark Paid AJAX SweetAlert confirmation with Payment Date Input
     $(document).on('click', '.pay-ajax-btn', function(e) {
         e.preventDefault();
         var $btn = $(this);
         var url = $btn.data('url');
         var payrollId = $btn.data('id');
+        var today = new Date().toISOString().split('T')[0];
 
         Swal.fire({
-            title: 'Are you sure?',
-            html: 'This payroll will be marked as <strong>PAID</strong>.<br><br>After payment, Classes Completed and Rate per Class can no longer be edited.',
-            icon: 'warning',
+            title: 'Mark as Paid',
+            html: '<p style="font-size:13.5px;color:#64748b;margin-bottom:14px;">This payroll will be marked as <strong>PAID</strong>.<br>Classes Completed and Rate per Class can no longer be edited.</p>' +
+                  '<div style="text-align:left;margin-top:12px;">' +
+                  '<label style="font-size:12px;font-weight:700;color:#334155;display:block;margin-bottom:6px;text-transform:uppercase;">Payment Date *</label>' +
+                  '<input type="date" id="swal_payroll_payment_date" class="form-control" value="' + today + '" style="width:100%;height:38px;padding:6px 12px;border:1.5px solid #cbd5e1;border-radius:8px;font-size:13.5px;box-sizing:border-box;">' +
+                  '</div>',
+            icon: 'info',
             showCancelButton: true,
             confirmButtonColor: '#2e7d32',
             cancelButtonColor: '#64748b',
-            confirmButtonText: 'Mark Paid',
-            cancelButtonText: 'Cancel'
+            confirmButtonText: '<i class="material-icons" style="font-size:16px;vertical-align:middle;">check</i> Confirm Paid',
+            cancelButtonText: 'Cancel',
+            preConfirm: function() {
+                var paymentDate = document.getElementById('swal_payroll_payment_date').value;
+                if (!paymentDate) {
+                    Swal.showValidationMessage('Please select a valid payment date.');
+                    return false;
+                }
+                return { payment_date: paymentDate };
+            }
         }).then((result) => {
             if (result.isConfirmed) {
+                var selectedDate = result.value.payment_date;
                 $.ajax({
                     url: url,
                     type: 'POST',
+                    data: { payment_date: selectedDate },
                     dataType: 'json',
                     headers: {
                         'X-CSRF-Token': $('[name="_csrfToken"]').val()
@@ -1040,4 +1075,62 @@ $(document).ready(function() {
         });
     }
 });
+
+function openPayrollDeleteModal(payrollId, trainerName, clientName, amount) {
+    $('#del_payroll_id').val(payrollId);
+    $('#del_trainer_name').text(trainerName);
+    $('#del_client_name').text(clientName);
+    $('#del_amount').text('₹' + amount);
+    $('#del_payroll_reason').val('');
+    var deleteUrl = '<?= $this->Url->build(['controller' => 'PtPayrolls', 'action' => 'delete']) ?>/' + payrollId;
+    $('#deletePayrollForm').attr('action', deleteUrl);
+    $('#payrollDeleteModal').modal('show');
+}
 </script>
+
+<!-- Payout Delete Confirmation Modal -->
+<div class="modal fade" id="payrollDeleteModal" tabindex="-1" role="dialog" aria-labelledby="payrollDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="margin-top:100px;">
+        <div class="modal-content" style="border-radius:10px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.2);">
+            <form id="deletePayrollForm" method="post" action="<?= $this->Url->build(['controller' => 'PtPayrolls', 'action' => 'delete']) ?>">
+                <input type="hidden" name="_csrfToken" value="<?= !empty($csrfToken) ? h($csrfToken) : h($this->request->getParam('_csrfToken')) ?>">
+                <div class="modal-header" style="background:#c62828;color:#fff;padding:16px 20px;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;opacity:.8;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="payrollDeleteModalLabel" style="font-weight:700;display:flex;align-items:center;gap:8px;margin:0;">
+                        <i class="material-icons" style="font-size:22px;">warning</i>
+                        <?= __('Confirm Payout Deletion') ?>
+                    </h4>
+                </div>
+                <div class="modal-body" style="padding:24px 20px;">
+                    <p style="font-size:14px;color:#333;margin-bottom:12px;">
+                        <?= __('Are you sure you want to delete this trainer payout record?') ?><br>
+                        Trainer: <strong id="del_trainer_name"></strong> | Client: <strong id="del_client_name"></strong><br>
+                        Amount: <strong id="del_amount"></strong>
+                    </p>
+                    <div class="alert alert-warning" style="font-size:12px;padding:10px 14px;border-radius:6px;background:#fff8e1;border:1px solid #ffe082;color:#b78103;">
+                        <i class="material-icons" style="font-size:16px;vertical-align:middle;">info</i>
+                        <?= __('This action is restricted to privileged administrators and requires an audit reason. The payout record will be safely soft-deleted.') ?>
+                    </div>
+                    <div class="form-group" style="margin-top:16px;margin-bottom:0;">
+                        <label for="del_payroll_reason" style="font-weight:700;color:#c62828;font-size:13px;">
+                            <?= __('Reason for Deletion') ?> <span style="color:red;">*</span>:
+                        </label>
+                        <textarea name="deletion_reason" id="del_payroll_reason" class="form-control" rows="3" required placeholder="<?= __('Enter mandatory deletion reason (e.g. incorrect class count, logged under wrong trainer, cancelled, etc.)') ?>" style="border:1.5px solid #ef9a9a;border-radius:6px;padding:10px;resize:vertical;"></textarea>
+                    </div>
+                    <input type="hidden" id="del_payroll_id" name="payroll_id">
+                </div>
+                <div class="modal-footer" style="background:#fafafa;padding:12px 20px;display:flex;justify-content:flex-end;gap:10px;">
+                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal" style="font-weight:600;border-radius:6px;padding:6px 14px;">
+                        <?= __('Cancel') ?>
+                    </button>
+                    <button type="submit" class="btn btn-danger waves-effect" style="background-color:#c62828!important;border-color:#c62828!important;font-weight:600;border-radius:6px;padding:6px 16px;">
+                        <i class="material-icons" style="font-size:16px;vertical-align:middle;">delete_forever</i>
+                        <?= __('Delete Payout Record') ?>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

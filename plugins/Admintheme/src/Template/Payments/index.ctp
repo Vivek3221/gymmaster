@@ -159,6 +159,28 @@
                 background-color: #fff !important;
                 box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.15) !important;
             }
+
+             /* Action Circle Buttons */
+             .action-btn-circle {
+                 display: inline-flex !important;
+                 align-items: center !important;
+                 justify-content: center !important;
+                 width: 32px !important;
+                 height: 32px !important;
+                 border-radius: 50% !important;
+                 background: #f8fafc !important;
+                 border: 1px solid #e2e8f0 !important;
+                 transition: all 0.2s ease !important;
+                 text-decoration: none !important;
+                 cursor: pointer;
+             }
+             .action-btn-circle:hover {
+                 transform: translateY(-2px);
+                 box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+             }
+             .action-btn-circle.view-btn:hover { background: #e1f5fe !important; border-color: #81d4fa !important; }
+             .action-btn-circle.edit-btn:hover { background: #fff3e0 !important; border-color: #ffb74d !important; }
+             .action-btn-circle.delete-btn:hover { background: #ffebee !important; border-color: #ef9a9a !important; }
       </style>
 
       <div class="row clearfix">
@@ -177,7 +199,7 @@
                         <?php echo $this->Form->input('name', ['label' => __('Search'), 'class' => 'form-control', 'type' => 'text', 'placeholder' => __('User, Plan or Amount'), 'value' => $name]); ?>
                     </div>
                     <div class="filter-group">
-                        <?= $this->Form->control('mode_ofpay', ['class' => 'form-control', 'type' => 'select','empty'=>'Select Mode','label' => 'Mode Of Payment','options'=>$getModPayment, 'default'=>$mode_ofpay]) ?>
+                        <?= $this->Form->control('mode_ofpay', ['class' => 'form-control select2', 'type' => 'select','empty'=>'Select Mode','label' => 'Mode Of Payment','options'=>$getModPayment, 'default'=>$mode_ofpay]) ?>
                     </div> 
                     <?php if (isset($users_type) && ($users_type == 1)) { ?>  
                         <div class="filter-group">
@@ -189,7 +211,7 @@
                         <?= $this->Form->input('created', ['type' => 'text', 'class' => 'form-control date-range-picker', 'placeholder' => __('Select Date Range'), 'label'=>false, 'readonly'=>'readonly']); ?>
                     </div>
                     <div class="filter-group">
-                        <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control', 'placeholder' => __('Select Records'), 'options' => $nofrec, 'value' => $norec]); ?>
+                        <?= $this->Form->input('norec', ['label' => __('No. of Records'), 'type' => 'select', 'class' => 'form-control select2', 'placeholder' => __('Select Records'), 'options' => $nofrec, 'value' => $norec]); ?>
                     </div>
                 </div>    
                 <div class="filter-actions">
@@ -204,10 +226,15 @@
 
             <!-- Payments List Card -->
             <div class="card modern-card">
-               <div class="header">
-                  <h2>
+               <div class="header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                  <h2 style="margin:0;">
                      <?= __('Payment List') ?>
                   </h2>
+                  <?php if (!empty($isDeleteRoot)): ?>
+                     <a href="<?= $this->Url->build(['action' => 'manageDeleteAccess']); ?>" class="btn btn-warning waves-effect" style="background-color:#c62828!important;border-color:#c62828!important;color:#fff!important;font-weight:600;border-radius:6px;padding:6px 14px;font-size:12px;display:inline-flex;align-items:center;gap:6px;">
+                        <i class="material-icons" style="font-size:16px;">security</i> <?= __('Manage Delete Permissions') ?>
+                     </a>
+                  <?php endif; ?>
                </div>
                <div class="body">
                   <?php if ($this->Paginator->counter(['format' => __('{{count}}')]) != 0) { ?>
@@ -218,8 +245,9 @@
                            <th><?=__('User Name')?></th>
                            <th><?= __('Plan Name') ?></th>
                            <th><?= __('Amount') ?></th>
+                           <th><?= __('Discount') ?></th>
                            <th><?= __('Payment Mode') ?></th>
-                           <th><?= __('Date') ?></th>
+                           <th><?= __('Payment Date') ?></th>
                            <th><?= __('Action') ?></th>
                         </tr>
                      </thead>
@@ -228,8 +256,9 @@
                            <th><?=__('User Name')?></th>
                            <th><?= __('Plan Name') ?></th>
                            <th><?= __('Amount') ?></th>
+                           <th><?= __('Discount') ?></th>
                            <th><?= __('Payment Mode') ?></th>
-                           <th><?= __('Date') ?></th>
+                           <th><?= __('Payment Date') ?></th>
                            <th><?= __('Action') ?></th>
                         </tr>
                      </tfoot>
@@ -238,15 +267,35 @@
                         <tr>
                            <td><?= ucwords($payment->user->name)?></td>
                            <td><?= ucfirst($payment->plan_subscriber->plan_name)  ?></td>
-                           <td><?= $this->Number->format($payment->amount) ?></td>
-                           <td><?= $getModPayment[$payment->mode_ofpay] ?></td>
-                           <td> <?= (date("d-m-Y", strtotime($payment->created))) ?></td>
+                           <td style="font-weight:700;">₹<?= $this->Number->format($payment->amount) ?></td>
                            <td>
-                               <?php if (isset($users_type) && $users_type != 5) { ?>
-                               <i class="material-icons" title="View"><?= $this->Html->link(__('visibility'), ['action' => 'view', $payment['id']],['target'=>'_blank']) ?></i>
-                               <i class="material-icons" title="Edit"><?= $this->Html->link(__('mode_edit'), ['action' => 'edit', $payment['id']]) ?></i>
-                               <?php } ?>
+                              <?php if (!empty($payment->discount_percent) && $payment->discount_percent > 0): ?>
+                                 <span class="badge" style="background-color:#e8f5e9;color:#2e7d32;font-size:11px;font-weight:700;padding:4px 8px;border-radius:4px;border:1px solid #c8e6c9;" title="<?= h($payment->discount_reason) ?>">
+                                    <?= $payment->discount_percent ?>% (-₹<?= $this->Number->format($payment->discount_amount) ?>)
+                                 </span>
+                              <?php else: ?>
+                                 <span style="color:#aaa;">—</span>
+                              <?php endif; ?>
                            </td>
+                           <td><?= $getModPayment[$payment->mode_ofpay] ?></td>
+                           <td><?= $payment->payment_date ? date("d-m-Y", strtotime($payment->payment_date)) : date("d-m-Y", strtotime($payment->created)) ?></td>
+                           <td style="text-align:center; vertical-align:middle;">
+                                <div style="display:inline-flex; align-items:center; justify-content:center; gap:8px;">
+                                    <?php if (isset($users_type) && $users_type != 5) { ?>
+                                        <a href="<?= $this->Url->build(['action' => 'view', $payment['id']]) ?>" target="_blank" class="action-btn-circle view-btn" title="<?= __('View') ?>">
+                                            <i class="material-icons" style="font-size:18px;color:#0288d1;">visibility</i>
+                                        </a>
+                                        <a href="<?= $this->Url->build(['action' => 'edit', $payment['id']]) ?>" class="action-btn-circle edit-btn" title="<?= __('Edit') ?>">
+                                            <i class="material-icons" style="font-size:18px;color:#ff9800;">edit</i>
+                                        </a>
+                                    <?php } ?>
+                                    <?php if (!empty($canDeletePayment)): ?>
+                                        <a href="javascript:void(0);" onclick="openPaymentDeleteModal(<?= $payment->id ?>, '<?= h(addslashes($payment->user->name)) ?>', '<?= $this->Number->format($payment->amount) ?>')" class="action-btn-circle delete-btn" title="<?= __('Delete Payment') ?>">
+                                            <i class="material-icons" style="font-size:18px;color:#e53935;">delete</i>
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
+                            </td>
                         </tr>
                         <?php endforeach; ?>
                      </tbody>
@@ -332,8 +381,74 @@
             "startDate": "<?= $startDate ?>",
             "endDate": "<?= $endDate ?>"
         }, function(start, end, label) {
-//          console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
         });
+
+        if ($.fn.select2) {
+            $('.select2').select2({ width: '100%' });
+        }
    });
-   
+
+   function openPaymentDeleteModal(paymentId, userName, amount) {
+       $('#del_payment_id').val(paymentId);
+       $('#del_user_name').text(userName);
+       $('#del_amount').text('₹' + amount);
+       $('#del_reason').val('');
+       var baseUrl = '<?= $this->Url->build(['controller' => 'Payments', 'action' => 'delete']) ?>';
+       $('#deletePaymentForm').attr('action', baseUrl + '/' + paymentId);
+       $('#paymentDeleteModal').modal('show');
+   }
 </script>
+
+<!-- Payment Delete Confirmation Modal -->
+<div class="modal fade" id="paymentDeleteModal" tabindex="-1" role="dialog" aria-labelledby="paymentDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="margin-top:100px;">
+        <div class="modal-content" style="border-radius:10px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.2);">
+            <form id="deletePaymentForm" method="post" action="<?= $this->Url->build(['controller' => 'Payments', 'action' => 'delete']) ?>">
+                <?php
+                $delCsrf = $this->request->getParam('_csrfToken');
+                if (empty($delCsrf) && method_exists($this->request, 'cookie')) {
+                    $delCsrf = $this->request->cookie('_csrfToken');
+                }
+                if (empty($delCsrf) && isset($_COOKIE['csrfToken'])) {
+                    $delCsrf = $_COOKIE['csrfToken'];
+                }
+                ?>
+                <input type="hidden" name="_csrfToken" value="<?= h($delCsrf) ?>">
+                <div class="modal-header" style="background:#c62828;color:#fff;padding:16px 20px;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;opacity:.8;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="paymentDeleteModalLabel" style="font-weight:700;display:flex;align-items:center;gap:8px;margin:0;">
+                        <i class="material-icons" style="font-size:22px;">warning</i>
+                        <?= __('Confirm Payment Deletion') ?>
+                    </h4>
+                </div>
+                <div class="modal-body" style="padding:24px 20px;">
+                    <p style="font-size:14px;color:#333;margin-bottom:12px;">
+                        <?= __('Are you sure you want to delete this payment record for') ?> <strong id="del_user_name"></strong> (Amount: <strong id="del_amount"></strong>)?
+                    </p>
+                    <div class="alert alert-warning" style="font-size:12px;padding:10px 14px;border-radius:6px;background:#fff8e1;border:1px solid #ffe082;color:#b78103;">
+                        <i class="material-icons" style="font-size:16px;vertical-align:middle;">info</i>
+                        <?= __('This action is restricted to privileged administrators and requires an audit reason. The record will be safely soft-deleted.') ?>
+                    </div>
+                    <div class="form-group" style="margin-top:16px;margin-bottom:0;">
+                        <label for="del_reason" style="font-weight:700;color:#c62828;font-size:13px;">
+                            <?= __('Reason for Deletion') ?> <span style="color:red;">*</span>:
+                        </label>
+                        <textarea name="deletion_reason" id="del_reason" class="form-control" rows="3" required placeholder="<?= __('Enter mandatory deletion reason (e.g. accidental entry, duplicate payment, refund, etc.)') ?>" style="border:1px solid #ef9a9a;border-radius:6px;padding:10px;resize:vertical;"></textarea>
+                    </div>
+                    <input type="hidden" id="del_payment_id" name="payment_id">
+                </div>
+                <div class="modal-footer" style="background:#fafafa;padding:12px 20px;display:flex;justify-content:flex-end;gap:10px;">
+                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal" style="font-weight:600;border-radius:6px;padding:6px 14px;">
+                        <?= __('Cancel') ?>
+                    </button>
+                    <button type="submit" class="btn btn-danger waves-effect" style="background-color:#c62828!important;border-color:#c62828!important;font-weight:600;border-radius:6px;padding:6px 16px;">
+                        <i class="material-icons" style="font-size:16px;vertical-align:middle;">delete_forever</i>
+                        <?= __('Delete Payment') ?>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

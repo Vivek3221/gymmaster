@@ -242,25 +242,53 @@ $getModPayment = $this->Common->getModPayment();
                                 </div>
                             </div>
 
-                            <div id="planDetailDiv" style="display:none;">
+                            <div id="planDetailDiv" style="display:none; grid-column: 1 / -1;">
                                 <!-- Filled dynamically via AJAX -->
-                            </div>    
+                            </div>
 
                             <div class="form-group">
-                                <label><?= __('Amount') ?></label>
+                                <label><?= __('Collection / Payment Date') ?> <span style="color:red">*</span></label>
                                 <div class="form-line">
-                                    <?= $this->Form->control('amount', ['class' => 'form-control', 'type' => 'number', 'min'=>0, 'label' => false, 'placeholder' => 'Enter payment amount']) ?>
+                                    <input type="date" name="payment_date" id="paymentDate" class="form-control" value="<?= date('Y-m-d') ?>" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label><?= __('Discount (%)') ?></label>
+                                <div class="form-line">
+                                    <input type="number" step="0.01" min="0" max="100" id="discountPercent" name="discount_percent" class="form-control" placeholder="0%">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label><?= __('Discount Amount (₹)') ?></label>
+                                <div class="form-line">
+                                    <input type="number" step="0.01" min="0" id="discountAmount" name="discount_amount" class="form-control" placeholder="₹0.00">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label><?= __('Discount Remark / Reason') ?> <span id="reasonReqMark" style="color:red;display:none;">*</span></label>
+                                <div class="form-line">
+                                    <textarea id="discountReason" name="discount_reason" rows="2" class="form-control" placeholder="<?= __('Mandatory remark when discount is applied (e.g. promo, referral, special approval)') ?>" style="border-radius:8px;border:1.5px solid #e2e8f0;padding:8px 12px;font-size:13.5px;width:100%;box-sizing:border-box;background:#f8fafc;"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label><?= __('Amount (₹)') ?> <span style="color:red">*</span></label>
+                                <div class="form-line">
+                                    <?= $this->Form->control('amount', ['class' => 'form-control', 'type' => 'number', 'min'=>0, 'label' => false, 'id' => 'amountPaid', 'placeholder' => 'Enter payment amount', 'required' => true]) ?>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label><?= __('Mode Of Payment') ?></label>
                                 <div class="form-line">
-                                    <?= $this->Form->control('mode_ofpay', ['class' => 'form-control select2', 'type' => 'select','empty'=>'Select Mode Of Payment','label' => false,'options'=>$getModPayment]) ?>
+                                    <?= $this->Form->control('mode_ofpay', ['class' => 'form-control select2', 'type' => 'select','empty'=>'Select Mode Of Payment','label' => false,'options'=>$getModPayment, 'required' => true]) ?>
                                 </div>
                             </div>
 
-                            <div class="form-actions">
+                            <div class="form-actions" style="grid-column: 1 / -1;">
                                 <?= $this->Form->button('<i class="material-icons" style="font-size:16px;vertical-align:middle;">check_circle</i> Add Payment', ['class' => 'btn-save', 'escapeTitle' => false]) ?>
                                 <a href="<?= $this->Url->build(['controller' => 'ManualCollections', 'action' => 'index']) ?>" class="btn-cancel">
                                     <?= __('Payment Later') ?>
@@ -312,6 +340,11 @@ $getModPayment = $this->Common->getModPayment();
                 url: urls,
                 success: function (html) {
                    $('#planDetailDiv').html(html).show();
+                   var remFee = parseFloat($('#fee').val()) || 0;
+                   if (remFee > 0 && !$('#amountPaid').val()) {
+                       $('#amountPaid').val(remFee);
+                   }
+                   recalcDiscount();
                 }
             });
         } else {
@@ -319,6 +352,59 @@ $getModPayment = $this->Common->getModPayment();
         }
         return false;
     }
+
+    function recalcDiscount() {
+        var baseFee = parseFloat($('#fee').val()) || 0;
+        var dPct = parseFloat($('#discountPercent').val()) || 0;
+        var dAmt = parseFloat($('#discountAmount').val()) || 0;
+
+        if (dPct > 0 || dAmt > 0) {
+            $('#reasonReqMark').show();
+            $('#discountReason').prop('required', true);
+        } else {
+            $('#reasonReqMark').hide();
+            $('#discountReason').prop('required', false);
+        }
+    }
+
+    $('#discountPercent').on('input', function() {
+        var baseFee = parseFloat($('#fee').val()) || 0;
+        var pct = parseFloat($(this).val()) || 0;
+        if (pct > 100) { pct = 100; $(this).val(100); }
+        if (pct < 0) { pct = 0; $(this).val(0); }
+        if (baseFee > 0) {
+            var dAmt = Math.round((baseFee * pct / 100) * 100) / 100;
+            $('#discountAmount').val(dAmt > 0 ? dAmt : '');
+            var finalPay = Math.max(0, Math.round((baseFee - dAmt) * 100) / 100);
+            $('#amountPaid').val(finalPay);
+        }
+        recalcDiscount();
+    });
+
+    $('#discountAmount').on('input', function() {
+        var baseFee = parseFloat($('#fee').val()) || 0;
+        var dAmt = parseFloat($(this).val()) || 0;
+        if (baseFee > 0) {
+            if (dAmt > baseFee) { dAmt = baseFee; $(this).val(baseFee); }
+            var pct = Math.round((dAmt / baseFee * 100) * 100) / 100;
+            $('#discountPercent').val(pct > 0 ? pct : '');
+            var finalPay = Math.max(0, Math.round((baseFee - dAmt) * 100) / 100);
+            $('#amountPaid').val(finalPay);
+        }
+        recalcDiscount();
+    });
+
+    $('#payment').on('submit', function(e) {
+        var dPct = parseFloat($('#discountPercent').val()) || 0;
+        var dAmt = parseFloat($('#discountAmount').val()) || 0;
+        var reason = $.trim($('#discountReason').val());
+        if ((dPct > 0 || dAmt > 0) && reason === '') {
+            e.preventDefault();
+            alert('Discount remark/reason is mandatory whenever a discount is applied.');
+            $('#discountReason').focus();
+            return false;
+        }
+    });
     
     $(document).ready(function () {
         $('.datetimepicker').bootstrapMaterialDatePicker({format: 'YYYY-MM-DD HH:mm', lang: 'fr', weekStart: 1, cancelText: 'Cancel', maxDate: new Date()});

@@ -327,5 +327,62 @@ class CommonHelper extends Helper {
 
         return false;
     }
+
+    /**
+     * Check if email is a root privileged user
+     */
+    public function isPaymentDeleteRoot($email = '') {
+        $userType = $this->request->session()->read('users.users_type');
+        if ((int)$userType === 1) {
+            return true;
+        }
+        $currentEmail = strtolower(trim($email));
+        if (empty($currentEmail)) {
+            $currentEmail = strtolower(trim($this->request->session()->read('users.users_email') ?? ''));
+        }
+        return in_array($currentEmail, ['mukeshkr3221@gmail.com', 'ad1234@yopmail.com']);
+    }
+
+    /**
+     * Check if user can delete payments or payouts
+     */
+    public function canDeletePayment($email = '') {
+        $userType = $this->request->session()->read('users.users_type');
+        if ((int)$userType === 1) {
+            return true;
+        }
+        $currentEmail = strtolower(trim($email));
+        if (empty($currentEmail)) {
+            $currentEmail = strtolower(trim($this->request->session()->read('users.users_email') ?? ''));
+        }
+        if (empty($currentEmail)) {
+            return false;
+        }
+        if ($this->isPaymentDeleteRoot($currentEmail)) {
+            return true;
+        }
+
+        try {
+            $db = \Cake\Datasource\ConnectionManager::get('default');
+            $row = $db->execute(
+                "SELECT id FROM payment_delete_permissions WHERE LOWER(email) = ? AND is_active = 1 LIMIT 1",
+                [$currentEmail]
+            )->fetch('assoc');
+            return !empty($row);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Check if user can duplicate sessions
+     */
+    public function canDuplicateSession($userType, $email = '') {
+        $currentEmail = strtolower(trim($email));
+        if ($userType == 2 || in_array($currentEmail, ['mukeshkr3221@gmail.com', 'ad1234@yopmail.com'])) {
+            return true;
+        }
+        return false;
+    }
 }
 

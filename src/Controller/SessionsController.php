@@ -43,6 +43,7 @@ class SessionsController extends AppController
         $stat      = '';
         $search    = [];
         $s_type    = '';
+        $reps      = '';
          if (isset($this->request->query['name']) && trim($this->request->query['name']) != "") {
             $name = $this->request->query['name'];
             $search['Sessions.user_id'] = $name;
@@ -51,6 +52,16 @@ class SessionsController extends AppController
             $s_type = $this->request->query['s_type'];
             //$search['Users.name REGEXP'] = $name;
             $search['Sessions.session_type REGEXP'] = $s_type;
+        }
+        $reps = $this->request->getQuery('reps') ?? ($this->request->query['reps'] ?? '');
+        if (trim($reps) !== '') {
+            $reps = trim($reps);
+            $search['AND'][] = [
+                'OR' => [
+                    'Sessions.ex_detail LIKE' => '%"reps":"' . $reps . '"%',
+                    'Sessions.ex_detail LIKE' => '%"Reps":"' . $reps . '"%'
+                ]
+            ];
         }
         //sessions=notedit
          if (isset($this->request->query['sessions']) && trim($this->request->query['sessions']) != "") {
@@ -61,7 +72,7 @@ class SessionsController extends AppController
             $partner = $this->request->query['partners'];
             $search['Sessions.partner_id'] = $partner;
         }
-         if (isset($this->request->query['status']) && trim($this->request->query['status']) != "") {
+        if (isset($this->request->query['status']) && trim($this->request->query['status']) != "") {
             $status = $this->request->query['status'];
             $search['Sessions.status'] = $status;
         }
@@ -293,7 +304,8 @@ class SessionsController extends AppController
             $users = $this->Sessions->Users->find('list')->where(['Users.active' => '1' ,'Users.partner_id'=> $users_id,'user_type' =>3]);
         }
         
-        $this->set(compact('sessions','name','status','norec','users','user_type','sdate','edate','partner','stat','s_type', 'totalUsersCount', 'createdCount', 'notCreatedCount', 'notAttendedCount', 'todayFilter'));
+        $canDuplicateSession = $this->canDuplicateSession();
+        $this->set(compact('sessions','name','status','norec','users','user_type','sdate','edate','partner','stat','s_type','reps','canDuplicateSession', 'totalUsersCount', 'createdCount', 'notCreatedCount', 'notAttendedCount', 'todayFilter'));
         $this->set('_serialize', ['sessions']);
     }
 
@@ -438,6 +450,10 @@ class SessionsController extends AppController
     public function addMore($id = null){
          if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
+        }
+        if (!$this->canDuplicateSession()) {
+            $this->Flash->error(__('You are not authorized to duplicate sessions. This action is restricted to Partners and privileged root administrators.'));
+            return $this->redirect(['action' => 'index']);
         }
         $session = $this->Sessions->get($id, [
             'contain' => []

@@ -68,7 +68,7 @@ class PtPayrollsController extends AppController
             $this->calculateAndSavePayroll($ce);
         }
 
-        $search = [];
+        $search = ['PtPayrolls.is_deleted' => 0];
         if (!$isGlobal) {
             $search['PtPayrolls.partner_id'] = $userId;
         }
@@ -111,7 +111,11 @@ class PtPayrollsController extends AppController
         }
         $totalClasses = $this->PtClassEntries->find()->where($classConditions)->sumOf('total_classes') ?: 0;
 
-        $payrollConditions = ['PtClassEntries.month' => $currentMonth, 'PtClassEntries.year' => $currentYear];
+        $payrollConditions = [
+            'PtClassEntries.month' => $currentMonth, 
+            'PtClassEntries.year' => $currentYear,
+            'PtPayrolls.is_deleted' => 0
+        ];
         if (!$isGlobal) {
             $payrollConditions['PtPayrolls.partner_id'] = $userId;
         }
@@ -125,7 +129,8 @@ class PtPayrollsController extends AppController
         $pendingConditions = [
             'PtClassEntries.month' => $currentMonth, 
             'PtClassEntries.year' => $currentYear, 
-            'PtPayrolls.status' => 'Pending'
+            'PtPayrolls.status' => 'Pending',
+            'PtPayrolls.is_deleted' => 0
         ];
         if (!$isGlobal) {
             $pendingConditions['PtPayrolls.partner_id'] = $userId;
@@ -140,7 +145,10 @@ class PtPayrollsController extends AppController
             ->contain([
                 'Trainers', 
                 'Partners', 
-                'PtClassEntries' => ['Users', 'UserPtSubscriptions']
+                'PtClassEntries' => [
+                    'Users', 
+                    'UserPtSubscriptions' => ['Users']
+                ]
             ])
             ->where($search);
 
@@ -162,9 +170,14 @@ class PtPayrollsController extends AppController
             ->where($trainerQueryConditions)
             ->toArray();
 
+        $canDeletePayroll = $this->canDeletePayment();
+        $isDeleteRoot = $this->isPaymentDeleteRoot();
+        $csrfToken = $this->request->getParam('_csrfToken');
+
         $this->set(compact(
             'payrolls', 'totalTrainers', 'totalClasses', 'totalPayrollAmount', 'avgClasses', 'pendingPayroll',
-            'trainers', 'partners', 'isGlobal', 'trainerId', 'partnerId', 'month', 'year', 'status'
+            'trainers', 'partners', 'isGlobal', 'trainerId', 'partnerId', 'month', 'year', 'status',
+            'canDeletePayroll', 'isDeleteRoot', 'csrfToken'
         ));
     }
 
@@ -220,18 +233,26 @@ class PtPayrollsController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
+        $paymentDate = $this->request->getData('payment_date');
+        if (empty($paymentDate)) {
+            $paymentDate = date('Y-m-d');
+        } else {
+            $paymentDate = date('Y-m-d', strtotime($paymentDate));
+        }
+
         if ($this->request->is('ajax') || $this->request->is('json')) {
             $this->autoRender = false;
             $payroll->status = 'Paid';
-            $payroll->payment_date = date('Y-m-d');
+            $payroll->payment_date = $paymentDate;
             $payroll->paid_by = $userId;
             
             if ($this->PtPayrolls->save($payroll)) {
                 $metrics = $this->getUpdatedMetrics($isGlobal, $userId);
                 echo json_encode([
                     'success' => true,
-                    'message' => __('Payroll marked as Paid successfully.'),
-                    'metrics' => $metrics
+                    'message' => __('Payroll marked as Paid successfully with payment date {0}.', $paymentDate),
+                    'metrics' => $metrics,
+                    'payment_date' => $paymentDate
                 ]);
             } else {
                 echo json_encode([
@@ -243,13 +264,68 @@ class PtPayrollsController extends AppController
         }
 
         $payroll->status = 'Paid';
-        $payroll->payment_date = date('Y-m-d');
+        $payroll->payment_date = $paymentDate;
         $payroll->paid_by = $userId;
 
         if ($this->PtPayrolls->save($payroll)) {
-            $this->Flash->success(__('Payroll marked as Paid.'));
+            $this->Flash->success(__('Payroll marked as Paid with payment date {0}.', $paymentDate));
         } else {
             $this->Flash->error(__('Failed to update payroll status.'));
+        }
+
+        return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * Delete a trainer payout record (Soft-delete with permission check & mandatory reason)
+     */
+    public function delete($id = null)
+    {
+        $redirect = $this->checkAccess();
+        if ($redirect) return $redirect;
+
+        $this->request->allowMethod(['post', 'delete']);
+
+        if (!$this->canDeletePayment()) {
+            $this->Flash->error(__('You do not have permission to delete payout records. This action is strictly restricted.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        if (empty($id)) {
+            $id = $this->request->getData('payroll_id') ?: ($this->request->getData('id') ?: ($this->request->data['payroll_id'] ?? null));
+        }
+        if (empty($id)) {
+            $this->Flash->error(__('Payout record ID is missing.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        $reason = trim($this->request->getData('deletion_reason') ?: ($this->request->data['deletion_reason'] ?? ''));
+        if (empty($reason)) {
+            $this->Flash->error(__('A mandatory deletion reason must be provided to delete this payout record.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        $payroll = $this->PtPayrolls->find()->where(['id' => (int)$id])->first();
+        $classEntryId = $payroll ? (int)$payroll->class_entry_id : 0;
+
+        $userId = !empty($this->usersdetail['users_id']) ? $this->usersdetail['users_id'] : 1;
+        $db = \Cake\Datasource\ConnectionManager::get('default');
+        $updated = $db->execute(
+            "UPDATE pt_payrolls SET is_deleted = 1, deleted_by = ?, deleted_at = NOW(), deletion_reason = ? WHERE id = ?",
+            [$userId, $reason, (int)$id]
+        );
+
+        if ($classEntryId > 0) {
+            $db->execute(
+                "UPDATE pt_class_entries SET is_deleted = 1, updated_by = ? WHERE id = ?",
+                [$userId, $classEntryId]
+            );
+        }
+
+        if ($updated) {
+            $this->Flash->success(__('The trainer payout record has been deleted.'));
+        } else {
+            $this->Flash->error(__('The trainer payout record could not be deleted. Please, try again.'));
         }
 
         return $this->redirect(['action' => 'index']);
@@ -958,6 +1034,11 @@ class PtPayrollsController extends AppController
             ->where(['class_entry_id' => $classEntry->id])
             ->first();
 
+        // If payroll was soft-deleted, do not recreate or recalculate
+        if ($payroll && (int)$payroll->is_deleted === 1) {
+            return false;
+        }
+
         if (!$payroll) {
             $payroll = $this->PtPayrolls->newEntity();
             $payroll->status = 'Pending';
@@ -1151,6 +1232,8 @@ class PtPayrollsController extends AppController
 
         $trainerId = $this->request->getQuery('trainer_id');
         $userIdFilter = $this->request->getQuery('user_id');
+        $month = $this->request->getQuery('month');
+        $year = $this->request->getQuery('year');
 
         if (!empty($trainerId)) {
             $search['UserPtSubscriptions.trainer_id'] = $trainerId;
@@ -1171,11 +1254,22 @@ class PtPayrollsController extends AppController
         $totalGymProfit = 0;
 
         foreach ($subscriptions as $sub) {
-            $entries = $this->PtClassEntries->find()
-                ->where(['OR' => [
+            $entryConditions = [
+                'PtClassEntries.is_deleted' => 0,
+                'OR' => [
                     ['user_pt_subscription_id' => $sub->id],
                     ['user_id' => $sub->user_id]
-                ]])
+                ]
+            ];
+            if (!empty($month)) {
+                $entryConditions['month'] = (int)$month;
+            }
+            if (!empty($year)) {
+                $entryConditions['year'] = (int)$year;
+            }
+
+            $entries = $this->PtClassEntries->find()
+                ->where($entryConditions)
                 ->all();
 
             $conductedClasses = 0;
@@ -1187,6 +1281,11 @@ class PtPayrollsController extends AppController
                 $trainerPayout += ((int)$entry->total_classes * (float)$entry->rate_per_class);
                 $cRate = (float)($entry->client_per_class_rate > 0 ? $entry->client_per_class_rate : $sub->client_per_class_rate);
                 $clientRevenue += ((int)$entry->total_classes * $cRate);
+            }
+
+            // Skip subscriptions with no active conducted classes unless specifically queried by user_id
+            if ($conductedClasses == 0 && empty($userIdFilter)) {
+                continue;
             }
 
             $gymProfit = $clientRevenue - $trainerPayout;
@@ -1216,7 +1315,14 @@ class PtPayrollsController extends AppController
         $trainers = $this->Users->find('list', ['keyField' => 'id', 'valueField' => 'name'])->where($trainerConditions)->toArray();
         $usersList = $this->Users->find('list', ['keyField' => 'id', 'valueField' => 'name'])->where($userConditions)->toArray();
 
-        $this->set(compact('reportData', 'trainers', 'usersList', 'isGlobal', 'trainerId', 'userIdFilter', 'totalClientRevenue', 'totalTrainerPayout', 'totalGymProfit'));
+        $months = [
+            '1' => 'January', '2' => 'February', '3' => 'March', '4' => 'April',
+            '5' => 'May', '6' => 'June', '7' => 'July', '8' => 'August',
+            '9' => 'September', '10' => 'October', '11' => 'November', '12' => 'December'
+        ];
+        $years = array_combine(range(2024, 2030), range(2024, 2030));
+
+        $this->set(compact('reportData', 'trainers', 'usersList', 'months', 'years', 'isGlobal', 'trainerId', 'userIdFilter', 'month', 'year', 'totalClientRevenue', 'totalTrainerPayout', 'totalGymProfit'));
     }
 
     public function beforeRender(Event $event) {
