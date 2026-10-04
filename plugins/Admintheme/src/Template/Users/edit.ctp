@@ -321,13 +321,32 @@ $getPayDuration = $this->Common->getPayDuration();
                                     $dob = $dob1 ? date_format($dob1, "Y-m-d") : '';
                                     ?>
                                     <?= $this->Form->control('dob', [
-                                        'class' => 'form-control datetimepicker', 
+                                        'class' => 'form-control flatpickr-date', 
                                         'type' => 'text', 
                                         'placeholder' => 'YYYY-MM-DD',
                                         'value' => $dob, 
                                         'label' => false,
                                         'required' => true
                                     ]) ?>          
+                                </div>
+                            </div>
+
+                            <div class="modern-field-group">
+                                <label class="field-label"><?= __('Gender') ?></label>
+                                <div class="form-line">
+                                    <?php
+                                    $selectedGender = (string)($user->gender ?? '');
+                                    if ($selectedGender === 'Male' || $selectedGender === '1') { $selectedGender = '1'; }
+                                    elseif ($selectedGender === 'Female' || $selectedGender === '2') { $selectedGender = '2'; }
+                                    ?>
+                                    <?= $this->Form->control('gender', [
+                                        'class' => 'form-control select2', 
+                                        'type' => 'select', 
+                                        'empty' => __('Select Gender'), 
+                                        'options' => ['1' => __('Male'), '2' => __('Female')],
+                                        'value' => $selectedGender,
+                                        'label' => false
+                                    ]) ?>
                                 </div>
                             </div>
 

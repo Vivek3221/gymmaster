@@ -1009,7 +1009,11 @@ class PlanSubscribersController extends AppController
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $planSubscriber = $this->PlanSubscribers->patchEntity($planSubscriber, $this->request->getData());
+            $postData = $this->request->getData();
+            if (!$this->isAdminUser()) {
+                unset($postData['start_date'], $postData['plan_expire_date'], $postData['reminder_date']);
+            }
+            $planSubscriber = $this->PlanSubscribers->patchEntity($planSubscriber, $postData);
             if ($this->PlanSubscribers->save($planSubscriber)) {
                 $this->Flash->success(__('The plan subscriber has been saved.'));
 

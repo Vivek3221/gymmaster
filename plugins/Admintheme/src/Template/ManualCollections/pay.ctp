@@ -318,7 +318,7 @@
                 <div class="form-field" id="dueDateContainer">
                     <label><?= __('Next Due Date') ?> <span style="color:#94a3b8;font-size:10px;">(if partial)</span></label>
                     <input type="text" name="payment_due_date" id="paymentDueDate"
-                        class="plan-datepicker" placeholder="YYYY-MM-DD" autocomplete="off"
+                        class="form-control flatpickr-date" placeholder="YYYY-MM-DD" autocomplete="off"
                         value="<?= $planSubscriber->payment_due_date ? date('Y-m-d', strtotime($planSubscriber->payment_due_date)) : '' ?>">
                 </div>
             </div>

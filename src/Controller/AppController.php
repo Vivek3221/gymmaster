@@ -234,7 +234,26 @@ class AppController extends Controller
     }
 
     /**
-     * Check if user can duplicate sessions (Partner users or privileged root emails)
+     * Check if user is an admin (Super Admin user_type 1 or root emails)
+     */
+    public function isAdminUser($userType = null, $email = null)
+    {
+        if ($userType === null) {
+            $userType = $this->usersdetail['users_type'] ?? 0;
+        }
+        if ($email === null) {
+            $email = $this->usersdetail['users_email'] ?? '';
+        }
+        $email = strtolower(trim($email));
+
+        if ((int)$userType === 1 || in_array($email, $this->getPrivilegedRootEmails())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if user can duplicate sessions (Partner users, privileged root emails, or active delegated duplicate permissions)
      */
     public function canDuplicateSession($userType = null, $email = null)
     {
@@ -246,9 +265,24 @@ class AppController extends Controller
         }
         $email = strtolower(trim($email));
 
-        if ($userType == 2 || in_array($email, $this->getPrivilegedRootEmails())) {
+        if ($userType == 2 || $this->isAdminUser($userType, $email)) {
             return true;
         }
-        return false;
+
+        if (empty($email)) {
+            return false;
+        }
+
+        try {
+            $db = \Cake\Datasource\ConnectionManager::get('default');
+            $row = $db->execute(
+                "SELECT id FROM session_duplicate_permissions WHERE LOWER(email) = ? AND is_active = 1 LIMIT 1",
+                [$email]
+            )->fetch('assoc');
+            return !empty($row);
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }
+

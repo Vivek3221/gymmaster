@@ -231,7 +231,15 @@ class PaymentsController extends AppController
             if ($discountPercent > 0 && empty(trim($data['discount_reason'] ?? ''))) {
                 $this->Flash->error(__('A Discount Remark / Reason is mandatory when a discount is applied.'));
             } else {
-                $data['payment_date'] = $this->parsePaymentDate($data['payment_date'] ?? '');
+                if ($this->isAdminUser()) {
+                    $data['payment_date'] = $this->parsePaymentDate($data['payment_date'] ?? '');
+                } else {
+                    $data['payment_date'] = !empty($payment->payment_date) ? (
+                        $payment->payment_date instanceof \Cake\I18n\FrozenDate || $payment->payment_date instanceof \Cake\I18n\FrozenTime
+                            ? $payment->payment_date->format('Y-m-d')
+                            : date('Y-m-d', strtotime($payment->payment_date))
+                    ) : date('Y-m-d');
+                }
 
                 // If plan is changed and recalculate is requested
                 if (!empty($data['recalculate_amount']) && !empty($data['plan_subscriber_id'])) {

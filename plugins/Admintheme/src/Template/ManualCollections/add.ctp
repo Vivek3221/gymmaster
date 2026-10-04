@@ -378,7 +378,7 @@ $getModPayment       = $this->Common->getModPayment();
 
                         <div class="form-field">
                             <label><?= __('Subscription Start Date') ?> <span style="color:red">*</span></label>
-                            <input type="text" id="subscriptionStartDate" name="subscription_start_date" class="plan-datepicker" placeholder="YYYY-MM-DD" autocomplete="off" required>
+                            <input type="text" id="subscriptionStartDate" name="subscription_start_date" class="form-control flatpickr-date" placeholder="YYYY-MM-DD" autocomplete="off" required>
                         </div>
 
                         <div class="form-field">
@@ -444,10 +444,11 @@ $getModPayment       = $this->Common->getModPayment();
                         <div class="form-field">
                             <label><?= __('Remaining Due Date') ?></label>
                             <?= $this->Form->control('payment_due_date', [
-                                'class'       => 'plan-datepicker',
-                                'type'        => 'text',
-                                'label'       => false,
-                                'placeholder' => 'YYYY-MM-DD',
+                                'class'        => 'form-control flatpickr-date',
+                                'type'         => 'text',
+                                'label'        => false,
+                                'id'           => 'payment_due_date',
+                                'placeholder'  => 'YYYY-MM-DD',
                                 'autocomplete' => 'off'
                             ]) ?>
                         </div>
@@ -548,7 +549,7 @@ $(document).ready(function() {
             }
         });
 
-        flatpickr('#paymentDate, #payment_due_date, .flatpickr-date', {
+        flatpickr('#paymentDate, #payment_due_date, #payment-due-date, .flatpickr-date, .plan-datepicker', {
             dateFormat: 'Y-m-d',
             allowInput: true,
             monthSelectorType: 'dropdown'

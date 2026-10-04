@@ -516,8 +516,8 @@ select#planSelectDropdown {
 }
 </style>
 
-<section class="content" style="padding: 15px 20px;">
-<div class="payment-wrapper">
+<section class="content" style="padding: 15px 20px; overflow-x: hidden;">
+<div class="payment-wrapper" style="max-width: 100%; box-sizing: border-box; overflow-x: hidden;">
     <?= $this->Flash->render() ?>
 
     <div class="payment-card">
@@ -652,7 +652,7 @@ select#planSelectDropdown {
 
                 <div class="form-field">
                     <label><?= __('Subscription Start Date') ?> <span style="color:red">*</span></label>
-                    <input type="text" id="subscriptionStartDate" name="subscription_start_date" class="plan-datepicker" placeholder="YYYY-MM-DD" autocomplete="off" required>
+                    <input type="text" id="subscriptionStartDate" name="subscription_start_date" class="form-control flatpickr-date" placeholder="YYYY-MM-DD" autocomplete="off" required>
                 </div>
 
                 <div class="form-field">
@@ -754,7 +754,8 @@ select#planSelectDropdown {
                 <div class="form-field" id="remainingDueDateGroup">
                     <label id="remainingDueDateLabel"><?= __('Remaining Due Date') ?></label>
                     <?= $this->Form->control('payment_due_date', [
-                        'class'       => 'plan-datepicker',
+                        'class'       => 'form-control flatpickr-date',
+                        'id'          => 'payment_due_date',
                         'type'        => 'text',
                         'label'       => false,
                         'placeholder' => 'YYYY-MM-DD',

@@ -45,16 +45,38 @@ $getPayDuration = $this->Common->getPayDuration();
                                 <label class="form-label">Plan Total Fee</label>
                             </div>
                         </div>
+                        <?php
+                        $isAdmin = $this->Common->isAdminUser($usersdetail['users_type'] ?? 0, $usersdetail['users_email'] ?? '');
+                        ?>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('plan_expire_date', ['class' => 'form-control', 'type' => 'text','label' => FALSE ,'required', 'value'=>date('Y-m-d H:i:s',strtotime($planSubscriber['plan_expire_date']))]) ?>          
-                                <label class="form-label">Plan Expire Date</label>
+                                <label class="form-label" style="top: -15px; font-size: 12px; color: #888;">Plan Expire Date</label>
+                                <?= $this->Form->control('plan_expire_date', [
+                                    'class' => 'form-control ' . ($isAdmin ? 'flatpickr-date' : ''), 
+                                    'type' => 'text',
+                                    'label' => FALSE,
+                                    'readonly' => !$isAdmin,
+                                    'required', 
+                                    'value' => date('Y-m-d', strtotime($planSubscriber['plan_expire_date']))
+                                ]) ?>          
+                                <?php if (!$isAdmin): ?>
+                                    <small class="text-danger" style="display:block;margin-top:4px;">* Only Super Admin can edit expire date.</small>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?= $this->Form->control('payment_due_date', ['class' => 'form-control', 'type' => 'text', 'label' => FALSE, 'value'=>date('Y-m-d H:i:s',strtotime($planSubscriber['payment_due_date'])) ]) ?>          
-                                <label class="form-label">Payment Due Date</label>
+                                <label class="form-label" style="top: -15px; font-size: 12px; color: #888;">Payment Due Date</label>
+                                <?= $this->Form->control('payment_due_date', [
+                                    'class' => 'form-control ' . ($isAdmin ? 'flatpickr-date' : ''), 
+                                    'type' => 'text', 
+                                    'label' => FALSE, 
+                                    'readonly' => !$isAdmin,
+                                    'value' => date('Y-m-d', strtotime($planSubscriber['payment_due_date'])) 
+                                ]) ?>          
+                                <?php if (!$isAdmin): ?>
+                                    <small class="text-danger" style="display:block;margin-top:4px;">* Only Super Admin can edit due date.</small>
+                                <?php endif; ?>
                             </div>
                         </div> 
                         <div class="form-btn text-center">
@@ -80,10 +102,13 @@ $getPayDuration = $this->Common->getPayDuration();
     }
 
     $(document).ready(function () {
-        $('#payment-due-date').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD HH:mm', minDate : new Date() });
-        $('#plan-expire-date').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD HH:mm', minDate : new Date() });
-        $('.datetimepicker').bootstrapMaterialDatePicker({format: 'YYYY-MM-DD HH:mm', lang: 'fr', weekStart: 1, cancelText: 'Cancel', maxDate: new Date()});
-        $('').bootstrapMaterialDatePicker({format: 'DD/MM/YYYY HH:mm', minDate: new Date()});
+        if (typeof flatpickr !== 'undefined') {
+            flatpickr('.flatpickr-date', {
+                dateFormat: 'Y-m-d',
+                allowInput: true,
+                monthSelectorType: 'dropdown'
+            });
+        }
     });
 
 </script>

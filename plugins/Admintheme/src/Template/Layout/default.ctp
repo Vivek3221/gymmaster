@@ -292,36 +292,18 @@
     <script>
     $(document).ready(function() {
         if (typeof flatpickr !== 'undefined') {
-            flatpickr('.datetimepicker, .datepicker, .flatpickr-date, .datepicker-filter', {
+            flatpickr('.datetimepicker, .datepicker, .flatpickr-date, .datepicker-filter, .plan-datepicker', {
                 dateFormat: 'Y-m-d',
                 allowInput: true,
                 monthSelectorType: 'dropdown'
             });
         }
-        $(document).on('click', '.flatpickr-prev-month', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var cal = $(this).closest('.flatpickr-calendar')[0];
-            if (cal && cal._flatpickr) {
-                cal._flatpickr.changeMonth(-1);
-            }
-        });
-        $(document).on('click', '.flatpickr-next-month', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var cal = $(this).closest('.flatpickr-calendar')[0];
-            if (cal && cal._flatpickr) {
-                cal._flatpickr.changeMonth(1);
-            }
-        });
     });
     </script>
     <?php //echo $this->Html->script('pages/index.js') ?>
     <!-- Demo Js -->
 <!--    <script src="js/demo.js"></script>-->
     <script>
-        $('#payment-due-date').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD HH:mm', minDate : new Date() });
-        $('#plan-expire-date').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD HH:mm', minDate : new Date() });
         $('.select2').select2({ width: '100%' });
         $('#forgetPasswordDiv').hide();    
         $("#showForgetForm").click(function(){

@@ -375,14 +375,38 @@ class CommonHelper extends Helper {
     }
 
     /**
-     * Check if user can duplicate sessions
+     * Check if user is admin
      */
-    public function canDuplicateSession($userType, $email = '') {
+    public function isAdminUser($userType, $email = '') {
         $currentEmail = strtolower(trim($email));
-        if ($userType == 2 || in_array($currentEmail, ['mukeshkr3221@gmail.com', 'ad1234@yopmail.com'])) {
+        if ($userType == 1 || in_array($currentEmail, ['mukeshkr3221@gmail.com', 'ad1234@yopmail.com'])) {
             return true;
         }
         return false;
     }
+
+    /**
+     * Check if user can duplicate sessions
+     */
+    public function canDuplicateSession($userType, $email = '') {
+        $currentEmail = strtolower(trim($email));
+        if ($userType == 2 || $this->isAdminUser($userType, $currentEmail)) {
+            return true;
+        }
+        if (empty($currentEmail)) {
+            return false;
+        }
+        try {
+            $db = \Cake\Datasource\ConnectionManager::get('default');
+            $row = $db->execute(
+                "SELECT id FROM session_duplicate_permissions WHERE LOWER(email) = ? AND is_active = 1 LIMIT 1",
+                [$currentEmail]
+            )->fetch('assoc');
+            return !empty($row);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
+
 

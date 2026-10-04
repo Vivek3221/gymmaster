@@ -1,5 +1,5 @@
-<section class="content">
-    <div class="container-fluid">
+<section class="content" style="overflow-x: hidden;">
+    <div class="container-fluid" style="max-width: 100%; box-sizing: border-box; overflow-x: hidden;">
 
         <style>
             .plan-form-header {
@@ -11,6 +11,8 @@
                 align-items: center;
                 gap: 12px;
                 box-shadow: 0 6px 24px rgba(255, 152, 0, 0.25);
+                box-sizing: border-box;
+                max-width: 100%;
             }
             .plan-form-header h2 { color:#fff; font-size:20px; font-weight:700; margin:0; }
             .plan-form-header i  { color:#fff; font-size:26px; }
@@ -21,13 +23,22 @@
                 border: 1px solid #f0f0f0;
                 padding: 32px 36px;
                 max-width: 700px;
+                width: 100%;
+                box-sizing: border-box;
                 margin: 0 auto;
+            }
+            @media (max-width: 768px) {
+                .plan-form-card {
+                    padding: 20px;
+                }
             }
             .plan-row {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 20px;
                 margin-bottom: 0;
+                width: 100%;
+                box-sizing: border-box;
             }
             @media (max-width: 600px) {
                 .plan-row {

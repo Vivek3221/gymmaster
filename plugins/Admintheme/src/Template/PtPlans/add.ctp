@@ -174,9 +174,9 @@
 }
 </style>
 
-<section class="content">
-    <div class="container-fluid">
-        <div class="pt-wrapper">
+<section class="content" style="overflow-x: hidden;">
+    <div class="container-fluid" style="max-width: 100%; box-sizing: border-box; overflow-x: hidden;">
+        <div class="pt-wrapper" style="max-width: 100%; box-sizing: border-box;">
             <?= $this->Flash->render() ?>
 
             <div class="pt-card">

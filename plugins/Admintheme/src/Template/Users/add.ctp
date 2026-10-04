@@ -367,16 +367,15 @@ $user_type = $this->Common->getType();
 
                             <div class="modern-field-group">
                                 <label class="field-label"><?= __('Gender') ?></label>
-                                <div class="modern-radio-group">
-                                    <input type="radio" name="gender" id="a" value="1" class="indual with-gap" checked>
-                                    <label for="a">
-                                        <i class="material-icons" style="font-size: 16px; vertical-align: middle;">male</i> <?= __('Male') ?>
-                                    </label>
-                                    
-                                    <input type="radio" name="gender" id="b" value="2" class="company with-gap">
-                                    <label for="b">
-                                        <i class="material-icons" style="font-size: 16px; vertical-align: middle;">female</i> <?= __('Female') ?>
-                                    </label>
+                                <div class="form-line">
+                                    <?= $this->Form->control('gender', [
+                                        'class' => 'form-control select2', 
+                                        'type' => 'select', 
+                                        'empty' => __('Select Gender'), 
+                                        'options' => ['1' => __('Male'), '2' => __('Female')],
+                                        'default' => '1',
+                                        'label' => false
+                                    ]) ?>
                                 </div>
                             </div>
                             

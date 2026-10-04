@@ -305,7 +305,25 @@ class SessionsController extends AppController
         }
         
         $canDuplicateSession = $this->canDuplicateSession();
-        $this->set(compact('sessions','name','status','norec','users','user_type','sdate','edate','partner','stat','s_type','reps','canDuplicateSession', 'totalUsersCount', 'createdCount', 'notCreatedCount', 'notAttendedCount', 'todayFilter'));
+        $duplicatePermissions = [];
+        if ($user_type == 2 || $this->isAdminUser()) {
+            try {
+                $db = \Cake\Datasource\ConnectionManager::get('default');
+                if ($user_type == 2) {
+                    $duplicatePermissions = $db->execute(
+                        "SELECT * FROM session_duplicate_permissions WHERE partner_id = ? AND is_active = 1 ORDER BY id DESC",
+                        [$users_id]
+                    )->fetchAll('assoc');
+                } else {
+                    $duplicatePermissions = $db->execute(
+                        "SELECT * FROM session_duplicate_permissions WHERE is_active = 1 ORDER BY id DESC"
+                    )->fetchAll('assoc');
+                }
+            } catch (\Exception $e) {
+                $duplicatePermissions = [];
+            }
+        }
+        $this->set(compact('sessions','name','status','norec','users','user_type','sdate','edate','partner','stat','s_type','reps','canDuplicateSession', 'duplicatePermissions', 'totalUsersCount', 'createdCount', 'notCreatedCount', 'notAttendedCount', 'todayFilter'));
         $this->set('_serialize', ['sessions']);
     }
 
@@ -603,7 +621,79 @@ class SessionsController extends AppController
         }
     }
     
-     public function beforeRender(\Cake\Event\Event $event) {
+    /**
+     * Grant duplicate session access to a trainer/user by email
+     */
+    public function grantDuplicateAccess()
+    {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        $userType = $this->usersdetail['users_type'] ?? 0;
+        $partnerId = $this->usersdetail['users_id'] ?? null;
+        $email = strtolower(trim($this->request->getData('email') ?? ''));
+
+        if ($userType != 2 && !$this->isAdminUser()) {
+            $this->Flash->error(__('Only Partners and Admins can grant session duplicate access.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->Flash->error(__('Please enter a valid Email ID to grant access.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        try {
+            $db = \Cake\Datasource\ConnectionManager::get('default');
+            $existing = $db->execute("SELECT id FROM session_duplicate_permissions WHERE LOWER(email) = ? LIMIT 1", [$email])->fetch('assoc');
+            if ($existing) {
+                $db->execute("UPDATE session_duplicate_permissions SET is_active = 1, partner_id = ?, granted_by = ?, modified = NOW() WHERE id = ?", [
+                    $partnerId,
+                    $this->usersdetail['users_email'],
+                    $existing['id']
+                ]);
+            } else {
+                $db->execute("INSERT INTO session_duplicate_permissions (email, partner_id, granted_by, is_active, created, modified) VALUES (?, ?, ?, 1, NOW(), NOW())", [
+                    $email,
+                    $partnerId,
+                    $this->usersdetail['users_email']
+                ]);
+            }
+            $this->Flash->success(__('Successfully granted session duplicate access to {0}.', $email));
+        } catch (\Exception $e) {
+            $this->Flash->error(__('Error granting access: {0}', $e->getMessage()));
+        }
+
+        return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * Revoke duplicate session access
+     */
+    public function revokeDuplicateAccess($id = null)
+    {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        $userType = $this->usersdetail['users_type'] ?? 0;
+
+        if ($userType != 2 && !$this->isAdminUser()) {
+            $this->Flash->error(__('Only Partners and Admins can revoke session duplicate access.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        try {
+            $db = \Cake\Datasource\ConnectionManager::get('default');
+            $db->execute("UPDATE session_duplicate_permissions SET is_active = 0, modified = NOW() WHERE id = ?", [$id]);
+            $this->Flash->success(__('Session duplicate access has been revoked.'));
+        } catch (\Exception $e) {
+            $this->Flash->error(__('Error revoking access: {0}', $e->getMessage()));
+        }
+
+        return $this->redirect(['action' => 'index']);
+    }
+
+    public function beforeRender(\Cake\Event\Event $event) {
         parent::beforeRender($event);
         $this->viewBuilder()->theme('Admintheme');
     }

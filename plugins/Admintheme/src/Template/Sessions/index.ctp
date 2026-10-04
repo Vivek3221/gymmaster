@@ -319,6 +319,331 @@ $partners = $this->Common->getpartner();
                 transform: scale(1.1) rotate(90deg);
                 box-shadow: 0 6px 20px rgba(255, 152, 0, 0.6) !important;
             }
+
+            /* ─── Ultra Modern Modal & Trigger Button Styling ─── */
+            .btn-modern-duplicate-access {
+                background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%) !important;
+                color: #ffffff !important;
+                font-weight: 700 !important;
+                font-size: 13px !important;
+                border-radius: 10px !important;
+                padding: 8px 18px !important;
+                border: none !important;
+                box-shadow: 0 4px 14px rgba(255, 152, 0, 0.35) !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 8px !important;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                letter-spacing: 0.3px;
+                cursor: pointer;
+            }
+            .btn-modern-duplicate-access:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(255, 152, 0, 0.5) !important;
+                color: #ffffff !important;
+            }
+
+            .modal-modern-container .modal-dialog {
+                max-width: 580px;
+                width: 95%;
+                margin: 45px auto;
+            }
+            .modal-modern-card {
+                border-radius: 16px !important;
+                border: none !important;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25) !important;
+                overflow: hidden !important;
+                background: #ffffff !important;
+            }
+            .modal-modern-header {
+                background: linear-gradient(135deg, #ff9800 0%, #e65100 100%) !important;
+                padding: 22px 28px !important;
+                border: none !important;
+                position: relative;
+            }
+            .modal-modern-header .modal-title-box {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            .modal-modern-header .header-icon-avatar {
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+                background: rgba(255, 255, 255, 0.22);
+                backdrop-filter: blur(4px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                font-size: 22px;
+                flex-shrink: 0;
+            }
+            .modal-modern-header .modal-title {
+                color: #ffffff !important;
+                font-size: 17px !important;
+                font-weight: 700 !important;
+                margin: 0 !important;
+                letter-spacing: 0.3px;
+                line-height: 1.2;
+            }
+            .modal-modern-header .modal-subtitle {
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 12px;
+                margin-top: 3px;
+                font-weight: 400;
+            }
+            .modal-modern-header .close-btn-circle {
+                position: absolute;
+                right: 20px;
+                top: 20px;
+                background: rgba(255, 255, 255, 0.2);
+                border: none;
+                color: #ffffff;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                outline: none;
+                opacity: 0.9;
+            }
+            .modal-modern-header .close-btn-circle:hover {
+                background: rgba(255, 255, 255, 0.35);
+                transform: scale(1.08);
+                opacity: 1;
+            }
+
+            .modal-modern-body {
+                padding: 28px !important;
+            }
+
+            .modern-form-group {
+                margin-bottom: 24px;
+            }
+            .modern-form-group label {
+                font-size: 12px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.6px;
+                color: #475569;
+                margin-bottom: 8px;
+                display: block;
+            }
+            .modern-input-row {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+            .modern-input-wrap {
+                flex: 1;
+                position: relative;
+            }
+            .modern-input-wrap i {
+                position: absolute;
+                left: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #94a3b8;
+                font-size: 20px;
+                pointer-events: none;
+                transition: color 0.2s ease;
+            }
+            .modern-input-wrap input.modern-input {
+                width: 100% !important;
+                height: 46px !important;
+                border-radius: 10px !important;
+                border: 1.5px solid #cbd5e1 !important;
+                background-color: #f8fafc !important;
+                padding-left: 44px !important;
+                padding-right: 14px !important;
+                font-size: 14px !important;
+                color: #1e293b !important;
+                box-shadow: none !important;
+                transition: all 0.2s ease !important;
+                outline: none !important;
+            }
+            .modern-input-wrap input.modern-input:focus {
+                border-color: #ff9800 !important;
+                background-color: #ffffff !important;
+                box-shadow: 0 0 0 4px rgba(255, 152, 0, 0.15) !important;
+            }
+            .modern-input-wrap input.modern-input:focus + i {
+                color: #ff9800;
+            }
+
+            .btn-grant-access {
+                height: 46px !important;
+                padding: 0 22px !important;
+                border-radius: 10px !important;
+                background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%) !important;
+                color: #ffffff !important;
+                font-weight: 700 !important;
+                font-size: 13.5px !important;
+                border: none !important;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                box-shadow: 0 4px 14px rgba(255, 152, 0, 0.35) !important;
+                cursor: pointer;
+                transition: all 0.25s ease;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+            .btn-grant-access:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 18px rgba(255, 152, 0, 0.5) !important;
+            }
+
+            /* Permissions Section */
+            .perm-section-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding-bottom: 10px;
+                border-bottom: 2px solid #f1f5f9;
+                margin-bottom: 16px;
+            }
+            .perm-section-title {
+                font-size: 13px;
+                font-weight: 700;
+                color: #1e293b;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+            .perm-badge-count {
+                background: #fff3e0;
+                color: #e65100;
+                padding: 2px 10px;
+                border-radius: 20px;
+                font-size: 11px;
+                font-weight: 700;
+                border: 1px solid #ffe0b2;
+            }
+
+            /* Modern List Table */
+            .perm-table-wrap {
+                border-radius: 12px;
+                border: 1px solid #e2e8f0;
+                overflow: hidden;
+                background: #ffffff;
+            }
+            .perm-modern-table {
+                width: 100%;
+                margin: 0;
+                border-collapse: collapse;
+            }
+            .perm-modern-table th {
+                background: #f8fafc;
+                padding: 12px 16px;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: #64748b;
+                letter-spacing: 0.5px;
+                border-bottom: 1px solid #e2e8f0;
+            }
+            .perm-modern-table td {
+                padding: 14px 16px;
+                font-size: 13px;
+                color: #334155;
+                vertical-align: middle;
+                border-bottom: 1px solid #f1f5f9;
+            }
+            .perm-modern-table tr:last-child td {
+                border-bottom: none;
+            }
+            .perm-modern-table tr:hover td {
+                background-color: #fafbfd;
+            }
+            .user-email-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                font-weight: 600;
+                color: #0f172a;
+            }
+            .user-avatar-dot {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: #fff3e0;
+                color: #e65100;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 13px;
+                font-weight: 700;
+                border: 1px solid #ffe0b2;
+            }
+
+            .btn-revoke-circle {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: #fee2e2;
+                color: #ef4444;
+                border: 1px solid #fca5a5;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s ease;
+                text-decoration: none !important;
+            }
+            .btn-revoke-circle:hover {
+                background: #ef4444;
+                color: #ffffff;
+                box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+                transform: scale(1.08);
+            }
+
+            .empty-perm-box {
+                text-align: center;
+                padding: 30px 20px;
+                background: #f8fafc;
+                border-radius: 12px;
+                border: 1.5px dashed #cbd5e1;
+            }
+            .empty-perm-box i {
+                font-size: 42px;
+                color: #94a3b8;
+                margin-bottom: 8px;
+                display: block;
+            }
+            .empty-perm-box p {
+                margin: 0;
+                font-size: 13px;
+                color: #64748b;
+                font-weight: 500;
+            }
+
+            .modal-modern-footer {
+                padding: 16px 28px !important;
+                background: #f8fafc !important;
+                border-top: 1px solid #e2e8f0 !important;
+                display: flex;
+                justify-content: flex-end;
+            }
+            .btn-modal-close {
+                background: #ffffff !important;
+                border: 1.5px solid #cbd5e1 !important;
+                color: #475569 !important;
+                font-weight: 600 !important;
+                font-size: 13px !important;
+                padding: 8px 20px !important;
+                border-radius: 8px !important;
+                transition: all 0.2s ease;
+            }
+            .btn-modal-close:hover {
+                background: #f1f5f9 !important;
+                color: #1e293b !important;
+            }
         </style>
 
 
@@ -383,10 +708,19 @@ $partners = $this->Common->getpartner();
 
                 <!-- Modern Card Layout for Table -->
                 <div class="card modern-card">
-                    <div class="header">
-                        <h2>
-                            <?= __('Sessions List') ?>
+                    <?php
+                    $isAdmin = $this->Common->isAdminUser($usersdetail['users_type'] ?? 0, $usersdetail['users_email'] ?? '');
+                    ?>
+                    <div class="header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                        <h2 style="margin:0; display:flex; align-items:center; gap:8px;">
+                            <i class="material-icons" style="color:#ff9800;">event_note</i> <?= __('Sessions List') ?>
                         </h2>
+                        <?php if ($user_type == 2 || $isAdmin): ?>
+                            <button type="button" class="btn btn-modern-duplicate-access" data-toggle="modal" data-target="#duplicateAccessModal">
+                                <i class="material-icons" style="font-size:18px;">key</i> <?= __('Manage Trainer Duplicate Access') ?>
+                            </button>
+                        <?php endif; ?>
+                    </div>
                         <!-- Quick Status Tabs -->
                         <div class="status-tabs" style="margin-top:14px;">
                             <?php
@@ -573,7 +907,100 @@ $partners = $this->Common->getpartner();
                 </div>
             </div>
         </div>
-        <!-- #END# Basic Examples -->
+        <!-- Modal for Managing Trainer Duplicate Access -->
+        <?php if ($user_type == 2 || $isAdmin): ?>
+        <div class="modal fade modal-modern-container" id="duplicateAccessModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content modal-modern-card">
+                    <div class="modal-header modal-modern-header">
+                        <button type="button" class="close-btn-circle" data-dismiss="modal" title="Close">
+                            <i class="material-icons" style="font-size:18px;">close</i>
+                        </button>
+                        <div class="modal-title-box">
+                            <div class="header-icon-avatar">
+                                <i class="material-icons">security</i>
+                            </div>
+                            <div>
+                                <h4 class="modal-title"><?= __('Trainer Duplicate Access') ?></h4>
+                                <div class="modal-subtitle"><?= __('Grant session copy permission to trainers by Email ID') ?></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body modal-modern-body">
+                        <?= $this->Form->create(null, ['url' => ['controller' => 'Sessions', 'action' => 'grantDuplicateAccess']]) ?>
+                            <div class="modern-form-group">
+                                <label><?= __('Enter Trainer / Staff Email Address') ?></label>
+                                <div class="modern-input-row">
+                                    <div class="modern-input-wrap">
+                                        <input type="email" name="email" class="form-control modern-input" placeholder="trainer@gymmaster.com" required autocomplete="off">
+                                        <i class="material-icons">mail_outline</i>
+                                    </div>
+                                    <button type="submit" class="btn btn-grant-access">
+                                        <i class="material-icons" style="font-size:18px;">add_circle</i> <?= __('Grant') ?>
+                                    </button>
+                                </div>
+                            </div>
+                        <?= $this->Form->end() ?>
+
+                        <div class="perm-section-header">
+                            <div class="perm-section-title">
+                                <i class="material-icons" style="font-size:18px; color:#ff9800;">verified_user</i>
+                                <span><?= __('Active Granted Users') ?></span>
+                            </div>
+                            <span class="perm-badge-count"><?= count($duplicatePermissions ?? []) ?> Allowed</span>
+                        </div>
+
+                        <?php if (!empty($duplicatePermissions)): ?>
+                            <div class="perm-table-wrap">
+                                <table class="perm-modern-table">
+                                    <thead>
+                                        <tr>
+                                            <th><?= __('User Email') ?></th>
+                                            <th><?= __('Granted By') ?></th>
+                                            <th style="text-align:center; width:70px;"><?= __('Action') ?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($duplicatePermissions as $perm): ?>
+                                            <tr>
+                                                <td>
+                                                    <div class="user-email-pill">
+                                                        <div class="user-avatar-dot">
+                                                            <?= strtoupper(substr($perm['email'], 0, 1)) ?>
+                                                        </div>
+                                                        <span><?= h($perm['email']) ?></span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span style="color:#64748b; font-size:12px;"><?= h($perm['granted_by']) ?></span>
+                                                </td>
+                                                <td style="text-align:center;">
+                                                    <a href="<?= $this->Url->build(['action' => 'revokeDuplicateAccess', $perm['id']]) ?>" class="btn-revoke-circle" onclick="return confirm('<?= __('Are you sure you want to revoke duplicate session access for {0}?', h($perm['email'])) ?>');" title="Revoke Access">
+                                                        <i class="material-icons" style="font-size:16px;">delete_outline</i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php else: ?>
+                            <div class="empty-perm-box">
+                                <i class="material-icons">lock_open</i>
+                                <p><?= __('No trainer email addresses currently have duplicate access.') ?></p>
+                                <small style="color:#94a3b8; display:block; margin-top:4px; font-size:11px;">
+                                    Enter an email ID above to delegate session copy permissions.
+                                </small>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="modal-footer modal-modern-footer">
+                        <button type="button" class="btn btn-modal-close" data-dismiss="modal"><?= __('Close Window') ?></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 </section>
 <script type="text/javascript" language="javascript">

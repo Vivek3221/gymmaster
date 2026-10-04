@@ -274,9 +274,14 @@
                            <td style="font-weight:700;">₹<?= $this->Number->format($payment->amount) ?></td>
                            <td>
                               <?php if (!empty($payment->discount_percent) && $payment->discount_percent > 0): ?>
-                                 <span class="badge" style="background-color:#e8f5e9;color:#2e7d32;font-size:11px;font-weight:700;padding:4px 8px;border-radius:4px;border:1px solid #c8e6c9;" title="<?= h($payment->discount_reason) ?>">
+                                 <span class="badge" style="background-color:#e8f5e9;color:#2e7d32;font-size:11px;font-weight:700;padding:4px 8px;border-radius:4px;border:1px solid #c8e6c9;">
                                     <?= $payment->discount_percent ?>% (-₹<?= $this->Number->format($payment->discount_amount) ?>)
                                  </span>
+                                 <?php if (!empty($payment->discount_reason)): ?>
+                                    <div style="font-size:11px;color:#555;margin-top:4px;font-weight:500;">
+                                       <i class="material-icons" style="font-size:12px;vertical-align:middle;color:#ff9800;">comment</i> <?= h($payment->discount_reason) ?>
+                                    </div>
+                                 <?php endif; ?>
                               <?php else: ?>
                                  <span style="color:#aaa;">—</span>
                               <?php endif; ?>
