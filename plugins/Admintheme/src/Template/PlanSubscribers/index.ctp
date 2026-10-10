@@ -486,6 +486,7 @@
                                             <th><?= __('Total Fee') ?></th>
                                             <th><?= __('Paid Fee') ?></th>
                                             <th><?= __('Remain Fee') ?></th>
+                                            <th><?= __('Plan Start') ?></th>
                                             <th><?= __('Plan Expire') ?></th>
                                             <th><?= __('Payment Due') ?></th>
                                             <th><?= __('Action') ?></th>
@@ -498,6 +499,7 @@
                                             <th><?= __('Total Fee') ?></th>
                                             <th><?= __('Paid Fee') ?></th>
                                             <th><?= __('Remain Fee') ?></th>
+                                            <th><?= __('Plan Start') ?></th>
                                             <th><?= __('Plan Expire') ?></th>
                                             <th><?= __('Payment Due') ?></th>
                                             <th><?= __('Action') ?></th>
@@ -511,6 +513,7 @@
                                             <td><?= $this->Number->format($planSubscriber->fee) ?></td>
                                             <td style="color: #2e7d32; font-weight: bold;"><?= $this->Number->format($planSubscriber->paid_fee) ?></td>
                                             <td style="color: #c62828; font-weight: bold;"><?= $this->Number->format($planSubscriber->remain_fee) ?></td>
+                                            <td><?= !empty($planSubscriber->subscription_start_date) ? date("d-m-Y", strtotime($planSubscriber->subscription_start_date)) : (!empty($planSubscriber->created) ? date("d-m-Y", strtotime($planSubscriber->created)) : '-') ?></td>
                                             <td><?= (date("d-m-Y", strtotime($planSubscriber->plan_expire_date))) ?></td>
                                             <td><?= (date("d-m-Y", strtotime($planSubscriber->payment_due_date))) ?></td>
                                             <td>

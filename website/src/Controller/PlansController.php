@@ -1,22 +1,82 @@
 <?php
+
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Table\PlansTable;
+use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
 /**
  * Plans Controller
+ *
+ * @property \App\Model\Table\PlansTable $Plans
  */
 class PlansController extends AppController
 {
-    public function beforeRender(\Cake\Event\Event $event)
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('Flash');
+        $this->loadComponent('Common');
+    }
+
+    public function beforeFilter(Event $event)
+    {
+        parent::beforeFilter($event);
+        $this->Auth->allow(['index', 'add', 'edit', 'view']);
+    }
+
+    public function beforeRender(Event $event)
     {
         parent::beforeRender($event);
         $this->viewBuilder()->theme('Admintheme');
     }
 
     /**
-     * Index method
+     * GET /plans/get-days — AJAX: returns days for a given duration_months
+     */
+    public function getDays()
+    {
+        $this->autoRender = false;
+        $months = (int)($this->request->query('months') ?? 0);
+        $days = PlansTable::calculateDays($months);
+        echo json_encode(['days' => $days]);
+        exit;
+    }
+
+    /**
+     * GET /plans/get-plan-details — AJAX: returns plan details by plan title for payment form
+     */
+    public function getPlanDetails()
+    {
+        $this->autoRender = false;
+        $planId = (int)($this->request->query('plan_id') ?? 0);
+
+        if (!$planId) {
+            echo json_encode(['success' => false]);
+            exit;
+        }
+
+        $Plans = TableRegistry::get('Plans');
+        $plan  = $Plans->find()->where(['Plans.id' => $planId, 'Plans.active' => 1])->first();
+
+        if (empty($plan)) {
+            echo json_encode(['success' => false]);
+            exit;
+        }
+
+        echo json_encode([
+            'success' => true,
+            'title'   => $plan->title,
+            'days'    => (int)$plan->days,
+            'price'   => (float)$plan->price,
+        ]);
+        exit;
+    }
+
+    /**
+     * Index — Plans list with full CRUD (no delete)
      */
     public function index()
     {
@@ -26,10 +86,11 @@ class PlansController extends AppController
 
         $users_type = $this->usersdetail['users_type'];
         $users_id   = $this->usersdetail['users_id'];
+        $targetPartnerId = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? $this->usersdetail['partner_id'] : $users_id);
 
         $conditions = [];
         if ($users_type != 1) {
-            $conditions['Plans.partner_id'] = $users_id;
+            $conditions['Plans.partner_id'] = $targetPartnerId;
         }
 
         $this->paginate = ['limit' => 20, 'order' => ['Plans.id' => 'DESC']];
@@ -46,21 +107,18 @@ class PlansController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-        if ($this->usersdetail['users_type'] == 5) {
-            $this->Flash->error(__('Front Desk role is restricted from modifying plans.'));
-            return $this->redirect(['action' => 'index']);
-        }
 
         $users_type = $this->usersdetail['users_type'];
         $users_id   = $this->usersdetail['users_id'];
+        $targetPartnerId = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? $this->usersdetail['partner_id'] : $users_id);
 
         $plan = $this->Plans->newEntity();
 
         if ($this->request->is('post')) {
             $data = $this->request->data;
             $months = (int)($data['duration_months'] ?? 0);
-            $data['days']       = ($months == 12) ? 365 : ($months * 30);
-            $data['partner_id'] = $users_id;
+            $data['days']       = PlansTable::calculateDays($months);
+            $data['partner_id'] = $targetPartnerId;
             $data['active']     = 1;
 
             $plan = $this->Plans->patchEntity($plan, $data);
@@ -72,8 +130,8 @@ class PlansController extends AppController
         }
 
         $durationOptions = [];
-        for ($m = 1; $m <= 12; $m++) {
-            $days = ($m == 12) ? 365 : ($m * 30);
+        for ($m = 1; $m <= 24; $m++) {
+            $days = PlansTable::calculateDays($m);
             $durationOptions[$m] = "$m Month" . ($m > 1 ? "s" : "") . " ($days days)";
         }
 
@@ -88,20 +146,22 @@ class PlansController extends AppController
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
             return $this->redirect('/');
         }
-        if ($this->usersdetail['users_type'] == 5) {
-            $this->Flash->error(__('Front Desk role is restricted from modifying plans.'));
-            return $this->redirect(['action' => 'index']);
-        }
 
         $users_type = $this->usersdetail['users_type'];
         $users_id   = $this->usersdetail['users_id'];
+        $targetPartnerId = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? $this->usersdetail['partner_id'] : $users_id);
         $plan       = $this->Plans->get($id);
+
+        if ($users_type != 1 && $plan->partner_id != $targetPartnerId) {
+            $this->Flash->error(__('You are not authorized to edit this plan.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data   = $this->request->data;
             $months = (int)($data['duration_months'] ?? 0);
-            $data['days']       = ($months == 12) ? 365 : ($months * 30);
-            $data['partner_id'] = $users_id;
+            $data['days']       = PlansTable::calculateDays($months);
+            $data['partner_id'] = $targetPartnerId;
 
             $plan = $this->Plans->patchEntity($plan, $data);
             if ($this->Plans->save($plan)) {
@@ -112,8 +172,8 @@ class PlansController extends AppController
         }
 
         $durationOptions = [];
-        for ($m = 1; $m <= 12; $m++) {
-            $days = ($m == 12) ? 365 : ($m * 30);
+        for ($m = 1; $m <= 24; $m++) {
+            $days = PlansTable::calculateDays($m);
             $durationOptions[$m] = "$m Month" . ($m > 1 ? "s" : "") . " ($days days)";
         }
 
@@ -139,12 +199,21 @@ class PlansController extends AppController
     public function toggleStatus($id = null)
     {
         $this->autoRender = false;
-        if (empty($this->usersdetail['users_name']) || $this->usersdetail['users_type'] == 5) {
+        if (empty($this->usersdetail['users_name'])) {
             echo json_encode(['success' => false]);
             exit;
         }
 
+        $users_type = $this->usersdetail['users_type'];
+        $users_id   = $this->usersdetail['users_id'];
+        $targetPartnerId = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? $this->usersdetail['partner_id'] : $users_id);
+
         $plan = $this->Plans->get($id);
+        if ($users_type != 1 && $plan->partner_id != $targetPartnerId) {
+            echo json_encode(['success' => false]);
+            exit;
+        }
+
         $plan->active = ($plan->active == 1) ? 0 : 1;
         $this->Plans->save($plan);
 

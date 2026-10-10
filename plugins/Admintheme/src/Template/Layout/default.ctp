@@ -49,6 +49,88 @@
      <?= $this->Html->css('themes/all-themes.css') ?>
      <?php echo $this->Html->css('datePicker.css') ?>
     <style>
+        /* Suppress buggy bootstrapMaterialDatePicker modal completely across whole app */
+        .dtp, .dtp * {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            z-index: -9999 !important;
+        }
+        /* Modern Flatpickr Calendar Styling */
+        .flatpickr-calendar {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif !important;
+            border-radius: 12px !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+            border: 1px solid #e2e8f0 !important;
+            z-index: 99999 !important;
+        }
+        .flatpickr-months {
+            background: #1e293b !important;
+            border-radius: 12px 12px 0 0 !important;
+            position: relative !important;
+        }
+        .flatpickr-months .flatpickr-month {
+            background: #1e293b !important;
+            color: #ffffff !important;
+            fill: #ffffff !important;
+            border-radius: 12px 12px 0 0 !important;
+            height: 38px !important;
+        }
+        .flatpickr-months .flatpickr-prev-month, 
+        .flatpickr-months .flatpickr-next-month {
+            color: #ffffff !important;
+            fill: #ffffff !important;
+            height: 28px !important;
+            width: 28px !important;
+            padding: 4px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            top: 5px !important;
+            z-index: 9999 !important;
+            cursor: pointer !important;
+            border-radius: 6px !important;
+            background: rgba(255, 255, 255, 0.22) !important;
+            transition: all 0.2s ease !important;
+        }
+        .flatpickr-months .flatpickr-prev-month:hover, 
+        .flatpickr-months .flatpickr-next-month:hover {
+            background: #ff9800 !important;
+        }
+        .flatpickr-months .flatpickr-prev-month svg, 
+        .flatpickr-months .flatpickr-next-month svg,
+        .flatpickr-months .flatpickr-prev-month svg path, 
+        .flatpickr-months .flatpickr-next-month svg path {
+            fill: #ffffff !important;
+            stroke: #ffffff !important;
+            width: 14px !important;
+            height: 14px !important;
+            display: block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        .flatpickr-months .flatpickr-prev-month:hover svg, 
+        .flatpickr-months .flatpickr-next-month:hover svg,
+        .flatpickr-months .flatpickr-prev-month:hover svg path, 
+        .flatpickr-months .flatpickr-next-month:hover svg path {
+            fill: #ffffff !important;
+            stroke: #ffffff !important;
+        }
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            font-weight: 700 !important;
+            background: #1e293b !important;
+            color: #ffffff !important;
+            padding: 4px 8px !important;
+        }
+        .flatpickr-current-month input.cur-year {
+            font-weight: 700 !important;
+            color: #ffffff !important;
+        }
+        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+            background: #ff9800 !important;
+            border-color: #ff9800 !important;
+        }
         .addLangDv{ cursor: pointer; text-align: right;    margin-right: 23px;}
         .addLangDv span{ float: right; margin-top: 2px; margin-bottom: 2px; }
         .addLangDv:hover{ color: #000;   }
@@ -290,15 +372,40 @@
     <?php echo $this->Html->script('jquery_002.js') ?>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-    $(document).ready(function() {
-        if (typeof flatpickr !== 'undefined') {
-            flatpickr('.datetimepicker, .datepicker, .flatpickr-date, .datepicker-filter, .plan-datepicker', {
-                dateFormat: 'Y-m-d',
-                allowInput: true,
-                monthSelectorType: 'dropdown'
-            });
+    (function($) {
+        // Suppress and bridge bootstrapMaterialDatePicker to Flatpickr
+        if ($ && $.fn) {
+            $.fn.bootstrapMaterialDatePicker = function(options) {
+                if (typeof flatpickr !== 'undefined') {
+                    var isTime = (options && options.time && options.time !== 'false' && options.time !== false);
+                    var fpFormat = isTime ? 'Y-m-d H:i' : 'Y-m-d';
+                    this.each(function() {
+                        $(this).off('.dtp').removeAttr('data-dtp');
+                        flatpickr(this, {
+                            dateFormat: fpFormat,
+                            enableTime: isTime,
+                            allowInput: true,
+                            monthSelectorType: 'dropdown',
+                            static: false
+                        });
+                    });
+                }
+                return this;
+            };
         }
-    });
+
+        $(document).ready(function() {
+            $('.dtp').remove();
+            if (typeof flatpickr !== 'undefined') {
+                flatpickr('.datetimepicker, .datepicker, .flatpickr-date, .datepicker-filter, .plan-datepicker, input[name="dob"]', {
+                    dateFormat: 'Y-m-d',
+                    allowInput: true,
+                    monthSelectorType: 'dropdown',
+                    static: false
+                });
+            }
+        });
+    })(jQuery);
     </script>
     <?php //echo $this->Html->script('pages/index.js') ?>
     <!-- Demo Js -->

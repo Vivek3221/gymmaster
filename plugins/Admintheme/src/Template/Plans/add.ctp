@@ -200,6 +200,7 @@
                         'label'   => false,
                         'options' => $durationOptions,
                         'empty'   => '-- Select Duration --',
+                        'class'   => 'select2',
                         'required'
                     ]) ?>
                 </div>
@@ -261,10 +262,28 @@
 
 <script>
 $(document).ready(function() {
-    $('#plan-duration').on('change', function() {
+    if ($.fn.select2) {
+        $('#plan-duration').select2({
+            width: '100%',
+            placeholder: '-- Select Duration --',
+            minimumResultsForSearch: 0
+        });
+    }
+
+    function calculateDays(months) {
+        months = parseInt(months, 10) || 0;
+        if (months <= 0) return 0;
+        if (months < 12) return months * 30;
+        if (months === 12) return 365;
+        if (months < 24) return 365 + ((months - 12) * 30);
+        if (months === 24) return 730;
+        return Math.floor(months / 12) * 365 + ((months % 12) * 30);
+    }
+
+    $('#plan-duration').on('change select2:select', function() {
         var months = parseInt($(this).val(), 10);
-        if (months >= 1 && months <= 12) {
-            var days = (months === 12) ? 365 : (months * 30);
+        if (months >= 1 && months <= 24) {
+            var days = calculateDays(months);
             $('#daysValue').text(days + ' Days');
             $('#planDaysInput').val(days);
             $('#daysDisplay').css({'border-color': '#4caf50', 'background': 'linear-gradient(135deg,#e8f5e9,#f1f8e9)'});

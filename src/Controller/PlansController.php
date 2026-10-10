@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Table\PlansTable;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
@@ -39,7 +40,7 @@ class PlansController extends AppController
     {
         $this->autoRender = false;
         $months = (int)($this->request->query('months') ?? 0);
-        $days = ($months == 12) ? 365 : ($months * 30);
+        $days = PlansTable::calculateDays($months);
         echo json_encode(['days' => $days]);
         exit;
     }
@@ -116,7 +117,7 @@ class PlansController extends AppController
         if ($this->request->is('post')) {
             $data = $this->request->data;
             $months = (int)($data['duration_months'] ?? 0);
-            $data['days']       = ($months == 12) ? 365 : ($months * 30);
+            $data['days']       = PlansTable::calculateDays($months);
             $data['partner_id'] = $targetPartnerId;
             $data['active']     = 1;
 
@@ -129,8 +130,8 @@ class PlansController extends AppController
         }
 
         $durationOptions = [];
-        for ($m = 1; $m <= 12; $m++) {
-            $days = ($m == 12) ? 365 : ($m * 30);
+        for ($m = 1; $m <= 24; $m++) {
+            $days = PlansTable::calculateDays($m);
             $durationOptions[$m] = "$m Month" . ($m > 1 ? "s" : "") . " ($days days)";
         }
 
@@ -159,7 +160,7 @@ class PlansController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data   = $this->request->data;
             $months = (int)($data['duration_months'] ?? 0);
-            $data['days']       = ($months == 12) ? 365 : ($months * 30);
+            $data['days']       = PlansTable::calculateDays($months);
             $data['partner_id'] = $targetPartnerId;
 
             $plan = $this->Plans->patchEntity($plan, $data);
@@ -171,8 +172,8 @@ class PlansController extends AppController
         }
 
         $durationOptions = [];
-        for ($m = 1; $m <= 12; $m++) {
-            $days = ($m == 12) ? 365 : ($m * 30);
+        for ($m = 1; $m <= 24; $m++) {
+            $days = PlansTable::calculateDays($m);
             $durationOptions[$m] = "$m Month" . ($m > 1 ? "s" : "") . " ($days days)";
         }
 

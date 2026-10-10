@@ -1006,25 +1006,37 @@ class PlanSubscribersController extends AppController
         $users_type = $this->usersdetail['users_type'];
         $users_id = $this->usersdetail['users_id'];
         $planSubscriber = $this->PlanSubscribers->get($id, [
-            'contain' => []
+            'contain' => ['Users']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $postData = $this->request->getData();
-            if (!$this->isAdminUser()) {
-                unset($postData['start_date'], $postData['plan_expire_date'], $postData['reminder_date']);
+            // Allow Super Admins (1) and Partners/Gym Owners (2) to manage and edit subscription dates
+            $isAuthorizedEditor = in_array((int)$users_type, [1, 2]) || $this->isAdminUser();
+            if (!$isAuthorizedEditor) {
+                unset($postData['subscription_start_date'], $postData['start_date'], $postData['plan_expire_date'], $postData['payment_due_date'], $postData['reminder_date']);
             }
             $planSubscriber = $this->PlanSubscribers->patchEntity($planSubscriber, $postData);
             if ($this->PlanSubscribers->save($planSubscriber)) {
-                $this->Flash->success(__('The plan subscriber has been saved.'));
+                $this->Flash->success(__('The plan subscriber has been saved successfully.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The plan subscriber could not be saved. Please, try again.'));
+            
+            $errList = [];
+            foreach ($planSubscriber->getErrors() as $field => $errs) {
+                $errList[] = $field . ': ' . implode(', ', array_values($errs));
+            }
+            $errText = !empty($errList) ? ' (' . implode(' | ', $errList) . ')' : '';
+            $this->Flash->error(__('The plan subscriber could not be saved. Please, try again.' . $errText));
         }
         if (isset($users_type) && ($users_type == 2)) {
-            $search['Users.partner_id'] = $users_id;
+            $search['OR'] = [
+                ['Users.partner_id' => $users_id, 'Users.user_type' => 3],
+                ['Users.id' => $planSubscriber->user_id]
+            ];
+        } else {
+            $search['Users.user_type'] = 3;
         }
-        $search['Users.user_type'] = 3;
         if (!empty($search)) {
             $users = $this->PlanSubscribers->Users->find('list')
                     ->where([$search]);
@@ -1033,7 +1045,18 @@ class PlanSubscribersController extends AppController
         }
         
         $partners = $this->PlanSubscribers->Partners->find('list', ['limit' => 200]);
-        $this->set(compact('planSubscriber', 'users', 'partners'));
+
+        $plansTable = TableRegistry::get('Plans');
+        $planConditions = ['Plans.active' => 1];
+        if ($users_type != 1) {
+            $targetPartnerId = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? $this->usersdetail['partner_id'] : $planSubscriber->partner_id);
+            if (!empty($targetPartnerId)) {
+                $planConditions['Plans.partner_id'] = $targetPartnerId;
+            }
+        }
+        $availablePlans = $plansTable->find('all')->where($planConditions)->order(['Plans.title' => 'ASC'])->toArray();
+
+        $this->set(compact('planSubscriber', 'users', 'partners', 'availablePlans'));
     }
 
     /**

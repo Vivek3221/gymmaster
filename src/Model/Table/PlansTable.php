@@ -30,7 +30,36 @@ class PlansTable extends Table
         3  => 90,
         6  => 180,
         12 => 365,
+        24 => 730,
     ];
+
+    /**
+     * Accurately calculate days for 1 to 24+ months:
+     * - 1 to 11 months: months * 30
+     * - 12 months: 365 days (1 full year)
+     * - 13 to 23 months: 365 + ((months - 12) * 30)
+     * - 24 months: 730 days (2 full years = 365 * 2)
+     */
+    public static function calculateDays($months)
+    {
+        $months = (int)$months;
+        if ($months <= 0) {
+            return 0;
+        }
+        if ($months < 12) {
+            return $months * 30;
+        }
+        if ($months == 12) {
+            return 365;
+        }
+        if ($months < 24) {
+            return 365 + (($months - 12) * 30);
+        }
+        if ($months == 24) {
+            return 730;
+        }
+        return (int)(floor($months / 12) * 365) + (($months % 12) * 30);
+    }
 
     public function initialize(array $config)
     {
@@ -60,8 +89,8 @@ class PlansTable extends Table
             ->requirePresence('duration_months', 'create')
             ->notEmpty('duration_months')
             ->add('duration_months', 'range', [
-                'rule' => ['range', 1, 12],
-                'message' => 'Duration must be between 1 and 12 months.'
+                'rule' => ['range', 1, 24],
+                'message' => 'Duration must be between 1 and 24 months.'
             ]);
 
         $validator

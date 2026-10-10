@@ -67,6 +67,46 @@ class PlanSubscribersTable extends Table
     }
 
     /**
+     * Normalize incoming form data before entity marshaling
+     */
+    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
+    {
+        if (isset($data['plan_expire_date']) && is_string($data['plan_expire_date'])) {
+            $val = trim($data['plan_expire_date']);
+            if ($val !== '') {
+                $time = strtotime($val);
+                if ($time !== false) {
+                    $data['plan_expire_date'] = (strlen($val) <= 10) ? date('Y-m-d 23:59:59', $time) : date('Y-m-d H:i:s', $time);
+                }
+            }
+        }
+
+        if (isset($data['subscription_start_date']) && is_string($data['subscription_start_date'])) {
+            $val = trim($data['subscription_start_date']);
+            if ($val !== '') {
+                $time = strtotime($val);
+                if ($time !== false) {
+                    $data['subscription_start_date'] = date('Y-m-d', $time);
+                }
+            }
+        }
+
+        if (isset($data['payment_due_date']) && is_string($data['payment_due_date'])) {
+            $val = trim($data['payment_due_date']);
+            if ($val !== '') {
+                $time = strtotime($val);
+                if ($time !== false) {
+                    $data['payment_due_date'] = (strlen($val) <= 10) ? date('Y-m-d 00:00:00', $time) : date('Y-m-d H:i:s', $time);
+                }
+            }
+        }
+
+        if (isset($data['fee']) && is_string($data['fee'])) {
+            $data['fee'] = (float)str_replace(',', '', trim($data['fee']));
+        }
+    }
+
+    /**
      * Default validation rules.
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
@@ -85,32 +125,58 @@ class PlanSubscribersTable extends Table
             ->notEmpty('plan_name');
 
         $validator
-            ->integer('fee')
+            ->numeric('fee')
             ->requirePresence('fee', 'create')
             ->notEmpty('fee');
 
         $validator
             ->scalar('currency')
             ->maxLength('currency', 3)
-            ->requirePresence('currency', 'create')
-            ->notEmpty('currency');
+            ->allowEmpty('currency');
 
         $validator
-            ->dateTime('plan_expire_date')
             ->requirePresence('plan_expire_date', 'create')
-            ->notEmpty('plan_expire_date');
+            ->notEmpty('plan_expire_date', 'Plan expire date is required')
+            ->add('plan_expire_date', 'validDate', [
+                'rule' => function ($value, $context) {
+                    if ($value instanceof \DateTimeInterface) return true;
+                    return is_string($value) && (bool)strtotime($value);
+                },
+                'message' => 'Please provide a valid plan expire date'
+            ]);
 
         $validator
-            ->dateTime('payment_due_date')
-            ->allowEmpty('payment_due_date');
+            ->allowEmpty('payment_due_date')
+            ->add('payment_due_date', 'validDate', [
+                'rule' => function ($value, $context) {
+                    if (empty($value)) return true;
+                    if ($value instanceof \DateTimeInterface) return true;
+                    return is_string($value) && (bool)strtotime($value);
+                },
+                'message' => 'Please provide a valid payment due date'
+            ]);
 
         $validator
-            ->date('subscription_start_date')
-            ->allowEmpty('subscription_start_date');
+            ->allowEmpty('subscription_start_date')
+            ->add('subscription_start_date', 'validDate', [
+                'rule' => function ($value, $context) {
+                    if (empty($value)) return true;
+                    if ($value instanceof \DateTimeInterface) return true;
+                    return is_string($value) && (bool)strtotime($value);
+                },
+                'message' => 'Please provide a valid subscription start date'
+            ]);
 
         $validator
-            ->date('reminder_date')
-            ->allowEmpty('reminder_date');
+            ->allowEmpty('reminder_date')
+            ->add('reminder_date', 'validDate', [
+                'rule' => function ($value, $context) {
+                    if (empty($value)) return true;
+                    if ($value instanceof \DateTimeInterface) return true;
+                    return is_string($value) && (bool)strtotime($value);
+                },
+                'message' => 'Please provide a valid reminder date'
+            ]);
 
         return $validator;
     }
@@ -125,7 +191,7 @@ class PlanSubscribersTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
-        $rules->add($rules->existsIn(['partner_id'], 'Users'));
+        $rules->add($rules->existsIn(['partner_id'], 'Users', ['allowNullableNulls' => true]));
 
         return $rules;
     }

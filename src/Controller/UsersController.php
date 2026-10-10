@@ -33,7 +33,7 @@ class UsersController extends AppController
     {
         parent::beforeFilter($event);
         // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index', 'add', 'view', 'edit', 'login', 'status', 'adminLogin', 'verifiedUpdate', 'logout', 'payment', 'forgetPassword', 'forgotPassword', 'resetPassword', 'siteMap', 'about', 'contact', 'sendContact', 'userProfile', 'saveRemark', 'getRemarks', 'softDelete', 'exportContacts', 'clearCache', 'expiredUsers']);
+        $this->Auth->allow(['index', 'add', 'view', 'edit', 'login', 'status', 'adminLogin', 'verifiedUpdate', 'logout', 'payment', 'forgetPassword', 'forgotPassword', 'resetPassword', 'siteMap', 'about', 'contact', 'sendContact', 'userProfile', 'saveRemark', 'getRemarks', 'softDelete', 'exportContacts', 'clearCache', 'expiredUsers', 'cronExpireMembers', 'followupList', 'enquiryList']);
     }
 
     public function about()
@@ -2683,6 +2683,382 @@ require \'composer.phar\';';
 
         $this->set(compact('user', 'users_type'));
         $this->set('_serialize', ['user']);
+    }
+
+    /**
+     * Automated Cron endpoint to mark expired members as Inactive (active = 0)
+     * Can be invoked via URL: GET /users/cronExpireMembers?token=gymmaster_cron_2026
+     */
+    public function cronExpireMembers()
+    {
+        $this->autoRender = false;
+        $token = $this->request->getQuery('token') ?? $this->request->getData('token') ?? '';
+        $validToken = 'gymmaster_cron_2026';
+
+        // Check if token matches or user is logged in as Super Admin
+        $isAuthorized = ($token === $validToken) || (method_exists($this, 'isAdminUser') && $this->isAdminUser());
+        if (!$isAuthorized) {
+            $this->response = $this->response->withType('application/json');
+            $this->response = $this->response->withStatus(403);
+            return $this->response->withStringBody(json_encode([
+                'success' => false,
+                'message' => 'Unauthorized access. Valid token parameter required.'
+            ]));
+        }
+
+        $planSubscribersTable = TableRegistry::get('PlanSubscribers');
+        $today = date('Y-m-d');
+
+        // Subquery: Has any active or future plan expiring today or in the future
+        $activePlanSubquery = $planSubscribersTable->find()
+            ->select(['PlanSubscribers.id'])
+            ->where([
+                'PlanSubscribers.user_id = Users.id',
+                'PlanSubscribers.plan_expire_date >=' => $today . ' 00:00:00'
+            ]);
+
+        // Find active members (user_type = 3, active = 1) who have an expired plan AND no active/future plan
+        $expiredMembers = $this->Users->find()
+            ->select(['id', 'name', 'email', 'partner_id'])
+            ->where([
+                'Users.user_type' => 3,
+                'Users.active' => 1
+            ])
+            ->where(function ($exp) use ($activePlanSubquery, $planSubscribersTable, $today) {
+                $hasExpiredPlanSubquery = $planSubscribersTable->find()
+                    ->select(['PlanSubscribers.id'])
+                    ->where([
+                        'PlanSubscribers.user_id = Users.id',
+                        'PlanSubscribers.plan_expire_date <' => $today . ' 00:00:00'
+                    ]);
+
+                return $exp
+                    ->exists($hasExpiredPlanSubquery)
+                    ->notExists($activePlanSubquery);
+            })
+            ->toArray();
+
+        $count = 0;
+        $updatedList = [];
+        if (!empty($expiredMembers)) {
+            foreach ($expiredMembers as $m) {
+                $this->Users->updateAll(
+                    ['active' => 0],
+                    ['id' => $m->id]
+                );
+                $updatedList[] = [
+                    'id'    => $m->id,
+                    'name'  => $m->name,
+                    'email' => $m->email
+                ];
+                $count++;
+            }
+        }
+
+        $this->response = $this->response->withType('application/json');
+        return $this->response->withStringBody(json_encode([
+            'success'       => true,
+            'updated_count' => $count,
+            'message'       => "Successfully marked {$count} expired member(s) as Inactive.",
+            'timestamp'     => date('Y-m-d H:i:s'),
+            'members'       => $updatedList
+        ], JSON_PRETTY_PRINT));
+    }
+
+    /**
+     * Follow-up List — Comprehensive user-wise follow-up logs page
+     */
+    public function followupList()
+    {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+
+        $users_type = (int)($this->usersdetail['users_type'] ?? 0);
+        $users_id   = (int)($this->usersdetail['users_id'] ?? 0);
+        $partnerId  = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? (int)$this->usersdetail['partner_id'] : 0);
+
+        $userRemarksTable = TableRegistry::get('UserRemarks');
+        $usersTable       = TableRegistry::get('Users');
+
+        // Scope conditions by gym / partner
+        $partnerCondition = [];
+        if ($users_type == 2 || ($users_type == 5 && $partnerId > 0)) {
+            $partnerCondition['Users.partner_id'] = $partnerId;
+        } elseif ($users_type == 4) {
+            $partnerCondition['OR'] = [
+                ['Users.trainer_userid' => $users_id],
+                ['Users.partner_id' => $partnerId]
+            ];
+        }
+
+        $today = date('Y-m-d');
+        $tab = $this->request->query('tab') ?: 'all';
+        $search = trim($this->request->query('search') ?? '');
+        $singleDate = trim($this->request->query('date') ?? '');
+        $dateFrom = trim($this->request->query('date_from') ?? '');
+        $dateTo = trim($this->request->query('date_to') ?? '');
+        if ($singleDate !== '') {
+            $dateFrom = $singleDate;
+            $dateTo = $singleDate;
+        }
+        $dateType = trim($this->request->query('date_type') ?? 'created'); // 'created' or 'followup_date'
+        $staffFilter = (int)($this->request->query('staff_id') ?? 0);
+        $userStatusFilter = trim($this->request->query('user_status') ?? '');
+
+        // Base query for counting tabs
+        $buildTabQuery = function() use ($userRemarksTable, $partnerCondition) {
+            $q = $userRemarksTable->find('all')
+                ->contain(['Users'])
+                ->where(['Users.active !=' => 3]);
+            if (!empty($partnerCondition)) {
+                $q->where($partnerCondition);
+            }
+            return $q;
+        };
+
+        $countAll = $buildTabQuery()->count();
+        $countTodayTaken = $buildTabQuery()->where(['DATE(UserRemarks.created) =' => $today])->count();
+        $countTodayDue = $buildTabQuery()->where(['DATE(UserRemarks.followup_date) =' => $today])->count();
+        $countUpcoming = $buildTabQuery()->where(['DATE(UserRemarks.followup_date) >' => $today])->count();
+        $countOverdue = $buildTabQuery()->where(['DATE(UserRemarks.followup_date) <' => $today, 'UserRemarks.followup_date IS NOT' => null])->count();
+
+        // Main filter query
+        $query = $userRemarksTable->find('all')
+            ->contain([
+                'Users' => ['Partners'],
+                'CreatedByUsers'
+            ])
+            ->where(['Users.active !=' => 3]);
+
+        if (!empty($partnerCondition)) {
+            $query->where($partnerCondition);
+        }
+
+        // Apply Tab filters
+        if ($tab === 'today_taken') {
+            $query->where(['DATE(UserRemarks.created) =' => $today]);
+        } elseif ($tab === 'today_due') {
+            $query->where(['DATE(UserRemarks.followup_date) =' => $today]);
+        } elseif ($tab === 'upcoming') {
+            $query->where(['DATE(UserRemarks.followup_date) >' => $today]);
+        } elseif ($tab === 'overdue') {
+            $query->where(['DATE(UserRemarks.followup_date) <' => $today, 'UserRemarks.followup_date IS NOT' => null]);
+        }
+
+        // Text Search
+        if ($search !== '') {
+            $query->where([
+                'OR' => [
+                    ['Users.name LIKE' => "%$search%"],
+                    ['Users.mobile_no LIKE' => "%$search%"],
+                    ['Users.email LIKE' => "%$search%"],
+                    ['UserRemarks.remark LIKE' => "%$search%"]
+                ]
+            ]);
+        }
+
+        // Date Range Filter
+        $dateColumn = ($dateType === 'followup_date') ? 'UserRemarks.followup_date' : 'UserRemarks.created';
+        if ($dateFrom !== '') {
+            $query->where(["$dateColumn >=" => $dateFrom . ' 00:00:00']);
+        }
+        if ($dateTo !== '') {
+            $query->where(["$dateColumn <=" => $dateTo . ' 23:59:59']);
+        }
+
+        // Staff filter
+        if ($staffFilter > 0) {
+            $query->where(['UserRemarks.created_by' => $staffFilter]);
+        }
+
+        // User status filter
+        if ($userStatusFilter !== '') {
+            $query->where(['Users.active' => $userStatusFilter]);
+        }
+
+        // Order by
+        if ($tab === 'today_due' || $tab === 'upcoming') {
+            $query->order(['UserRemarks.followup_date' => 'ASC', 'UserRemarks.id' => 'DESC']);
+        } else {
+            $query->order(['UserRemarks.created' => 'DESC', 'UserRemarks.id' => 'DESC']);
+        }
+
+        $this->paginate = [
+            'limit' => 30,
+            'maxLimit' => 100
+        ];
+        $followups = $this->paginate($query);
+
+        // Fetch staff list for filter dropdown
+        $staffConditions = ['user_type IN' => [1, 2, 4, 5], 'active' => 1];
+        if (!empty($partnerCondition)) {
+            $staffConditions['OR'] = [
+                ['id' => $users_id],
+                ['partner_id' => $partnerId],
+                ['user_type' => 1]
+            ];
+        }
+        $staffList = $usersTable->find('list', ['keyField' => 'id', 'valueField' => 'name'])
+            ->where($staffConditions)
+            ->order(['name' => 'ASC'])
+            ->toArray();
+
+        $this->set(compact(
+            'followups',
+            'tab',
+            'countAll',
+            'countTodayTaken',
+            'countTodayDue',
+            'countUpcoming',
+            'countOverdue',
+            'search',
+            'singleDate',
+            'dateFrom',
+            'dateTo',
+            'dateType',
+            'staffFilter',
+            'userStatusFilter',
+            'staffList',
+            'users_type'
+        ));
+    }
+
+    /**
+     * Enquiry List — Search & manage enquiries by month or custom date range in one click
+     */
+    public function enquiryList()
+    {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+
+        $users_type = (int)($this->usersdetail['users_type'] ?? 0);
+        $users_id   = (int)($this->usersdetail['users_id'] ?? 0);
+        $partnerId  = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? (int)$this->usersdetail['partner_id'] : 0);
+
+        $usersTable       = TableRegistry::get('Users');
+        $userRemarksTable = TableRegistry::get('UserRemarks');
+
+        // Scoping conditions
+        $partnerCondition = [];
+        if ($users_type == 2 || ($users_type == 5 && $partnerId > 0)) {
+            $partnerCondition['Users.partner_id'] = $partnerId;
+        } elseif ($users_type == 4) {
+            $partnerCondition['OR'] = [
+                ['Users.trainer_userid' => $users_id],
+                ['Users.partner_id' => $partnerId]
+            ];
+        }
+
+        // Query parameters
+        $monthSelect = trim($this->request->query('month') ?? ''); // e.g. '2026-10' or 'current' or 'last'
+        $dateFrom    = trim($this->request->query('date_from') ?? '');
+        $dateTo      = trim($this->request->query('date_to') ?? '');
+        $search      = trim($this->request->query('search') ?? '');
+        $trainerId   = (int)($this->request->query('trainer_id') ?? 0);
+        $status      = trim($this->request->query('status') ?? '2'); // default to 2 (Enquiries), can also view converted (1) or all
+
+        // If month preset chosen, calculate dateFrom & dateTo
+        if ($monthSelect === 'current') {
+            $dateFrom = date('Y-m-01');
+            $dateTo   = date('Y-m-t');
+        } elseif ($monthSelect === 'last') {
+            $dateFrom = date('Y-m-01', strtotime('first day of last month'));
+            $dateTo   = date('Y-m-t', strtotime('last day of last month'));
+        } elseif (preg_match('/^\d{4}-\d{2}$/', $monthSelect)) {
+            $dateFrom = $monthSelect . '-01';
+            $dateTo   = date('Y-m-t', strtotime($dateFrom));
+        }
+
+        // Summary counts
+        $baseCountQuery = function() use ($usersTable, $partnerCondition) {
+            $q = $usersTable->find('all')
+                ->where(['Users.user_type' => 3, 'Users.active !=' => 3]);
+            if (!empty($partnerCondition)) {
+                $q->where($partnerCondition);
+            }
+            return $q;
+        };
+
+        $totalEnquiriesAllTime = $baseCountQuery()->where(['Users.active' => 2])->count();
+        $totalConvertedAllTime = $baseCountQuery()->where(['Users.active' => 1])->count();
+
+        // Main enquiry query
+        $query = $usersTable->find('all')
+            ->contain([
+                'Partners',
+                'UserRemarks' => function($q) {
+                    return $q->order(['UserRemarks.created' => 'DESC']);
+                }
+            ])
+            ->where(['Users.user_type' => 3, 'Users.active !=' => 3]);
+
+        if (!empty($partnerCondition)) {
+            $query->where($partnerCondition);
+        }
+
+        // Status filter: 2 = Enquiry, 1 = Converted Member, 'all' = Both
+        if ($status !== 'all' && $status !== '') {
+            $query->where(['Users.active' => $status]);
+        } else {
+            $query->where(['Users.active IN' => [1, 2]]);
+        }
+
+        // Date filter on Users.created
+        if ($dateFrom !== '') {
+            $query->where(['Users.created >=' => $dateFrom . ' 00:00:00']);
+        }
+        if ($dateTo !== '') {
+            $query->where(['Users.created <=' => $dateTo . ' 23:59:59']);
+        }
+
+        // Text Search
+        if ($search !== '') {
+            $query->where([
+                'OR' => [
+                    ['Users.name LIKE' => "%$search%"],
+                    ['Users.mobile_no LIKE' => "%$search%"],
+                    ['Users.email LIKE' => "%$search%"]
+                ]
+            ]);
+        }
+
+        // Trainer filter
+        if ($trainerId > 0) {
+            $query->where(['Users.trainer_userid' => $trainerId]);
+        }
+
+        $query->order(['Users.created' => 'DESC']);
+
+        $this->paginate = [
+            'limit' => 30,
+            'maxLimit' => 100
+        ];
+        $enquiries = $this->paginate($query);
+
+        $filteredCount = $query->count();
+
+        // Trainers list
+        $trainers = $usersTable->find('list', ['keyField' => 'id', 'valueField' => 'name'])
+            ->where(['user_type' => 4, 'active' => 1])
+            ->order(['name' => 'ASC'])
+            ->toArray();
+
+        $this->set(compact(
+            'enquiries',
+            'monthSelect',
+            'dateFrom',
+            'dateTo',
+            'search',
+            'trainerId',
+            'status',
+            'totalEnquiriesAllTime',
+            'totalConvertedAllTime',
+            'filteredCount',
+            'trainers',
+            'users_type'
+        ));
     }
 
     public function beforeRender(\Cake\Event\Event $event)

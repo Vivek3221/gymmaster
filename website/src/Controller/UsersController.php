@@ -33,7 +33,7 @@ class UsersController extends AppController
     {
         parent::beforeFilter($event);
         // $this->Users->userAuth = $this->UserAuth;
-        $this->Auth->allow(['index', 'add', 'view', 'edit', 'login', 'status', 'adminLogin', 'verifiedUpdate', 'logout', 'payment', 'forgetPassword', 'forgotPassword', 'resetPassword', 'siteMap', 'about', 'contact', 'sendContact', 'userProfile', 'saveRemark', 'getRemarks', 'softDelete', 'exportContacts', 'clearCache']);
+        $this->Auth->allow(['index', 'add', 'view', 'edit', 'login', 'status', 'adminLogin', 'verifiedUpdate', 'logout', 'payment', 'forgetPassword', 'forgotPassword', 'resetPassword', 'siteMap', 'about', 'contact', 'sendContact', 'userProfile', 'saveRemark', 'getRemarks', 'softDelete', 'exportContacts', 'clearCache', 'expiredUsers', 'cronExpireMembers', 'followupList', 'enquiryList']);
     }
 
     public function about()
@@ -211,7 +211,14 @@ class UsersController extends AppController
             $end_date = $this->request->query['end_date'];
         }
 
-        if ($date_type !== 'followup') {
+        $front_desk_id = '';
+        if (isset($this->request->query['front_desk_id']) && trim($this->request->query['front_desk_id']) != "") {
+            $front_desk_id = $this->request->query['front_desk_id'];
+            $search['Users.added_by'] = $front_desk_id;
+        }
+
+        $isExpiredFilter = ($status === 'expired' || $status === '3' || $date_type === 'expiry');
+        if ($date_type !== 'followup' && !$isExpiredFilter) {
             if (!empty($start_date)) {
                 $search['Users.created >='] = $start_date . ' 00:00:00';
             }
@@ -243,6 +250,16 @@ class UsersController extends AppController
 
         if (isset($users_type) && ($users_type == 2)) {
             $search['Users.partner_id'] = $users_id;
+        } elseif (isset($users_type) && ($users_type == 4)) {
+            $ptUserIds = TableRegistry::get('UserPtSubscriptions')->find()->select(['user_id'])->where(['trainer_id' => $users_id]);
+            $search['OR'] = [
+                'Users.trainer_userid' => $users_id,
+                'Users.id IN' => $ptUserIds
+            ];
+        } elseif (isset($users_type) && ($users_type == 5)) {
+            $partnerId = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : 0;
+            $search['Users.partner_id'] = $partnerId;
+            $search['Users.added_by'] = $users_id;
         }
         //   pr($search);exit;
         $search['Users.user_type NOT IN'] = [4, 5];
@@ -254,19 +271,44 @@ class UsersController extends AppController
             $count = $this->Users->find('all');
         }
 
-        $count = $count->where(['Users.active !=' => '3', 'Users.user_type !=' => '1', 'Users.user_type NOT IN' => [4, 5]]);
+        $count = $count->where(['Users.active !=' => '3', 'Users.user_type !=' => '1', 'Users.user_type NOT IN' => [4, 5]])
+            ->contain(['AddedByUsers']);
 
-        if ($status === 'expired' || $status === '3') {
-            $planSubscribersTable = TableRegistry::get('PlanSubscribers');
-            $expiredSubquery = $planSubscribersTable->find()
-                ->select(['user_id'])
-                ->where([
-                    'PlanSubscribers.user_id = Users.id',
-                    'PlanSubscribers.plan_expire_date <' => date('Y-m-d')
+        $planSubscribersTable = TableRegistry::get('PlanSubscribers');
+        $activeSubquery = $planSubscribersTable->find()
+            ->select(['user_id'])
+            ->where([
+                'PlanSubscribers.user_id = Users.id',
+                'PlanSubscribers.plan_expire_date >=' => date('Y-m-d')
+            ]);
+        $expiredSubquery = $planSubscribersTable->find()
+            ->select(['user_id'])
+            ->where([
+                'PlanSubscribers.user_id = Users.id',
+                'PlanSubscribers.plan_expire_date <' => date('Y-m-d')
+            ]);
+
+        if ($isExpiredFilter) {
+            $count = $count->where(function ($exp) use ($expiredSubquery, $activeSubquery) {
+                return $exp->and_([
+                    $exp->exists($expiredSubquery),
+                    $exp->notExists($activeSubquery)
                 ]);
-            $count = $count->where(function ($exp) use ($expiredSubquery) {
-                return $exp->exists($expiredSubquery);
             });
+
+            if (!empty($start_date) || !empty($end_date)) {
+                $count = $count->where(function ($exp) use ($start_date, $end_date) {
+                    $psTable = TableRegistry::get('PlanSubscribers');
+                    $sub = $psTable->find()->select(['user_id'])->where(['PlanSubscribers.user_id = Users.id']);
+                    if (!empty($start_date)) {
+                        $sub->where(['PlanSubscribers.plan_expire_date >=' => $start_date . ' 00:00:00']);
+                    }
+                    if (!empty($end_date)) {
+                        $sub->where(['PlanSubscribers.plan_expire_date <=' => $end_date . ' 23:59:59']);
+                    }
+                    return $exp->exists($sub);
+                });
+            }
         }
 
         if ($date_type === 'followup') {
@@ -295,36 +337,70 @@ class UsersController extends AppController
             ->toArray();
 
         // --- Tab counts: All, Active, Inactive, Enquiry, Expired ---
-        $baseCountConditions = ['Users.user_type NOT IN' => ['1', '4'], 'Users.active !=' => '3'];
+        $baseCountConditions = ['Users.user_type NOT IN' => ['1', '4', '5'], 'Users.active !=' => '3'];
         if (isset($users_type) && ($users_type == 2)) {
             $baseCountConditions['Users.partner_id'] = $users_id;
+        } elseif (isset($users_type) && ($users_type == 4)) {
+            $ptUserIds = TableRegistry::get('UserPtSubscriptions')->find()->select(['user_id'])->where(['trainer_id' => $users_id]);
+            $baseCountConditions['OR'] = [
+                'Users.trainer_userid' => $users_id,
+                'Users.id IN' => $ptUserIds
+            ];
+        } elseif (isset($users_type) && ($users_type == 5)) {
+            $partnerId = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : 0;
+            $baseCountConditions['Users.partner_id'] = $partnerId;
+            $baseCountConditions['Users.added_by'] = $users_id;
         }
         $tabCountAll      = $this->Users->find('all')->where($baseCountConditions)->count();
         $tabCountActive   = $this->Users->find('all')->where($baseCountConditions)->where(['Users.active' => '1'])->count();
         $tabCountInactive = $this->Users->find('all')->where($baseCountConditions)->where(['Users.active' => '0'])->count();
         $tabCountEnquiry  = $this->Users->find('all')->where($baseCountConditions)->where(['Users.active' => '2'])->count();
 
-        $planSubscribersTable = TableRegistry::get('PlanSubscribers');
-        $expiredSubquery = $planSubscribersTable->find()
-            ->select(['user_id'])
-            ->where([
-                'PlanSubscribers.user_id = Users.id',
-                'PlanSubscribers.plan_expire_date <' => date('Y-m-d')
-            ]);
         $tabCountExpired  = $this->Users->find('all')
             ->where($baseCountConditions)
-            ->where(function ($exp) use ($expiredSubquery) {
-                return $exp->exists($expiredSubquery);
+            ->where(function ($exp) use ($expiredSubquery, $activeSubquery) {
+                return $exp->and_([
+                    $exp->exists($expiredSubquery),
+                    $exp->notExists($activeSubquery)
+                ]);
             })->count();
         // --------------------------------------------------
 
         $this->paginate = ['limit' => $norec, 'order' => ['Users.id' => 'DESC']];
 
         $users = $this->paginate($count)->toArray();
-        $trainers = $this->Users->find('list')
-            ->where(['Users.user_type' => 4, 'Users.partner_id' => $users_id]);
 
-        $this->set(compact('users', 'name', 'status', 'norec', 'email', 'mobile', 'user_type', 'users_type', 'partners', 'partner', 'trainers', 'trainer', 'start_date', 'end_date', 'date_type', 'tabCountAll', 'tabCountActive', 'tabCountInactive', 'tabCountEnquiry', 'tabCountExpired'));
+        $userIds = [];
+        foreach ($users as $u) {
+            $userIds[] = $u->id;
+        }
+        $latestPlans = [];
+        if (!empty($userIds)) {
+            $allUserSubs = $planSubscribersTable->find('all')
+                ->where(['user_id IN' => $userIds])
+                ->order(['id' => 'DESC'])
+                ->toArray();
+            foreach ($allUserSubs as $sub) {
+                if (!isset($latestPlans[$sub->user_id])) {
+                    $latestPlans[$sub->user_id] = $sub;
+                }
+            }
+        }
+
+        $trainerPartnerId = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? $this->usersdetail['partner_id'] : $users_id);
+        $trainers = $this->Users->find('list')
+            ->where(['Users.user_type' => 4, 'Users.partner_id' => $trainerPartnerId]);
+
+        $fdConditions = ['Users.user_type' => 5, 'Users.active' => '1'];
+        if ($users_type == 2) {
+            $fdConditions['Users.partner_id'] = $users_id;
+        }
+        $frontDeskUsers = $this->Users->find('list', [
+            'keyField' => 'id',
+            'valueField' => 'name'
+        ])->where($fdConditions)->toArray();
+
+        $this->set(compact('users', 'name', 'status', 'norec', 'email', 'mobile', 'user_type', 'users_type', 'partners', 'partner', 'trainers', 'trainer', 'frontDeskUsers', 'front_desk_id', 'start_date', 'end_date', 'date_type', 'tabCountAll', 'tabCountActive', 'tabCountInactive', 'tabCountEnquiry', 'tabCountExpired', 'latestPlans'));
         $this->set('_serialize', ['users']);
     }
 
@@ -360,7 +436,7 @@ class UsersController extends AppController
                 foreach ($planSubscribers as $plan) {
                     $paidAmount = $this->Payments->find('all');
                     $paidAmount =        $paidAmount->select(['sum' => $paidAmount->func()->sum('amount')])
-                        ->where(['plan_subscriber_id' => $plan->id])->first();
+                        ->where(['plan_subscriber_id' => $plan->id, 'Payments.is_deleted' => 0])->first();
                     $paid = 0;
                     if (!empty($paidAmount->sum)) {
                         $paid = $paidAmount->sum;
@@ -382,7 +458,7 @@ class UsersController extends AppController
         if ($this->usersdetail['users_type'] != 3) {
             $userPaymentsHistory = $this->Payments->find('all')
                 ->contain(['PlanSubscribers'])
-                ->where(['Payments.user_id' => $id])
+                ->where(['Payments.user_id' => $id, 'Payments.is_deleted' => 0])
                 ->order(['Payments.id' => 'DESC'])
                 ->toArray();
         }
@@ -431,10 +507,18 @@ class UsersController extends AppController
 
             $t    = time();
             $name = $data['name'] . $t;
-            if (isset($users_type) && ($users_type == 2)) {
+            if (isset($users_type) && ($users_type == 2 || $users_type == 5)) {
                 $data['user_type'] = '3';
             }
-            $data['partner_id'] = $users_id;
+            if ($users_type == 5) {
+                $data['partner_id'] = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : $users_id;
+            } else {
+                $data['partner_id'] = $users_id;
+            }
+            $data['added_by']   = $users_id;
+            if (!empty($data['trainer_userid'])) {
+                $data['trainer_userid'] = $data['trainer_userid'];
+            }
             $data['username']   = $this->slugify($name);
             $data['guestid']    = $this->Cookie->read('guest_id');
             $data['verified']   = '1';
@@ -442,12 +526,17 @@ class UsersController extends AppController
             // pr($data);exit;
 
             $user = $this->Users->patchEntity($user, $data);
+            $user->added_by = $users_id;
             
             try {
                 $useradd = $this->Users->save($user);
+                if ($useradd && !empty($users_id)) {
+                    $db = $this->Users->getConnection();
+                    $db->execute("UPDATE users SET added_by = ? WHERE id = ?", [(int)$users_id, (int)$useradd->id]);
+                }
             } catch (\Exception $e) {
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
-                $this->set(compact('user', 'users_type'));
+                $this->set(compact('user', 'users_type', 'trainers'));
                 return;
             }
 
@@ -481,7 +570,18 @@ class UsersController extends AppController
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
-        $this->set(compact('user', 'users_type'));
+
+        $partnerIdForTrainers = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? $this->usersdetail['partner_id'] : null);
+        $trainerConditions = ['Users.user_type' => 4, 'Users.active' => '1'];
+        if (!empty($partnerIdForTrainers)) {
+            $trainerConditions['Users.partner_id'] = $partnerIdForTrainers;
+        }
+        $trainers = $this->Users->find('list', [
+            'keyField' => 'id',
+            'valueField' => 'name'
+        ])->where($trainerConditions)->toArray();
+
+        $this->set(compact('user', 'users_type', 'trainers'));
         $this->set('_serialize', ['user']);
     }
 
@@ -504,6 +604,10 @@ class UsersController extends AppController
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->data;
+            if (!empty($data['discount_percent']) && (float)$data['discount_percent'] > 0 && empty(trim($data['discount_reason'] ?? ''))) {
+                $this->Flash->error(__('A Discount Remark / Reason is mandatory when a discount is applied.'));
+                return $this->redirect(['action' => 'payment', $id]);
+            }
             if (empty($data['email']) && !empty($user->email)) {
                 $data['email'] = $user->email;
             }
@@ -521,8 +625,8 @@ class UsersController extends AppController
                     $data['photo'] = $flname;
                 }
             }
-            if (!empty($data['trainer_userid'])) {
-                $user->trainer_userid = $data['trainer_userid'];
+            if (isset($data['trainer_userid'])) {
+                $user->trainer_userid = !empty($data['trainer_userid']) ? $data['trainer_userid'] : null;
             }
             $user = $this->Users->patchEntity($user, $data, ['validate' => false]);
             try {
@@ -533,34 +637,97 @@ class UsersController extends AppController
             }
             $targetPartnerId = !empty($user->partner_id) ? $user->partner_id : ($users_type == 2 ? $users_id : (isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : $users_id));
             if ($useradd) {
+                // Auto-fetch plan_name and fee if plan_id is provided but plan_name was not populated by JS
+                if (empty($data['plan_name']) && !empty($data['plan_id'])) {
+                    $plansTbl = TableRegistry::get('Plans');
+                    $planObj = $plansTbl->find()->where(['id' => $data['plan_id']])->first();
+                    if ($planObj) {
+                        $data['plan_name'] = $planObj->title;
+                        if (empty($data['fee'])) {
+                            $data['fee'] = $planObj->fee;
+                        }
+                    }
+                }
+
                 if (!empty($data['plan_name'])) {
                     // insert into plan_subscribers
                     $plandata['user_id']         = $user->id;
                     $plandata['partner_id']      = $targetPartnerId;
+                    $plandata['collection_type'] = 'normal';
                     $plandata['plan_name']       = $data['plan_name'];
                     $plandata['fee']             = !empty($data['fee']) ? $data['fee'] : 0;
                     $plandata['currency']        = 'INR';
-                    $plandata['plan_expire_date'] = !empty($data['plan_expire_date']) ? date('Y-m-d H:i:s', strtotime($data['plan_expire_date'])) : date('Y-m-d H:i:s', strtotime('+30 days'));
+                    $subStartDate = !empty($data['subscription_start_date']) ? date('Y-m-d', strtotime($data['subscription_start_date'])) : date('Y-m-d');
                     $plandata['payment_due_date'] = !empty($data['payment_due_date']) ? date('Y-m-d H:i:s', strtotime($data['payment_due_date'])) : null;
-                    if (!empty($data['subscription_start_date'])) {
-                        $plandata['subscription_start_date'] = date('Y-m-d', strtotime($data['subscription_start_date']));
+
+                    $plansTable = TableRegistry::get('Plans');
+                    $planObj = null;
+                    if (!empty($data['plan_name'])) {
+                        $planObj = $plansTable->find()->where(['title' => $data['plan_name']])->first();
                     }
-                    if (!empty($data['reminder_date'])) {
-                        $plandata['reminder_date'] = date('Y-m-d', strtotime($data['reminder_date']));
+                    if (!$planObj && !empty($data['plan_id'])) {
+                        $planObj = $plansTable->find()->where(['id' => $data['plan_id']])->first();
                     }
-                    $planSubscribers             = $this->PlanSubscribers->patchEntity($planSubscribers, $plandata);
+
+                    if ($planObj && !empty($planObj->days)) {
+                        $plandata['plan_expire_date'] = date('Y-m-d 00:00:00', strtotime("+{$planObj->days} days", strtotime($subStartDate)));
+                        $remDays = max(1, $planObj->days - 5);
+                        $remDate = date('Y-m-d', strtotime("+{$remDays} days", strtotime($subStartDate)));
+                    } else {
+                        $plandata['plan_expire_date'] = !empty($data['plan_expire_date']) ? date('Y-m-d H:i:s', strtotime($data['plan_expire_date'])) : date('Y-m-d H:i:s', strtotime('+30 days', strtotime($subStartDate)));
+                        $remDate = !empty($data['reminder_date']) ? date('Y-m-d', strtotime($data['reminder_date'])) : date('Y-m-d', strtotime('-5 days', strtotime($plandata['plan_expire_date'])));
+                    }
+
+                    $plandata['subscription_start_date'] = $subStartDate;
+                    $plandata['reminder_date']           = $remDate;
+
+                    $planSubscribers                     = $this->PlanSubscribers->patchEntity($planSubscribers, $plandata);
+                    $planSubscribers->collection_type   = 'normal';
+                    $planSubscribers->subscription_start_date = $subStartDate;
+                    $planSubscribers->reminder_date      = $remDate;
+
                     $planSubscribersAdd = $this->PlanSubscribers->save($planSubscribers);
 
                     if ($planSubscribersAdd) {
+                        // Direct DB update to guarantee collection_type, subscription_start_date and reminder_date
+                        $db = $this->PlanSubscribers->getConnection();
+                        $db->execute("UPDATE plan_subscribers SET collection_type = 'normal', subscription_start_date = ?, reminder_date = ?, plan_expire_date = ? WHERE id = ?", [
+                            $subStartDate,
+                            $remDate,
+                            $plandata['plan_expire_date'],
+                            (int)$planSubscribersAdd->id
+                        ]);
                         // insert into payments
                         $paymentdata['user_id']             = $user->id;
                         $paymentdata['partner_id']          = $targetPartnerId;
-                        $paymentdata['plan_subscriber_id']  = $planSubscribers->id;
+                        $paymentdata['plan_subscriber_id']  = $planSubscribersAdd->id;
                         $paymentdata['amount']              = !empty($data['amount']) ? $data['amount'] : 0;
                         $paymentdata['currency']            = 'INR';
+                        $paymentdata['payment_date']        = !empty($data['payment_date']) ? $this->parsePaymentDate($data['payment_date']) : date('Y-m-d');
+                        $paymentdata['discount_percent']    = !empty($data['discount_percent']) ? (float)$data['discount_percent'] : 0.00;
+                        $paymentdata['discount_amount']     = !empty($data['discount_amount']) ? (float)$data['discount_amount'] : 0.00;
+                        $paymentdata['discount_reason']     = !empty($data['discount_reason']) ? $data['discount_reason'] : null;
+
+                        $paymentdata['mode_ofpay']          = (isset($data['mode_ofpay']) && $data['mode_ofpay'] !== '') ? (int)$data['mode_ofpay'] : 0;
                         $payments    = $this->Payments->patchEntity($payments, $paymentdata);
-                        $payments->mode_ofpay = !empty($data['mode_ofpay']) ? $data['mode_ofpay'] : null;
+                        $payments->payment_date = $paymentdata['payment_date'];
+                        $payments->mode_ofpay = $paymentdata['mode_ofpay'];
+                        $payments->discount_amount = $paymentdata['discount_amount'];
+                        $payments->discount_percent = $paymentdata['discount_percent'];
+                        $payments->discount_reason = $paymentdata['discount_reason'];
+
                         $paymentssAdd = $this->Payments->save($payments);
+                        if ($paymentssAdd && !empty($paymentssAdd->id)) {
+                            $db = $this->Payments->getConnection();
+                            $db->execute("UPDATE payments SET payment_date = ?, mode_ofpay = ?, discount_amount = ?, discount_percent = ?, discount_reason = ? WHERE id = ?", [
+                                $paymentdata['payment_date'],
+                                $paymentdata['mode_ofpay'],
+                                $paymentdata['discount_amount'],
+                                $paymentdata['discount_percent'],
+                                $paymentdata['discount_reason'],
+                                (int)$paymentssAdd->id
+                            ]);
+                        }
 
                         // Update active status for Enquiry users based on payment completion
                         if (!empty($user->active) && $user->active == 2) {
@@ -608,32 +775,45 @@ class UsersController extends AppController
                     } catch (\Exception $e) {
                     }
                 }
-                if (empty($data['password'])) {
-                    $this->Flash->success(__('The plan has been saved successfully.'));
-                    return $this->redirect(['controller' => 'Users', 'action' => 'index']);
-                } elseif ($useradd->user_type == 2) {
-                    $this->Flash->success(__('The user has been saved.'));
-                    return $this->redirect(['controller' => 'Users', 'action' => 'index']);
-                } else {
-                    $this->Flash->success(__('The user has been saved.'));
-                    return $this->redirect(['controller' => 'FitnessMeserments', 'action' => 'add']);
-                }
+                $this->Flash->success(__('The plan has been saved successfully.'));
+                return $this->redirect(['controller' => 'Users', 'action' => 'index']);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
+            return $this->redirect(['action' => 'payment', $id]);
         }
         $user_id = $id;
-        $trainers = $this->Users->find('list')
-            ->where(['Users.user_type' => 4, 'Users.partner_id' => $users_id]);
+        $partnerIdForTrainers = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? $this->usersdetail['partner_id'] : (!empty($user->partner_id) ? $user->partner_id : null));
+        $trainerConditions = ['Users.user_type' => 4, 'Users.active' => '1'];
+        if (!empty($partnerIdForTrainers)) {
+            $trainerConditions['Users.partner_id'] = $partnerIdForTrainers;
+        }
+        $trainers = $this->Users->find('list', [
+            'keyField' => 'id',
+            'valueField' => 'name'
+        ])->where($trainerConditions)->toArray();
+        if (empty($trainers)) {
+            // Fallback to all active gym trainers
+            $trainers = $this->Users->find('list', [
+                'keyField' => 'id',
+                'valueField' => 'name'
+            ])->where(['Users.user_type' => 4, 'Users.active' => '1'])->toArray();
+        }
 
         $plansTable = TableRegistry::get('Plans');
         $planConditions = ['Plans.active' => 1];
-        if ($users_type != 1) {
-            $planConditions['Plans.partner_id'] = $users_id;
+        if ($users_type != 1 && !empty($partnerIdForTrainers)) {
+            $planConditions['Plans.partner_id'] = $partnerIdForTrainers;
         }
         $availablePlans = $plansTable->find('list', [
             'keyField' => 'id',
             'valueField' => 'title'
         ])->where($planConditions)->toArray();
+        if (empty($availablePlans)) {
+            $availablePlans = $plansTable->find('list', [
+                'keyField' => 'id',
+                'valueField' => 'title'
+            ])->where(['Plans.active' => 1])->toArray();
+        }
 
         $this->set(compact('user_id', 'user', 'trainers', 'users_type', 'availablePlans'));
         $this->set('_serialize', ['user_id', 'user', 'users_type']);
@@ -693,8 +873,14 @@ class UsersController extends AppController
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
-        $trainers = $this->Users->find('list')
-            ->where(['Users.user_type' => 4, 'Users.partner_id' => $users_id]);
+        if ($users_type == 1) {
+            $trainers = $this->Users->find('list')
+                ->where(['Users.user_type' => 4, 'Users.active !=' => '3']);
+        } else {
+            $trainerPartnerId = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? $this->usersdetail['partner_id'] : (!empty($user->partner_id) ? $user->partner_id : $users_id));
+            $trainers = $this->Users->find('list')
+                ->where(['Users.user_type' => 4, 'Users.partner_id' => $trainerPartnerId, 'Users.active !=' => '3']);
+        }
         $this->set(compact('user', 'users_type', 'trainers', 'users_type'));
         $this->set('_serialize', ['user']);
     }
@@ -861,6 +1047,150 @@ class UsersController extends AppController
         // not when browsing the homepage while already logged in.
         // The homepage IS the adminLogin page, so we just render it normally.
     }
+
+    /**
+     * Expired Users page with date range filter and status filters
+     */
+    public function expiredUsers()
+    {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+        $users_type = $this->usersdetail['users_type'];
+        $users_id = $this->usersdetail['users_id'];
+
+        $name = $this->request->query('name') ?? '';
+        $email = $this->request->query('email') ?? '';
+        $mobile = $this->request->query('mobile') ?? '';
+        $front_desk_id = $this->request->query('front_desk_id') ?? '';
+        $filter_type = $this->request->query('filter_type') ?? 'all'; // all, expired, expiring_soon
+        $start_date = $this->request->query('start_date') ?? '';
+        $end_date = $this->request->query('end_date') ?? '';
+        $norec = (int)($this->request->query('norec') ?? 20);
+        if ($norec <= 0) { $norec = 20; }
+
+        $planSubscribersTable = TableRegistry::get('PlanSubscribers');
+
+        // Base user search conditions
+        $userSearch = ['Users.active !=' => 3, 'Users.user_type !=' => 1, 'Users.user_type NOT IN' => [4, 5]];
+
+        if (!empty($name)) {
+            $userSearch['Users.name REGEXP'] = trim($name);
+        }
+        if (!empty($email)) {
+            $userSearch['Users.email REGEXP'] = trim($email);
+        }
+        if (!empty($mobile)) {
+            $userSearch['Users.mobile_no REGEXP'] = trim($mobile);
+        }
+        if (!empty($front_desk_id)) {
+            $userSearch['Users.added_by'] = $front_desk_id;
+        }
+
+        if ($users_type == 2) {
+            $userSearch['Users.partner_id'] = $users_id;
+        } elseif ($users_type == 4) {
+            $ptUserIds = TableRegistry::get('UserPtSubscriptions')->find()->select(['user_id'])->where(['trainer_id' => $users_id]);
+            $userSearch['OR'] = [
+                'Users.trainer_userid' => $users_id,
+                'Users.id IN' => $ptUserIds
+            ];
+        } elseif ($users_type == 5) {
+            $partnerId = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : 0;
+            $userSearch['Users.partner_id'] = $partnerId;
+            $userSearch['Users.added_by'] = $users_id;
+        }
+
+        $todayStr = date('Y-m-d');
+        $oneMonthLaterStr = date('Y-m-d', strtotime('+30 days'));
+
+        // Fetch matching users with details
+        $usersList = $this->Users->find('all')
+            ->where($userSearch)
+            ->contain(['AddedByUsers', 'Partners'])
+            ->toArray();
+
+        $userIds = array_map(function($u) { return $u->id; }, $usersList);
+
+        $latestPlans = [];
+        if (!empty($userIds)) {
+            $allSubs = $planSubscribersTable->find('all')
+                ->where(['user_id IN' => $userIds])
+                ->order(['id' => 'DESC'])
+                ->toArray();
+            foreach ($allSubs as $sub) {
+                if (!isset($latestPlans[$sub->user_id])) {
+                    $latestPlans[$sub->user_id] = $sub;
+                }
+            }
+        }
+
+        $filteredUsers = [];
+        $totalExpiredCount = 0;
+        $totalExpiringSoonCount = 0;
+
+        foreach ($usersList as $u) {
+            $plan = $latestPlans[$u->id] ?? null;
+            if (!$plan || empty($plan->plan_expire_date)) {
+                continue;
+            }
+
+            $expDateStr = $plan->plan_expire_date->format('Y-m-d');
+            $isExpired = ($expDateStr < $todayStr);
+            $isExpiringSoon = ($expDateStr >= $todayStr && $expDateStr <= $oneMonthLaterStr);
+
+            if ($isExpired) {
+                $totalExpiredCount++;
+            } else {
+                $totalExpiringSoonCount++;
+            }
+
+            // Status Filter logic
+            if ($filter_type === 'expired' && !$isExpired) {
+                continue;
+            }
+            if ($filter_type === 'expiring_soon' && !$isExpiringSoon) {
+                continue;
+            }
+
+            // Date Range Filter logic
+            if (!empty($start_date) && $expDateStr < $start_date) {
+                continue;
+            }
+            if (!empty($end_date) && $expDateStr > $end_date) {
+                continue;
+            }
+
+            $u->latest_plan = $plan;
+            $u->is_expired = $isExpired;
+            $filteredUsers[] = $u;
+        }
+
+        // Pagination for filtered array
+        $page = (int)($this->request->query('page') ?? 1);
+        if ($page <= 0) { $page = 1; }
+        $totalRecords = count($filteredUsers);
+        $totalPages = ceil($totalRecords / $norec);
+        if ($totalPages <= 0) { $totalPages = 1; }
+        $offset = ($page - 1) * $norec;
+        $pagedUsers = array_slice($filteredUsers, $offset, $norec);
+
+        $fdConditions = ['Users.user_type' => 5, 'Users.active' => '1'];
+        if ($users_type == 2) {
+            $fdConditions['Users.partner_id'] = $users_id;
+        }
+        $frontDeskUsers = $this->Users->find('list', [
+            'keyField' => 'id',
+            'valueField' => 'name'
+        ])->where($fdConditions)->toArray();
+
+        $this->set(compact(
+            'pagedUsers', 'name', 'email', 'mobile', 'front_desk_id',
+            'filter_type', 'start_date', 'end_date', 'norec', 'page',
+            'totalRecords', 'totalPages', 'totalExpiredCount', 'totalExpiringSoonCount',
+            'frontDeskUsers', 'users_type'
+        ));
+    }
     public function dashboard()
     {
         if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
@@ -872,12 +1202,23 @@ class UsersController extends AppController
         $uesrs = TableRegistry::get('Users');
         $query = $uesrs->find()->select(['Users.id'])
             ->where([
-                'Users.active !=' => 2,
-                'Users.user_type NOT IN' => ['1', '2', '4']
+                'Users.active !=' => 3,
+                'Users.user_type NOT IN' => ['1', '2', '4', '5']
             ]);
         
         if (isset($users_type) && ($users_type == 2)) {
             $query->where(['Users.partner_id' => $users_id]);
+        } elseif (isset($users_type) && ($users_type == 4)) {
+            $ptUserIds = TableRegistry::get('UserPtSubscriptions')->find()->select(['user_id'])->where(['trainer_id' => $users_id]);
+            $query->where([
+                'OR' => [
+                    'Users.trainer_userid' => $users_id,
+                    'Users.id IN' => $ptUserIds
+                ]
+            ]);
+        } elseif (isset($users_type) && ($users_type == 5)) {
+            $partnerId = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : 0;
+            $query->where(['Users.partner_id' => $partnerId]);
         }
         
         $users_count = $query->count();
@@ -902,8 +1243,7 @@ class UsersController extends AppController
                 if ($users_type == 2) {
                     $allSubsQuery->where(['Users.partner_id' => $users_id]);
                 } elseif ($users_type == 4) {
-                    $partnerId = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : 0;
-                    $allSubsQuery->where(['Users.partner_id' => $partnerId]);
+                    $allSubsQuery->where(['Users.trainer_userid' => $users_id]);
                 }
 
                 $allSubs = $allSubsQuery->order(['PlanSubscribers.id' => 'DESC'])->toArray();
@@ -956,9 +1296,7 @@ class UsersController extends AppController
                 if ($users_type == 2) {
                     $bquery->where(['Users.partner_id' => $users_id]);
                 } elseif ($users_type == 4) {
-                    // Trainer uses partner_id from session/details
-                    $partnerId = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : 0;
-                    $bquery->where(['Users.partner_id' => $partnerId]);
+                    $bquery->where(['Users.trainer_userid' => $users_id]);
                 }
 
                 $birthdayMembers = $bquery->toArray();
@@ -967,52 +1305,162 @@ class UsersController extends AppController
             $session->write('DashboardAlertsShown', true);
         }
 
-        // Fetch last 6 months collection data for graph
-        $paymentsTable = TableRegistry::get('Payments');
-        $chartConditions = [
-            'Payments.created >=' => date('Y-m-01 00:00:00', strtotime('-5 months'))
-        ];
-        if ($users_type == 2) {
-            $chartConditions['Payments.partner_id'] = $users_id;
-        } elseif ($users_type == 4) {
-            $partnerId = isset($this->usersdetail['partner_id']) ? $this->usersdetail['partner_id'] : 0;
-            $chartConditions['Payments.partner_id'] = $partnerId;
-        }
+        // Trainer on-dashboard specific widgets (upcoming/recent expiries & birthdays)
+        $trainerUpcomingExpiries = [];
+        $trainerTodayBirthdays = [];
+        if ($users_type == 4) {
+            $psTable = TableRegistry::get('PlanSubscribers');
+            $ptUserIds = TableRegistry::get('UserPtSubscriptions')->find()->select(['user_id'])->where(['trainer_id' => $users_id]);
+            
+            $subs = $psTable->find('all')
+                ->contain(['Users'])
+                ->where([
+                    'Users.active !=' => 2,
+                    'OR' => [
+                        'Users.trainer_userid' => $users_id,
+                        'Users.id IN' => $ptUserIds
+                    ],
+                    'PlanSubscribers.plan_expire_date IS NOT' => null
+                ])
+                ->toArray();
 
-        $rawPayments = $paymentsTable->find('all')
-            ->select(['created', 'amount'])
-            ->where($chartConditions)
-            ->toArray();
-
-        // Build last 6 months skeleton
-        $chartMonths = [];
-        for ($i = 5; $i >= 0; $i--) {
-            $ym = date('Y-m', strtotime("-$i months"));
-            $label = date('M Y', strtotime("-$i months"));
-            $chartMonths[$ym] = [
-                'label' => $label,
-                'total' => 0
-            ];
-        }
-
-        // Aggregate in PHP
-        foreach ($rawPayments as $payment) {
-            if ($payment->created) {
-                $ym = $payment->created->format('Y-m');
-                if (isset($chartMonths[$ym])) {
-                    $chartMonths[$ym]['total'] += (float)$payment->amount;
-                }
+            // Group subscriptions by user_id to pick each client's most relevant subscription
+            $userSubs = [];
+            foreach ($subs as $sub) {
+                if (empty($sub->plan_expire_date) || empty($sub->user_id)) continue;
+                $userSubs[$sub->user_id][] = $sub;
             }
+
+            $today = date('Y-m-d');
+            $expiringSoonThreshold = date('Y-m-d', strtotime('+15 days'));
+
+            foreach ($userSubs as $uid => $uSubsList) {
+                $activeOrUpcoming = [];
+                $pastExpired = [];
+
+                foreach ($uSubsList as $s) {
+                    $expStr = $s->plan_expire_date->format('Y-m-d');
+                    if ($expStr >= $today) {
+                        $activeOrUpcoming[] = $s;
+                    } else {
+                        $pastExpired[] = $s;
+                    }
+                }
+
+                if (!empty($activeOrUpcoming)) {
+                    // Pick the active plan expiring soonest (earliest date)
+                    usort($activeOrUpcoming, function($a, $b) {
+                        return strcmp($a->plan_expire_date->format('Y-m-d'), $b->plan_expire_date->format('Y-m-d'));
+                    });
+                    $chosen = $activeOrUpcoming[0];
+                } else {
+                    // All plans expired, pick the one that expired most recently
+                    usort($pastExpired, function($a, $b) {
+                        return strcmp($b->plan_expire_date->format('Y-m-d'), $a->plan_expire_date->format('Y-m-d'));
+                    });
+                    $chosen = $pastExpired[0];
+                }
+
+                $rawDate = $chosen->plan_expire_date->format('Y-m-d');
+                if ($rawDate < $today) {
+                    $status = 'expired';
+                } elseif ($rawDate <= $expiringSoonThreshold) {
+                    $status = 'expiring_soon';
+                } else {
+                    $status = 'active';
+                }
+
+                $trainerUpcomingExpiries[] = [
+                    'user_id' => $chosen->user_id,
+                    'user_name' => $chosen->user ? $chosen->user->name : 'N/A',
+                    'plan_name' => $chosen->plan_name,
+                    'expire_date' => $chosen->plan_expire_date->format('d-m-Y'),
+                    'raw_date' => $rawDate,
+                    'status' => $status,
+                    'is_expired' => ($status === 'expired')
+                ];
+            }
+
+            // Sort: Expiring Soon (1) first by date ASC, then Active (2) by date ASC, then Expired (3) by date DESC
+            usort($trainerUpcomingExpiries, function($a, $b) {
+                $orderMap = ['expiring_soon' => 1, 'active' => 2, 'expired' => 3];
+                $pA = $orderMap[$a['status']] ?? 2;
+                $pB = $orderMap[$b['status']] ?? 2;
+                if ($pA !== $pB) {
+                    return $pA - $pB;
+                }
+                return strcmp($a['raw_date'], $b['raw_date']);
+            });
+
+            $trainerTodayBirthdays = $uesrs->find('all')
+                ->where([
+                    'Users.active !=' => 2,
+                    'OR' => [
+                        'Users.trainer_userid' => $users_id,
+                        'Users.id IN' => $ptUserIds
+                    ],
+                    'Users.dob IS NOT' => null,
+                    'MONTH(Users.dob) =' => date('m'),
+                    'DAY(Users.dob) =' => date('d')
+                ])
+                ->order(['Users.name' => 'ASC'])
+                ->toArray();
         }
+
+        // Restrict Monthly Collections Trend (Last 6 Months):
+        // Only Root Admins (full) and Partners (scoped to partner_id) have access.
+        // Never show to Trainers (4) or Front Desk (5).
+        $userEmail = !empty($this->usersdetail['users_email']) ? strtolower(trim($this->usersdetail['users_email'])) : '';
+        $isRootAdmin = ($users_type == 1 || in_array($userEmail, ['ad1234@yopmail.com', 'mukeshkr3221@gmail.com']));
+        $isPartner = ($users_type == 2);
+        $showCollectionsTrend = ($isRootAdmin || $isPartner);
 
         $chartLabels = [];
         $chartValues = [];
-        foreach ($chartMonths as $mInfo) {
-            $chartLabels[] = $mInfo['label'];
-            $chartValues[] = $mInfo['total'];
+
+        if ($showCollectionsTrend) {
+            $paymentsTable = TableRegistry::get('Payments');
+            $chartConditions = [
+                'Payments.is_deleted' => 0,
+                'Payments.created >=' => date('Y-m-01 00:00:00', strtotime('-5 months'))
+            ];
+            if (!$isRootAdmin && $isPartner) {
+                $chartConditions['Payments.partner_id'] = $users_id;
+            }
+
+            $rawPayments = $paymentsTable->find('all')
+                ->select(['created', 'amount'])
+                ->where($chartConditions)
+                ->toArray();
+
+            // Build last 6 months skeleton
+            $chartMonths = [];
+            for ($i = 5; $i >= 0; $i--) {
+                $ym = date('Y-m', strtotime("-$i months"));
+                $label = date('M Y', strtotime("-$i months"));
+                $chartMonths[$ym] = [
+                    'label' => $label,
+                    'total' => 0
+                ];
+            }
+
+            // Aggregate in PHP
+            foreach ($rawPayments as $payment) {
+                if ($payment->created) {
+                    $ym = $payment->created->format('Y-m');
+                    if (isset($chartMonths[$ym])) {
+                        $chartMonths[$ym]['total'] += (float)$payment->amount;
+                    }
+                }
+            }
+
+            foreach ($chartMonths as $mInfo) {
+                $chartLabels[] = $mInfo['label'];
+                $chartValues[] = $mInfo['total'];
+            }
         }
 
-        $this->set(compact('users_count', 'expiredMembers', 'birthdayMembers', 'isMyBirthday', 'chartLabels', 'chartValues'));
+        $this->set(compact('users_count', 'expiredMembers', 'birthdayMembers', 'isMyBirthday', 'chartLabels', 'chartValues', 'showCollectionsTrend', 'trainerUpcomingExpiries', 'trainerTodayBirthdays'));
     }
 
 
@@ -1035,11 +1483,21 @@ class UsersController extends AppController
                 $this->Cookie->write('user_email', $data['email']);
                 $this->request->session()->write('Auth.User.email', $data['email']);
 
-                $user_detail = $this->Users->find()
+                $matchingUsers = $this->Users->find()
                     ->select(['id', 'user_type', 'name', 'email', 'partner_id'])
                     ->where(['email' => $data['email'], 'password' => $data['password'], 'active' => 1])
-                    ->order(['user_type' => 'ASC', 'id' => 'DESC'])
-                    ->first();
+                    ->toArray();
+
+                usort($matchingUsers, function($a, $b) {
+                    $priority = [5 => 1, 2 => 2, 1 => 3, 4 => 4, 3 => 5];
+                    $pA = $priority[(int)$a->user_type] ?? 99;
+                    $pB = $priority[(int)$b->user_type] ?? 99;
+                    if ($pA === $pB) {
+                        return $b->id <=> $a->id;
+                    }
+                    return $pA <=> $pB;
+                });
+                $user_detail = $matchingUsers[0];
                 $this->Cookie->write('users', ['users_id' => $user_detail->id, 'users_name' => $user_detail->name, 'users_email' => $user_detail->email, 'users_type' => $user_detail->user_type, 'partner_id' => $user_detail->partner_id]);
                 $this->request->session()->write('users', ['users_id' => $user_detail->id, 'users_name' => $user_detail->name, 'users_email' => $user_detail->email, 'users_type' => $user_detail->user_type, 'partner_id' => $user_detail->partner_id]);
                 return $this->redirect(['controller' => 'Users', 'action' => 'dashboard']);
@@ -1193,12 +1651,45 @@ class UsersController extends AppController
 
         $payment = $this->Payments->newEntity();
         if ($this->request->is('post')) {
-            $data = $this->request->getData();
-            $data['partner_id'] = $targetPartnerId;
-            $data['currency'] = 'INR';
+            $data = !empty($this->request->getData()) ? $this->request->getData() : $this->request->data;
+            $parsedDate = $this->parsePaymentDate($data['payment_date'] ?? '');
+
+            if ((!empty($data['discount_percent']) && (float)$data['discount_percent'] > 0 || !empty($data['discount_amount']) && (float)$data['discount_amount'] > 0) && empty(trim($data['discount_reason'] ?? ''))) {
+                $this->Flash->error(__('A Discount Remark / Reason is mandatory when a discount is applied.'));
+                return $this->redirect(['action' => 'addPayment', $userid]);
+            }
+            $data['payment_date']     = $parsedDate;
+            $data['partner_id']       = $targetPartnerId;
+            $data['currency']         = 'INR';
+            $data['discount_percent'] = !empty($data['discount_percent']) ? (float)$data['discount_percent'] : 0.00;
+            $data['discount_amount']  = !empty($data['discount_amount']) ? (float)$data['discount_amount'] : 0.00;
+            $data['discount_reason']  = !empty($data['discount_reason']) ? $data['discount_reason'] : null;
+            $data['mode_ofpay']       = (isset($data['mode_ofpay']) && $data['mode_ofpay'] !== '') ? (int)$data['mode_ofpay'] : 0;
+
             $payment = $this->Payments->patchEntity($payment, $data);
+            $payment->payment_date = $parsedDate;
             $payment->mode_ofpay = $data['mode_ofpay'];
-            if ($this->Payments->save($payment)) {
+            $payment->discount_percent = $data['discount_percent'];
+            $payment->discount_amount = $data['discount_amount'];
+            $payment->discount_reason = $data['discount_reason'];
+
+            if ($savedPayment = $this->Payments->save($payment)) {
+                if (!empty($savedPayment->id)) {
+                    $db = $this->Payments->getConnection();
+                    $db->execute("UPDATE payments SET payment_date = ?, mode_ofpay = ?, discount_amount = ?, discount_percent = ?, discount_reason = ? WHERE id = ?", [
+                        $parsedDate,
+                        $data['mode_ofpay'],
+                        $data['discount_amount'],
+                        $data['discount_percent'],
+                        $data['discount_reason'],
+                        (int)$savedPayment->id
+                    ]);
+                }
+                if (!empty($data['plan_subscriber_id'])) {
+                    $PlanSubscribersTbl = TableRegistry::get('PlanSubscribers');
+                    $db = $PlanSubscribersTbl->getConnection();
+                    $db->execute("UPDATE plan_subscribers SET collection_type = 'normal' WHERE id = ? AND (collection_type IS NULL OR collection_type = '')", [(int)$data['plan_subscriber_id']]);
+                }
                 $this->Flash->success(__('The payment has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
@@ -1218,7 +1709,13 @@ class UsersController extends AppController
 
         $partners = $this->Payments->Partners->find('list');
         $planSubscribers = $this->Payments->PlanSubscribers->find('list')
-            ->where(['user_id' => $userid]);
+            ->where([
+                'user_id' => $userid,
+                'OR' => [
+                    'PlanSubscribers.collection_type !=' => 'manual',
+                    'PlanSubscribers.collection_type IS' => null
+                ]
+            ]);
         $this->set(compact('payment', 'users', 'partners', 'planSubscribers', 'userid'));
     }
 
@@ -1233,7 +1730,13 @@ class UsersController extends AppController
             return $this->redirect('/');
         }
         $planSubscribers = $this->Payments->PlanSubscribers->find('list', ['limit' => 200])
-            ->where(['user_id' => $userid]);
+            ->where([
+                'user_id' => $userid,
+                'OR' => [
+                    'PlanSubscribers.collection_type !=' => 'manual',
+                    'PlanSubscribers.collection_type IS' => null
+                ]
+            ]);
         $this->set(compact('planSubscribers', 'userid'));
     }
 
@@ -1252,25 +1755,79 @@ class UsersController extends AppController
             ->select(['id', 'fee', 'payment_due_date', 'plan_expire_date'])
             ->where(['id' => $planid])->first();
         $paidAmount = $this->Payments->find('all');
-        $paidAmount =        $paidAmount->select(['sum' => $paidAmount->func()->sum('amount')])
-            ->where(['plan_subscriber_id' => $planSubscribers->id])->first();
+        $paidAmount = $paidAmount->select(['sum' => $paidAmount->func()->sum('amount')])
+            ->where(['plan_subscriber_id' => $planSubscribers->id, 'Payments.is_deleted' => 0])->first();
         $paid = 0;
         if (!empty($paidAmount->sum)) {
-            $paid = $paidAmount->sum;
+            $paid = (float)$paidAmount->sum;
         }
-        $remaining = $planSubscribers->fee - $paid;
+
+        $discountAmount = $this->Payments->find('all');
+        $discountAmount = $discountAmount->select(['sum' => $discountAmount->func()->sum('discount_amount')])
+            ->where(['plan_subscriber_id' => $planSubscribers->id, 'Payments.is_deleted' => 0])->first();
+        $discount = 0;
+        if (!empty($discountAmount->sum)) {
+            $discount = (float)$discountAmount->sum;
+        }
+
+        $remaining = max(0, $planSubscribers->fee - $discount - $paid);
         if (!empty($this->request->query('amount'))) {
             $updateLimit = $remaining + $this->request->query('amount');
             $paid = $paid - $this->request->query('amount');
             $remaining = $remaining + $this->request->query('amount');
         }
-        echo '<div class="col-sm-12"><strong>Selected Plan Details:</strong></div>';
-        echo '<div class="col-sm-4"><strong>Total Fee:</strong> INR ' . $planSubscribers->fee . '</div>';
-        echo '<div class="col-sm-4"><strong>Paid Amount:</strong> INR ' . $paid . '</div>';
-        echo '<div class="col-sm-4"><strong>Remaining Amount:</strong> INR ' . $remaining . '</div>';
-        echo ' <input type="hidden" id="fee" name="fee" value="' . $remaining . '">';
-        echo '<div class="col-sm-4"><strong>Payment Due Date:</strong> ' . date('d-m-Y', strtotime($planSubscribers->payment_due_date)) . '</div>';
-        echo '<div class="col-sm-4"><strong>Plan Expire Date:</strong> ' . date('d-m-Y', strtotime($planSubscribers->plan_expire_date)) . '</div>';
+        $formattedFee = number_format((float)$planSubscribers->fee, 2);
+        $formattedDiscount = number_format((float)$discount, 2);
+        $formattedPaid = number_format((float)$paid, 2);
+        $formattedRem = number_format((float)$remaining, 2);
+        $dueDate = !empty($planSubscribers->payment_due_date) ? date('d M Y', strtotime($planSubscribers->payment_due_date)) : 'N/A';
+        $expireDate = !empty($planSubscribers->plan_expire_date) ? date('d M Y', strtotime($planSubscribers->plan_expire_date)) : 'N/A';
+
+        $statusBadge = ($remaining <= 0)
+            ? '<span class="psc-badge paid"><i class="material-icons" style="font-size:13px; vertical-align:middle;">check_circle</i> Fully Paid</span>'
+            : '<span class="psc-badge pending"><i class="material-icons" style="font-size:13px; vertical-align:middle;">schedule</i> Pending: INR ' . $formattedRem . '</span>';
+
+        echo '<div class="plan-summary-card">';
+        echo '  <div class="psc-top">';
+        echo '    <div class="psc-title">';
+        echo '      <i class="material-icons" style="color:#ff9800; font-size:18px;">card_membership</i>';
+        echo '      <span>Selected Plan Details</span>';
+        echo '    </div>';
+        echo '    <div>' . $statusBadge . '</div>';
+        echo '  </div>';
+        echo '  <div class="psc-grid">';
+        echo '    <div class="psc-item">';
+        echo '      <span class="psc-label">Total Plan Fee</span>';
+        echo '      <span class="psc-val">INR ' . $formattedFee . '</span>';
+        echo '    </div>';
+        if ($discount > 0) {
+            echo '    <div class="psc-item">';
+            echo '      <span class="psc-label">Discount Applied</span>';
+            echo '      <span class="psc-val text-info" style="color:#0284c7; font-weight:700;">- INR ' . $formattedDiscount . '</span>';
+            echo '    </div>';
+        }
+        echo '    <div class="psc-item">';
+        echo '      <span class="psc-label">Paid So Far</span>';
+        echo '      <span class="psc-val text-success" style="color:#16a34a; font-weight:700;">INR ' . $formattedPaid . '</span>';
+        echo '    </div>';
+        echo '    <div class="psc-item">';
+        echo '      <span class="psc-label">Remaining Balance</span>';
+        echo '      <span class="psc-val ' . ($remaining > 0 ? 'text-warning' : 'text-muted') . '" style="' . ($remaining > 0 ? 'color:#ea580c;' : 'color:#94a3b8;') . ' font-weight:700;">INR ' . $formattedRem . '</span>';
+        echo '    </div>';
+        echo '    <div class="psc-item">';
+        echo '      <span class="psc-label">Payment Due Date</span>';
+        echo '      <span class="psc-val date" style="display:inline-flex; align-items:center; gap:4px;"><i class="material-icons" style="font-size:15px; color:#94a3b8;">event</i> ' . $dueDate . '</span>';
+        echo '    </div>';
+        echo '    <div class="psc-item">';
+        echo '      <span class="psc-label">Plan Expire Date</span>';
+        echo '      <span class="psc-val date" style="display:inline-flex; align-items:center; gap:4px;"><i class="material-icons" style="font-size:15px; color:#94a3b8;">event_busy</i> ' . $expireDate . '</span>';
+        echo '    </div>';
+        echo '  </div>';
+        echo '  <input type="hidden" id="fee" name="fee" value="' . $remaining . '">';
+        echo '  <input type="hidden" id="total_fee" value="' . $planSubscribers->fee . '">';
+        echo '  <input type="hidden" id="discount_amount" value="' . $discount . '">';
+        echo '  <input type="hidden" id="paid_amount" value="' . $paid . '">';
+        echo '</div>';
         exit;
     }
 
@@ -2126,6 +2683,382 @@ require \'composer.phar\';';
 
         $this->set(compact('user', 'users_type'));
         $this->set('_serialize', ['user']);
+    }
+
+    /**
+     * Automated Cron endpoint to mark expired members as Inactive (active = 0)
+     * Can be invoked via URL: GET /users/cronExpireMembers?token=gymmaster_cron_2026
+     */
+    public function cronExpireMembers()
+    {
+        $this->autoRender = false;
+        $token = $this->request->getQuery('token') ?? $this->request->getData('token') ?? '';
+        $validToken = 'gymmaster_cron_2026';
+
+        // Check if token matches or user is logged in as Super Admin
+        $isAuthorized = ($token === $validToken) || (method_exists($this, 'isAdminUser') && $this->isAdminUser());
+        if (!$isAuthorized) {
+            $this->response = $this->response->withType('application/json');
+            $this->response = $this->response->withStatus(403);
+            return $this->response->withStringBody(json_encode([
+                'success' => false,
+                'message' => 'Unauthorized access. Valid token parameter required.'
+            ]));
+        }
+
+        $planSubscribersTable = TableRegistry::get('PlanSubscribers');
+        $today = date('Y-m-d');
+
+        // Subquery: Has any active or future plan expiring today or in the future
+        $activePlanSubquery = $planSubscribersTable->find()
+            ->select(['PlanSubscribers.id'])
+            ->where([
+                'PlanSubscribers.user_id = Users.id',
+                'PlanSubscribers.plan_expire_date >=' => $today . ' 00:00:00'
+            ]);
+
+        // Find active members (user_type = 3, active = 1) who have an expired plan AND no active/future plan
+        $expiredMembers = $this->Users->find()
+            ->select(['id', 'name', 'email', 'partner_id'])
+            ->where([
+                'Users.user_type' => 3,
+                'Users.active' => 1
+            ])
+            ->where(function ($exp) use ($activePlanSubquery, $planSubscribersTable, $today) {
+                $hasExpiredPlanSubquery = $planSubscribersTable->find()
+                    ->select(['PlanSubscribers.id'])
+                    ->where([
+                        'PlanSubscribers.user_id = Users.id',
+                        'PlanSubscribers.plan_expire_date <' => $today . ' 00:00:00'
+                    ]);
+
+                return $exp
+                    ->exists($hasExpiredPlanSubquery)
+                    ->notExists($activePlanSubquery);
+            })
+            ->toArray();
+
+        $count = 0;
+        $updatedList = [];
+        if (!empty($expiredMembers)) {
+            foreach ($expiredMembers as $m) {
+                $this->Users->updateAll(
+                    ['active' => 0],
+                    ['id' => $m->id]
+                );
+                $updatedList[] = [
+                    'id'    => $m->id,
+                    'name'  => $m->name,
+                    'email' => $m->email
+                ];
+                $count++;
+            }
+        }
+
+        $this->response = $this->response->withType('application/json');
+        return $this->response->withStringBody(json_encode([
+            'success'       => true,
+            'updated_count' => $count,
+            'message'       => "Successfully marked {$count} expired member(s) as Inactive.",
+            'timestamp'     => date('Y-m-d H:i:s'),
+            'members'       => $updatedList
+        ], JSON_PRETTY_PRINT));
+    }
+
+    /**
+     * Follow-up List — Comprehensive user-wise follow-up logs page
+     */
+    public function followupList()
+    {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+
+        $users_type = (int)($this->usersdetail['users_type'] ?? 0);
+        $users_id   = (int)($this->usersdetail['users_id'] ?? 0);
+        $partnerId  = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? (int)$this->usersdetail['partner_id'] : 0);
+
+        $userRemarksTable = TableRegistry::get('UserRemarks');
+        $usersTable       = TableRegistry::get('Users');
+
+        // Scope conditions by gym / partner
+        $partnerCondition = [];
+        if ($users_type == 2 || ($users_type == 5 && $partnerId > 0)) {
+            $partnerCondition['Users.partner_id'] = $partnerId;
+        } elseif ($users_type == 4) {
+            $partnerCondition['OR'] = [
+                ['Users.trainer_userid' => $users_id],
+                ['Users.partner_id' => $partnerId]
+            ];
+        }
+
+        $today = date('Y-m-d');
+        $tab = $this->request->query('tab') ?: 'all';
+        $search = trim($this->request->query('search') ?? '');
+        $singleDate = trim($this->request->query('date') ?? '');
+        $dateFrom = trim($this->request->query('date_from') ?? '');
+        $dateTo = trim($this->request->query('date_to') ?? '');
+        if ($singleDate !== '') {
+            $dateFrom = $singleDate;
+            $dateTo = $singleDate;
+        }
+        $dateType = trim($this->request->query('date_type') ?? 'created'); // 'created' or 'followup_date'
+        $staffFilter = (int)($this->request->query('staff_id') ?? 0);
+        $userStatusFilter = trim($this->request->query('user_status') ?? '');
+
+        // Base query for counting tabs
+        $buildTabQuery = function() use ($userRemarksTable, $partnerCondition) {
+            $q = $userRemarksTable->find('all')
+                ->contain(['Users'])
+                ->where(['Users.active !=' => 3]);
+            if (!empty($partnerCondition)) {
+                $q->where($partnerCondition);
+            }
+            return $q;
+        };
+
+        $countAll = $buildTabQuery()->count();
+        $countTodayTaken = $buildTabQuery()->where(['DATE(UserRemarks.created) =' => $today])->count();
+        $countTodayDue = $buildTabQuery()->where(['DATE(UserRemarks.followup_date) =' => $today])->count();
+        $countUpcoming = $buildTabQuery()->where(['DATE(UserRemarks.followup_date) >' => $today])->count();
+        $countOverdue = $buildTabQuery()->where(['DATE(UserRemarks.followup_date) <' => $today, 'UserRemarks.followup_date IS NOT' => null])->count();
+
+        // Main filter query
+        $query = $userRemarksTable->find('all')
+            ->contain([
+                'Users' => ['Partners'],
+                'CreatedByUsers'
+            ])
+            ->where(['Users.active !=' => 3]);
+
+        if (!empty($partnerCondition)) {
+            $query->where($partnerCondition);
+        }
+
+        // Apply Tab filters
+        if ($tab === 'today_taken') {
+            $query->where(['DATE(UserRemarks.created) =' => $today]);
+        } elseif ($tab === 'today_due') {
+            $query->where(['DATE(UserRemarks.followup_date) =' => $today]);
+        } elseif ($tab === 'upcoming') {
+            $query->where(['DATE(UserRemarks.followup_date) >' => $today]);
+        } elseif ($tab === 'overdue') {
+            $query->where(['DATE(UserRemarks.followup_date) <' => $today, 'UserRemarks.followup_date IS NOT' => null]);
+        }
+
+        // Text Search
+        if ($search !== '') {
+            $query->where([
+                'OR' => [
+                    ['Users.name LIKE' => "%$search%"],
+                    ['Users.mobile_no LIKE' => "%$search%"],
+                    ['Users.email LIKE' => "%$search%"],
+                    ['UserRemarks.remark LIKE' => "%$search%"]
+                ]
+            ]);
+        }
+
+        // Date Range Filter
+        $dateColumn = ($dateType === 'followup_date') ? 'UserRemarks.followup_date' : 'UserRemarks.created';
+        if ($dateFrom !== '') {
+            $query->where(["$dateColumn >=" => $dateFrom . ' 00:00:00']);
+        }
+        if ($dateTo !== '') {
+            $query->where(["$dateColumn <=" => $dateTo . ' 23:59:59']);
+        }
+
+        // Staff filter
+        if ($staffFilter > 0) {
+            $query->where(['UserRemarks.created_by' => $staffFilter]);
+        }
+
+        // User status filter
+        if ($userStatusFilter !== '') {
+            $query->where(['Users.active' => $userStatusFilter]);
+        }
+
+        // Order by
+        if ($tab === 'today_due' || $tab === 'upcoming') {
+            $query->order(['UserRemarks.followup_date' => 'ASC', 'UserRemarks.id' => 'DESC']);
+        } else {
+            $query->order(['UserRemarks.created' => 'DESC', 'UserRemarks.id' => 'DESC']);
+        }
+
+        $this->paginate = [
+            'limit' => 30,
+            'maxLimit' => 100
+        ];
+        $followups = $this->paginate($query);
+
+        // Fetch staff list for filter dropdown
+        $staffConditions = ['user_type IN' => [1, 2, 4, 5], 'active' => 1];
+        if (!empty($partnerCondition)) {
+            $staffConditions['OR'] = [
+                ['id' => $users_id],
+                ['partner_id' => $partnerId],
+                ['user_type' => 1]
+            ];
+        }
+        $staffList = $usersTable->find('list', ['keyField' => 'id', 'valueField' => 'name'])
+            ->where($staffConditions)
+            ->order(['name' => 'ASC'])
+            ->toArray();
+
+        $this->set(compact(
+            'followups',
+            'tab',
+            'countAll',
+            'countTodayTaken',
+            'countTodayDue',
+            'countUpcoming',
+            'countOverdue',
+            'search',
+            'singleDate',
+            'dateFrom',
+            'dateTo',
+            'dateType',
+            'staffFilter',
+            'userStatusFilter',
+            'staffList',
+            'users_type'
+        ));
+    }
+
+    /**
+     * Enquiry List — Search & manage enquiries by month or custom date range in one click
+     */
+    public function enquiryList()
+    {
+        if (empty($this->usersdetail['users_name']) || empty($this->usersdetail['users_email'])) {
+            return $this->redirect('/');
+        }
+
+        $users_type = (int)($this->usersdetail['users_type'] ?? 0);
+        $users_id   = (int)($this->usersdetail['users_id'] ?? 0);
+        $partnerId  = ($users_type == 2) ? $users_id : (($users_type == 5 && !empty($this->usersdetail['partner_id'])) ? (int)$this->usersdetail['partner_id'] : 0);
+
+        $usersTable       = TableRegistry::get('Users');
+        $userRemarksTable = TableRegistry::get('UserRemarks');
+
+        // Scoping conditions
+        $partnerCondition = [];
+        if ($users_type == 2 || ($users_type == 5 && $partnerId > 0)) {
+            $partnerCondition['Users.partner_id'] = $partnerId;
+        } elseif ($users_type == 4) {
+            $partnerCondition['OR'] = [
+                ['Users.trainer_userid' => $users_id],
+                ['Users.partner_id' => $partnerId]
+            ];
+        }
+
+        // Query parameters
+        $monthSelect = trim($this->request->query('month') ?? ''); // e.g. '2026-10' or 'current' or 'last'
+        $dateFrom    = trim($this->request->query('date_from') ?? '');
+        $dateTo      = trim($this->request->query('date_to') ?? '');
+        $search      = trim($this->request->query('search') ?? '');
+        $trainerId   = (int)($this->request->query('trainer_id') ?? 0);
+        $status      = trim($this->request->query('status') ?? '2'); // default to 2 (Enquiries), can also view converted (1) or all
+
+        // If month preset chosen, calculate dateFrom & dateTo
+        if ($monthSelect === 'current') {
+            $dateFrom = date('Y-m-01');
+            $dateTo   = date('Y-m-t');
+        } elseif ($monthSelect === 'last') {
+            $dateFrom = date('Y-m-01', strtotime('first day of last month'));
+            $dateTo   = date('Y-m-t', strtotime('last day of last month'));
+        } elseif (preg_match('/^\d{4}-\d{2}$/', $monthSelect)) {
+            $dateFrom = $monthSelect . '-01';
+            $dateTo   = date('Y-m-t', strtotime($dateFrom));
+        }
+
+        // Summary counts
+        $baseCountQuery = function() use ($usersTable, $partnerCondition) {
+            $q = $usersTable->find('all')
+                ->where(['Users.user_type' => 3, 'Users.active !=' => 3]);
+            if (!empty($partnerCondition)) {
+                $q->where($partnerCondition);
+            }
+            return $q;
+        };
+
+        $totalEnquiriesAllTime = $baseCountQuery()->where(['Users.active' => 2])->count();
+        $totalConvertedAllTime = $baseCountQuery()->where(['Users.active' => 1])->count();
+
+        // Main enquiry query
+        $query = $usersTable->find('all')
+            ->contain([
+                'Partners',
+                'UserRemarks' => function($q) {
+                    return $q->order(['UserRemarks.created' => 'DESC']);
+                }
+            ])
+            ->where(['Users.user_type' => 3, 'Users.active !=' => 3]);
+
+        if (!empty($partnerCondition)) {
+            $query->where($partnerCondition);
+        }
+
+        // Status filter: 2 = Enquiry, 1 = Converted Member, 'all' = Both
+        if ($status !== 'all' && $status !== '') {
+            $query->where(['Users.active' => $status]);
+        } else {
+            $query->where(['Users.active IN' => [1, 2]]);
+        }
+
+        // Date filter on Users.created
+        if ($dateFrom !== '') {
+            $query->where(['Users.created >=' => $dateFrom . ' 00:00:00']);
+        }
+        if ($dateTo !== '') {
+            $query->where(['Users.created <=' => $dateTo . ' 23:59:59']);
+        }
+
+        // Text Search
+        if ($search !== '') {
+            $query->where([
+                'OR' => [
+                    ['Users.name LIKE' => "%$search%"],
+                    ['Users.mobile_no LIKE' => "%$search%"],
+                    ['Users.email LIKE' => "%$search%"]
+                ]
+            ]);
+        }
+
+        // Trainer filter
+        if ($trainerId > 0) {
+            $query->where(['Users.trainer_userid' => $trainerId]);
+        }
+
+        $query->order(['Users.created' => 'DESC']);
+
+        $this->paginate = [
+            'limit' => 30,
+            'maxLimit' => 100
+        ];
+        $enquiries = $this->paginate($query);
+
+        $filteredCount = $query->count();
+
+        // Trainers list
+        $trainers = $usersTable->find('list', ['keyField' => 'id', 'valueField' => 'name'])
+            ->where(['user_type' => 4, 'active' => 1])
+            ->order(['name' => 'ASC'])
+            ->toArray();
+
+        $this->set(compact(
+            'enquiries',
+            'monthSelect',
+            'dateFrom',
+            'dateTo',
+            'search',
+            'trainerId',
+            'status',
+            'totalEnquiriesAllTime',
+            'totalConvertedAllTime',
+            'filteredCount',
+            'trainers',
+            'users_type'
+        ));
     }
 
     public function beforeRender(\Cake\Event\Event $event)

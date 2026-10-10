@@ -273,10 +273,28 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
                 </li>
                 <?php } ?>    
                 <?php if($usersdetail['users_type'] == 1 || $usersdetail['users_type'] == 2 || $usersdetail['users_type'] == 5){; ?>
-                 <li class="<?php if (($controller == 'Users' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'addPayment' || $action == 'payment'))){echo "active";}?>">
+                  <li class="<?php if (($controller == 'Users' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'adminLogin'|| $action == 'login'|| $action == 'addPayment' || $action == 'payment')) && ($this->request->query('date_type') !== 'followup')){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index']); ?>">
                         <i class="material-icons">list</i>
                         <span><?= __('Users') ?></span>
+                    </a>
+                </li>
+                <li class="<?php if (($controller == 'Users' && ($action == 'followupList' || ($action == 'index' && $this->request->query('date_type') === 'followup')))){echo "active";}?>">
+                    <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'followupList']); ?>">
+                        <i class="material-icons">phone_callback</i>
+                        <span><?= __('Follow-up List') ?></span>
+                    </a>
+                </li>
+                <li class="<?php if (($controller == 'Users' && $action == 'enquiryList')){echo "active";}?>">
+                    <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'enquiryList']); ?>">
+                        <i class="material-icons">person_search</i>
+                        <span><?= __('Enquiries') ?></span>
+                    </a>
+                </li>
+                <li class="<?php if (($controller == 'Users' && $action == 'expiredUsers')){echo "active";}?>">
+                    <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'expiredUsers']); ?>">
+                        <i class="material-icons">timer_off</i>
+                        <span><?= __('Expired Users') ?></span>
                     </a>
                 </li>
                  <li class="<?php if (($controller == 'Plans' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'))){echo "active";}?>">
@@ -311,13 +329,15 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
                     </a>
                 </li>
                 <?php } } ?>
+                <?php } ?>
+                <?php if($usersdetail['users_type'] == 1 || $usersdetail['users_type'] == 2){; ?>
                 <li class="<?php if (($controller == 'Payments' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'Payments', 'action' => 'index']); ?>">
                         <i class="material-icons">payment</i>
                         <span><?= __('Payments') ?></span>
                     </a>
                 </li>
-                 <?php } ?>
+                <?php } ?>
                 <?php
                 // PT Master Plans & PT Payroll: show to partners, admins, permitted front desk, and special emails
                 $showPtPayroll = false;
@@ -370,6 +390,7 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
                         <span><?= __('Fitness Test') ?></span>
                     </a>
                 </li>
+                <?php } ?>
 
                 <li class="<?php if (($controller == 'Bodies')  || ($controller == 'FitnessMeserments') || ($controller == 'Diets') || ($controller == 'DietDirectories')){echo "active";}?>">
                     <a href="javascript:void(0);" class="menu-toggle">
@@ -382,15 +403,16 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
                             <?= $this->Html->link(__('Diet Directories'), ['controller' => 'DietDirectories', 'action' => 'index']) ?>
                        </li>
                       <?php } ?>
+                       <?php if($usersdetail['users_type'] != 5){ ?>
                        <li class="<?php if ($controller == 'Diets' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view' || $action == 'addMore' || $action == 'userEdit')) {echo 'active';} ?>">
                             <?= $this->Html->link(__('Diets'), ['controller' => 'Diets', 'action' => 'index']) ?>
                        </li>
+                       <?php } ?>
                        <li class="<?php if ($controller == 'FitnessMeserments' && ($action == 'index'|| $action == 'add' || $action == 'edit' || $action == 'view')) {echo 'active';} ?>">
                             <?= $this->Html->link(__('Body Measurement'), ['controller' => 'FitnessMeserments', 'action' => 'index']) ?>
                        </li>
                     </ul>
                 </li>
-                <?php } ?>
                 <?php if($usersdetail['users_type'] != 3 && $usersdetail['users_type'] != 5){ ;?>
                 <li class="<?php if (($controller == 'Sessions' && ($action == 'index' || $action == 'add' || $action == 'edit' || $action == 'view'|| $action == 'userEdit' || $action == 'addMore'))){echo "active";}?>">
                     <a href="<?= $this->Url->build(['controller' => 'Sessions', 'action' => 'index']); ?>">

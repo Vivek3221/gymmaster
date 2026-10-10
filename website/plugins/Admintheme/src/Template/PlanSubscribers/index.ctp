@@ -233,29 +233,31 @@
             
             /* Action Icons modern style */
             .action-btn-container {
-                display: flex;
+                display: inline-flex;
                 align-items: center;
-                gap: 8px;
+                gap: 4px;
+                flex-wrap: nowrap;
             }
             .action-icon-btn {
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                width: 32px;
-                height: 32px;
-                border-radius: 8px;
+                width: 28px;
+                height: 28px;
+                border-radius: 6px;
                 background: #f5f5f5;
                 color: #555 !important;
                 text-decoration: none !important;
                 transition: all 0.2s ease;
                 border: 1px solid #e0e0e0;
+                flex-shrink: 0;
             }
             .action-icon-btn:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                box-shadow: 0 3px 6px rgba(0,0,0,0.12);
             }
             .action-icon-btn i {
-                font-size: 18px !important;
+                font-size: 16px !important;
             }
             .action-icon-btn.view-btn:hover {
                 background: #e0f7fa;
@@ -484,6 +486,7 @@
                                             <th><?= __('Total Fee') ?></th>
                                             <th><?= __('Paid Fee') ?></th>
                                             <th><?= __('Remain Fee') ?></th>
+                                            <th><?= __('Plan Start') ?></th>
                                             <th><?= __('Plan Expire') ?></th>
                                             <th><?= __('Payment Due') ?></th>
                                             <th><?= __('Action') ?></th>
@@ -496,6 +499,7 @@
                                             <th><?= __('Total Fee') ?></th>
                                             <th><?= __('Paid Fee') ?></th>
                                             <th><?= __('Remain Fee') ?></th>
+                                            <th><?= __('Plan Start') ?></th>
                                             <th><?= __('Plan Expire') ?></th>
                                             <th><?= __('Payment Due') ?></th>
                                             <th><?= __('Action') ?></th>
@@ -509,6 +513,7 @@
                                             <td><?= $this->Number->format($planSubscriber->fee) ?></td>
                                             <td style="color: #2e7d32; font-weight: bold;"><?= $this->Number->format($planSubscriber->paid_fee) ?></td>
                                             <td style="color: #c62828; font-weight: bold;"><?= $this->Number->format($planSubscriber->remain_fee) ?></td>
+                                            <td><?= !empty($planSubscriber->subscription_start_date) ? date("d-m-Y", strtotime($planSubscriber->subscription_start_date)) : (!empty($planSubscriber->created) ? date("d-m-Y", strtotime($planSubscriber->created)) : '-') ?></td>
                                             <td><?= (date("d-m-Y", strtotime($planSubscriber->plan_expire_date))) ?></td>
                                             <td><?= (date("d-m-Y", strtotime($planSubscriber->payment_due_date))) ?></td>
                                             <td>
@@ -556,6 +561,12 @@
 
 <script type="text/javascript" language="javascript">
     $(document).ready(function() {
-        $('.datepicker-filter').bootstrapMaterialDatePicker({ format : 'YYYY-MM-DD', time: false });
+        if (typeof flatpickr !== 'undefined') {
+            flatpickr('.datepicker-filter', {
+                dateFormat: 'Y-m-d',
+                allowInput: true,
+                monthSelectorType: 'dropdown'
+            });
+        }
     });
 </script>

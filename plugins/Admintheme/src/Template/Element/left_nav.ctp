@@ -279,10 +279,16 @@ $firstLetter = !empty($usersdetail['users_name']) ? strtoupper(substr(trim($user
                         <span><?= __('Users') ?></span>
                     </a>
                 </li>
-                <li class="<?php if (($controller == 'Users' && $action == 'index' && $this->request->query('date_type') === 'followup')){echo "active";}?>">
-                    <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'index', '?' => ['date_type' => 'followup']]); ?>">
+                <li class="<?php if (($controller == 'Users' && ($action == 'followupList' || ($action == 'index' && $this->request->query('date_type') === 'followup')))){echo "active";}?>">
+                    <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'followupList']); ?>">
                         <i class="material-icons">phone_callback</i>
                         <span><?= __('Follow-up List') ?></span>
+                    </a>
+                </li>
+                <li class="<?php if (($controller == 'Users' && $action == 'enquiryList')){echo "active";}?>">
+                    <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'enquiryList']); ?>">
+                        <i class="material-icons">person_search</i>
+                        <span><?= __('Enquiries') ?></span>
                     </a>
                 </li>
                 <li class="<?php if (($controller == 'Users' && $action == 'expiredUsers')){echo "active";}?>">

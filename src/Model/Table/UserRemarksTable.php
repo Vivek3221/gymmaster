@@ -43,6 +43,13 @@ class UserRemarksTable extends Table
             'foreignKey' => 'user_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('CreatedByUsers', [
+            'className' => 'Users',
+            'foreignKey' => 'created_by',
+            'joinType' => 'LEFT'
+        ]);
+
+        $this->getSchema()->addColumn('created_by', ['type' => 'integer']);
     }
 
     /**
